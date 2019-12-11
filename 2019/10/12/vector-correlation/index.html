@@ -85,12 +85,12 @@
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;12&#x2F;vector-correlation&#x2F;index.html">
 <meta property="og:site_name" content="炼丹炉">
 <meta property="og:description" content="问题描述现有一个一组特征，记作$F_{k\times n}$, 现求该组向量中每个特征与其他特征的关系，记结果矩阵为$M_{k\times k\times 2\times n}$ Pytorch 描述123456789k &#x3D; 3n &#x3D; 2F &#x3D; torch.randint(100, size&#x3D;(k, n))F1 &#x3D; torch.cat([F]*k, dim&#x3D;1)F1 &#x3D; F1.view((k*k,">
-<meta property="og:image" content="https:&#x2F;&#x2F;imgur.com&#x2F;WKdNPUO">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;WKdNPUO.jpg">
 <meta property="article:published_time" content="2019-10-12T07:57:37.000Z">
-<meta property="article:modified_time" content="2019-12-11T10:46:48.679Z">
+<meta property="article:modified_time" content="2019-12-11T10:49:29.284Z">
 <meta property="article:author" content="Gummary">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;imgur.com&#x2F;WKdNPUO">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;WKdNPUO.jpg">
 
 
 
@@ -303,7 +303,7 @@
         <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>现有一个一组特征，记作$F_{k\times n}$, 现求该组向量中每个特征与其他特征的关系，记结果矩阵为$M_{k\times k\times 2\times n}$</p>
 <h2 id="Pytorch-描述"><a href="#Pytorch-描述" class="headerlink" title="Pytorch 描述"></a>Pytorch 描述</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">k = <span class="number">3</span></span><br><span class="line">n = <span class="number">2</span></span><br><span class="line">F = torch.randint(<span class="number">100</span>, size=(k, n))</span><br><span class="line">F1 = torch.cat([F]*k, dim=<span class="number">1</span>)</span><br><span class="line">F1 = F1.view((k*k, n))</span><br><span class="line">F2 = torch.cat([F]*k, dim=<span class="number">0</span>)</span><br><span class="line">F2 = F1.view((k*k, n))</span><br><span class="line">M = torch.cat([F1, F2], dim=<span class="number">1</span>)</span><br><span class="line">M = M.view(k, k, <span class="number">2</span>, n)</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://imgur.com/WKdNPUO" alt=""></p>
+<p><img src="https://i.imgur.com/WKdNPUO.jpg" alt=""></p>
 
       
     </div>
