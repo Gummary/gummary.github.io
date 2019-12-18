@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Faster-RCNN本文重点介绍FasterRCNN的RPN网络和HeadNet。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Faster-RCNN 算法详解">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;17&#x2F;faster-rcnn-review&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="Faster-RCNN本文重点介绍FasterRCNN的RPN网络和HeadNet。">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;ZgZvGOb.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;YR2kXUN.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;qeNWvAc.jpg">
+<meta property="article:published_time" content="2019-12-17T03:55:13.000Z">
+<meta property="article:modified_time" content="2019-12-17T15:40:44.728Z">
+<meta property="article:author" content="Gummary">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;ZgZvGOb.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/12/17/faster-rcnn-review/"/>
+
+
+
+
+
+  <title>Faster-RCNN 算法详解 | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/17/faster-rcnn-review/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Faster-RCNN 算法详解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-17T11:55:13+08:00">
+                2019-12-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Faster-RCNN"><a href="#Faster-RCNN" class="headerlink" title="Faster-RCNN"></a>Faster-RCNN</h1><p>本文重点介绍FasterRCNN的RPN网络和HeadNet。</p>
+<a id="more"></a>
+
+<p><img src="https://i.imgur.com/ZgZvGOb.png" alt=""></p>
+<h1 id="RPN网络"><a href="#RPN网络" class="headerlink" title="RPN网络"></a>RPN网络</h1><p>RPN网络分为两路，一路预测出正例Proposals，另一路预测每个Proposal的boundingbox偏移。RPN预测Proposals是利用Anchor完成的。生成多个Anchor后用Softmax分类器进行二分类得到正例。最后将生成的boundingbox和正例导入到Proposal层中得到最终结果。</p>
+<p><img src="https://i.imgur.com/YR2kXUN.jpg" alt=""></p>
+<h2 id="Anchor"><a href="#Anchor" class="headerlink" title="Anchor"></a>Anchor</h2><p><img src="https://i.imgur.com/qeNWvAc.jpg" alt=""></p>
+<p>OpenCV adaboost使用滑动窗口+图像金字塔生成检测框；或如R-CNN使用SS(Selective Search)方法生成检测框。而Faster RCNN则抛弃了传统的滑动窗口和SS方法，直接使用RPN生成检测框。</p>
+<p>Faster RCNN在生成的特征图上的每个点都应用9个anchor作为初始的检测框，九个anchor为三种不同比例的检测框，分别为1:1,1:2,2:1。原图800x600，VGG下采样16倍，feature map每个点设置9个Anchor，所以共有</p>
+<p>$$<br>\lceil (800/16) \rceil \times \lceil (600/16) \rceil \times 9 = 50 \times 38 \times 9 = 17100<br>$$</p>
+<p>个检测框。</p>
+<h2 id="Softmax-判定anchor"><a href="#Softmax-判定anchor" class="headerlink" title="Softmax 判定anchor"></a>Softmax 判定anchor</h2><p>利用Backbone提取特征图后，首先利用Conv1x1卷积得到一个$H\times W\times18$的矩阵，表示每个像素点处的9个anchor是正例还是负例。通过Softmax判定是否包含目标，一般认为正例包含目标。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">layer</span> <span class="string">&#123;</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">"rpn_cls_score"</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">"Convolution"</span></span><br><span class="line">  <span class="attr">bottom:</span> <span class="string">"rpn/output"</span></span><br><span class="line">  <span class="attr">top:</span> <span class="string">"rpn_cls_score"</span></span><br><span class="line">  <span class="string">param</span> <span class="string">&#123;</span> <span class="attr">lr_mult:</span> <span class="number">1.0</span> <span class="string">&#125;</span></span><br><span class="line">  <span class="string">param</span> <span class="string">&#123;</span> <span class="attr">lr_mult:</span> <span class="number">2.0</span> <span class="string">&#125;</span></span><br><span class="line">  <span class="string">convolution_param</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="attr">num_output:</span> <span class="number">18</span>   <span class="comment"># 2(bg/fg) * 9(anchors)</span></span><br><span class="line">    <span class="attr">kernel_size: 1 pad: 0 stride:</span> <span class="number">1</span></span><br><span class="line">    <span class="string">weight_filler</span> <span class="string">&#123;</span> <span class="attr">type:</span> <span class="string">"gaussian"</span> <span class="attr">std:</span> <span class="number">0.01</span> <span class="string">&#125;</span></span><br><span class="line">    <span class="string">bias_filler</span> <span class="string">&#123;</span> <span class="attr">type:</span> <span class="string">"constant"</span> <span class="attr">value:</span> <span class="number">0</span> <span class="string">&#125;</span></span><br><span class="line">  <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>至于Softmax之前的reshape层是用来将输入$B\times H\times W\times 18$ reshape成$B\times 2\times 9*H\times W$,第二个维度用于存放每个像素处9个anchor的Softmax分类结果，之后的reshape层是用于将其调整回$B\times 18\times H\times W$。</p>
+<p>在训练过程中，根据GroundTruth在两种情况下给定某个anchor为正例：</p>
+<ul>
+<li>与一个ground-truth相交的最大的IOU的anchor</li>
+<li>与任意Ground-truth的IOU值大于0.7的anchor</li>
+</ul>
+<h2 id="Bouond-box-regression"><a href="#Bouond-box-regression" class="headerlink" title="Bouond box regression"></a>Bouond box regression</h2><p>Bounding box回归是为了微调旋转框的位置，因为一个Anchor不可能恰好包含一个物体，因此需要对其进行调整。</p>
+<p>假设窗口用一个4维向量(x,y,h,w)，分别代表窗口的中心点坐标，高度和宽度。给定anchor $A=(A_x, A_y, A_h, A_w)$和GroundTruth $G=(G_x, G_y, G_h, G_w)$, 则检测框回归的任务是找到一个变换$G’ = F(A)$使得$G’\approx G$</p>
+<p>这个变换的网络是在RCNN中提出的，变换F包括四个函数$F = {d_x(A), d_y(A),d_h(A),d_w(A)}$,分别用于对中心点做平移变换，对宽和高进行放缩：</p>
+<p>$$<br>\begin{aligned}<br>  G’_x &amp;= A_w d_x(A) + A_x \<br>  G’_y &amp;= A_h d_y(A) + A_y \<br>  G’_w &amp;= A_w \text{exp}(d_w(A_w)) \<br>  G’_h &amp;= A_h \text{exp}(d_h(A_h))<br>\end{aligned}<br>$$</p>
+<p>这个回归函数的输入是特征图和GroundTruth与anchor的偏移，输出为$d_*(A), *\in{x,y,w,h}$.假设输入的特征图为$\phi(A)$,则：</p>
+<p>$$<br>d_<em>(A) = W_</em>^T\phi(A)<br>$$</p>
+<p>则损失函数为：</p>
+<p>$$<br>Loss = \sum_i^N | t_<em>^i - W_</em>^T\phi(A) |<br>$$</p>
+<p>其中，$t_*$为GroundTruth与anchor之间的偏移，具体为：</p>
+<p>$$<br>\begin{aligned}<br>  t_x = \frac{G_x - A_x}{A_w}, \quad t_y = \frac{G_y - A_y}{A_h} \<br>  t_w = \text{log}(\frac{G_w}{A_w}), \quad t_h = \text{log}(\frac{G_h}{A_h})<br>\end{aligned}<br>$$</p>
+<p>最终的优化目标为：</p>
+<p>$$<br>\hat{W}<em>* = \text{argmin}</em>{W_<em>}\sum_i^N | t_</em>^i - W_<em>^T\phi(A) | + \lambda |W_</em>|<br>$$</p>
+<p>在实际应用过程中，作者发现当Anchor与GroundTruth距离很远时，这种变换将失去意义，因此对靠近一个GroundTruth的框学习，靠近的定义是Anchor与GroundTruth的IOU大于0.6。</p>
+<p>在FasterRCNN中该回归使用一层1x1卷积层实现的,其中每个位置处的输出为36个也即每个anchor都有4个偏移。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">layer</span> <span class="string">&#123;</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">"rpn_bbox_pred"</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">"Convolution"</span></span><br><span class="line">  <span class="attr">bottom:</span> <span class="string">"rpn/output"</span></span><br><span class="line">  <span class="attr">top:</span> <span class="string">"rpn_bbox_pred"</span></span><br><span class="line">  <span class="string">param</span> <span class="string">&#123;</span> <span class="attr">lr_mult:</span> <span class="number">1.0</span> <span class="string">&#125;</span></span><br><span class="line">  <span class="string">param</span> <span class="string">&#123;</span> <span class="attr">lr_mult:</span> <span class="number">2.0</span> <span class="string">&#125;</span></span><br><span class="line">  <span class="string">convolution_param</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="attr">num_output:</span> <span class="number">36</span>   <span class="comment"># 4 * 9(anchors)</span></span><br><span class="line">    <span class="attr">kernel_size: 1 pad: 0 stride:</span> <span class="number">1</span></span><br><span class="line">    <span class="string">weight_filler</span> <span class="string">&#123;</span> <span class="attr">type:</span> <span class="string">"gaussian"</span> <span class="attr">std:</span> <span class="number">0.01</span> <span class="string">&#125;</span></span><br><span class="line">    <span class="string">bias_filler</span> <span class="string">&#123;</span> <span class="attr">type:</span> <span class="string">"constant"</span> <span class="attr">value:</span> <span class="number">0</span> <span class="string">&#125;</span></span><br><span class="line">  <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Proposal-Layer"><a href="#Proposal-Layer" class="headerlink" title="Proposal Layer"></a>Proposal Layer</h2><p>RPN最终的输出为</p>
+<ol>
+<li>大小为$H\times W\times 2k$的positive/negative softmax分类特征矩阵</li>
+<li>大小为$H\times W\times 4k$的bounding box 坐标回归矩阵。</li>
+</ol>
+<p>Proposal层的作用就是根据2得到更精确的Positive region，送入ROI Pooling Layer中。</p>
+<p>该层的定义为</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">layer</span> <span class="string">&#123;</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">'proposal'</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">'Python'</span></span><br><span class="line">  <span class="attr">bottom:</span> <span class="string">'rpn_cls_prob_reshape'</span></span><br><span class="line">  <span class="attr">bottom:</span> <span class="string">'rpn_bbox_pred'</span></span><br><span class="line">  <span class="attr">bottom:</span> <span class="string">'im_info'</span></span><br><span class="line">  <span class="attr">top:</span> <span class="string">'rpn_rois'</span></span><br><span class="line">  <span class="string">python_param</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="attr">module:</span> <span class="string">'rpn.proposal_layer'</span></span><br><span class="line">    <span class="attr">layer:</span> <span class="string">'ProposalLayer'</span></span><br><span class="line">    <span class="attr">param_str:</span> <span class="string">"'feat_stride': 16"</span></span><br><span class="line">  <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Proposal层中rpn_cls_prob_reshape为softmax分类特征矩阵， rpn_bbox_pred为bounding box 坐标回归矩阵，im_info为输入图像的大小和缩放信息。这里的缩放信息是指，输入图片后首先将图片缩放到一个固定的尺寸后再输入到网络，这缩放的比例即为im_scales。而param_str中的feat_stride是指特征图经过4次Pooling，共缩放了16倍，用于计算anchor偏移量。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">blobs[<span class="string">'im_info'</span>] = np.array(</span><br><span class="line">    [[im_blob.shape[<span class="number">2</span>], im_blob.shape[<span class="number">3</span>], im_scales[<span class="number">0</span>]]],</span><br><span class="line">    dtype=np.float32)</span><br></pre></td></tr></table></figure>
+
+<p>Proposal层实现的具体步骤为：</p>
+<ol>
+<li>根据RPN预测的偏移和positive boundingbox生成proposals</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">height, width = scores.shape[<span class="number">-2</span>:]</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> DEBUG:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'score map size: &#123;&#125;'</span>.format(scores.shape)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 根据feat_stride和当前特征图的大小计算原图大小</span></span><br><span class="line">shift_x = np.arange(<span class="number">0</span>, width) * self._feat_stride</span><br><span class="line">shift_y = np.arange(<span class="number">0</span>, height) * self._feat_stride</span><br><span class="line">shift_x, shift_y = np.meshgrid(shift_x, shift_y)</span><br><span class="line">shifts = np.vstack((shift_x.ravel(), shift_y.ravel(),</span><br><span class="line">                    shift_x.ravel(), shift_y.ravel())).transpose()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成所有像素点处的anchor</span></span><br><span class="line">A = self._num_anchors</span><br><span class="line">K = shifts.shape[<span class="number">0</span>]</span><br><span class="line">anchors = self._anchors.reshape((<span class="number">1</span>, A, <span class="number">4</span>)) + \</span><br><span class="line">          shifts.reshape((<span class="number">1</span>, K, <span class="number">4</span>)).transpose((<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>))</span><br><span class="line">anchors = anchors.reshape((K * A, <span class="number">4</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将预测得到的bbox transformation转换为与anchor同样的大小</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># bbox deltas will be (1, 4 * A, H, W) format</span></span><br><span class="line"><span class="comment"># transpose to (1, H, W, 4 * A)</span></span><br><span class="line"><span class="comment"># reshape to (1 * H * W * A, 4) where rows are ordered by (h, w, a)</span></span><br><span class="line"><span class="comment"># in slowest to fastest order</span></span><br><span class="line">bbox_deltas = bbox_deltas.transpose((<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>)).reshape((<span class="number">-1</span>, <span class="number">4</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 对score做同样的操作</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># scores are (1, A, H, W) format</span></span><br><span class="line"><span class="comment"># transpose to (1, H, W, A)</span></span><br><span class="line"><span class="comment"># reshape to (1 * H * W * A, 1) where rows are ordered by (h, w, a)</span></span><br><span class="line">scores = scores.transpose((<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>)).reshape((<span class="number">-1</span>, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 根据bbox transformation将anchor转换为proposal</span></span><br><span class="line">proposals = bbox_transform_inv(anchors, bbox_deltas)</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>处理超出图像边界部分的bbox，将图像边界作为超出边界的bbox的边界。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">clip_boxes</span><span class="params">(boxes, im_shape)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Clip boxes to image boundaries.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># x1 &gt;= 0</span></span><br><span class="line">    boxes[:, <span class="number">0</span>::<span class="number">4</span>] = np.maximum(np.minimum(boxes[:, <span class="number">0</span>::<span class="number">4</span>], im_shape[<span class="number">1</span>] - <span class="number">1</span>), <span class="number">0</span>)</span><br><span class="line">    <span class="comment"># y1 &gt;= 0</span></span><br><span class="line">    boxes[:, <span class="number">1</span>::<span class="number">4</span>] = np.maximum(np.minimum(boxes[:, <span class="number">1</span>::<span class="number">4</span>], im_shape[<span class="number">0</span>] - <span class="number">1</span>), <span class="number">0</span>)</span><br><span class="line">    <span class="comment"># x2 &lt; im_shape[1]</span></span><br><span class="line">    boxes[:, <span class="number">2</span>::<span class="number">4</span>] = np.maximum(np.minimum(boxes[:, <span class="number">2</span>::<span class="number">4</span>], im_shape[<span class="number">1</span>] - <span class="number">1</span>), <span class="number">0</span>)</span><br><span class="line">    <span class="comment"># y2 &lt; im_shape[0]</span></span><br><span class="line">    boxes[:, <span class="number">3</span>::<span class="number">4</span>] = np.maximum(np.minimum(boxes[:, <span class="number">3</span>::<span class="number">4</span>], im_shape[<span class="number">0</span>] - <span class="number">1</span>), <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span> boxes</span><br><span class="line"></span><br><span class="line">proposals = clip_boxes(proposals, im_info[:<span class="number">2</span>])</span><br></pre></td></tr></table></figure>
+
+
+<ol start="3">
+<li>去除小于阈值的bbox</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">keep = _filter_boxes(proposals, min_size * im_info[<span class="number">2</span>])</span><br><span class="line">        proposals = proposals[keep, :]</span><br><span class="line">        scores = scores[keep]</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>将所有的(proposal, score)对根据score的值进行由高到低排序</li>
+<li>取前pre_nms_topN(6000)个值</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">order = scores.ravel().argsort()[::<span class="number">-1</span>]</span><br><span class="line"><span class="keyword">if</span> pre_nms_topN &gt; <span class="number">0</span>:</span><br><span class="line">    order = order[:pre_nms_topN]</span><br><span class="line">proposals = proposals[order, :]</span><br><span class="line">scores = scores[order]</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>对剩余positive proposals进行NMS，threshold = 0.7</li>
+<li>取NMS后的前post_nms_topN(300)个</li>
+<li>返回剩余的proposal</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">keep = nms(np.hstack((proposals, scores)), nms_thresh)</span><br><span class="line"><span class="keyword">if</span> post_nms_topN &gt; <span class="number">0</span>:</span><br><span class="line">    keep = keep[:post_nms_topN]</span><br><span class="line">proposals = proposals[keep, :]</span><br><span class="line">scores = scores[keep]</span><br></pre></td></tr></table></figure>
+
+<h1 id="RoI-Pooling"><a href="#RoI-Pooling" class="headerlink" title="RoI Pooling"></a>RoI Pooling</h1><p>在经过bbox transformation之后，生成的每个bbox都是不同的大小尺寸都不同的，为了保证输入输出尺寸固定且不丢失原始图像的结构和形状，因此采用RoI Pooling的方法。</p>
+<h2 id="RoI-Pooing原理"><a href="#RoI-Pooing原理" class="headerlink" title="RoI Pooing原理"></a>RoI Pooing原理</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">layer</span> <span class="string">&#123;</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">"roi_pool_conv5"</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">"ROIPooling"</span></span><br><span class="line">  <span class="attr">bottom:</span> <span class="string">"conv5"</span></span><br><span class="line">  <span class="attr">bottom:</span> <span class="string">"rois"</span></span><br><span class="line">  <span class="attr">top:</span> <span class="string">"roi_pool_conv5"</span></span><br><span class="line">  <span class="string">roi_pooling_param</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="attr">pooled_w:</span> <span class="number">6</span></span><br><span class="line">    <span class="attr">pooled_h:</span> <span class="number">6</span></span><br><span class="line">    <span class="attr">spatial_scale:</span> <span class="number">0.0625</span> <span class="comment"># 1/16</span></span><br><span class="line">  <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>RoI Pooling是将每个生成的Proposal都通过pooling的方式变为$\text{pooled_w}\times\text{pooled_h}$的大小，具体步骤为：</p>
+<ol>
+<li>由于Proposal层输出的Proposal坐标为在原图的左边， 因此首先利用spatial_scale将Proposal变换到特征图上。</li>
+<li>将每个特征图上的Proposal划分成$\text{pooled_w}\times\text{pooled_h}$的网格。</li>
+<li>对每个网格进行maxpooling</li>
+</ol>
+<h1 id="Classification"><a href="#Classification" class="headerlink" title="Classification"></a>Classification</h1><p>最后根据RoI Pooling层生成的特征使用全连接层对Proposal进行bounding box regression再次获取更高精度的rect box,使用softmax对proposal进行分类。</p>
+<h1 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h1><p>训练的过程分为4个步骤：</p>
+<ol>
+<li>根据在imagenet上的pretrain训练RPN网络</li>
+<li>利用训练好的RPN得到proposal，训练backbone</li>
+<li>利用backbone再次训练RPN</li>
+<li>利用再次训练backbone</li>
+</ol>
+<p>Faster-RCNN的多任务损失函数为：</p>
+<p>$$<br>L({p_i},{t_i}) = \frac{1}{N_{cls}}\sum_iL_{cls}(p_i, p_i^<em>) + \lambda\frac{1}{N_{reg}}\sum_ip_i^*L_{reg}(t_i, t_i^</em>)<br>$$</p>
+<p>其中，i为anchor的index，$p_i$为anchor中是否包含物体的概率，$p_i^<em>$为ground truth，当为物体时为1，t_i为预测的bbox的偏移，$t_i^</em>$为正例的ground truth</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/12/ssd-detection-review/" rel="next" title="SSD检测算法详解">
+                <i class="fa fa-chevron-left"></i> SSD检测算法详解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Faster-RCNN"><span class="nav-number">1.</span> <span class="nav-text">Faster-RCNN</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RPN网络"><span class="nav-number">2.</span> <span class="nav-text">RPN网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Anchor"><span class="nav-number">2.1.</span> <span class="nav-text">Anchor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Softmax-判定anchor"><span class="nav-number">2.2.</span> <span class="nav-text">Softmax 判定anchor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bouond-box-regression"><span class="nav-number">2.3.</span> <span class="nav-text">Bouond box regression</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Proposal-Layer"><span class="nav-number">2.4.</span> <span class="nav-text">Proposal Layer</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RoI-Pooling"><span class="nav-number">3.</span> <span class="nav-text">RoI Pooling</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RoI-Pooing原理"><span class="nav-number">3.1.</span> <span class="nav-text">RoI Pooing原理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Classification"><span class="nav-number">4.</span> <span class="nav-text">Classification</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Training"><span class="nav-number">5.</span> <span class="nav-text">Training</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

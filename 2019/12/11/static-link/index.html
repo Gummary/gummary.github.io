@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="静态链接的过程静态链接主要分为x个步骤，首先合并两个目标文件的段，然后为每个目标文件中的符号分配地址，根据分配好的地址进行重定位。下面将结合两个具体的源文件分析这个过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="静态链接">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;11&#x2F;static-link&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="静态链接的过程静态链接主要分为x个步骤，首先合并两个目标文件的段，然后为每个目标文件中的符号分配地址，根据分配好的地址进行重定位。下面将结合两个具体的源文件分析这个过程。">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;D2TYLtn.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;DSZvWFH.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;mpxQ09l.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;FHQBKRQ.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;AvMa8i5.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;M1608yX.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;9IvAFOF.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;n8Tb00S.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;NBNRGhL.png">
+<meta property="article:published_time" content="2019-12-11T13:35:55.000Z">
+<meta property="article:modified_time" content="2019-12-17T15:40:04.451Z">
+<meta property="article:author" content="Gummary">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;D2TYLtn.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/12/11/static-link/"/>
+
+
+
+
+
+  <title>静态链接 | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/11/static-link/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">静态链接</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-11T21:35:55+08:00">
+                2019-12-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="静态链接的过程"><a href="#静态链接的过程" class="headerlink" title="静态链接的过程"></a>静态链接的过程</h1><p>静态链接主要分为x个步骤，首先合并两个目标文件的段，然后为每个目标文件中的符号分配地址，根据分配好的地址进行重定位。下面将结合两个具体的源文件分析这个过程。</p>
+<a id="more"></a>
+
+
+<p>假设有如下两个源文件</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// a.c</span></span><br><span class="line"><span class="keyword">extern</span> <span class="keyword">int</span> shared;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">100</span>;</span><br><span class="line">    swap(&amp;a, &amp;shared);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// b.c</span></span><br><span class="line"><span class="keyword">int</span> shared = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">int</span> test = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>* a, <span class="keyword">int</span>* b)</span> </span>&#123;</span><br><span class="line">    *a ^= *b ^= *a ^= *b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>源文件a引用了b中的一个全局变量和一个函数。下面具体的链接过程。</p>
+<h1 id="合并段"><a href="#合并段" class="headerlink" title="合并段"></a>合并段</h1><p>首先编译两个源代码</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> -fno-stack-protector 关闭gcc编译时的保护机制，减少汇编代码</span></span><br><span class="line">gcc -c -fno-stack-protector -m32 a.c b.c</span><br></pre></td></tr></table></figure>
+
+<p>然后是链接过程</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ld -m elf_i386 a.o b.o -e main -o ab</span><br></pre></td></tr></table></figure>
+
+<p>链接器在链接两个目标文件时，需要将二者的所有段都合并到一起，这里可以将每个文件的段分开存放，也可将两个目标文件相同名字的段放到一起，后者显然更加合理。链接器在将两个相同的段合并到一起时，需要重新调整符号表中符号的的地址。符号的地址在原始的目标文件中保存的是距离某个段起始位置的偏移，因此在合并时可以直接根据合并后段的地址加偏移即可。</p>
+<p><img src="https://i.imgur.com/D2TYLtn.jpg" alt=""></p>
+<p><img src="https://i.imgur.com/DSZvWFH.jpg" alt=""></p>
+<p><img src="https://i.imgur.com/mpxQ09l.jpg" alt=""></p>
+<p>可以看到，a和b的text已经合并到ab中，大小为二者的和，地址分配到了虚拟地址0x08048094处（在目标文件中为0）</p>
+<h1 id="重定位"><a href="#重定位" class="headerlink" title="重定位"></a>重定位</h1><p>重定位的过程是指给目标文件中某个段中所引用但未定义的符号分配地址.</p>
+<p>首席按查看一下未链接之前目标文件是如何引用未定义的变量：</p>
+<p><img src="https://i.imgur.com/FHQBKRQ.jpg" alt=""></p>
+<p>在0x23处的指令为a和swap的地址分配空间，0x1c处是将100赋值给变量a，因此a的地址为-0xc(%ebp),则0x0(%eax)为share的地址，而该地址为0x1。所以在编译过程中，编译器先将为找到定义的地址设置为0x1.</p>
+<p>对于swap函数，在0x33处使用call指令调用，指令码为0xe8，该指令为Call near, relative, displacement relative to next instruction，具体可查看<a href="https://c9x.me/x86/html/file_module_x86_id_26.html" target="_blank" rel="noopener">x86 Instruction Set Reference</a>.总之该指令的后四个字节是相对于下一条指令的偏移，是一个有符号数，而0xfffffffc为-4的补码，所以call指令调用的是0x38-0x04=0x34处的函数，显然不是swap函数的位置。</p>
+<p>当链接器完成上一节的地址分配后，即可将这两个值替换为真正的地址。可以通过查看文件得到：</p>
+<p><img src="https://i.imgur.com/AvMa8i5.jpg" alt=""></p>
+<p><img src="https://i.imgur.com/M1608yX.png" alt=""></p>
+<p>可以看到，swap的地址已经重定位到804a00c的位置。而对于swap函数，0x80480d4+0x16=080480e2,也重定位到了正确的位置。</p>
+<h2 id="重定位表"><a href="#重定位表" class="headerlink" title="重定位表"></a>重定位表</h2><p>每个有需要被重定位符号的段都有一个对应的重定位表，一个重定位表也是ELF文件中的一个段，比如.text的重定位段为.rel.text。重定位表实际上是一个Elf32_Rel结构的数组，该结构为：</p>
+<p><img src="https://i.imgur.com/9IvAFOF.png" alt=""></p>
+<p>a中的重定位表为：</p>
+<p><img src="https://i.imgur.com/n8Tb00S.jpg" alt=""></p>
+<p>可以看到shared和swap的offset正是之前对a.o进行反汇编后距离main的偏移。</p>
+<p><img src="https://i.imgur.com/NBNRGhL.png" alt=""></p>
+<p>其中类型为UND的符号均为需要重定位的项。</p>
+<h2 id="符号解析"><a href="#符号解析" class="headerlink" title="符号解析"></a>符号解析</h2><p>链接过程中，链接器处理重定位表，链接符号的方式为：</p>
+<ul>
+<li>链接器首先根据符号表维护两个队列:<ul>
+<li>当前所有库和目标文件所定义的符号。</li>
+<li>当前的库和目标文件所引用的但是还未找到地址的符号。</li>
+</ul>
+</li>
+<li>当链接器链接一个新的目标文件时，查看符号表中的两个部分:<ul>
+<li>该目标文件定义符号: 加入到上述的已定义的符号表中，如果该符号还位于未找到的符号表中，则将其从中移除。 如果该符号已经存在于已定义的符号表中，则会根据富豪的强弱报错，multiple defined symbol。</li>
+<li>该目标文件所引用的符号: 除了在已定义的符号表中的符号，剩下的符号都添加到未定义符号表中</li>
+</ul>
+</li>
+<li>当链接器链接一个库时，链接器遍历整个库中的目标文件并查看该目标文件的符号表：<ul>
+<li>如果该目标文件中存在的符号位于未定义符号表，则进行下一步，否则跳过该目标文件。</li>
+<li>将该目标文件按新目标文件处理。</li>
+<li>最后，如果该库中有目标文件被链接，则重新扫描该库，防止使用的目标文件中引用了该库的其他目标文件。</li>
+</ul>
+</li>
+</ul>
+<h2 id="指令修正方式"><a href="#指令修正方式" class="headerlink" title="指令修正方式"></a>指令修正方式</h2><p>32位平台下地址的修正方式有两种</p>
+<ol>
+<li>R_386_32，绝对地址修正 S + A</li>
+<li>R_386_PC32 相对地址修正 S+A-P</li>
+</ol>
+<p>其中S为符号实际地址，A为保存在被修正位置处的值，P为被修正的位置（可通过r_offset计算）。</p>
+<p>也即绝对地址修正是符号的实际地址，而相对地址修正为修正位置（引用该符号的指令位置）与符号地址之间的差，可用于相对地址寻址指令中（如上面提到的call指令）。</p>
+<h1 id="COMMON-块"><a href="#COMMON-块" class="headerlink" title="COMMON 块"></a>COMMON 块</h1><p>COMMON块是用来处理定义在多个目标文件中的弱符号类型不同的问题。当链接器遇到两个名称相同的弱符号时，以占空间大的符号作为准。因为对于链接器来说，变量的类型是透明的。</p>
+<p>未初始化的全局变量是典型的弱符号，编译器将未初始化的全局变量放在COMMON块中，此时可能有其他的目标文件的该符号比当前目标文件的该符号大，因此不放在BSS段中也不为他分配空间。当链接结束后，所有的弱符号都已经确定了，此时再将其放到BSS段中。</p>
+<h1 id="链接过程控制"><a href="#链接过程控制" class="headerlink" title="链接过程控制"></a>链接过程控制</h1><p>对于一般的程序，使用默认的链接规则即可，但是对于操作系统等特殊的程序，或者需要运行在某些特殊环境下的程序，对段的存放、虚拟地址位置等有特殊要求的情况下，都需要手动定义链接规则。</p>
+<h2 id="链接脚本"><a href="#链接脚本" class="headerlink" title="链接脚本"></a>链接脚本</h2><p>链接脚本是控制链接过程，定义链接规则的一种方式，还可以通过指定参数和在目标文件中定义链接命令实现，这里只看链接脚本这种方式。</p>
+<p>查看默认脚本命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ld</span> --verbose</span><br></pre></td></tr></table></figure>
+
+<p>自定义脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ld</span> -T link.script</span><br></pre></td></tr></table></figure>
+
+<h2 id="链接脚本举例"><a href="#链接脚本举例" class="headerlink" title="链接脚本举例"></a>链接脚本举例</h2><p>假设我们有如下程序，再不调用系统API的情况下输出Hello world，使main函数变为nomain,并将该程序的段整合到tinytext中。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span>* str = <span class="string">"Hello world!\n"</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">asm</span>(<span class="string">"movl $13, %%edx\n\t"</span></span><br><span class="line">        <span class="string">"movq %0, %%rcx\n\t"</span></span><br><span class="line">        <span class="string">"movl $0, %%ebx\n\t"</span></span><br><span class="line">        <span class="string">"movl $4, %%eax\n\t"</span></span><br><span class="line">        <span class="string">"int $0x80 \n\t"</span></span><br><span class="line">        ::<span class="string">"r"</span>(str):<span class="string">"edx"</span>,<span class="string">"ecx"</span>,<span class="string">"ebx"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">exit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">asm</span>(<span class="string">"movl $42,%ebx\n\t"</span></span><br><span class="line">        <span class="string">"movl $1, %eax\n\t"</span></span><br><span class="line">        <span class="string">"int $0x80 \n\t"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">nomain</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">print</span>();</span><br><span class="line">    <span class="built_in">exit</span>();</span><br><span class="line">&#125;</span><br><span class="line">~~</span><br><span class="line"></span><br><span class="line">输出的方式是通过使用WRITE系统调用的方式实现。系统调用的中断号为<span class="number">0x80</span>，eax为调用号，ebx,ecx,edx为系统参数。</span><br><span class="line"></span><br><span class="line">~~~c</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">write</span><span class="params">(<span class="keyword">int</span> fd, <span class="keyword">char</span>* <span class="built_in">buffer</span>, <span class="keyword">int</span> <span class="built_in">size</span>)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>这里ebx作为fd表示输出的文件句柄为默认终端0，edx为要传递的buffer，ecx为大小。</p>
+<p>而exit()函数使用的是EXIT系统调用，ebx为退出码。</p>
+<p>编译并运行该代码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc -c -fno-builtin hello.c</span><br><span class="line">ld -static -e nomain -o hello hello.o</span><br></pre></td></tr></table></figure>
+
+<p>一个简单的链接脚本</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ENTRY(nomain)</span><br><span class="line"></span><br><span class="line">SECTIONS</span><br><span class="line">&#123;</span><br><span class="line">    . = <span class="number">0x08048000</span> + SIZEOF_HEADERS;</span><br><span class="line">    tinytext :  &#123; *(.<span class="built_in">text</span>) *(.data) *(.rodata) &#125;</span><br><span class="line">    /DISCARD/ : &#123; *(.comment) *(.eh_pframe) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中ENTRY指定了程序入口,SECTIONS中定义了链接的主要规则，.表示当前符号地址，将其设置为0x08048000 + SIZEOF_HEADERS，第二条为转换规则，将三个段合并为tinytext，第三条为将所有带有comment的段丢弃。</p>
+<p>具体链接规则可查看<a href="http://www.scoberlin.de/content/media/http/informatik/gcc_docs/ld_3.html" target="_blank" rel="noopener">Linker Scripts</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/11/calculate-iou-in-python/" rel="next" title="用python计算IOU">
+                <i class="fa fa-chevron-left"></i> 用python计算IOU
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/12/12/ssd-detection-review/" rel="prev" title="SSD检测算法详解">
+                SSD检测算法详解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#静态链接的过程"><span class="nav-number">1.</span> <span class="nav-text">静态链接的过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#合并段"><span class="nav-number">2.</span> <span class="nav-text">合并段</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重定位"><span class="nav-number">3.</span> <span class="nav-text">重定位</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#重定位表"><span class="nav-number">3.1.</span> <span class="nav-text">重定位表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#符号解析"><span class="nav-number">3.2.</span> <span class="nav-text">符号解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指令修正方式"><span class="nav-number">3.3.</span> <span class="nav-text">指令修正方式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#COMMON-块"><span class="nav-number">4.</span> <span class="nav-text">COMMON 块</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#链接过程控制"><span class="nav-number">5.</span> <span class="nav-text">链接过程控制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#链接脚本"><span class="nav-number">5.1.</span> <span class="nav-text">链接脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#链接脚本举例"><span class="nav-number">5.2.</span> <span class="nav-text">链接脚本举例</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

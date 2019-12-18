@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="SSD是一种单阶段的检测器，Faster-RCNN等双阶段的检测器需要首先通过RPN网络生成Proposals，然后利用卷积网络判断Proposals中是否存在物体。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSD检测算法详解">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;12&#x2F;ssd-detection-review&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="SSD是一种单阶段的检测器，Faster-RCNN等双阶段的检测器需要首先通过RPN网络生成Proposals，然后利用卷积网络判断Proposals中是否存在物体。">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;feqoRi5.jpg">
+<meta property="article:published_time" content="2019-12-12T03:11:37.000Z">
+<meta property="article:modified_time" content="2019-12-18T06:59:01.807Z">
+<meta property="article:author" content="Gummary">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;feqoRi5.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/12/12/ssd-detection-review/"/>
+
+
+
+
+
+  <title>SSD检测算法详解 | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/12/ssd-detection-review/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SSD检测算法详解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-12T11:11:37+08:00">
+                2019-12-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>SSD是一种单阶段的检测器，Faster-RCNN等双阶段的检测器需要首先通过RPN<br>网络生成Proposals，然后利用卷积网络判断Proposals中是否存在物体。</p>
+<a id="more"></a>
+
+<h1 id="SSD-检测框预测"><a href="#SSD-检测框预测" class="headerlink" title="SSD 检测框预测"></a>SSD 检测框预测</h1><p>与其他网络使用全连接层生成坐标不同，SSD使用卷积层生成相对默认于默认的box坐标的偏移或类别置信度。对于大小为$c\times m\times n$的特征图，使用的卷积核为$c\times3\times3$.</p>
+<p>对于每个不同尺度的特征图中的格子（cell），都有一集默认的bounding box用于检测。对于每个位置，卷积和预测距离默认框的offset和每个框内包含每个类的置信度。假设由k个默认框，每个位置需要输出4个offset和一个置信度，因此每个位置共有$(c+4)k$个输出；对于一个$m\times n$的特征图，最终的输出$(c+4)kmn$个值。这里是应用了Faster-RCNN中的anchor思想。</p>
+<p>在SSD中，一个bounding box用框的中心和长宽来表示。假设默认框为$d = (d^{cx}, d^{cy}, d^h, d^w)$,真实的位置为$g = (g^{cx}, g^{cy}, g^h, g^w)$,则网络的预测的偏置其实是要尽可能的为：</p>
+<p>$$<br>\begin{aligned}<br>    \hat{g}^{cx} = \frac{g^{cx} - d^{cx}}{d^w}, \quad \hat{g}^{cy} = \frac{g^{cy} - d^{cy}}{d^h} \<br>    \hat{g}^w = \text{log}(\frac{g^w}{d^w}),\quad \hat{g}^h = \text{log}(\frac{g^h}{d^h})<br>\end{aligned}<br>$$</p>
+<p>在推理过程中，利用上述公式将g反解即可。</p>
+<h1 id="SSD网络结构"><a href="#SSD网络结构" class="headerlink" title="SSD网络结构"></a>SSD网络结构</h1><p>SSD网络模型首先根据一个base network提取特征，然后在这个特征图上应用卷积网络减小特征图的大小，以此得到不同尺度的特征图，在这些不同尺度的特征图上检测物体。SSD的网络结构图如下图所示。</p>
+<p><img src="https://i.imgur.com/feqoRi5.jpg" alt=""></p>
+<p>从网络结构图中可以得到，SSD共在6个特征图上进行检测，分别为$(38,38),(19,19),(10,10),(5,5),(3,3),(1,1)$</p>
+<h1 id="SSD-训练过程"><a href="#SSD-训练过程" class="headerlink" title="SSD 训练过程"></a>SSD 训练过程</h1><h2 id="先验框匹配"><a href="#先验框匹配" class="headerlink" title="先验框匹配"></a>先验框匹配</h2><p>在训练的过程中，需要将GroundTruth框与默认的框进行匹配，作为默认框的target。首先将选出与Ground Truth bbox的IOU最大的默认框，然后再选出与Ground Truth bbox的IOU&gt;0.5的框，将这两种框作为正例。</p>
+<h2 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h2><p>最终的损失函数为:</p>
+<p>$$<br>L(x,c,l,g) = \frac{1}{N}(L_{conf}(x,c) + \alpha L_{loc}(x,l,g))<br>$$</p>
+<p>与Faster-RCNN类似，分为置信度误差$L_{conf}$和位置误差$L_{loc}$。其中N为默认框中正样本的数量；$x_{ij}^p={0,1}$表示第i个默认框与第j个Ground Truth框相匹配且类别为p时为1，否则为0；c为类别信息；l，g为预测的偏移和真实偏移。</p>
+<p>$$<br>L_{loc}(x,l,g) = \sum_{i\in \text{Pos}}^N\sum_{m\in{cx, cy, cw, ch}}x_{ij}^k\text{smooth}_{L1}(l_i^m - \hat{g}_j^m)<br>$$</p>
+<p>$$<br>\text{smooth}_{L1}(x) =<br>  \begin{cases}<br>    0.5x^2       &amp; \quad \text{if } |x| &lt; 1,\<br>    |x|-0.5  &amp; \quad \text{otherwise}<br>  \end{cases}<br>$$</p>
+<p>$$<br>L_{\text{conf}}(x,c) = -\sum_{i\in Pos}^N x_{ij}^plog(\hat{c}<em>i^p) - \sum</em>{i\in Neg} log(\hat{c}_i^0) \quad \text{where} \quad \hat{c}_i^p = \frac{\text{exp}(c_i^p)}{\sum_p\text{exp}(c_i^p)}<br>$$</p>
+<h2 id="先验框的尺度与长宽比"><a href="#先验框的尺度与长宽比" class="headerlink" title="先验框的尺度与长宽比"></a>先验框的尺度与长宽比</h2><p>深度神经网络中不同深度的特征图的每个特征具有不同大小的感受野，SSD利用这个特点令网络不同深度的特征检测不同大小的物体。因此，SSD中将先验框的尺度设置为随特征分辨率的递减而递增，公式为：</p>
+<p>$$<br>s_k = s_{\text{min}} + \frac{s_{\text{max}} - s_{\text{min}}}{m-1}(k-1), k\in[1,m]<br>$$</p>
+<p>其中$s_{\text{min}} = 0.2,s_{\text{max}}=0.9$。</p>
+<p>同时为了检测不同规则的物体，SSD为每个尺度的检测狂框设置了不同大小的长宽比$a_r\in {1, 2, 3, \frac{1}{2}, \frac{1}{3}}$,则每个先验框的长和宽的计算公式为：</p>
+<p>$$<br>w_k^a = s_k\sqrt{a_r},\quad h_k^a = \frac{s_k}{\sqrt{a_r}}<br>$$</p>
+<p>对于长宽比为1的情况，额外添加一个尺度为$s_k’ = \sqrt{s_ks_{k+1}}$d的检测框。因此不同的尺度下共有6个先验框。</p>
+<p>在训练过程中，SSD在6个特征图上预测检测框</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># conv4_3 ==&gt; 38 x 38</span></span><br><span class="line"><span class="comment"># fc7 ==&gt; 19 x 19</span></span><br><span class="line"><span class="comment"># conv6_2 ==&gt; 10 x 10</span></span><br><span class="line"><span class="comment"># conv7_2 ==&gt; 5 x 5</span></span><br><span class="line"><span class="comment"># conv8_2 ==&gt; 3 x 3</span></span><br><span class="line"><span class="comment"># conv9_2 ==&gt; 1 x 1</span></span><br><span class="line">mbox_source_layers = [<span class="string">'conv4_3'</span>, <span class="string">'fc7'</span>, <span class="string">'conv6_2'</span>, <span class="string">'conv7_2'</span>, <span class="string">'conv8_2'</span>, <span class="string">'conv9_2'</span>]</span><br></pre></td></tr></table></figure>
+
+<p>对于<code>conv4_3</code>，将其尺度设置为0.1,其他按照尺度计算公式计算,代码中以%的形式计算。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># in percent %</span></span><br><span class="line">min_ratio = <span class="number">20</span></span><br><span class="line">max_ratio = <span class="number">90</span></span><br><span class="line">step = int(math.floor((max_ratio - min_ratio) / (len(mbox_source_layers) - <span class="number">2</span>)))</span><br><span class="line">min_sizes = []</span><br><span class="line">max_sizes = []</span><br><span class="line"><span class="keyword">for</span> ratio <span class="keyword">in</span> xrange(min_ratio, max_ratio + <span class="number">1</span>, step):</span><br><span class="line">  min_sizes.append(min_dim * ratio / <span class="number">100.</span>)</span><br><span class="line">  max_sizes.append(min_dim * (ratio + step) / <span class="number">100.</span>)</span><br><span class="line">min_sizes = [min_dim * <span class="number">10</span> / <span class="number">100.</span>] + min_sizes</span><br><span class="line">max_sizes = [min_dim * <span class="number">20</span> / <span class="number">100.</span>] + max_sizes</span><br></pre></td></tr></table></figure>
+
+<p>对于<code>conv4_3</code>,<code>conv8_2</code>,<code>conv9_2</code>,不适用长宽比为$\frac{1}{3},3$的先验框，因此全部先验框的数量为</p>
+<p>$$<br>38\times38\times4 + 19\times19\times6+10\times10\times6+5\times5\times6 + 3\times3\times4+1\times1\times4=8732<br>$$</p>
+<p>SSD在每个位置处利用两个$3\times3$卷积生成4个点的坐标和c个类别的置信度，假设共有$n_k$个先验框，则卷积核的大小为分别为$3\times3\times 4n_k$和$3\times3\times c_k$</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/11/static-link/" rel="next" title="静态链接">
+                <i class="fa fa-chevron-left"></i> 静态链接
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/12/17/faster-rcnn-review/" rel="prev" title="Faster-RCNN 算法详解">
+                Faster-RCNN 算法详解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SSD-检测框预测"><span class="nav-number">1.</span> <span class="nav-text">SSD 检测框预测</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SSD网络结构"><span class="nav-number">2.</span> <span class="nav-text">SSD网络结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SSD-训练过程"><span class="nav-number">3.</span> <span class="nav-text">SSD 训练过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#先验框匹配"><span class="nav-number">3.1.</span> <span class="nav-text">先验框匹配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#损失函数"><span class="nav-number">3.2.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#先验框的尺度与长宽比"><span class="nav-number">3.3.</span> <span class="nav-text">先验框的尺度与长宽比</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
