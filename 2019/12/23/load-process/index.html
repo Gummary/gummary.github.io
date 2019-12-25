@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="问题描述现有一个一组特征，记作$F_{k\times n}$, 现求该组向量中每个特征与其他特征的关系，记结果矩阵为$M_{k\times k\times 2\times n}$">
+<meta name="description" content="进程虚拟空间32位操作系统的虚拟空间大小为$2^{32}$B,也即4GB；64位操作系统为$2^{64}$B。在32为Linux操作系统中，虚拟空间的分配是一部分用于操作系统(0xC0000000-0xFFFFFFFF),剩余部分供进程使用 装载进程程序只有从硬盘上被装载到内存中才可被CPU执行，从硬盘上读取可执行文件并装载到内存中的过程即为装载进程。通过高效的装载进程算法可以只装载部分可执行文件">
 <meta property="og:type" content="article">
-<meta property="og:title" content="计算特征间关系">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;12&#x2F;vector-correlation&#x2F;index.html">
+<meta property="og:title" content="可执行文件装载与进程">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;23&#x2F;load-process&#x2F;index.html">
 <meta property="og:site_name" content="炼丹炉">
-<meta property="og:description" content="问题描述现有一个一组特征，记作$F_{k\times n}$, 现求该组向量中每个特征与其他特征的关系，记结果矩阵为$M_{k\times k\times 2\times n}$">
-<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;WKdNPUO.jpg">
-<meta property="article:published_time" content="2019-10-12T07:57:37.000Z">
-<meta property="article:modified_time" content="2019-12-17T15:41:17.755Z">
+<meta property="og:description" content="进程虚拟空间32位操作系统的虚拟空间大小为$2^{32}$B,也即4GB；64位操作系统为$2^{64}$B。在32为Linux操作系统中，虚拟空间的分配是一部分用于操作系统(0xC0000000-0xFFFFFFFF),剩余部分供进程使用 装载进程程序只有从硬盘上被装载到内存中才可被CPU执行，从硬盘上读取可执行文件并装载到内存中的过程即为装载进程。通过高效的装载进程算法可以只装载部分可执行文件">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;xq8Xmy0.png">
+<meta property="article:published_time" content="2019-12-23T10:54:26.000Z">
+<meta property="article:modified_time" content="2019-12-24T14:47:54.881Z">
 <meta property="article:author" content="Gummary">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;WKdNPUO.jpg">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;xq8Xmy0.png">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/10/12/vector-correlation/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/12/23/load-process/"/>
 
 
 
 
 
-  <title>计算特征间关系 | 炼丹炉</title>
+  <title>可执行文件装载与进程 | 炼丹炉</title>
   
 
 
@@ -243,7 +243,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/12/vector-correlation/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/23/load-process/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Gummary">
@@ -260,7 +260,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">计算特征间关系</h1>
+          <h1 class="post-title" itemprop="name headline">可执行文件装载与进程</h1>
         
 
         <div class="post-meta">
@@ -272,8 +272,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-12T15:57:37+08:00">
-                2019-10-12
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-23T18:54:26+08:00">
+                2019-12-23
               </time>
             
 
@@ -310,14 +310,23 @@
       
 
       
-        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>现有一个一组特征，记作$F_{k\times n}$, 现求该组向量中每个特征与其他特征的关系，记结果矩阵为$M_{k\times k\times 2\times n}$</p>
-<a id="more"></a>
-
-
-<h2 id="Pytorch-描述"><a href="#Pytorch-描述" class="headerlink" title="Pytorch 描述"></a>Pytorch 描述</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">k = <span class="number">3</span></span><br><span class="line">n = <span class="number">2</span></span><br><span class="line">F = torch.randint(<span class="number">100</span>, size=(k, n))</span><br><span class="line">F1 = torch.cat([F]*k, dim=<span class="number">1</span>)</span><br><span class="line">F1 = F1.view((k*k, n))</span><br><span class="line">F2 = torch.cat([F]*k, dim=<span class="number">0</span>)</span><br><span class="line">F2 = F1.view((k*k, n))</span><br><span class="line">M = torch.cat([F1, F2], dim=<span class="number">1</span>)</span><br><span class="line">M = M.view(k, k, <span class="number">2</span>, n)</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://i.imgur.com/WKdNPUO.jpg" alt=""></p>
-
+        <h1 id="进程虚拟空间"><a href="#进程虚拟空间" class="headerlink" title="进程虚拟空间"></a>进程虚拟空间</h1><p>32位操作系统的虚拟空间大小为$2^{32}$B,也即4GB；64位操作系统为$2^{64}$B。在32为Linux操作系统中，虚拟空间的分配是一部分用于操作系统(0xC0000000-0xFFFFFFFF),剩余部分供进程使用</p>
+<h1 id="装载进程"><a href="#装载进程" class="headerlink" title="装载进程"></a>装载进程</h1><p>程序只有从硬盘上被装载到内存中才可被CPU执行，从硬盘上读取可执行文件并装载到内存中的过程即为装载进程。通过高效的装载进程算法可以只装载部分可执行文件，节约内存空间。装载进程得方式包括覆盖装入和页映射，这里主要讨论页映射。</p>
+<p>操作系统将内存和硬盘的空间以页为单位进行划分，从硬盘中读取和向内存中写入都是以页为单位。Intel IA32处理器一般采用4096字节作为页的大小。操作系统从硬盘上读取可执行文件后，将必要的段读入内存中，当程序执行至内存不够时，将换出一部分页存到硬盘上，再读入新需要的页。</p>
+<h1 id="进程建立"><a href="#进程建立" class="headerlink" title="进程建立"></a>进程建立</h1><p>一个进程的建立主要包括三个步骤：</p>
+<ol>
+<li>创建虚拟地址空间</li>
+<li>读取文件头，建立虚拟地址空间与执行文件中各个段之间的关系</li>
+<li>将CPU的指令寄存器设置为可执行文件的入口</li>
+</ol>
+<p><strong>创建虚拟地址空间</strong>其实是创建一个映射函数所需要的数据结构，在32为linux下该步骤是分配了一个页目录。至于建立映射函数，实际上是在需要将程序载入内存时完成的。</p>
+<p><strong>读取文件头并建立虚拟地址空间与执行文件中各个段之间的关系</strong>是建立虚拟地址空间与可执行文件之间的映射关系。这是为了帮助操作系统在需要从硬盘中读取所需要的页时找到正确的位置。</p>
+<p>操作系统是通过一种数据结构实现这种映射关系的，在Linux下称作VMA(virtual memory address)。一个进程的虚拟地址空间被分成若干个VMA，每个VMA是一段连续的内存且拥有相同的权限，每个VMA对应可执行文件中的一个段，因此一个VMA可能由多个页表组成。</p>
+<p><strong>将CPU的指令寄存器设置为可执行文件的入口</strong>是将CPU的指令控制器转交给进程，设置为进程的入口地址，也即ELF文件头中的入口地址。</p>
+<p>在某些情况下，可执行文件有的Section很小，不足以填满一页，因此在装载的过程中，又将相同权限的Section合并成Segment。在内存中，一个VMA对应一个Segment。关于Section，Segment和VMA的具体关系可查看<a href="https://web.archive.org/web/20171129031316/http://nairobi-embedded.org/040_elf_sec_seg_vma_mappings.html" target="_blank" rel="noopener">ELF Sections &amp; Segments and Linux VMA Mappings</a></p>
+<p>操作系统除了利用VMA管理虚拟地址空间和目标文件之间的映射外，还通过VMA管理虚拟地址空间，例如进程中的堆和栈也被当作一个VMA进行管理。</p>
+<p><img src="https://i.imgur.com/xq8Xmy0.png" alt=""></p>
+<h1 id="Linux-加载ELF文件"><a href="#Linux-加载ELF文件" class="headerlink" title="Linux 加载ELF文件"></a>Linux 加载ELF文件</h1>
       
     </div>
     
@@ -341,8 +350,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/10/08/FLOPs-in-neural-networks/" rel="next" title="神经网络中FLOPs与params">
-                <i class="fa fa-chevron-left"></i> 神经网络中FLOPs与params
+              <a href="/2019/12/23/rotation-detection/" rel="next" title="SSD与FasterRCNN检测旋转框技术">
+                <i class="fa fa-chevron-left"></i> SSD与FasterRCNN检测旋转框技术
               </a>
             
           </div>
@@ -350,10 +359,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/12/11/calculate-iou-in-python/" rel="prev" title="用python计算IOU">
-                用python计算IOU <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -467,7 +472,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pytorch-描述"><span class="nav-number">2.</span> <span class="nav-text">Pytorch 描述</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#进程虚拟空间"><span class="nav-number">1.</span> <span class="nav-text">进程虚拟空间</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#装载进程"><span class="nav-number">2.</span> <span class="nav-text">装载进程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程建立"><span class="nav-number">3.</span> <span class="nav-text">进程建立</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux-加载ELF文件"><span class="nav-number">4.</span> <span class="nav-text">Linux 加载ELF文件</span></a></li></ol></div>
             
 
           </div>
@@ -667,26 +672,6 @@
   
 
   
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="//cdn.staticfile.org/MathJax/MathJax-2.6-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
   
 
 

@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引言对于遥感检测、文字检测等领域，通用的正框检测器已无法满足对舰船文字等密集倾斜物体检测，本文将介绍三种基于通用框架的旋转框检测方法，分别是基于SSD的DRBox、基于FasterRCNN的R2CNN、基于R2CNN的SCRDET">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSD与FasterRCNN检测旋转框技术">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;23&#x2F;rotation-detection&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="引言对于遥感检测、文字检测等领域，通用的正框检测器已无法满足对舰船文字等密集倾斜物体检测，本文将介绍三种基于通用框架的旋转框检测方法，分别是基于SSD的DRBox、基于FasterRCNN的R2CNN、基于R2CNN的SCRDET">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;nqfxjdK.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;QhkuEjJ.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;PnQulEV.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;hXkgVwJ.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;yXTEgrA.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;fXLAkCF.png">
+<meta property="article:published_time" content="2019-12-23T02:19:29.000Z">
+<meta property="article:modified_time" content="2019-12-25T04:18:08.078Z">
+<meta property="article:author" content="Gummary">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;nqfxjdK.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/12/23/rotation-detection/"/>
+
+
+
+
+
+  <title>SSD与FasterRCNN检测旋转框技术 | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/23/rotation-detection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SSD与FasterRCNN检测旋转框技术</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-23T10:19:29+08:00">
+                2019-12-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>对于遥感检测、文字检测等领域，通用的正框检测器已无法满足对舰船文字等密集倾斜物体检测，本文将介绍三种基于通用框架的旋转框检测方法，分别是基于SSD的DRBox、基于FasterRCNN的R2CNN、基于R2CNN的SCRDET</p>
+<a id="more"></a>
+
+<h1 id="DRbox"><a href="#DRbox" class="headerlink" title="DRbox"></a>DRbox</h1><h2 id="旋转框定义"><a href="#旋转框定义" class="headerlink" title="旋转框定义"></a>旋转框定义</h2><p>在训练过程中，首先需要判断的是生成的Proposal是正样本还是负样本，判断的依据是根据先验框与GroundTruth的IOU大小。对于旋转框来说，由于存在角度信息，因此需要使用angle-related IoU(ArIOU).</p>
+<p>$$<br>\begin{aligned}<br>    \text{IOU} = \frac{A\cap B}{A\cup B} \<br>    \text{ArIOU} = \frac{\hat{A}\cap B}{\hat{A}\cup B}\text{cos}(\theta_A-\theta_B) \<br>    \text{ArIOU}_{180} = \frac{\hat{A}\cap B}{\hat{A}\cup B}|\text{cos}(\theta_A-\theta_B)|<br>\end{aligned}<br>$$</p>
+<p>其中框$\hat{A}$与A的位置相同，与B的角度相同。$\text{ArIOU}_{180}$忽略了两个框的头尾关系。</p>
+<h2 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h2><p>DRBox采用SSD模型，在SSD模型的基础上，每个位置处除了使用不同长宽比的正框之外，还利用了不同的角度的旋转框，其中不同旋转框之间的角度差是固定的。</p>
+<p><img src="https://i.imgur.com/nqfxjdK.jpg" alt=""></p>
+<h2 id="模型训练"><a href="#模型训练" class="headerlink" title="模型训练"></a>模型训练</h2><p>在训练过程中，DRBox认定$\text{ArIOU}&gt;0.5$的先验框为正框，用于计算位置和角度的损失函数。DRBox的损失函数与SSD类似，只在位置回归的loss函数中添加了角度的信息。</p>
+<p>$$<br>\begin{aligned}<br>    L(x,c,l,g) &amp;= \frac{1}{N}(L_{conf}(x,c) + \alpha L_{\text{rloc}}(x,l,g))\<br>    L_{\text{rloc}}(x,l,g) &amp;= \sum_{i\in \text{Pos}}^N\sum_{m\in{cx, cy, w, h, a}}x_{ij}^k\text{smooth}_{L1}(l_i^m - \hat{g}_j^m)<br>\end{aligned}<br>$$</p>
+<p>$$<br>\begin{aligned}<br>    \hat{t}^{cx} = \frac{t^{cx} - p^{cx}}{p^w},&amp; \quad \hat{t}^{cy} = \frac{t^{cy} - p^{cy}}{p^h} \<br>    \hat{t}^w = \text{log}(\frac{t^w}{p^w}),&amp;\quad \hat{t}^h = \text{log}(\frac{t^h}{p^h}) \<br>    \hat{t}^a = \text{tan}(t^a - p^a)<br>\end{aligned}<br>$$</p>
+<p>其中t为l和g，分别为预测框和GroundTruth，p为生成的先验框。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>DRBox的思想非常简单，在原始的SSD上加了对角度的回归，而且先验框中的角度是固定的，如果要检测不同的物体需要更多的长宽比，因此需要更多的先验框，因此对于不同的物体作者分了三个网络进行训练，这是该模型改进的一个思路，将多种物体的检测融合到同一个模型中。</p>
+<h1 id="R2CNN"><a href="#R2CNN" class="headerlink" title="R2CNN"></a>R2CNN</h1><p>R2CNN是用于检测图片中任意角度的文字检测模型。该模型以FasterRCNN为基础，首先利用RPN生成正框，在正框中做Pooling得到特征，利用该特征回归得到旋转框。</p>
+<h2 id="旋转框定义-1"><a href="#旋转框定义-1" class="headerlink" title="旋转框定义"></a>旋转框定义</h2><p><img src="https://i.imgur.com/QhkuEjJ.jpg" alt=""></p>
+<p>标注数据为由四个点定义的任意四边形，R2CNN预测的是第一个和第二个点的坐标及高度，第一个和第二个点的定义为左上角及其顺时针方向上的点。</p>
+<h2 id="网络结构-1"><a href="#网络结构-1" class="headerlink" title="网络结构"></a>网络结构</h2><p><img src="https://i.imgur.com/PnQulEV.jpg" alt=""></p>
+<p>R2CNN首先利用RPN生成正框Proposals，然后使用不同大小的Pooling层生成特征，将生成的特征concatenate之后进行回归和分类，得到最终的正框、类别和斜框。</p>
+<p>对斜框采用的NMS是Skew Non-Maximum Suppression,由<a href="https://arxiv.org/abs/1703.01086" target="_blank" rel="noopener">RRPN</a>提出。正框的NMS只考虑了IOU信息，但两个斜框之间可能由于很小的角度偏差导致IOU很低，但应该被视作正例。例如一个长宽比为1:8的anchor，若角度偏差为$\frac{\pi}{12}$，其IOU为0.31但这个框应该被视为正例。因此作者提出的SkewNMS包含两个步骤：</p>
+<ol>
+<li>保留所有IOU大于0.7的目标</li>
+<li>对于IOU在$[0.3,0.7]$中间的proposal，保留与ground truth之间角度差最小的框。</li>
+</ol>
+<h2 id="模型训练-1"><a href="#模型训练-1" class="headerlink" title="模型训练"></a>模型训练</h2><p>模型的训练过程与FasterRCNN类似，唯一的不同在于损失函数多了斜框的loss。</p>
+<p>$$<br>L(p,t,v,v^<em>, u, u^</em>) = L_{cls}(p, t) + \lambda_1t\sum_{i\in x,y,w,h}L_{reg}(v_i, v^<em><em>i) + \lambda_2 t\sum</em>{i\in x1,y1,x2,y2,h}L_{reg}(u_i, u^</em>_i)<br>$$</p>
+<p>其中p为预测的类别概率，t为类别Ground Truth。第二项为对正框的回归损失函数，第三项为对斜框的回归损失函数。$L_{reg}$为smooth L1损失函数。</p>
+<p>$$<br>\text{smooth}_{L1}(x) =<br>\begin{cases}<br>    0.5 x^2 \quad if |x| &lt; 1 \<br>    |x| - 0.5 \quad otherwise<br>\end{cases}<br>$$</p>
+<h1 id="SCRDet"><a href="#SCRDet" class="headerlink" title="SCRDet"></a>SCRDet</h1><h2 id="旋转框定义-2"><a href="#旋转框定义-2" class="headerlink" title="旋转框定义"></a>旋转框定义</h2><p>使用5个参数表示一个旋转框$(x,y,w,h,\theta)$,分别为中心点坐标，宽高和角度。$\theta$为与x轴方向为锐角的角，则另一个边定义为w。对x,y,w,h的预测与FasterRCNN相同，对$\theta$的预测是回归插值:</p>
+<p>$$<br>t_\theta = \theta - \theta_a<br>$$</p>
+<h2 id="模型结构"><a href="#模型结构" class="headerlink" title="模型结构"></a>模型结构</h2><p><img src="https://i.imgur.com/hXkgVwJ.png" alt=""></p>
+<p>为了提高对小目标的检测精度，作者对骨干网络的最后两层使用了Inception模块并进行了特征融合，然后使用Attention增强网络的学习能力，这里不详细展开，重点看一下Rotation branch的实现。</p>
+<p>Rotation branch的实现与R2CNN类似，先由RPN生成正框Proposal，然后使用全连接层实现对旋转框5个坐标的预测。在RPN网络中也使用了skew IOU，并在后处理使用RNMS。由于图片中不同类别物体的大小不同，因此为不同类别的物体设置不同的NMS threshold。</p>
+<p>网络对中心点坐标和</p>
+<h2 id="模型训练-2"><a href="#模型训练-2" class="headerlink" title="模型训练"></a>模型训练</h2><p>SCRDet的损失函数为：</p>
+<p>$$<br>L = \frac{\lambda_1}{N}\sum_i^Nt_n’\sum_{j \in {x,y,w,h,\theta}}\frac{L_{reg}(v_{nj}’,v_{nj})}{|L_{reg}(v_{nj}’,v_{nj})|}|-\text{log}(IOU)| +\frac{\lambda_2}{M\times N}\sum_i^M\sum_j^NL_{att}’(u_{ij}, u_{ij})+ \frac{\lambda_3}{N}\sum_i^NL_{cls}(p_n, t_n)<br>$$</p>
+<p>第一项为回归损失函数，可以看出这里只对旋转框计算损失函数。第二项为attention的损失函数，第三项为分类损失函数。</p>
+<p><img src="https://i.imgur.com/yXTEgrA.png" alt=""></p>
+<p>作者在使用Smooth L1对角度进行回归时发现，如果直接使用Smooth-L1进行回归，则由于角度的连续行会导致Loss很大，使得网络在旋转的过程中对边界进行放缩，如下图所示。</p>
+<p><img src="https://i.imgur.com/fXLAkCF.png" alt=""></p>
+<p>因此，作者添加了一个常数$\frac{|-\text{log}(IOU)|}{|L_{reg}(v_{nj}’,v_{nj})|}$,当角度偏差很小时，IOU接近于1，则$|-\text{log}(IOU)|\approx 0$,使loss不会特别大。则原来的回归损失函数可分为两部分，$\frac{L_{reg}(v_{nj}’,v_{nj})}{|L_{reg}(v_{nj}’,v_{nj})|}$决定loss的大小，$|-\text{log}(IOU)|$决定loss的方向</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a href="https://arxiv.org/abs/1703.01086" target="_blank" rel="noopener">Arbitrary-Oriented Scene Text Detection via Rotation Proposals</a></li>
+<li><a href="https://arxiv.org/abs/1706.09579" target="_blank" rel="noopener">R2CNN: Rotational Region CNN for Orientation Robust Scene Text Detection</a></li>
+<li><a href="https://arxiv.org/abs/1711.09405" target="_blank" rel="noopener">Learning a Rotation Invariant Detector with Rotatable Bounding Box</a></li>
+<li><a href="https://arxiv.org/abs/1811.07126" target="_blank" rel="noopener">SCRDet: Towards More Robust Detection for Small, Cluttered and Rotated Objects</a></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/17/faster-rcnn-review/" rel="next" title="Faster-RCNN 算法详解">
+                <i class="fa fa-chevron-left"></i> Faster-RCNN 算法详解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/12/23/load-process/" rel="prev" title="可执行文件装载与进程">
+                可执行文件装载与进程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DRbox"><span class="nav-number">2.</span> <span class="nav-text">DRbox</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#旋转框定义"><span class="nav-number">2.1.</span> <span class="nav-text">旋转框定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络结构"><span class="nav-number">2.2.</span> <span class="nav-text">网络结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型训练"><span class="nav-number">2.3.</span> <span class="nav-text">模型训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">2.4.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#R2CNN"><span class="nav-number">3.</span> <span class="nav-text">R2CNN</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#旋转框定义-1"><span class="nav-number">3.1.</span> <span class="nav-text">旋转框定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络结构-1"><span class="nav-number">3.2.</span> <span class="nav-text">网络结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型训练-1"><span class="nav-number">3.3.</span> <span class="nav-text">模型训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SCRDet"><span class="nav-number">4.</span> <span class="nav-text">SCRDet</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#旋转框定义-2"><span class="nav-number">4.1.</span> <span class="nav-text">旋转框定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型结构"><span class="nav-number">4.2.</span> <span class="nav-text">模型结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型训练-2"><span class="nav-number">4.3.</span> <span class="nav-text">模型训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.staticfile.org/MathJax/MathJax-2.6-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
