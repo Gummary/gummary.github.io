@@ -177,7 +177,7 @@
       
         
         <li class="menu-item menu-item-home">
-          <a href="/%20" rel="section">
+          <a href="/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
@@ -187,7 +187,7 @@
       
         
         <li class="menu-item menu-item-about">
-          <a href="/about%20" rel="section">
+          <a href="/about/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
@@ -197,7 +197,7 @@
       
         
         <li class="menu-item menu-item-archives">
-          <a href="/archives%20" rel="section">
+          <a href="/archives/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
@@ -308,28 +308,15 @@
 
       
         
-          
-            <h1 id="进程虚拟空间">进程虚拟空间</h1>
+          <h1 id="进程虚拟空间">进程虚拟空间</h1>
 <p>32位操作系统的虚拟空间大小为<span class="math inline">\(2^{32}\)</span>B,也即4GB；64位操作系统为<span class="math inline">\(2^{64}\)</span>B。在32为Linux操作系统中，虚拟空间的分配是一部分用于操作系统(0xC0000000-0xFFFFFFFF),剩余部分供进程使用</p>
-<h1 id="装载进程">装载进程</h1>
-<p>程序只有从硬盘上被装载到内存中才可被CPU执行，从硬盘上读取可执行文件并装载到内存中的过程即为装载进程。通过高效的装载进程算法可以只装载部分可执行文件，节约内存空间。装载进程得方式包括覆盖装入和页映射，这里主要讨论页映射。</p>
-<p>操作系统将内存和硬盘的空间以页为单位进行划分，从硬盘中读取和向内存中写入都是以页为单位。Intel IA32处理器一般采用4096字节作为页的大小。操作系统从硬盘上读取可执行文件后，将必要的段读入内存中，当程序执行至内存不够时，将换出一部分页存到硬盘上，再读入新需要的页。</p>
-<h1 id="进程建立">进程建立</h1>
-<p>一个进程的建立主要包括三个步骤：</p>
-<ol type="1">
-<li>创建虚拟地址空间</li>
-<li>读取文件头，建立虚拟地址空间与执行文件中各个段之间的关系</li>
-<li>将CPU的指令寄存器设置为可执行文件的入口</li>
-</ol>
-<p><strong>创建虚拟地址空间</strong>其实是创建一个映射函数所需要的数据结构，在32为linux下该步骤是分配了一个页目录。至于建立映射函数，实际上是在需要将程序载入内存时完成的。</p>
-<p><strong>读取文件头并建立虚拟地址空间与执行文件中各个段之间的关系</strong>是建立虚拟地址空间与可执行文件之间的映射关系。这是为了帮助操作系统在需要从硬盘中读取所需要的页时找到正确的位置。</p>
-<p>操作系统是通过一种数据结构实现这种映射关系的，在Linux下称作VMA(virtual memory address)。一个进程的虚拟地址空间被分成若干个VMA，每个VMA是一段连续的内存且拥有相同的权限，每个VMA对应可执行文件中的一个段，因此一个VMA可能由多个页表组成。</p>
-<p><strong>将CPU的指令寄存器设置为可执行文件的入口</strong>是将CPU的指令控制器转交给进程，设置为进程的入口地址，也即ELF文件头中的入口地址。</p>
-<p>在某些情况下，可执行文件有的Section很小，不足以填满一页，因此在装载的过程中，又将相同权限的Section合并成Segment。在内存中，一个VMA对应一个Segment。关于Section，Segment和VMA的具体关系可查看<a href="https://web.archive.org/web/20171129031316/http://nairobi-embedded.org/040_elf_sec_seg_vma_mappings.html" target="_blank" rel="noopener">ELF Sections &amp; Segments and Linux VMA Mappings</a></p>
-<p>操作系统除了利用VMA管理虚拟地址空间和目标文件之间的映射外，还通过VMA管理虚拟地址空间，例如进程中的堆和栈也被当作一个VMA进行管理。</p>
-<p><img src="https://i.imgur.com/xq8Xmy0.png" /></p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/12/23/load-process/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1284,7 +1271,7 @@ IOU = \frac{A\cap B}{A\cup B}
             
               <div class="site-state-item site-state-posts">
               
-                <a href="/archives%20%7C%7C%20archive">
+                <a href="/archives/%7C%7Carchive">
               
                   <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">posts</span>

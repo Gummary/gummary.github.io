@@ -79,15 +79,15 @@
 
 
 
-<meta name="description" content="进程虚拟空间 32位操作系统的虚拟空间大小为\(2^{32}\)B,也即4GB；64位操作系统为\(2^{64}\)B。在32为Linux操作系统中，虚拟空间的分配是一部分用于操作系统(0xC0000000-0xFFFFFFFF),剩余部分供进程使用 装载进程 程序只有从硬盘上被装载到内存中才可被CPU执行，从硬盘上读取可执行文件并装载到内存中的过程即为装载进程。通过高效的装载进程算法可以只">
+<meta name="description" content="进程虚拟空间 32位操作系统的虚拟空间大小为\(2^{32}\)B,也即4GB；64位操作系统为\(2^{64}\)B。在32为Linux操作系统中，虚拟空间的分配是一部分用于操作系统(0xC0000000-0xFFFFFFFF),剩余部分供进程使用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="可执行文件装载与进程">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;23&#x2F;load-process&#x2F;index.html">
 <meta property="og:site_name" content="炼丹炉">
-<meta property="og:description" content="进程虚拟空间 32位操作系统的虚拟空间大小为\(2^{32}\)B,也即4GB；64位操作系统为\(2^{64}\)B。在32为Linux操作系统中，虚拟空间的分配是一部分用于操作系统(0xC0000000-0xFFFFFFFF),剩余部分供进程使用 装载进程 程序只有从硬盘上被装载到内存中才可被CPU执行，从硬盘上读取可执行文件并装载到内存中的过程即为装载进程。通过高效的装载进程算法可以只">
+<meta property="og:description" content="进程虚拟空间 32位操作系统的虚拟空间大小为\(2^{32}\)B,也即4GB；64位操作系统为\(2^{64}\)B。在32为Linux操作系统中，虚拟空间的分配是一部分用于操作系统(0xC0000000-0xFFFFFFFF),剩余部分供进程使用">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;xq8Xmy0.png">
 <meta property="article:published_time" content="2019-12-23T10:54:26.000Z">
-<meta property="article:modified_time" content="2019-12-25T08:04:55.377Z">
+<meta property="article:modified_time" content="2019-12-25T08:09:26.329Z">
 <meta property="article:author" content="Gummary">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;xq8Xmy0.png">
@@ -182,7 +182,7 @@
       
         
         <li class="menu-item menu-item-home">
-          <a href="/%20" rel="section">
+          <a href="/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
@@ -192,7 +192,7 @@
       
         
         <li class="menu-item menu-item-about">
-          <a href="/about%20" rel="section">
+          <a href="/about/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
@@ -202,7 +202,7 @@
       
         
         <li class="menu-item menu-item-archives">
-          <a href="/archives%20" rel="section">
+          <a href="/archives/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
@@ -312,6 +312,7 @@
       
         <h1 id="进程虚拟空间">进程虚拟空间</h1>
 <p>32位操作系统的虚拟空间大小为<span class="math inline">\(2^{32}\)</span>B,也即4GB；64位操作系统为<span class="math inline">\(2^{64}\)</span>B。在32为Linux操作系统中，虚拟空间的分配是一部分用于操作系统(0xC0000000-0xFFFFFFFF),剩余部分供进程使用</p>
+<a id="more"></a>
 <h1 id="装载进程">装载进程</h1>
 <p>程序只有从硬盘上被装载到内存中才可被CPU执行，从硬盘上读取可执行文件并装载到内存中的过程即为装载进程。通过高效的装载进程算法可以只装载部分可执行文件，节约内存空间。装载进程得方式包括覆盖装入和页映射，这里主要讨论页映射。</p>
 <p>操作系统将内存和硬盘的空间以页为单位进行划分，从硬盘中读取和向内存中写入都是以页为单位。Intel IA32处理器一般采用4096字节作为页的大小。操作系统从硬盘上读取可执行文件后，将必要的段读入内存中，当程序执行至内存不够时，将换出一部分页存到硬盘上，再读入新需要的页。</p>
@@ -436,7 +437,7 @@
             
               <div class="site-state-item site-state-posts">
               
-                <a href="/archives%20%7C%7C%20archive">
+                <a href="/archives/%7C%7Carchive">
               
                   <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">posts</span>
