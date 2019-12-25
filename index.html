@@ -309,11 +309,14 @@
       
         
           
-            <h1 id="进程虚拟空间"><a href="#进程虚拟空间" class="headerlink" title="进程虚拟空间"></a>进程虚拟空间</h1><p>32位操作系统的虚拟空间大小为$2^{32}$B,也即4GB；64位操作系统为$2^{64}$B。在32为Linux操作系统中，虚拟空间的分配是一部分用于操作系统(0xC0000000-0xFFFFFFFF),剩余部分供进程使用</p>
-<h1 id="装载进程"><a href="#装载进程" class="headerlink" title="装载进程"></a>装载进程</h1><p>程序只有从硬盘上被装载到内存中才可被CPU执行，从硬盘上读取可执行文件并装载到内存中的过程即为装载进程。通过高效的装载进程算法可以只装载部分可执行文件，节约内存空间。装载进程得方式包括覆盖装入和页映射，这里主要讨论页映射。</p>
+            <h1 id="进程虚拟空间">进程虚拟空间</h1>
+<p>32位操作系统的虚拟空间大小为<span class="math inline">\(2^{32}\)</span>B,也即4GB；64位操作系统为<span class="math inline">\(2^{64}\)</span>B。在32为Linux操作系统中，虚拟空间的分配是一部分用于操作系统(0xC0000000-0xFFFFFFFF),剩余部分供进程使用</p>
+<h1 id="装载进程">装载进程</h1>
+<p>程序只有从硬盘上被装载到内存中才可被CPU执行，从硬盘上读取可执行文件并装载到内存中的过程即为装载进程。通过高效的装载进程算法可以只装载部分可执行文件，节约内存空间。装载进程得方式包括覆盖装入和页映射，这里主要讨论页映射。</p>
 <p>操作系统将内存和硬盘的空间以页为单位进行划分，从硬盘中读取和向内存中写入都是以页为单位。Intel IA32处理器一般采用4096字节作为页的大小。操作系统从硬盘上读取可执行文件后，将必要的段读入内存中，当程序执行至内存不够时，将换出一部分页存到硬盘上，再读入新需要的页。</p>
-<h1 id="进程建立"><a href="#进程建立" class="headerlink" title="进程建立"></a>进程建立</h1><p>一个进程的建立主要包括三个步骤：</p>
-<ol>
+<h1 id="进程建立">进程建立</h1>
+<p>一个进程的建立主要包括三个步骤：</p>
+<ol type="1">
 <li>创建虚拟地址空间</li>
 <li>读取文件头，建立虚拟地址空间与执行文件中各个段之间的关系</li>
 <li>将CPU的指令寄存器设置为可执行文件的入口</li>
@@ -324,8 +327,9 @@
 <p><strong>将CPU的指令寄存器设置为可执行文件的入口</strong>是将CPU的指令控制器转交给进程，设置为进程的入口地址，也即ELF文件头中的入口地址。</p>
 <p>在某些情况下，可执行文件有的Section很小，不足以填满一页，因此在装载的过程中，又将相同权限的Section合并成Segment。在内存中，一个VMA对应一个Segment。关于Section，Segment和VMA的具体关系可查看<a href="https://web.archive.org/web/20171129031316/http://nairobi-embedded.org/040_elf_sec_seg_vma_mappings.html" target="_blank" rel="noopener">ELF Sections &amp; Segments and Linux VMA Mappings</a></p>
 <p>操作系统除了利用VMA管理虚拟地址空间和目标文件之间的映射外，还通过VMA管理虚拟地址空间，例如进程中的堆和栈也被当作一个VMA进行管理。</p>
-<p><img src="https://i.imgur.com/xq8Xmy0.png" alt=""></p>
-<h1 id="Linux-加载ELF文件"><a href="#Linux-加载ELF文件" class="headerlink" title="Linux 加载ELF文件"></a>Linux 加载ELF文件</h1>
+<p><img src="https://i.imgur.com/xq8Xmy0.png" /></p>
+<h1 id="linux-加载elf文件">Linux 加载ELF文件</h1>
+
           
         
       
@@ -443,7 +447,8 @@
 
       
         
-          <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>对于遥感检测、文字检测等领域，通用的正框检测器已无法满足对舰船文字等密集倾斜物体检测，本文将介绍三种基于通用框架的旋转框检测方法，分别是基于SSD的DRBox、基于FasterRCNN的R2CNN、基于R2CNN的SCRDET</p>
+          <h1 id="引言">引言</h1>
+<p>对于遥感检测、文字检测等领域，通用的正框检测器已无法满足对舰船文字等密集倾斜物体检测，本文将介绍三种基于通用框架的旋转框检测方法，分别是基于SSD的DRBox、基于FasterRCNN的R2CNN、基于R2CNN的SCRDET</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/12/23/rotation-detection/#more" rel="contents">
@@ -567,7 +572,8 @@
 
       
         
-          <h1 id="Faster-RCNN"><a href="#Faster-RCNN" class="headerlink" title="Faster-RCNN"></a>Faster-RCNN</h1><p>本文重点介绍FasterRCNN的RPN网络和HeadNet。</p>
+          <h1 id="faster-rcnn">Faster-RCNN</h1>
+<p>本文重点介绍FasterRCNN的RPN网络和HeadNet。</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/12/17/faster-rcnn-review/#more" rel="contents">
@@ -691,7 +697,7 @@
 
       
         
-          <p>SSD是一种单阶段的检测器，Faster-RCNN等双阶段的检测器需要首先通过RPN<br>网络生成Proposals，然后利用卷积网络判断Proposals中是否存在物体。</p>
+          <p>SSD是一种单阶段的检测器，Faster-RCNN等双阶段的检测器需要首先通过RPN 网络生成Proposals，然后利用卷积网络判断Proposals中是否存在物体。</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/12/12/ssd-detection-review/#more" rel="contents">
@@ -815,7 +821,8 @@
 
       
         
-          <h1 id="静态链接的过程"><a href="#静态链接的过程" class="headerlink" title="静态链接的过程"></a>静态链接的过程</h1><p>静态链接主要分为x个步骤，首先合并两个目标文件的段，然后为每个目标文件中的符号分配地址，根据分配好的地址进行重定位。下面将结合两个具体的源文件分析这个过程。</p>
+          <h1 id="静态链接的过程">静态链接的过程</h1>
+<p>静态链接主要分为x个步骤，首先合并两个目标文件的段，然后为每个目标文件中的符号分配地址，根据分配好的地址进行重定位。下面将结合两个具体的源文件分析这个过程。</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/12/11/static-link/#more" rel="contents">
@@ -940,7 +947,9 @@
       
         
           <p>IOU计算公式为</p>
-<p>$$<br>IOU = \frac{A\cap B}{A\cup B}<br>$$</p>
+<p><span class="math display">\[
+IOU = \frac{A\cap B}{A\cup B}
+\]</span></p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/12/11/calculate-iou-in-python/#more" rel="contents">
@@ -1064,7 +1073,8 @@
 
       
         
-          <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>现有一个一组特征，记作$F_{k\times n}$, 现求该组向量中每个特征与其他特征的关系，记结果矩阵为$M_{k\times k\times 2\times n}$</p>
+          <h2 id="问题描述">问题描述</h2>
+<p>现有一个一组特征，记作<span class="math inline">\(F_{k\times n}\)</span>, 现求该组向量中每个特征与其他特征的关系，记结果矩阵为<span class="math inline">\(M_{k\times k\times 2\times n}\)</span></p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/10/12/vector-correlation/#more" rel="contents">
@@ -1188,7 +1198,8 @@
 
       
         
-          <h1 id="计算量FLOPs"><a href="#计算量FLOPs" class="headerlink" title="计算量FLOPs"></a>计算量FLOPs</h1><p>FLOPs的全称为floating point operations，也即浮点操作的次数，可以用于衡量模型的复杂度。</p>
+          <h1 id="计算量flops">计算量FLOPs</h1>
+<p>FLOPs的全称为floating point operations，也即浮点操作的次数，可以用于衡量模型的复杂度。</p>
 <p><em>计算机领域还有一个FLOPS，全称为floating point operations per second，也即每秒浮点运算的次数。</em></p>
           <!--noindex-->
           <div class="post-button text-center">
