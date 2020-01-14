@@ -238,6 +238,164 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/14/hack-captcha/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/01/14/hack-captcha/" itemprop="url">hack-captcha</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-01-14T14:33:43+08:00">
+                2020-01-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="问题描述">问题描述</h1>
+<p>最近打羽毛球订场地比较困难，想写个爬虫自动订场，其中有一个需要填写验证码的地方，就想用DNN尝试破解一下。</p>
+<p>验证码的形式如下，为两位数的加减运算。</p>
+<p><img src="https://i.imgur.com/aQPK60M.png" /></p>
+<h1 id="字符识别">字符识别</h1>
+<p>实现字符识别的思路为将输入的图片切片，每个切片的位置代表一个字符。使用CNN在每个切片位置提取特征，然后将特征序列输入到RNN中得到每个位置处各个字符的概率。如下图所示</p>
+<p><img src="https://i.imgur.com/843l4cS.png" /></p>
+<p>其中CNN用于提取特征，RNN构建序列的信息，CTC为使用的字符分类器，用于计算loss或对输出序列进行解码。</p>
+<h1 id="数据集">数据集</h1>
+<p>查阅了一些资料发现，这个验证码是用了Google的一个验证码生成库,<a href="https://code.google.com/archive/p/kaptcha/" target="_blank" rel="noopener">kaptcha</a>生成的。于是用这个库生成了大约30000张训练集，10000张当作测试集.</p>
+<p>观察这个验证码结构可知：</p>
+<ul>
+<li>序列长度最大为2+1+2+2=7</li>
+<li>最后两个字符一定为&quot;=?&quot;</li>
+</ul>
+<h1 id="模型结构">模型结构</h1>
+<p>模型结构是先通过一个CNN网络提取特征得到一个特征序列，然后将该序列输入到RNN中，最后通过全连接层得到每个字符的类别。</p>
+<p>具体来说，经过CNN得到的特征图大小为<span class="math inline">\([B,C,w,h]\)</span>,使用全连接层将该特征图映射到预设的序列长度T，得到大小为<span class="math inline">\([B,C,T]\)</span>的特征序列。</p>
+<p>RNN使用的是两层双向LSTM，使用双向LSTM的目的是为了更好的利用特征的context。最后使用全连接层得到大小为<span class="math inline">\([T,B,N]\)</span>的特征，其中T为序列长度，B为BatchSize，N为字典的大小。</p>
+<h1 id="ctc-operation">CTC Operation</h1>
+<p>CTC主要用于解决输入的特征与GroundTruth序列对齐的问题。因为将图片切片之后可能一个字符对应多个切片，或者最终GT的大小不一致等等。</p>
+<p>CTC引入了空白字符的概念（不是空格），当CTC进行编码时，将对应同一个字符的不同切片都预测为同一个字符，在不同的字符之间插入空白字符；在解码过程中,删除相邻的相同字符和空白字符即为最终的结果。</p>
+<p>例如：</p>
+<ul>
+<li>“to”可以被编码为“tt-oo”，“t-o”等</li>
+<li>“too”可以被编码为“ttt-oo-o”或“t-o-o”等，但不能是“too”</li>
+</ul>
+<h2 id="loss-计算">Loss 计算</h2>
+<p>给定GT后，CTCLoss的计算方式是先枚举所有可能产生GT的序列，然后计算这些序列的概率，将概率相加，对这个概率取负对数得到最终的Loss函数。</p>
+<p>如下图所示，假设有字典中有3个字符，序列长度为2.</p>
+<p><img src="https://i.imgur.com/QUuXJwg.png" /></p>
+<p>假设GT为“a”，则所有可能产生序列“a”的编码为“aa”，“a-”和“-a”，概率分别为<span class="math inline">\(0.4\times0.4=0.16\)</span>,<span class="math inline">\(0.4\times0.6=0.24\)</span>,<span class="math inline">\(0.6\times0.4=0.24\)</span>,则“a”的概率为<span class="math inline">\(0.16+0.24+0.24=0.64\)</span></p>
+<h1 id="训练结果">训练结果</h1>
+<p><img src="https://i.imgur.com/GboA1AE.png" /></p>
+<h1 id="参考资料">参考资料</h1>
+<ol type="1">
+<li><a href="https://towardsdatascience.com/intuitively-understanding-connectionist-temporal-classification-3797e43a86c" target="_blank" rel="noopener">An Intuitive Explanation of Connectionist Temporal Classification</a></li>
+<li><a href="https://www.davex.pw/2017/09/07/How-To-Break-Captcha-II/" target="_blank" rel="noopener">DL 入门：破解 Captcha 验证码 II</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/23/load-process/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1273,7 +1431,7 @@ IOU = \frac{A\cap B}{A\cup B}
               
                 <a href="/archives/%7C%7Carchive">
               
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1314,7 +1472,7 @@ IOU = \frac{A\cap B}{A\cup B}
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
