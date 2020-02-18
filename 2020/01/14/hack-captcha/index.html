@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="问题描述 最近打羽毛球订场地比较困难，想写个爬虫自动订场，其中有一个需要填写验证码的地方，就想用DNN尝试破解一下。 验证码的形式如下，为两位数的加减运算。  字符识别 实现字符识别的思路为将输入的图片切片，每个切片的位置代表一个字符。使用CNN在每个切片位置提取特征，然后将特征序列输入到RNN中得到每个位置处各个字符的概率。如下图所示  其中CNN用于提取特征，RNN构建序列的信息">
+<meta name="description" content="问题描述 最近打羽毛球订场地比较困难，想写个爬虫自动订场，其中有一个需要填写验证码的地方，就想用DNN尝试破解一下。 验证码的形式如下，为两位数的加减运算。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="hack-captcha">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;14&#x2F;hack-captcha&#x2F;index.html">
 <meta property="og:site_name" content="炼丹炉">
-<meta property="og:description" content="问题描述 最近打羽毛球订场地比较困难，想写个爬虫自动订场，其中有一个需要填写验证码的地方，就想用DNN尝试破解一下。 验证码的形式如下，为两位数的加减运算。  字符识别 实现字符识别的思路为将输入的图片切片，每个切片的位置代表一个字符。使用CNN在每个切片位置提取特征，然后将特征序列输入到RNN中得到每个位置处各个字符的概率。如下图所示  其中CNN用于提取特征，RNN构建序列的信息">
+<meta property="og:description" content="问题描述 最近打羽毛球订场地比较困难，想写个爬虫自动订场，其中有一个需要填写验证码的地方，就想用DNN尝试破解一下。 验证码的形式如下，为两位数的加减运算。">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;aQPK60M.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;843l4cS.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;QUuXJwg.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;GboA1AE.png">
 <meta property="article:published_time" content="2020-01-14T06:33:43.000Z">
-<meta property="article:modified_time" content="2020-01-14T06:36:10.961Z">
+<meta property="article:modified_time" content="2020-01-14T06:37:11.791Z">
 <meta property="article:author" content="Gummary">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;aQPK60M.png">
@@ -317,6 +317,7 @@
 <p>最近打羽毛球订场地比较困难，想写个爬虫自动订场，其中有一个需要填写验证码的地方，就想用DNN尝试破解一下。</p>
 <p>验证码的形式如下，为两位数的加减运算。</p>
 <p><img src="https://i.imgur.com/aQPK60M.png" /></p>
+<a id="more"></a>
 <h1 id="字符识别">字符识别</h1>
 <p>实现字符识别的思路为将输入的图片切片，每个切片的位置代表一个字符。使用CNN在每个切片位置提取特征，然后将特征序列输入到RNN中得到每个位置处各个字符的概率。如下图所示</p>
 <p><img src="https://i.imgur.com/843l4cS.png" /></p>
