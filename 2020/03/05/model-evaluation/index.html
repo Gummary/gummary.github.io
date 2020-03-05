@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="概述 模型评估过程中，不同的问题需要不同的指标。每个指标只能片面的反应模型的某一部分性能，只看一个指标并不能有效的得到模型的真正性能，甚至得出错误的结论，因此选择合适的指标是验证模型的重要步骤。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="百面机器学习-模型评估">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;03&#x2F;05&#x2F;model-evaluation&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="概述 模型评估过程中，不同的问题需要不同的指标。每个指标只能片面的反应模型的某一部分性能，只看一个指标并不能有效的得到模型的真正性能，甚至得出错误的结论，因此选择合适的指标是验证模型的重要步骤。">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;Cun5Ypl.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;l7OmJQc.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;wEL0UJO.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;5TcbL92.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;Q5n48kB.jpg">
+<meta property="article:published_time" content="2020-03-05T11:06:55.000Z">
+<meta property="article:modified_time" content="2020-03-05T11:08:04.482Z">
+<meta property="article:author" content="Gummary">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;Cun5Ypl.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/03/05/model-evaluation/"/>
+
+
+
+
+
+  <title>百面机器学习-模型评估 | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/05/model-evaluation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">百面机器学习-模型评估</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-05T19:06:55+08:00">
+                2020-03-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="概述">概述</h1>
+<p>模型评估过程中，不同的问题需要不同的指标。每个指标只能片面的反应模型的某一部分性能，只看一个指标并不能有效的得到模型的真正性能，甚至得出错误的结论，因此选择合适的指标是验证模型的重要步骤。</p>
+<a id="more"></a>
+<h1 id="模型评估的基本概念">模型评估的基本概念</h1>
+<h2 id="二分类问题">二分类问题</h2>
+<p>假设类别为A和Not A，则TP,FP,FN,TN的定义为：</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>A</th>
+<th>Not A</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Predict A</td>
+<td>True positive</td>
+<td>False positive</td>
+</tr>
+<tr class="even">
+<td>Predict Not A</td>
+<td>False negative</td>
+<td>True negative</td>
+</tr>
+</tbody>
+</table>
+<p>则，对应的准确率和召回率为：</p>
+<p><span class="math display">\[
+\begin{aligned}
+    \text{Recall} &amp;= \frac{TP}{TP+FN} \\
+    \text{Prescision} &amp;= \frac{TP}{TP+FP}
+\end{aligned}
+\]</span></p>
+<p>也即召回率是在真实的样本中采样计算，而准确率是在模型预测得到的样本中采样计算。二者是一个矛盾的概念，当模型的准确率上升时，FP降低了但是相对的FN上升了，也即模型为了将更有把握的样本预测正确但是却漏掉了一些正例样本。</p>
+<p>为了准确判断模型性能，通常绘制PR曲线来评判模型。PR曲线是在不同的阈值下计算准确率和召回率得到的。</p>
+<p>例如有六个物体，正例负例的个数均为三个，根据模型预测的score按从大到小排序为：</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Class</th>
+<th>Score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>T</td>
+<td>0.9</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>T</td>
+<td>0.8</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>N</td>
+<td>0.6</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>T</td>
+<td>0.4</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>N</td>
+<td>0.3</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>N</td>
+<td>0.1</td>
+</tr>
+</tbody>
+</table>
+<p><span class="math display">\[
+\begin{aligned}
+    \text{Thresh}&amp;=0.9\quad \text{Prescision} = \frac{1}{1} = 1\quad \text{Recall} = \frac{1}{3}=0.33 \\
+    \text{Thresh}&amp;=0.8\quad \text{Prescision} = \frac{2}{2} = 1\quad \text{Recall} = \frac{2}{3}=0.67 \\
+    \text{Thresh}&amp;=0.6\quad \text{Prescision} = \frac{2}{3} = 0.67\quad \text{Recall} = \frac{2}{3}=0.67 \\
+    \text{Thresh}&amp;=0.4\quad \text{Prescision} = \frac{3}{4} = 0.67\quad \text{Recall} = \frac{3}{3}=1 \\
+    \text{Thresh}&amp;=0.3\quad \text{Prescision} = \frac{3}{5} = 0.6\quad \text{Recall} = \frac{3}{3}=1 \\
+    \text{Thresh}&amp;=0.1\quad \text{Prescision} = \frac{3}{6} = 0.5\quad \text{Recall} = \frac{3}{3}=1
+\end{aligned}
+\]</span></p>
+<p>PR曲线为：</p>
+<p><img src="https://i.imgur.com/Cun5Ypl.png" /></p>
+<p>评判模型的指标还有F1值，为Prescision和Recall的调和平均值：</p>
+<p><span class="math display">\[
+\text{F1} = \frac{2\times P\times R}{P + R}
+\]</span></p>
+<h2 id="回归问题">回归问题</h2>
+<p>回归问题通常用RMSE(Root Mean Square Eroor)来衡量回归模型的好坏，RMSE的定义为：</p>
+<p><span class="math display">\[
+\text{RMSE} = \sqrt{\frac{\sum_{i=1}^n(y_i-\hat{y_i})^2}{n}}
+\]</span></p>
+<p>其中<span class="math inline">\(y_i\)</span>为真实的label，<span class="math inline">\(\hat{y_i}\)</span>为预测值。</p>
+<p>RMSE受离群点的影响比较大，比RMSE更鲁棒的指标为MAPE</p>
+<p><span class="math display">\[
+MAPE = \sum_{i=1}^n|\frac{y_i - \hat{y_i}}{y_i}|\times \frac{100}{n}
+\]</span></p>
+<p>MAPE相当于将每个点的误差都进行归一化。</p>
+<h2 id="目标检测问题">目标检测问题</h2>
+<p>在目标检测中通常用AP(Average Precision)来衡量一个检测模型，是否检测出相应的物体是通过IOU计算得到， 给定一个IOU的阈值，当大于该阈值时判定为检测出来。</p>
+<p>假设在一个图片中检测出10个框，IOU&gt;0.5判定为检测成功，下表中第二列表示是否检测成果，第三列第四列为精确度和召回率。</p>
+<p><img src="https://i.imgur.com/l7OmJQc.png" /></p>
+<p>PR曲线为：</p>
+<p><img src="https://i.imgur.com/wEL0UJO.png" /></p>
+<p>则AP的定义为：</p>
+<p><span class="math display">\[
+ \text{AP} = \int_0^1p(r)dr
+\]</span></p>
+<p>在目标检测中计算AP时，通常将每个Recall对应的Precision的值取右边的最大值，也即：</p>
+<p><img src="https://i.imgur.com/5TcbL92.jpg" /></p>
+<p>PASCAL VOC2008</p>
+<p>从平滑后的pr曲线中取11个点[0,0.1,0.2...1.0],然后对这个精度取平局值：</p>
+<p><span class="math display">\[
+\text{AP} = \frac{1}{11}\times (AP_r(0)+...AP_r(1))
+\]</span></p>
+<p>对于多个类别，mAP通常对每个类计算AP后取平均值。</p>
+<p>PASCAL VOC2010</p>
+<p>将曲线平滑之后，计算曲线下矩形的面积。</p>
+<p><img src="https://i.imgur.com/Q5n48kB.jpg" /></p>
+<p><span class="math display">\[
+\begin{aligned}
+AP = \sum(r_{n+1}-r_n)p_{interp}(r_{n+1}) \\
+p_{interp}(r_{n+1}) = max(p(\hat{r})), \quad \hat{r} \geq r
+\end{aligned}
+\]</span></p>
+<p>COCO</p>
+<p>对于COCO数据集，AP是在是个IOU下计算之后取平均得到的。AP@[0.5:0.95]的意思是IOU每隔0.05计算一次AP，然后在这个10个IOU下取平均。</p>
+<h2 id="问题一">问题一</h2>
+<p>假设某<strong>分类模型</strong>的准确率为99%，但是模型上线后并不能对数据做出合理的预测，可能的原因有哪些？</p>
+<p><strong>解答</strong></p>
+<p>首先准确率的定义为：</p>
+<p><span class="math display">\[
+\text{Accuracy} = \frac{N_{\text{correct}}}{N_{\text{total}}}
+\]</span></p>
+<p>当训练集的样本极度不均匀，假设有99%的均为负例，那么模型将所有的输入都判为负例，则准确率也有99%，所以可能是评价指标出了问题。</p>
+<p>如果正确选择指标，还可能会存在模型过拟合或欠拟合、测试集和训练集划分不合理、线下评估与线上测试的样本分布存在差异等一系列问题。</p>
+<h2 id="问题二">问题二</h2>
+<p>假设某视频推荐网站的TOP5为100%，但是用户在寻找冷门视频时常常找不到搜索结果，可能的原因是什么。</p>
+<p><strong>解答</strong></p>
+<p>冷门视频的定义在于某个类别中很少被用户选择观看的视频，通常在检索结果的后面几页，找不到冷门视频说明无法在后面几页找到该视频。</p>
+<p>假设有100个该类别的视频，TOP5@Prescision为100%,而TOP5@Recall仅为5%。可能是Recall出现问题。不能仅看TOP5的准确率，要在不同阈值下看Prescision和Recall的值。</p>
+<p>参考资料</p>
+<ol type="1">
+<li>百面机器学习</li>
+<li><a href="https://medium.com/@jonathan_hui/map-mean-average-precision-for-object-detection-45c121a31173" target="_blank" rel="noopener">mAP (mean Average Precision) for Object Detection</a></li>
+<li><a href="https://blog.csdn.net/teminusign/article/details/51982877" target="_blank" rel="noopener">PR曲线和F1、ROC曲线和AUC</a></li>
+<li><a href="http://nooverfit.com/wp/david9%E7%9A%84%E6%99%AE%E5%8F%8A%E8%B4%B4%EF%BC%9A%E6%9C%BA%E5%99%A8%E8%A7%86%E8%A7%89%E4%B8%AD%E7%9A%84%E5%B9%B3%E5%9D%87%E7%B2%BE%E5%BA%A6ap-%E5%B9%B3%E5%9D%87%E7%B2%BE%E5%BA%A6%E5%9D%87/" target="_blank" rel="noopener">David9的普及贴：机器视觉中的平均精度(AP), 平均精度均值(mAP), 召回率(Recall), 精确率(Precision), TP，TN，FP，FN</a></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/14/hack-captcha/" rel="next" title="hack-captcha">
+                <i class="fa fa-chevron-left"></i> hack-captcha
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#模型评估的基本概念"><span class="nav-number">2.</span> <span class="nav-text">模型评估的基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#二分类问题"><span class="nav-number">2.1.</span> <span class="nav-text">二分类问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#回归问题"><span class="nav-number">2.2.</span> <span class="nav-text">回归问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目标检测问题"><span class="nav-number">2.3.</span> <span class="nav-text">目标检测问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题一"><span class="nav-number">2.4.</span> <span class="nav-text">问题一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题二"><span class="nav-number">2.5.</span> <span class="nav-text">问题二</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
