@@ -79,18 +79,16 @@
 
 
 
-<meta name="description" content="问题描述 现有一个一组特征，记作\(F_{k\times n}\), 现求该组向量中每个特征与其他特征的关系，记结果矩阵为\(M_{k\times k\times 2\times n}\)">
+<meta name="description" content="Problem Description Given a 2D binary matrix filled with 0&#39;s and 1&#39;s, find the largest square containing only 1&#39;s and return its area. Example: 12345678Input: 1 0 1 0 01 0 1 1 11 1 1 1 11 0 0 1 0Ou">
 <meta property="og:type" content="article">
-<meta property="og:title" content="计算特征间关系">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;12&#x2F;vector-correlation&#x2F;index.html">
+<meta property="og:title" content="Maximal-Square">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;03&#x2F;10&#x2F;Maximal-Square&#x2F;index.html">
 <meta property="og:site_name" content="炼丹炉">
-<meta property="og:description" content="问题描述 现有一个一组特征，记作\(F_{k\times n}\), 现求该组向量中每个特征与其他特征的关系，记结果矩阵为\(M_{k\times k\times 2\times n}\)">
-<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;WKdNPUO.jpg">
-<meta property="article:published_time" content="2019-10-12T07:57:37.000Z">
-<meta property="article:modified_time" content="2019-12-17T15:41:17.755Z">
+<meta property="og:description" content="Problem Description Given a 2D binary matrix filled with 0&#39;s and 1&#39;s, find the largest square containing only 1&#39;s and return its area. Example: 12345678Input: 1 0 1 0 01 0 1 1 11 1 1 1 11 0 0 1 0Ou">
+<meta property="article:published_time" content="2020-03-10T13:13:06.000Z">
+<meta property="article:modified_time" content="2020-03-10T13:28:33.050Z">
 <meta property="article:author" content="Gummary">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;WKdNPUO.jpg">
 
 
 
@@ -120,13 +118,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/10/12/vector-correlation/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/03/10/Maximal-Square/"/>
 
 
 
 
 
-  <title>计算特征间关系 | 炼丹炉</title>
+  <title>Maximal-Square | 炼丹炉</title>
   
 
 
@@ -243,7 +241,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/12/vector-correlation/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/10/Maximal-Square/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Gummary">
@@ -260,7 +258,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">计算特征间关系</h1>
+          <h1 class="post-title" itemprop="name headline">Maximal-Square</h1>
         
 
         <div class="post-meta">
@@ -272,8 +270,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-12T15:57:37+08:00">
-                2019-10-12
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-10T21:13:06+08:00">
+                2020-03-10
               </time>
             
 
@@ -310,12 +308,30 @@
       
 
       
-        <h2 id="问题描述">问题描述</h2>
-<p>现有一个一组特征，记作<span class="math inline">\(F_{k\times n}\)</span>, 现求该组向量中每个特征与其他特征的关系，记结果矩阵为<span class="math inline">\(M_{k\times k\times 2\times n}\)</span></p>
-<a id="more"></a>
-<h2 id="pytorch-描述">Pytorch 描述</h2>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">k = <span class="number">3</span></span><br><span class="line">n = <span class="number">2</span></span><br><span class="line">F = torch.randint(<span class="number">100</span>, size=(k, n))</span><br><span class="line">F1 = torch.cat([F]*k, dim=<span class="number">1</span>)</span><br><span class="line">F1 = F1.view((k*k, n))</span><br><span class="line">F2 = torch.cat([F]*k, dim=<span class="number">0</span>)</span><br><span class="line">F2 = F1.view((k*k, n))</span><br><span class="line">M = torch.cat([F1, F2], dim=<span class="number">1</span>)</span><br><span class="line">M = M.view(k, k, <span class="number">2</span>, n)</span><br></pre></td></tr></table></figure>
-<p><img src="https://i.imgur.com/WKdNPUO.jpg" /></p>
+        <h1 id="problem-description">Problem Description</h1>
+<p>Given a 2D binary matrix filled with 0's and 1's, find the largest square containing only 1's and return its area.</p>
+<p>Example:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Input: </span><br><span class="line"></span><br><span class="line">1 0 1 0 0</span><br><span class="line">1 0 1 1 1</span><br><span class="line">1 1 1 1 1</span><br><span class="line">1 0 0 1 0</span><br><span class="line"></span><br><span class="line">Output: 4</span><br></pre></td></tr></table></figure>
+<h1 id="solution">Solution</h1>
+<p>使用动态规划算法，对于一个点来说，如果构成一个正方形，则只有两种情况：</p>
+<ul>
+<li>自己构成一个面积为1的矩形</li>
+<li>与左、左上、右三个点构成更大的矩形</li>
+</ul>
+<p>然后用动态规划算出该点所在正方形的边长，对应上述两种情况：</p>
+<ul>
+<li>边长为1</li>
+<li>左、左上、右三个点构成的最小正方形的边长+1，因为当前点指定使矩形的边长拓宽1</li>
+</ul>
+<p>假设用C[i,j]保存边长，M[i,j]为矩阵则状态转移方程为：</p>
+<p><span class="math display">\[
+C[i,j] = \begin{cases}
+    0,\quad  M[i,j] = 0 \\
+    Min(C[i-1,j], C[i-1,j], C[i-1,j])
+\end{cases}
+\]</span></p>
+<p>代码;</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">maximalSquare</span><span class="params">(self, matrix: List[List[str]])</span> -&gt; int:</span></span><br><span class="line">        max_square = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(matrix)):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(len(matrix[<span class="number">0</span>])):</span><br><span class="line">                matrix[i][j] = int(matrix[i][j])</span><br><span class="line">                <span class="keyword">if</span> i == <span class="number">0</span> <span class="keyword">or</span> j == <span class="number">0</span> <span class="keyword">or</span> matrix[i][j] == <span class="number">0</span>:</span><br><span class="line">                    matrix[i][j] = matrix[i][j]</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    matrix[i][j] = min(matrix[i<span class="number">-1</span>][j], matrix[i][j<span class="number">-1</span>], matrix[i<span class="number">-1</span>][j<span class="number">-1</span>]) + <span class="number">1</span></span><br><span class="line">                max_square = max(matrix[i][j], max_square)</span><br><span class="line">        <span class="keyword">return</span> max_square**<span class="number">2</span></span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -340,8 +356,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/10/08/FLOPs-in-neural-networks/" rel="next" title="神经网络中FLOPs与params">
-                <i class="fa fa-chevron-left"></i> 神经网络中FLOPs与params
+              <a href="/2020/03/09/k-th-smallest-prime-fraction/" rel="next" title="k-th-smallest-prime-fraction">
+                <i class="fa fa-chevron-left"></i> k-th-smallest-prime-fraction
               </a>
             
           </div>
@@ -349,10 +365,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/12/11/calculate-iou-in-python/" rel="prev" title="用python计算IOU">
-                用python计算IOU <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -466,7 +478,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pytorch-描述"><span class="nav-number">2.</span> <span class="nav-text">Pytorch 描述</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#problem-description"><span class="nav-number">1.</span> <span class="nav-text">Problem Description</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#solution"><span class="nav-number">2.</span> <span class="nav-text">Solution</span></a></li></ol></div>
             
 
           </div>
@@ -666,26 +678,6 @@
   
 
   
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="//cdn.staticfile.org/MathJax/MathJax-2.6-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
   
 
 
