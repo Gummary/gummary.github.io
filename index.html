@@ -238,6 +238,141 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/09/k-th-smallest-prime-fraction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/09/k-th-smallest-prime-fraction/" itemprop="url">k-th-smallest-prime-fraction</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-09T21:40:19+08:00">
+                2020-03-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="problem-description">Problem Description</h1>
+<p>A sorted list A contains 1, plus some number of primes. Then, for every p &lt; q in the list, we consider the fraction p/q.</p>
+<p>What is the K-th smallest fraction considered? Return your answer as an array of ints, where answer[0] = p and answer[1] = q.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Examples:</span><br><span class="line">Input: A &#x3D; [1, 2, 3, 5], K &#x3D; 3</span><br><span class="line">Output: [2, 5]</span><br><span class="line">Explanation:</span><br><span class="line">The fractions to be considered in sorted order are:</span><br><span class="line">1&#x2F;5, 1&#x2F;3, 2&#x2F;5, 1&#x2F;2, 3&#x2F;5, 2&#x2F;3.</span><br><span class="line">The third fraction is 2&#x2F;5.</span><br><span class="line"></span><br><span class="line">Input: A &#x3D; [1, 7], K &#x3D; 1</span><br><span class="line">Output: [1, 7]</span><br></pre></td></tr></table></figure>
+<p>Note:</p>
+<ul>
+<li>A will have length between 2 and 2000.</li>
+<li>Each A[i] will be between 1 and 30000.</li>
+<li>K will be between 1 and A.length * (A.length - 1) / 2.</li>
+</ul>
+<h1 id="solution">Solution</h1>
+<h2 id="最小堆">最小堆</h2>
+<p>将最小值加入最小堆中，从最小堆中取出最小的值，增大这个值的分子和分母，获得两个比这个值大的两个分数，如果之前没有遇到这个分数，则将该分数加入最小堆中，不断重复上述过程，直到取出的值的数量为K。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> heapq <span class="keyword">import</span> heapify,heappush,heappop</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">kthSmallestPrimeFraction</span><span class="params">(self, A, K: int)</span>:</span></span><br><span class="line">        visited = set((<span class="number">0</span>, len(A)<span class="number">-1</span>))</span><br><span class="line">        heap = [(A[<span class="number">0</span>]/A[len(A)<span class="number">-1</span>], <span class="number">0</span>, len(A)<span class="number">-1</span>)]</span><br><span class="line">        count = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> count &lt; K:</span><br><span class="line">            val, i, j = heappop(heap)</span><br><span class="line">            <span class="keyword">if</span> i &lt; j:</span><br><span class="line">                <span class="keyword">if</span> (i+<span class="number">1</span>, j) <span class="keyword">not</span> <span class="keyword">in</span> visited:</span><br><span class="line">                    visited.add((i+<span class="number">1</span>, j))</span><br><span class="line">                    heappush(heap, (A[i+<span class="number">1</span>]/A[j], i+<span class="number">1</span>, j))</span><br><span class="line">                <span class="keyword">if</span> (i, j<span class="number">-1</span>) <span class="keyword">not</span> <span class="keyword">in</span> visited:</span><br><span class="line">                    visited.add((i, j<span class="number">-1</span>))</span><br><span class="line">                    heappush(heap, (A[i]/A[j<span class="number">-1</span>], i, j<span class="number">-1</span>))</span><br><span class="line">            count += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> A[i],A[j]</span><br></pre></td></tr></table></figure>
+<h2 id="二分查找">二分查找</h2>
+<p>因为除法的值一定小于1所以可以将边界设置为[0,1]在这个范围内进行二分查找，设置中间值为0.5，计算所有分数中小于这个中间值的个数，不断进行二分查找直到找到一个值使得小于mid的分数等于K，每次记录小于这个值的分数的最大值。 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> heapq <span class="keyword">import</span> heapify,heappush,heappop</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">kthSmallestPrimeFraction</span><span class="params">(self, A, K: int)</span>:</span></span><br><span class="line">        low, high, p, q, l = <span class="number">0.0</span>, <span class="number">1.0</span>, , len(A)</span><br><span class="line">        <span class="keyword">while</span> low &lt; high:</span><br><span class="line">            mid, p, q, count, j = (low + high)/<span class="number">2</span>, A[<span class="number">0</span>], A[<span class="number">-1</span>], <span class="number">0</span>, <span class="number">0</span></span><br><span class="line">            <span class="keyword">for</span> n <span class="keyword">in</span> A:</span><br><span class="line">                <span class="keyword">while</span> j &lt; l <span class="keyword">and</span> n / A[j] &gt; mid: </span><br><span class="line">                    j+=<span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> j &lt; l <span class="keyword">and</span> p*A[j] &lt; n * q:</span><br><span class="line">                    p, q = n, A[j]</span><br><span class="line">                count += l - j</span><br><span class="line">            <span class="keyword">if</span> count &gt; K:</span><br><span class="line">                high = mid</span><br><span class="line">            <span class="keyword">elif</span> count &lt; K:</span><br><span class="line">                low = mid</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> p, q</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/05/model-evaluation/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1353,135 +1488,13 @@ IOU = \frac{A\cap B}{A\cup B}
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/08/FLOPs-in-neural-networks/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Gummary">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="炼丹炉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/10/08/FLOPs-in-neural-networks/" itemprop="url">神经网络中FLOPs与params</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-08T23:04:29+08:00">
-                2019-10-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="计算量flops">计算量FLOPs</h1>
-<p>FLOPs的全称为floating point operations，也即浮点操作的次数，可以用于衡量模型的复杂度。</p>
-<p><em>计算机领域还有一个FLOPS，全称为floating point operations per second，也即每秒浮点运算的次数。</em></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/10/08/FLOPs-in-neural-networks/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">&lt;i class&#x3D;&quot;fa fa-angle-right&quot;&gt;&lt;&#x2F;i&gt;</a>
+  </nav>
+
 
 
           </div>
@@ -1525,7 +1538,7 @@ IOU = \frac{A\cap B}{A\cup B}
               
                 <a href="/archives/%7C%7Carchive">
               
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

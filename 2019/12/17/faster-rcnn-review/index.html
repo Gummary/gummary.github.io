@@ -89,7 +89,7 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;YR2kXUN.jpg">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;qeNWvAc.jpg">
 <meta property="article:published_time" content="2019-12-17T03:55:13.000Z">
-<meta property="article:modified_time" content="2020-02-18T09:23:38.350Z">
+<meta property="article:modified_time" content="2020-03-10T10:02:56.699Z">
 <meta property="article:author" content="Gummary">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;ZgZvGOb.png">
@@ -331,7 +331,28 @@
 <p>利用Backbone提取特征图后，首先利用Conv1x1卷积得到一个<span class="math inline">\(H\times W\times18\)</span>的矩阵，表示每个像素点处的9个anchor是正例还是负例。通过Softmax判定是否包含目标，一般认为正例包含目标。</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">layer</span> <span class="string">&#123;</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">"rpn_cls_score"</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">"Convolution"</span></span><br><span class="line">  <span class="attr">bottom:</span> <span class="string">"rpn/output"</span></span><br><span class="line">  <span class="attr">top:</span> <span class="string">"rpn_cls_score"</span></span><br><span class="line">  <span class="string">param</span> <span class="string">&#123;</span> <span class="attr">lr_mult:</span> <span class="number">1.0</span> <span class="string">&#125;</span></span><br><span class="line">  <span class="string">param</span> <span class="string">&#123;</span> <span class="attr">lr_mult:</span> <span class="number">2.0</span> <span class="string">&#125;</span></span><br><span class="line">  <span class="string">convolution_param</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="attr">num_output:</span> <span class="number">18</span>   <span class="comment"># 2(bg/fg) * 9(anchors)</span></span><br><span class="line">    <span class="attr">kernel_size: 1 pad: 0 stride:</span> <span class="number">1</span></span><br><span class="line">    <span class="string">weight_filler</span> <span class="string">&#123;</span> <span class="attr">type:</span> <span class="string">"gaussian"</span> <span class="attr">std:</span> <span class="number">0.01</span> <span class="string">&#125;</span></span><br><span class="line">    <span class="string">bias_filler</span> <span class="string">&#123;</span> <span class="attr">type:</span> <span class="string">"constant"</span> <span class="attr">value:</span> <span class="number">0</span> <span class="string">&#125;</span></span><br><span class="line">  <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
 <p>至于Softmax之前的reshape层是用来将输入<span class="math inline">\(B\times H\times W\times 18\)</span> reshape成<span class="math inline">\(B\times 2\times 9*H\times W\)</span>,第二个维度用于存放每个像素处9个anchor的Softmax分类结果，之后的reshape层是用于将其调整回<span class="math inline">\(B\times 18\times H\times W\)</span>。</p>
-<p>在训练过程中，根据GroundTruth在两种情况下给定某个anchor为正例： - 与一个ground-truth相交的最大的IOU的anchor - 与任意Ground-truth的IOU值大于0.7的anchor</p>
+<h2 id="rpn的target生成">RPN的Target生成</h2>
+<p>对Anchor进行分类，以下两种情况为正例：</p>
+<ol type="1">
+<li>遍历Groundtruth，找到IOU最大的Anchor</li>
+<li>遍历Anchor找到与Groundtruth的IOU&gt;0.7的值</li>
+</ol>
+<p>注：一个BBOX可能使多个Anchor为正例</p>
+<p>以下两种情况为负例：</p>
+<ol type="1">
+<li>遍历所有Groundtruth和Anchor，二者之间IOU&lt;0/3的为负例</li>
+<li>既不是正例也不是负例的其他Anchor</li>
+</ol>
+<p>为每个anchor分配类别标签和GroundTruth的坐标过程给你如下：</p>
+<ol type="1">
+<li>根据Anchor是否超出图像范围剔除无效的Anchor</li>
+<li>计算所有有效的Anchor与所有GroundTruth的IOU</li>
+<li>为每个GroundTruth找到与之最大IOU的Anchor的位置及IOU大小</li>
+<li>为每个Anchor找到与之IOU最大的GroundTruthr的位置及IOU大小</li>
+<li>根据4得到的Anchor最大IOU，为大于0.7的Anchor设置为正例，小于0.3的Anchor设置为负例</li>
+<li>根据3将具有最大IOU的Anchor设置为正例</li>
+</ol>
+<p>在训练过程中，为了防止正负例不均衡，通常随机采样256个Anchor，其中正例负例之比为1：1。这里采样的256个Anchor仅用于训练，Proposal的输入是RPN网络的全部输出。</p>
 <h2 id="bouond-box-regression">Bouond box regression</h2>
 <p>Bounding box回归是为了微调检测框的位置，因为一个Anchor不可能恰好包含一个物体，因此需要对其进行调整。</p>
 <p>假设窗口用一个4维向量(x,y,h,w)，分别代表窗口的中心点坐标，高度和宽度。给定anchor <span class="math inline">\(A=(A_x, A_y, A_h, A_w)\)</span>和GroundTruth <span class="math inline">\(G=(G_x, G_y, G_h, G_w)\)</span>, 则检测框回归的任务是找到一个变换<span class="math inline">\(G&#39; = F(A)\)</span>使得<span class="math inline">\(G&#39;\approx G\)</span></p>
@@ -370,7 +391,6 @@ Loss = \sum_i^N | t_*^i - W_*^T\phi(A) |
   p_w = e^{A_w}\times t_w, \quad p_h = e^{A_h}\times t_h
 \end{aligned}
 \]</span></p>
-<p>再RPN网络中，<span class="math inline">\(A_*\)</span>为生成的Anchor，在最终的BoundingBox回归为RPN预测的ROIs.</p>
 <p>在实际应用过程中，作者发现当Anchor与GroundTruth距离很远时，这种变换将失去意义，因此对靠近一个GroundTruth的框学习，靠近的定义是Anchor与GroundTruth的IOU大于0.6。</p>
 <p>在FasterRCNN中该回归使用一层1x1卷积层实现的,其中每个位置处的输出为36个也即每个anchor都有4个偏移。</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">layer</span> <span class="string">&#123;</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">"rpn_bbox_pred"</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">"Convolution"</span></span><br><span class="line">  <span class="attr">bottom:</span> <span class="string">"rpn/output"</span></span><br><span class="line">  <span class="attr">top:</span> <span class="string">"rpn_bbox_pred"</span></span><br><span class="line">  <span class="string">param</span> <span class="string">&#123;</span> <span class="attr">lr_mult:</span> <span class="number">1.0</span> <span class="string">&#125;</span></span><br><span class="line">  <span class="string">param</span> <span class="string">&#123;</span> <span class="attr">lr_mult:</span> <span class="number">2.0</span> <span class="string">&#125;</span></span><br><span class="line">  <span class="string">convolution_param</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="attr">num_output:</span> <span class="number">36</span>   <span class="comment"># 4 * 9(anchors)</span></span><br><span class="line">    <span class="attr">kernel_size: 1 pad: 0 stride:</span> <span class="number">1</span></span><br><span class="line">    <span class="string">weight_filler</span> <span class="string">&#123;</span> <span class="attr">type:</span> <span class="string">"gaussian"</span> <span class="attr">std:</span> <span class="number">0.01</span> <span class="string">&#125;</span></span><br><span class="line">    <span class="string">bias_filler</span> <span class="string">&#123;</span> <span class="attr">type:</span> <span class="string">"constant"</span> <span class="attr">value:</span> <span class="number">0</span> <span class="string">&#125;</span></span><br><span class="line">  <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
@@ -435,6 +455,10 @@ Loss = \sum_i^N | t_*^i - W_*^T\phi(A) |
 L(\{p_i\},\{t_i\}) = \frac{1}{N_{cls}}\sum_iL_{cls}(p_i, p_i^*) + \lambda\frac{1}{N_{reg}}\sum_ip_i^*L_{reg}(t_i, t_i^*)
 \]</span></p>
 <p>其中，i为anchor的index，<span class="math inline">\(p_i\)</span>为anchor中是否包含物体的概率，<span class="math inline">\(p_i^*\)</span>为ground truth，当为物体时为1，t_i为预测的bbox的偏移，<span class="math inline">\(t_i^*\)</span>为正例的ground truth</p>
+<h2 id="rpnloss">RPNLoss</h2>
+<p>RPNLoss中的输入是有效的Anhcor，所谓有效的Anchor是指在图像内的anchor，里面包含了正例（&lt;=128）负例（&gt;=128）以及不计算Loss的Anchor(label=-1)</p>
+<h2 id="proposal-net-loss">Proposal Net Loss</h2>
+<p>在训练过程中，Proposal层最终产生2000个Proposal，输入到ProposalTarget中，由该层采样128个Proposal正负例比例为1:3，将这个128个输入到ROIPooling层中得到特征，对然后输入到FC中计算pred_cla和pred_loc，二者均为128个值，然后用预测值与Proposal生成的Target求差计算Loss</p>
 
       
     </div>
@@ -548,7 +572,7 @@ L(\{p_i\},\{t_i\}) = \frac{1}{N_{cls}}\sum_iL_{cls}(p_i, p_i^*) + \lambda\frac{1
               
                 <a href="/archives/%7C%7Carchive">
               
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -585,7 +609,7 @@ L(\{p_i\},\{t_i\}) = \frac{1}{N_{cls}}\sum_iL_{cls}(p_i, p_i^*) + \lambda\frac{1
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#faster-rcnn"><span class="nav-number">1.</span> <span class="nav-text">Faster-RCNN</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rpn网络"><span class="nav-number">2.</span> <span class="nav-text">RPN网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#anchor"><span class="nav-number">2.1.</span> <span class="nav-text">Anchor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#softmax-判定anchor"><span class="nav-number">2.2.</span> <span class="nav-text">Softmax 判定anchor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bouond-box-regression"><span class="nav-number">2.3.</span> <span class="nav-text">Bouond box regression</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#proposal-layer"><span class="nav-number">2.4.</span> <span class="nav-text">Proposal Layer</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#roi-pooling"><span class="nav-number">3.</span> <span class="nav-text">RoI Pooling</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#roi-pooing原理"><span class="nav-number">3.1.</span> <span class="nav-text">RoI Pooing原理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#classification"><span class="nav-number">4.</span> <span class="nav-text">Classification</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#bbox-prediction"><span class="nav-number">5.</span> <span class="nav-text">BBox Prediction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#training"><span class="nav-number">6.</span> <span class="nav-text">Training</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#faster-rcnn"><span class="nav-number">1.</span> <span class="nav-text">Faster-RCNN</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rpn网络"><span class="nav-number">2.</span> <span class="nav-text">RPN网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#anchor"><span class="nav-number">2.1.</span> <span class="nav-text">Anchor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#softmax-判定anchor"><span class="nav-number">2.2.</span> <span class="nav-text">Softmax 判定anchor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rpn的target生成"><span class="nav-number">2.3.</span> <span class="nav-text">RPN的Target生成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bouond-box-regression"><span class="nav-number">2.4.</span> <span class="nav-text">Bouond box regression</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#proposal-layer"><span class="nav-number">2.5.</span> <span class="nav-text">Proposal Layer</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#roi-pooling"><span class="nav-number">3.</span> <span class="nav-text">RoI Pooling</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#roi-pooing原理"><span class="nav-number">3.1.</span> <span class="nav-text">RoI Pooing原理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#classification"><span class="nav-number">4.</span> <span class="nav-text">Classification</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#bbox-prediction"><span class="nav-number">5.</span> <span class="nav-text">BBox Prediction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#training"><span class="nav-number">6.</span> <span class="nav-text">Training</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#rpnloss"><span class="nav-number">6.1.</span> <span class="nav-text">RPNLoss</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#proposal-net-loss"><span class="nav-number">6.2.</span> <span class="nav-text">Proposal Net Loss</span></a></li></ol></li></ol></div>
             
 
           </div>

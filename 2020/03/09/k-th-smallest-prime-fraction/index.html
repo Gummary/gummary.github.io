@@ -79,18 +79,16 @@
 
 
 
-<meta name="description" content="进程虚拟空间 32位操作系统的虚拟空间大小为\(2^{32}\)B,也即4GB；64位操作系统为\(2^{64}\)B。在32为Linux操作系统中，虚拟空间的分配是一部分用于操作系统(0xC0000000-0xFFFFFFFF),剩余部分供进程使用">
+<meta name="description" content="Problem Description A sorted list A contains 1, plus some number of primes. Then, for every p &lt; q in the list, we consider the fraction p&#x2F;q. What is the K-th smallest fraction considered? Return">
 <meta property="og:type" content="article">
-<meta property="og:title" content="可执行文件装载与进程">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;23&#x2F;load-process&#x2F;index.html">
+<meta property="og:title" content="k-th-smallest-prime-fraction">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;03&#x2F;09&#x2F;k-th-smallest-prime-fraction&#x2F;index.html">
 <meta property="og:site_name" content="炼丹炉">
-<meta property="og:description" content="进程虚拟空间 32位操作系统的虚拟空间大小为\(2^{32}\)B,也即4GB；64位操作系统为\(2^{64}\)B。在32为Linux操作系统中，虚拟空间的分配是一部分用于操作系统(0xC0000000-0xFFFFFFFF),剩余部分供进程使用">
-<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;xq8Xmy0.png">
-<meta property="article:published_time" content="2019-12-23T10:54:26.000Z">
-<meta property="article:modified_time" content="2019-12-25T08:09:26.329Z">
+<meta property="og:description" content="Problem Description A sorted list A contains 1, plus some number of primes. Then, for every p &lt; q in the list, we consider the fraction p&#x2F;q. What is the K-th smallest fraction considered? Return">
+<meta property="article:published_time" content="2020-03-09T13:40:19.000Z">
+<meta property="article:modified_time" content="2020-03-10T09:24:43.352Z">
 <meta property="article:author" content="Gummary">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;xq8Xmy0.png">
 
 
 
@@ -120,13 +118,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/12/23/load-process/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/03/09/k-th-smallest-prime-fraction/"/>
 
 
 
 
 
-  <title>可执行文件装载与进程 | 炼丹炉</title>
+  <title>k-th-smallest-prime-fraction | 炼丹炉</title>
   
 
 
@@ -243,7 +241,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/23/load-process/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/09/k-th-smallest-prime-fraction/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Gummary">
@@ -260,7 +258,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">可执行文件装载与进程</h1>
+          <h1 class="post-title" itemprop="name headline">k-th-smallest-prime-fraction</h1>
         
 
         <div class="post-meta">
@@ -272,8 +270,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-23T18:54:26+08:00">
-                2019-12-23
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-09T21:40:19+08:00">
+                2020-03-09
               </time>
             
 
@@ -310,26 +308,22 @@
       
 
       
-        <h1 id="进程虚拟空间">进程虚拟空间</h1>
-<p>32位操作系统的虚拟空间大小为<span class="math inline">\(2^{32}\)</span>B,也即4GB；64位操作系统为<span class="math inline">\(2^{64}\)</span>B。在32为Linux操作系统中，虚拟空间的分配是一部分用于操作系统(0xC0000000-0xFFFFFFFF),剩余部分供进程使用</p>
-<a id="more"></a>
-<h1 id="装载进程">装载进程</h1>
-<p>程序只有从硬盘上被装载到内存中才可被CPU执行，从硬盘上读取可执行文件并装载到内存中的过程即为装载进程。通过高效的装载进程算法可以只装载部分可执行文件，节约内存空间。装载进程得方式包括覆盖装入和页映射，这里主要讨论页映射。</p>
-<p>操作系统将内存和硬盘的空间以页为单位进行划分，从硬盘中读取和向内存中写入都是以页为单位。Intel IA32处理器一般采用4096字节作为页的大小。操作系统从硬盘上读取可执行文件后，将必要的段读入内存中，当程序执行至内存不够时，将换出一部分页存到硬盘上，再读入新需要的页。</p>
-<h1 id="进程建立">进程建立</h1>
-<p>一个进程的建立主要包括三个步骤：</p>
-<ol type="1">
-<li>创建虚拟地址空间</li>
-<li>读取文件头，建立虚拟地址空间与执行文件中各个段之间的关系</li>
-<li>将CPU的指令寄存器设置为可执行文件的入口</li>
-</ol>
-<p><strong>创建虚拟地址空间</strong>其实是创建一个映射函数所需要的数据结构，在32为linux下该步骤是分配了一个页目录。至于建立映射函数，实际上是在需要将程序载入内存时完成的。</p>
-<p><strong>读取文件头并建立虚拟地址空间与执行文件中各个段之间的关系</strong>是建立虚拟地址空间与可执行文件之间的映射关系。这是为了帮助操作系统在需要从硬盘中读取所需要的页时找到正确的位置。</p>
-<p>操作系统是通过一种数据结构实现这种映射关系的，在Linux下称作VMA(virtual memory address)。一个进程的虚拟地址空间被分成若干个VMA，每个VMA是一段连续的内存且拥有相同的权限，每个VMA对应可执行文件中的一个段，因此一个VMA可能由多个页表组成。</p>
-<p><strong>将CPU的指令寄存器设置为可执行文件的入口</strong>是将CPU的指令控制器转交给进程，设置为进程的入口地址，也即ELF文件头中的入口地址。</p>
-<p>在某些情况下，可执行文件有的Section很小，不足以填满一页，因此在装载的过程中，又将相同权限的Section合并成Segment。在内存中，一个VMA对应一个Segment。关于Section，Segment和VMA的具体关系可查看<a href="https://web.archive.org/web/20171129031316/http://nairobi-embedded.org/040_elf_sec_seg_vma_mappings.html" target="_blank" rel="noopener">ELF Sections &amp; Segments and Linux VMA Mappings</a></p>
-<p>操作系统除了利用VMA管理虚拟地址空间和目标文件之间的映射外，还通过VMA管理虚拟地址空间，例如进程中的堆和栈也被当作一个VMA进行管理。</p>
-<p><img src="https://i.imgur.com/xq8Xmy0.png" /></p>
+        <h1 id="problem-description">Problem Description</h1>
+<p>A sorted list A contains 1, plus some number of primes. Then, for every p &lt; q in the list, we consider the fraction p/q.</p>
+<p>What is the K-th smallest fraction considered? Return your answer as an array of ints, where answer[0] = p and answer[1] = q.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Examples:</span><br><span class="line">Input: A &#x3D; [1, 2, 3, 5], K &#x3D; 3</span><br><span class="line">Output: [2, 5]</span><br><span class="line">Explanation:</span><br><span class="line">The fractions to be considered in sorted order are:</span><br><span class="line">1&#x2F;5, 1&#x2F;3, 2&#x2F;5, 1&#x2F;2, 3&#x2F;5, 2&#x2F;3.</span><br><span class="line">The third fraction is 2&#x2F;5.</span><br><span class="line"></span><br><span class="line">Input: A &#x3D; [1, 7], K &#x3D; 1</span><br><span class="line">Output: [1, 7]</span><br></pre></td></tr></table></figure>
+<p>Note:</p>
+<ul>
+<li>A will have length between 2 and 2000.</li>
+<li>Each A[i] will be between 1 and 30000.</li>
+<li>K will be between 1 and A.length * (A.length - 1) / 2.</li>
+</ul>
+<h1 id="solution">Solution</h1>
+<h2 id="最小堆">最小堆</h2>
+<p>将最小值加入最小堆中，从最小堆中取出最小的值，增大这个值的分子和分母，获得两个比这个值大的两个分数，如果之前没有遇到这个分数，则将该分数加入最小堆中，不断重复上述过程，直到取出的值的数量为K。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> heapq <span class="keyword">import</span> heapify,heappush,heappop</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">kthSmallestPrimeFraction</span><span class="params">(self, A, K: int)</span>:</span></span><br><span class="line">        visited = set((<span class="number">0</span>, len(A)<span class="number">-1</span>))</span><br><span class="line">        heap = [(A[<span class="number">0</span>]/A[len(A)<span class="number">-1</span>], <span class="number">0</span>, len(A)<span class="number">-1</span>)]</span><br><span class="line">        count = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> count &lt; K:</span><br><span class="line">            val, i, j = heappop(heap)</span><br><span class="line">            <span class="keyword">if</span> i &lt; j:</span><br><span class="line">                <span class="keyword">if</span> (i+<span class="number">1</span>, j) <span class="keyword">not</span> <span class="keyword">in</span> visited:</span><br><span class="line">                    visited.add((i+<span class="number">1</span>, j))</span><br><span class="line">                    heappush(heap, (A[i+<span class="number">1</span>]/A[j], i+<span class="number">1</span>, j))</span><br><span class="line">                <span class="keyword">if</span> (i, j<span class="number">-1</span>) <span class="keyword">not</span> <span class="keyword">in</span> visited:</span><br><span class="line">                    visited.add((i, j<span class="number">-1</span>))</span><br><span class="line">                    heappush(heap, (A[i]/A[j<span class="number">-1</span>], i, j<span class="number">-1</span>))</span><br><span class="line">            count += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> A[i],A[j]</span><br></pre></td></tr></table></figure>
+<h2 id="二分查找">二分查找</h2>
+<p>因为除法的值一定小于1所以可以将边界设置为[0,1]在这个范围内进行二分查找，设置中间值为0.5，计算所有分数中小于这个中间值的个数，不断进行二分查找直到找到一个值使得小于mid的分数等于K，每次记录小于这个值的分数的最大值。 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> heapq <span class="keyword">import</span> heapify,heappush,heappop</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">kthSmallestPrimeFraction</span><span class="params">(self, A, K: int)</span>:</span></span><br><span class="line">        low, high, p, q, l = <span class="number">0.0</span>, <span class="number">1.0</span>, , len(A)</span><br><span class="line">        <span class="keyword">while</span> low &lt; high:</span><br><span class="line">            mid, p, q, count, j = (low + high)/<span class="number">2</span>, A[<span class="number">0</span>], A[<span class="number">-1</span>], <span class="number">0</span>, <span class="number">0</span></span><br><span class="line">            <span class="keyword">for</span> n <span class="keyword">in</span> A:</span><br><span class="line">                <span class="keyword">while</span> j &lt; l <span class="keyword">and</span> n / A[j] &gt; mid: </span><br><span class="line">                    j+=<span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> j &lt; l <span class="keyword">and</span> p*A[j] &lt; n * q:</span><br><span class="line">                    p, q = n, A[j]</span><br><span class="line">                count += l - j</span><br><span class="line">            <span class="keyword">if</span> count &gt; K:</span><br><span class="line">                high = mid</span><br><span class="line">            <span class="keyword">elif</span> count &lt; K:</span><br><span class="line">                low = mid</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> p, q</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -354,8 +348,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/12/23/rotation-detection/" rel="next" title="SSD与FasterRCNN检测旋转框技术">
-                <i class="fa fa-chevron-left"></i> SSD与FasterRCNN检测旋转框技术
+              <a href="/2020/03/05/model-evaluation/" rel="next" title="百面机器学习-模型评估">
+                <i class="fa fa-chevron-left"></i> 百面机器学习-模型评估
               </a>
             
           </div>
@@ -363,10 +357,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/01/14/hack-captcha/" rel="prev" title="hack-captcha">
-                hack-captcha <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -480,7 +470,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#进程虚拟空间"><span class="nav-number">1.</span> <span class="nav-text">进程虚拟空间</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#装载进程"><span class="nav-number">2.</span> <span class="nav-text">装载进程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程建立"><span class="nav-number">3.</span> <span class="nav-text">进程建立</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#problem-description"><span class="nav-number">1.</span> <span class="nav-text">Problem Description</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#solution"><span class="nav-number">2.</span> <span class="nav-text">Solution</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#最小堆"><span class="nav-number">2.1.</span> <span class="nav-text">最小堆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二分查找"><span class="nav-number">2.2.</span> <span class="nav-text">二分查找</span></a></li></ol></li></ol></div>
             
 
           </div>
