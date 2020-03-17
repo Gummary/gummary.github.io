@@ -79,14 +79,14 @@
 
 
 
-<meta name="description" content="Problem Description Given a 2D binary matrix filled with 0&#39;s and 1&#39;s, find the largest square containing only 1&#39;s and return its area.">
+<meta name="description" content="Problem Description 小美曾经有一个特殊的数组，这个数组的长度为n。但是她在打恐怖游戏的时候被吓得忘记了这个数组长什么样了。不过她还记得这个数组满足一些条件。 首先这个数组的每个数的范围都在L和R之间。包括端点。 除此之外，这个数组满足数组中的所有元素的和是k的倍数。 但是这样的数组太多了，小美想知道有多少个这样的数组。你只需要告诉她在模1e9+7意义下的答案就行了。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Maximal-Square">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;03&#x2F;10&#x2F;Maximal-Square&#x2F;index.html">
+<meta property="og:title" content="美团笔试题目">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;03&#x2F;18&#x2F;meituan-interview&#x2F;index.html">
 <meta property="og:site_name" content="炼丹炉">
-<meta property="og:description" content="Problem Description Given a 2D binary matrix filled with 0&#39;s and 1&#39;s, find the largest square containing only 1&#39;s and return its area.">
-<meta property="article:published_time" content="2020-03-10T13:13:06.000Z">
-<meta property="article:modified_time" content="2020-03-15T13:25:56.722Z">
+<meta property="og:description" content="Problem Description 小美曾经有一个特殊的数组，这个数组的长度为n。但是她在打恐怖游戏的时候被吓得忘记了这个数组长什么样了。不过她还记得这个数组满足一些条件。 首先这个数组的每个数的范围都在L和R之间。包括端点。 除此之外，这个数组满足数组中的所有元素的和是k的倍数。 但是这样的数组太多了，小美想知道有多少个这样的数组。你只需要告诉她在模1e9+7意义下的答案就行了。">
+<meta property="article:published_time" content="2020-03-17T16:40:58.000Z">
+<meta property="article:modified_time" content="2020-03-17T16:56:15.335Z">
 <meta property="article:author" content="Gummary">
 <meta name="twitter:card" content="summary">
 
@@ -118,13 +118,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/03/10/Maximal-Square/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/03/18/meituan-interview/"/>
 
 
 
 
 
-  <title>Maximal-Square | 炼丹炉</title>
+  <title>美团笔试题目 | 炼丹炉</title>
   
 
 
@@ -241,7 +241,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/10/Maximal-Square/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/18/meituan-interview/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Gummary">
@@ -258,7 +258,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Maximal-Square</h1>
+          <h1 class="post-title" itemprop="name headline">美团笔试题目</h1>
         
 
         <div class="post-meta">
@@ -270,8 +270,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-10T21:13:06+08:00">
-                2020-03-10
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-18T00:40:58+08:00">
+                2020-03-18
               </time>
             
 
@@ -308,31 +308,24 @@
       
 
       
-        <h1 id="problem-description">Problem Description</h1>
-<p>Given a 2D binary matrix filled with 0's and 1's, find the largest square containing only 1's and return its area.</p>
-<a id="more"></a>
-<p>Example:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Input: </span><br><span class="line"></span><br><span class="line">1 0 1 0 0</span><br><span class="line">1 0 1 1 1</span><br><span class="line">1 1 1 1 1</span><br><span class="line">1 0 0 1 0</span><br><span class="line"></span><br><span class="line">Output: 4</span><br></pre></td></tr></table></figure>
+        <h2 id="problem-description">Problem Description</h2>
+<p>小美曾经有一个特殊的数组，这个数组的长度为n。但是她在打恐怖游戏的时候被吓得忘记了这个数组长什么样了。不过她还记得这个数组满足一些条件。</p>
+<p>首先这个数组的每个数的范围都在L和R之间。包括端点。</p>
+<p>除此之外，这个数组满足数组中的所有元素的和是k的倍数。</p>
+<p>但是这样的数组太多了，小美想知道有多少个这样的数组。你只需要告诉她在模1e9+7意义下的答案就行了。</p>
+<p>输入</p>
+<p>一行四个整数n,k,L,R</p>
+<p>（1≤n≤1e5 1≤k≤10 1≤L≤R≤1e9）</p>
+<p>输出</p>
+<p>输出一个数表示满足条件的数组的个数。</p>
+<p>样例输入</p>
+<p>9 1 1 3</p>
+<p>样例输出</p>
+<p>19683</p>
 <h1 id="solution">Solution</h1>
-<p>使用动态规划算法，对于一个点来说，如果构成一个正方形，则只有两种情况：</p>
-<ul>
-<li>自己构成一个面积为1的矩形</li>
-<li>与左、左上、右三个点构成更大的矩形</li>
-</ul>
-<p>然后用动态规划算出该点所在正方形的边长，对应上述两种情况：</p>
-<ul>
-<li>边长为1</li>
-<li>左、左上、右三个点构成的最小正方形的边长+1，因为当前点指定使矩形的边长拓宽1</li>
-</ul>
-<p>假设用C[i,j]保存边长，M[i,j]为矩阵则状态转移方程为：</p>
-<p><span class="math display">\[
-C[i,j] = \begin{cases}
-    0,\quad  M[i,j] = 0 \\
-    Min(C[i-1,j], C[i-1,j], C[i-1,j])
-\end{cases}
-\]</span></p>
-<p>代码;</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">maximalSquare</span><span class="params">(self, matrix: List[List[str]])</span> -&gt; int:</span></span><br><span class="line">        max_square = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(matrix)):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(len(matrix[<span class="number">0</span>])):</span><br><span class="line">                matrix[i][j] = int(matrix[i][j])</span><br><span class="line">                <span class="keyword">if</span> i == <span class="number">0</span> <span class="keyword">or</span> j == <span class="number">0</span> <span class="keyword">or</span> matrix[i][j] == <span class="number">0</span>:</span><br><span class="line">                    matrix[i][j] = matrix[i][j]</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    matrix[i][j] = min(matrix[i<span class="number">-1</span>][j], matrix[i][j<span class="number">-1</span>], matrix[i<span class="number">-1</span>][j<span class="number">-1</span>]) + <span class="number">1</span></span><br><span class="line">                max_square = max(matrix[i][j], max_square)</span><br><span class="line">        <span class="keyword">return</span> max_square**<span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p>看似很复杂，其实只需要研究一下样例就会发现其实是一个排列组合的问题。</p>
+<p>样例是要求找到一个长度为9的数组，数组元素位于范围[1, 3]，数组和是1的倍数。由范围[1,3]组成长度为9的数组的数量为<span class="math inline">\(3^9=19638\)</span>，均为1的倍数也即是答案。那么也就是说求出所有数组的数量，将其除k即可。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">t = [int(x) <span class="keyword">for</span> x <span class="keyword">in</span> input().split(<span class="string">' '</span>)]</span><br><span class="line">length, k, L, R = t[<span class="number">0</span>], t[<span class="number">1</span>], t[<span class="number">2</span>], t[<span class="number">3</span>]</span><br><span class="line">total = pow(length, R-L+<span class="number">1</span>)</span><br><span class="line">result = (total/k)%(<span class="number">1e10</span>+<span class="number">7</span>)</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -357,8 +350,8 @@ C[i,j] = \begin{cases}
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/03/09/k-th-smallest-prime-fraction/" rel="next" title="k-th-smallest-prime-fraction">
-                <i class="fa fa-chevron-left"></i> k-th-smallest-prime-fraction
+              <a href="/2020/03/15/intersection-of-two-linked-lists/" rel="next" title="Leetcode 160 intersection-of-two-linked-lists">
+                <i class="fa fa-chevron-left"></i> Leetcode 160 intersection-of-two-linked-lists
               </a>
             
           </div>
@@ -366,10 +359,6 @@ C[i,j] = \begin{cases}
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/03/14/partition-array/" rel="prev" title="Leetcode 416+698 Partition Array">
-                Leetcode 416+698 Partition Array <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -483,7 +472,7 @@ C[i,j] = \begin{cases}
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#problem-description"><span class="nav-number">1.</span> <span class="nav-text">Problem Description</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#solution"><span class="nav-number">2.</span> <span class="nav-text">Solution</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#problem-description"><span class="nav-number">1.</span> <span class="nav-text">Problem Description</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#solution"><span class="nav-number"></span> <span class="nav-text">Solution</span></a></div>
             
 
           </div>
