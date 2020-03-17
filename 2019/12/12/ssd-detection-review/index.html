@@ -87,7 +87,7 @@
 <meta property="og:description" content="SSD是一种单阶段的检测器，Faster-RCNN等双阶段的检测器需要首先通过RPN 网络生成Proposals，然后利用卷积网络判断Proposals中是否存在物体。">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;feqoRi5.jpg">
 <meta property="article:published_time" content="2019-12-12T03:11:37.000Z">
-<meta property="article:modified_time" content="2019-12-18T07:16:33.744Z">
+<meta property="article:modified_time" content="2020-03-17T10:18:31.070Z">
 <meta property="article:author" content="Gummary">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;feqoRi5.jpg">
@@ -313,8 +313,8 @@
         <p>SSD是一种单阶段的检测器，Faster-RCNN等双阶段的检测器需要首先通过RPN 网络生成Proposals，然后利用卷积网络判断Proposals中是否存在物体。</p>
 <a id="more"></a>
 <h1 id="ssd-检测框预测">SSD 检测框预测</h1>
-<p>与其他网络使用全连接层生成坐标不同，SSD使用卷积层生成相对默认于默认的box坐标的偏移或类别置信度。对于大小为<span class="math inline">\(c\times m\times n\)</span>的特征图，使用的卷积核为<span class="math inline">\(c\times3\times3\)</span>.</p>
-<p>对于每个不同尺度的特征图中的格子（cell），都有一集默认的bounding box用于检测。对于每个位置，卷积和预测距离默认框的offset和每个框内包含每个类的置信度。假设由k个默认框，每个位置需要输出4个offset和一个置信度，因此每个位置共有<span class="math inline">\((c+4)k\)</span>个输出；对于一个<span class="math inline">\(m\times n\)</span>的特征图，最终的输出<span class="math inline">\((c+4)kmn\)</span>个值。这里是应用了Faster-RCNN中的anchor思想。</p>
+<p>与其他网络使用全连接层生成坐标不同，SSD使用卷积层生成相对于坐标的偏移或类别置信度。对于大小为<span class="math inline">\(c\times m\times n\)</span>的特征图，使用的卷积核为<span class="math inline">\(c\times3\times3\)</span>.</p>
+<p>对于每个不同尺度的特征图中的格子（cell），都有一集默认的bounding box用于检测。对于每个位置，卷积和预测距离默认框的offset和每个框内包含每个类的置信度。假设由k个默认框，每个位置需要输出4个offset和c个类别的置信度，则每个位置共有<span class="math inline">\((c+4)k\)</span>个输出；对于一个<span class="math inline">\(m\times n\)</span>的特征图，最终的输出<span class="math inline">\((c+4)kmn\)</span>个值。这里是应用了Faster-RCNN中的anchor思想。</p>
 <p>在SSD中，一个bounding box用框的中心和长宽来表示。假设默认框为<span class="math inline">\(d = (d^{cx}, d^{cy}, d^h, d^w)\)</span>,真实的位置为<span class="math inline">\(g = (g^{cx}, g^{cy}, g^h, g^w)\)</span>,则网络的预测的偏置其实是要尽可能的为：</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -369,6 +369,15 @@ w_k^a = s_k\sqrt{a_r},\quad h_k^a = \frac{s_k}{\sqrt{a_r}}
 38\times38\times4 + 19\times19\times6+10\times10\times6+5\times5\times6 + 3\times3\times4+1\times1\times4=8732
 \]</span></p>
 <p>SSD在每个位置处利用两个<span class="math inline">\(3\times3\)</span>卷积生成4个点的坐标和c个类别的置信度，假设共有<span class="math inline">\(n_k\)</span>个先验框，则卷积核的大小为分别为<span class="math inline">\(3\times3\times 4n_k\)</span>和<span class="math inline">\(3\times3\times c_k\)</span></p>
+<h2 id="hard-negative-mining">Hard Negative Mining</h2>
+<p>在模型预测出的8732个检测框中，大部分都是Negative sample，如果全部计算Loss则会造成正负样本不均衡的问题，因此采用Hard Negative Mining平衡正负样本，具体做法如下；</p>
+<ol type="1">
+<li>计算GroundTruth与default box之间的IOU，找到与每个GT最大的default box，加入正例。</li>
+<li>在剩下的default box中找到与GT IOU大于0.5的框加入正例</li>
+<li>假设经过1，2得到正例的数量为P，则负例为8732-P</li>
+<li>根据8732个框的置信度loss <span class="math inline">\(L_{conf}\)</span>有大到小排序，取前M个框。</li>
+<li>去除P中和8732-P中不在M中的样本，得到最终的正例和负例，使其数量之比为1:3</li>
+</ol>
 
       
     </div>
@@ -482,7 +491,7 @@ w_k^a = s_k\sqrt{a_r},\quad h_k^a = \frac{s_k}{\sqrt{a_r}}
               
                 <a href="/archives/%7C%7Carchive">
               
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -519,7 +528,7 @@ w_k^a = s_k\sqrt{a_r},\quad h_k^a = \frac{s_k}{\sqrt{a_r}}
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ssd-检测框预测"><span class="nav-number">1.</span> <span class="nav-text">SSD 检测框预测</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ssd网络结构"><span class="nav-number">2.</span> <span class="nav-text">SSD网络结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ssd-训练过程"><span class="nav-number">3.</span> <span class="nav-text">SSD 训练过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#先验框匹配"><span class="nav-number">3.1.</span> <span class="nav-text">先验框匹配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#损失函数"><span class="nav-number">3.2.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#先验框的尺度与长宽比"><span class="nav-number">3.3.</span> <span class="nav-text">先验框的尺度与长宽比</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ssd-检测框预测"><span class="nav-number">1.</span> <span class="nav-text">SSD 检测框预测</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ssd网络结构"><span class="nav-number">2.</span> <span class="nav-text">SSD网络结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ssd-训练过程"><span class="nav-number">3.</span> <span class="nav-text">SSD 训练过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#先验框匹配"><span class="nav-number">3.1.</span> <span class="nav-text">先验框匹配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#损失函数"><span class="nav-number">3.2.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#先验框的尺度与长宽比"><span class="nav-number">3.3.</span> <span class="nav-text">先验框的尺度与长宽比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hard-negative-mining"><span class="nav-number">3.4.</span> <span class="nav-text">Hard Negative Mining</span></a></li></ol></li></ol></div>
             
 
           </div>

@@ -238,6 +238,521 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/15/intersection-of-two-linked-lists/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/15/intersection-of-two-linked-lists/" itemprop="url">Leetcode 160 intersection-of-two-linked-lists</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-15T22:08:06+08:00">
+                2020-03-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="problem-description">Problem Description</h1>
+<p>Write a program to find the node at which the intersection of two singly linked lists begins.</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/03/15/intersection-of-two-linked-lists/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/15/rand7-rand10/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/15/rand7-rand10/" itemprop="url">Leetcode 470 Implement Rand10() Using Rand7()</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-15T21:37:12+08:00">
+                2020-03-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="problem-description">Problem Description</h1>
+<p>Given a function rand7 which generates a uniform random integer in the range 1 to 7, write a function rand10 which generates a uniform random integer in the range 1 to 10.</p>
+<p>Do NOT use system's Math.random().</p>
+<p>Example 1: <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: 1</span><br><span class="line">Output: [7]</span><br></pre></td></tr></table></figure></p>
+<p>Example 2:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: 2</span><br><span class="line">Output: [8,4]</span><br></pre></td></tr></table></figure>
+<p>Example 3:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: 3</span><br><span class="line">Output: [8,1,10]</span><br></pre></td></tr></table></figure>
+<p>Note:</p>
+<ul>
+<li>rand7 is predefined.</li>
+<li>Each testcase has one argument: n, the number of times that rand10 is called.</li>
+</ul>
+<p>Follow up:</p>
+<ul>
+<li>What is the expected value for the number of calls to rand7() function?</li>
+<li>Could you minimize the number of calls to rand7()?</li>
+</ul>
+<h1 id="solution">Solution</h1>
+<p>采用的方法是接受拒绝采样，使用一个已知的概率密度函数去估计另一个。</p>
+<p>本题中用rand7来估计rand10，具体做法是做两次rand7得到rand49，取40内的数取余。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">rand10</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            r = rand7()</span><br><span class="line">            c = rand7()</span><br><span class="line">            idx = (r<span class="number">-1</span>)*<span class="number">7</span> + c</span><br><span class="line">            <span class="keyword">if</span> idx &lt;= <span class="number">40</span>:</span><br><span class="line">                <span class="keyword">return</span> (idx - <span class="number">1</span>) % <span class="number">10</span> + <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/15/two-sum/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/15/two-sum/" itemprop="url">Leetcode 1 Two Sum</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-15T21:23:24+08:00">
+                2020-03-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="problem-description">Problem Description</h1>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/03/15/two-sum/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/14/partition-array/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/14/partition-array/" itemprop="url">Leetcode 416+698 Partition Array</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-14T15:31:14+08:00">
+                2020-03-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="problem-description">Problem Description</h1>
+<p>Leetcode 416. Partition Equal Subset Sum</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/03/14/partition-array/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/10/Maximal-Square/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -308,33 +823,15 @@
 
       
         
-          
-            <h1 id="problem-description">Problem Description</h1>
+          <h1 id="problem-description">Problem Description</h1>
 <p>Given a 2D binary matrix filled with 0's and 1's, find the largest square containing only 1's and return its area.</p>
-<p>Example:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Input: </span><br><span class="line"></span><br><span class="line">1 0 1 0 0</span><br><span class="line">1 0 1 1 1</span><br><span class="line">1 1 1 1 1</span><br><span class="line">1 0 0 1 0</span><br><span class="line"></span><br><span class="line">Output: 4</span><br></pre></td></tr></table></figure>
-<h1 id="solution">Solution</h1>
-<p>使用动态规划算法，对于一个点来说，如果构成一个正方形，则只有两种情况：</p>
-<ul>
-<li>自己构成一个面积为1的矩形</li>
-<li>与左、左上、右三个点构成更大的矩形</li>
-</ul>
-<p>然后用动态规划算出该点所在正方形的边长，对应上述两种情况：</p>
-<ul>
-<li>边长为1</li>
-<li>左、左上、右三个点构成的最小正方形的边长+1，因为当前点指定使矩形的边长拓宽1</li>
-</ul>
-<p>假设用C[i,j]保存边长，M[i,j]为矩阵则状态转移方程为：</p>
-<p><span class="math display">\[
-C[i,j] = \begin{cases}
-    0,\quad  M[i,j] = 0 \\
-    Min(C[i-1,j], C[i-1,j], C[i-1,j])
-\end{cases}
-\]</span></p>
-<p>代码;</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">maximalSquare</span><span class="params">(self, matrix: List[List[str]])</span> -&gt; int:</span></span><br><span class="line">        max_square = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(matrix)):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(len(matrix[<span class="number">0</span>])):</span><br><span class="line">                matrix[i][j] = int(matrix[i][j])</span><br><span class="line">                <span class="keyword">if</span> i == <span class="number">0</span> <span class="keyword">or</span> j == <span class="number">0</span> <span class="keyword">or</span> matrix[i][j] == <span class="number">0</span>:</span><br><span class="line">                    matrix[i][j] = matrix[i][j]</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    matrix[i][j] = min(matrix[i<span class="number">-1</span>][j], matrix[i][j<span class="number">-1</span>], matrix[i<span class="number">-1</span>][j<span class="number">-1</span>]) + <span class="number">1</span></span><br><span class="line">                max_square = max(matrix[i][j], max_square)</span><br><span class="line">        <span class="keyword">return</span> max_square**<span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/03/10/Maximal-Square/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -451,25 +948,15 @@ C[i,j] = \begin{cases}
 
       
         
-          
-            <h1 id="problem-description">Problem Description</h1>
+          <h1 id="problem-description">Problem Description</h1>
 <p>A sorted list A contains 1, plus some number of primes. Then, for every p &lt; q in the list, we consider the fraction p/q.</p>
-<p>What is the K-th smallest fraction considered? Return your answer as an array of ints, where answer[0] = p and answer[1] = q.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Examples:</span><br><span class="line">Input: A &#x3D; [1, 2, 3, 5], K &#x3D; 3</span><br><span class="line">Output: [2, 5]</span><br><span class="line">Explanation:</span><br><span class="line">The fractions to be considered in sorted order are:</span><br><span class="line">1&#x2F;5, 1&#x2F;3, 2&#x2F;5, 1&#x2F;2, 3&#x2F;5, 2&#x2F;3.</span><br><span class="line">The third fraction is 2&#x2F;5.</span><br><span class="line"></span><br><span class="line">Input: A &#x3D; [1, 7], K &#x3D; 1</span><br><span class="line">Output: [1, 7]</span><br></pre></td></tr></table></figure>
-<p>Note:</p>
-<ul>
-<li>A will have length between 2 and 2000.</li>
-<li>Each A[i] will be between 1 and 30000.</li>
-<li>K will be between 1 and A.length * (A.length - 1) / 2.</li>
-</ul>
-<h1 id="solution">Solution</h1>
-<h2 id="最小堆">最小堆</h2>
-<p>将最小值加入最小堆中，从最小堆中取出最小的值，增大这个值的分子和分母，获得两个比这个值大的两个分数，如果之前没有遇到这个分数，则将该分数加入最小堆中，不断重复上述过程，直到取出的值的数量为K。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> heapq <span class="keyword">import</span> heapify,heappush,heappop</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">kthSmallestPrimeFraction</span><span class="params">(self, A, K: int)</span>:</span></span><br><span class="line">        visited = set((<span class="number">0</span>, len(A)<span class="number">-1</span>))</span><br><span class="line">        heap = [(A[<span class="number">0</span>]/A[len(A)<span class="number">-1</span>], <span class="number">0</span>, len(A)<span class="number">-1</span>)]</span><br><span class="line">        count = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> count &lt; K:</span><br><span class="line">            val, i, j = heappop(heap)</span><br><span class="line">            <span class="keyword">if</span> i &lt; j:</span><br><span class="line">                <span class="keyword">if</span> (i+<span class="number">1</span>, j) <span class="keyword">not</span> <span class="keyword">in</span> visited:</span><br><span class="line">                    visited.add((i+<span class="number">1</span>, j))</span><br><span class="line">                    heappush(heap, (A[i+<span class="number">1</span>]/A[j], i+<span class="number">1</span>, j))</span><br><span class="line">                <span class="keyword">if</span> (i, j<span class="number">-1</span>) <span class="keyword">not</span> <span class="keyword">in</span> visited:</span><br><span class="line">                    visited.add((i, j<span class="number">-1</span>))</span><br><span class="line">                    heappush(heap, (A[i]/A[j<span class="number">-1</span>], i, j<span class="number">-1</span>))</span><br><span class="line">            count += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> A[i],A[j]</span><br></pre></td></tr></table></figure>
-<h2 id="二分查找">二分查找</h2>
-<p>因为除法的值一定小于1所以可以将边界设置为[0,1]在这个范围内进行二分查找，设置中间值为0.5，计算所有分数中小于这个中间值的个数，不断进行二分查找直到找到一个值使得小于mid的分数等于K，每次记录小于这个值的分数的最大值。 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> heapq <span class="keyword">import</span> heapify,heappush,heappop</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">kthSmallestPrimeFraction</span><span class="params">(self, A, K: int)</span>:</span></span><br><span class="line">        low, high, p, q, l = <span class="number">0.0</span>, <span class="number">1.0</span>, , len(A)</span><br><span class="line">        <span class="keyword">while</span> low &lt; high:</span><br><span class="line">            mid, p, q, count, j = (low + high)/<span class="number">2</span>, A[<span class="number">0</span>], A[<span class="number">-1</span>], <span class="number">0</span>, <span class="number">0</span></span><br><span class="line">            <span class="keyword">for</span> n <span class="keyword">in</span> A:</span><br><span class="line">                <span class="keyword">while</span> j &lt; l <span class="keyword">and</span> n / A[j] &gt; mid: </span><br><span class="line">                    j+=<span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> j &lt; l <span class="keyword">and</span> p*A[j] &lt; n * q:</span><br><span class="line">                    p, q = n, A[j]</span><br><span class="line">                count += l - j</span><br><span class="line">            <span class="keyword">if</span> count &gt; K:</span><br><span class="line">                high = mid</span><br><span class="line">            <span class="keyword">elif</span> count &lt; K:</span><br><span class="line">                low = mid</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> p, q</span><br></pre></td></tr></table></figure></p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/03/09/k-th-smallest-prime-fraction/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1005,507 +1492,6 @@ C[i,j] = \begin{cases}
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/17/faster-rcnn-review/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Gummary">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="炼丹炉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/12/17/faster-rcnn-review/" itemprop="url">Faster-RCNN 算法详解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-17T11:55:13+08:00">
-                2019-12-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="faster-rcnn">Faster-RCNN</h1>
-<p>本文重点介绍FasterRCNN的RPN网络和HeadNet。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/12/17/faster-rcnn-review/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/12/ssd-detection-review/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Gummary">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="炼丹炉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/12/12/ssd-detection-review/" itemprop="url">SSD检测算法详解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-12T11:11:37+08:00">
-                2019-12-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>SSD是一种单阶段的检测器，Faster-RCNN等双阶段的检测器需要首先通过RPN 网络生成Proposals，然后利用卷积网络判断Proposals中是否存在物体。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/12/12/ssd-detection-review/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/11/static-link/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Gummary">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="炼丹炉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/12/11/static-link/" itemprop="url">静态链接</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-11T21:35:55+08:00">
-                2019-12-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="静态链接的过程">静态链接的过程</h1>
-<p>静态链接主要分为x个步骤，首先合并两个目标文件的段，然后为每个目标文件中的符号分配地址，根据分配好的地址进行重定位。下面将结合两个具体的源文件分析这个过程。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/12/11/static-link/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/11/calculate-iou-in-python/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Gummary">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="炼丹炉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/12/11/calculate-iou-in-python/" itemprop="url">用python计算IOU</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-11T16:30:51+08:00">
-                2019-12-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>IOU计算公式为</p>
-<p><span class="math display">\[
-IOU = \frac{A\cap B}{A\cup B}
-\]</span></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/12/11/calculate-iou-in-python/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1556,7 +1542,7 @@ IOU = \frac{A\cap B}{A\cup B}
               
                 <a href="/archives/%7C%7Carchive">
               
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
