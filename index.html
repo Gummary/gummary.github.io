@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh">
+<html class="theme-next gemini use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -92,7 +92,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Muse',
+    scheme: 'Gemini',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -100,7 +100,7 @@
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
     duoshuo: {
       userId: '0',
-      author: 'Author'
+      author: '博主'
     },
     algolia: {
       applicationID: '',
@@ -132,7 +132,7 @@
 
 <meta name="generator" content="Hexo 4.1.0"></head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
   
@@ -181,7 +181,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Home
+            首页
           </a>
         </li>
       
@@ -191,7 +191,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
-            About
+            关于
           </a>
         </li>
       
@@ -201,7 +201,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archives
+            归档
           </a>
         </li>
       
@@ -267,9 +267,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-18T00:40:58+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-18T00:40:58+08:00">
                 2020-03-18
               </time>
             
@@ -282,6 +282,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/03/18/meituan-interview/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/03/18/meituan-interview/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -308,27 +318,15 @@
 
       
         
-          
-            <h2 id="problem-description">Problem Description</h2>
+          <h2 id="problem-description">Problem Description</h2>
 <p>小美曾经有一个特殊的数组，这个数组的长度为n。但是她在打恐怖游戏的时候被吓得忘记了这个数组长什么样了。不过她还记得这个数组满足一些条件。</p>
-<p>首先这个数组的每个数的范围都在L和R之间。包括端点。</p>
-<p>除此之外，这个数组满足数组中的所有元素的和是k的倍数。</p>
-<p>但是这样的数组太多了，小美想知道有多少个这样的数组。你只需要告诉她在模1e9+7意义下的答案就行了。</p>
-<p>输入</p>
-<p>一行四个整数n,k,L,R</p>
-<p>（1≤n≤1e5 1≤k≤10 1≤L≤R≤1e9）</p>
-<p>输出</p>
-<p>输出一个数表示满足条件的数组的个数。</p>
-<p>样例输入</p>
-<p>9 1 1 3</p>
-<p>样例输出</p>
-<p>19683</p>
-<h1 id="solution">Solution</h1>
-<p>看似很复杂，其实只需要研究一下样例就会发现其实是一个排列组合的问题。</p>
-<p>样例是要求找到一个长度为9的数组，数组元素位于范围[1, 3]，数组和是1的倍数。由范围[1,3]组成长度为9的数组的数量为<span class="math inline">\(3^9=19638\)</span>，均为1的倍数也即是答案。那么也就是说求出所有数组的数量，将其除k即可。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">t = [int(x) <span class="keyword">for</span> x <span class="keyword">in</span> input().split(<span class="string">' '</span>)]</span><br><span class="line">length, k, L, R = t[<span class="number">0</span>], t[<span class="number">1</span>], t[<span class="number">2</span>], t[<span class="number">3</span>]</span><br><span class="line">total = pow(length, R-L+<span class="number">1</span>)</span><br><span class="line">result = (total/k)%(<span class="number">1e10</span>+<span class="number">7</span>)</span><br></pre></td></tr></table></figure>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/03/18/meituan-interview/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -404,9 +402,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-15T22:08:06+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-15T22:08:06+08:00">
                 2020-03-15
               </time>
             
@@ -419,6 +417,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/03/15/intersection-of-two-linked-lists/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/03/15/intersection-of-two-linked-lists/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -450,7 +458,7 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/03/15/intersection-of-two-linked-lists/#more" rel="contents">
-              Read more &raquo;
+              阅读全文 &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -529,9 +537,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-15T21:37:12+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-15T21:37:12+08:00">
                 2020-03-15
               </time>
             
@@ -544,6 +552,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/03/15/rand7-rand10/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/03/15/rand7-rand10/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -570,31 +588,15 @@
 
       
         
-          
-            <h1 id="problem-description">Problem Description</h1>
+          <h1 id="problem-description">Problem Description</h1>
 <p>Given a function rand7 which generates a uniform random integer in the range 1 to 7, write a function rand10 which generates a uniform random integer in the range 1 to 10.</p>
-<p>Do NOT use system's Math.random().</p>
-<p>Example 1: <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: 1</span><br><span class="line">Output: [7]</span><br></pre></td></tr></table></figure></p>
-<p>Example 2:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: 2</span><br><span class="line">Output: [8,4]</span><br></pre></td></tr></table></figure>
-<p>Example 3:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: 3</span><br><span class="line">Output: [8,1,10]</span><br></pre></td></tr></table></figure>
-<p>Note:</p>
-<ul>
-<li>rand7 is predefined.</li>
-<li>Each testcase has one argument: n, the number of times that rand10 is called.</li>
-</ul>
-<p>Follow up:</p>
-<ul>
-<li>What is the expected value for the number of calls to rand7() function?</li>
-<li>Could you minimize the number of calls to rand7()?</li>
-</ul>
-<h1 id="solution">Solution</h1>
-<p>采用的方法是接受拒绝采样，使用一个已知的概率密度函数去估计另一个。</p>
-<p>本题中用rand7来估计rand10，具体做法是做两次rand7得到rand49，取40内的数取余。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">rand10</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            r = rand7()</span><br><span class="line">            c = rand7()</span><br><span class="line">            idx = (r<span class="number">-1</span>)*<span class="number">7</span> + c</span><br><span class="line">            <span class="keyword">if</span> idx &lt;= <span class="number">40</span>:</span><br><span class="line">                <span class="keyword">return</span> (idx - <span class="number">1</span>) % <span class="number">10</span> + <span class="number">1</span></span><br></pre></td></tr></table></figure>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/03/15/rand7-rand10/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -670,9 +672,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-15T21:23:24+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-15T21:23:24+08:00">
                 2020-03-15
               </time>
             
@@ -685,6 +687,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/03/15/two-sum/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/03/15/two-sum/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -715,7 +727,7 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/03/15/two-sum/#more" rel="contents">
-              Read more &raquo;
+              阅读全文 &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -794,9 +806,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-14T15:31:14+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-14T15:31:14+08:00">
                 2020-03-14
               </time>
             
@@ -809,6 +821,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/03/14/partition-array/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/03/14/partition-array/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -840,7 +862,7 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/03/14/partition-array/#more" rel="contents">
-              Read more &raquo;
+              阅读全文 &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -919,9 +941,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-10T21:13:06+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-10T21:13:06+08:00">
                 2020-03-10
               </time>
             
@@ -934,6 +956,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/03/10/Maximal-Square/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/03/10/Maximal-Square/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -965,7 +997,7 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/03/10/Maximal-Square/#more" rel="contents">
-              Read more &raquo;
+              阅读全文 &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -1044,9 +1076,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-09T21:40:19+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-09T21:40:19+08:00">
                 2020-03-09
               </time>
             
@@ -1059,6 +1091,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/03/09/k-th-smallest-prime-fraction/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/03/09/k-th-smallest-prime-fraction/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -1090,7 +1132,7 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/03/09/k-th-smallest-prime-fraction/#more" rel="contents">
-              Read more &raquo;
+              阅读全文 &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -1169,9 +1211,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-05T19:06:55+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-05T19:06:55+08:00">
                 2020-03-05
               </time>
             
@@ -1184,6 +1226,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/03/05/model-evaluation/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/03/05/model-evaluation/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -1215,7 +1267,7 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/03/05/model-evaluation/#more" rel="contents">
-              Read more &raquo;
+              阅读全文 &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -1294,9 +1346,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-01-14T14:33:43+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-14T14:33:43+08:00">
                 2020-01-14
               </time>
             
@@ -1309,6 +1361,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/01/14/hack-captcha/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/01/14/hack-captcha/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -1342,7 +1404,7 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/01/14/hack-captcha/#more" rel="contents">
-              Read more &raquo;
+              阅读全文 &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -1421,9 +1483,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-23T18:54:26+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-23T18:54:26+08:00">
                 2019-12-23
               </time>
             
@@ -1436,6 +1498,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/12/23/load-process/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/12/23/load-process/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -1467,7 +1539,7 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/12/23/load-process/#more" rel="contents">
-              Read more &raquo;
+              阅读全文 &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -1508,7 +1580,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">&lt;i class&#x3D;&quot;fa fa-angle-right&quot;&gt;&lt;&#x2F;i&gt;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1555,7 +1627,7 @@
                 <a href="/archives/%7C%7Carchive">
               
                   <span class="site-state-item-count">17</span>
-                  <span class="site-state-item-name">posts</span>
+                  <span class="site-state-item-name">日志</span>
                 </a>
               </div>
             
@@ -1605,7 +1677,7 @@
 </div>
 
 
-  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
 
 
 
@@ -1613,7 +1685,7 @@
 
 
 
-  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
 
 
 
@@ -1713,6 +1785,13 @@
   
   
 
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
   
 
   
@@ -1752,6 +1831,28 @@
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 
