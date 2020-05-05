@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Makefile," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="利用linux工具自动构建Makefile">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自动构建Makefile">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;11&#x2F;23&#x2F;2016-11-23-auto-make&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="利用linux工具自动构建Makefile">
+<meta property="article:published_time" content="2016-11-22T16:00:00.000Z">
+<meta property="article:modified_time" content="2017-01-21T04:50:08.000Z">
+<meta property="article:author" content="Gummary">
+<meta property="article:tag" content="Makefile">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/23/2016-11-23-auto-make/"/>
+
+
+
+
+
+  <title>自动构建Makefile | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/23/2016-11-23-auto-make/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">自动构建Makefile</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-23T00:00:00+08:00">
+                2016-11-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/11/23/2016-11-23-auto-make/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2016/11/23/2016-11-23-auto-make/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><em>本文未校订，可能存在大量错别字</em></p>
+<h1 id="automake的介绍">Automake的介绍</h1>
+<p>在构建大型的C或C++项目时，很难编写出一些复合GNU Makefile标准的Makefile的文档，所以就产生了一些工具来自动生成Makefile文件。如果下载过一些C或C++项目的源码的话，可以看到，在目录下有很多configure, configure.ac, Makefile.in, Makefile.am, aclocal.m4类似的文件，这些文件的作用就是用于生成最终的Makefile。</p>
+<h2 id="gnu-构建系统简介">GNU 构建系统简介</h2>
+<p>在Unix世界中，通常用make构建一个系统，make的功能是读取package中的Makefile文件。Makefile包含了一系列用于构建系统的规则。每次make运行时都会读取Makefile然后检查文件是否存在是否被修改等信息，根据这些信息决定那些文件需要被构建（或重构），然后运行与之相关的命令。</p>
+<p>当一个系统需要在一个与开发环境不同的平台构建时，Makefile文件通常需要调整，例如编译器的名字变了或者需要其他的参数。在1991年David J. MacKenzie受够了为20个平台定制Makefile，于是他写了一个叫configure的shell脚本来自动调整Makefile（见<a href="https://www.gnu.org/software/autoconf/manual/autoconf.html#Genesis" target="_blank" rel="noopener">Genesis</a> ）.编译他的系统只需要简单的运行./configure &amp;&amp; make即可。</p>
+<p>如今这个过程被GNU项目标准化了了，GNU编码标准(见<a href="https://www.gnu.org/prep/standards/standards.html#Managing-Releases" target="_blank" rel="noopener">The Release Process</a>) 规定了每一个GNU项目的configure文件的内容和最小的接口。Makefile文件也应该遵循一些已经建立的标准。这么做的结果就是一个统一的构建系统可以使所有的系统在安装时都相同。</p>
+<p>这个构建系统就称作 GNU Build System.因为它就是通过GNU项目发展起来的。</p>
+<p>Autotools就是为你的工程构建一个GNU Build System的工具。Autoconf用于生成configure脚本，Automake用于生成Makefile文件。不使用这些工具也可以构建GNU Build System，但是非常的复杂而且易于出错。</p>
+<h2 id="gnu-build-system使用方法">GNU Build System使用方法</h2>
+<h3 id="基本的安装">基本的安装</h3>
+<p>最常见的安装过程如下:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">~ % tar zxf amhello-1.0.tar.gz</span><br><span class="line">~ % cd amhello-1.0</span><br><span class="line">~/amhello-1.0 % ./configure</span><br><span class="line">…</span><br><span class="line">config.status: creating Makefile</span><br><span class="line">config.status: creating src/Makefile</span><br><span class="line">…</span><br><span class="line">~/amhello-1.0 % make</span><br><span class="line">…</span><br><span class="line">~/amhello-1.0 % make check</span><br><span class="line">…</span><br><span class="line">~/amhello-1.0 % su</span><br><span class="line">Password:</span><br><span class="line">/home/adl/amhello-1.0 # make install</span><br><span class="line">…</span><br><span class="line">/home/adl/amhello-1.0 # exit</span><br><span class="line">~/amhello-1.0 % make installcheck</span><br><span class="line">…</span><br></pre></td></tr></table></figure>
+<p>用户首先利用tar工具解压这个包。然后进入新创建的文件并运行configure脚本，这个脚本检查该系统中各种特性，最终产生所有的Makefile文件。在这个例子中只有两个Makefile，但是在真实的环境中，会有更多甚至每个文件夹下都有一个Makefile文件。</p>
+<p>生成Makefile文件之后就可以运行make程序，make会构造出所有用于构造系统的的程序，依赖库和脚本.在这个例子中，编译的是hello程序。</p>
+<p>make check会运行程序的测试部分，这一步是非强制的，但是再决定是否安装这个程序之间检查是否构建成功是值得的。在这个例子中没有测试，所以该操作为空。</p>
+<p>在所有的文件都被构建之后，这个程序就可以被安装到系统上了。这会将所有的程序，依赖库，头文件，脚本和其他的数据文件从源目录拷贝到系统的目的目录。Make install就是完成这项工作的。默认情况下所有文件都会被安装到/usr/local的子目录下，二进制文件被复制到/usr/local/bin依赖库会被复制到/usr/local/bin，README文件会被复制到/usr/local/share/doc下。</p>
+<p>最后一个可选的步骤是运行make installcheck,这个命令会检查已经安装的文件，make check是在目录树下检查，make installcheck是检查拷贝后的文件。这两个测试在一些地方是不同的。例如有些测试无法在目录树下运行。</p>
+<h3 id="标准makfefile-targets">标准Makfefile targets</h3>
+<p>现在在GNU Build System下有了4中运行make的方式：make, make check, make install, and make installcheck。其中，check，install，installcheck被当做参数传递给make，这些参数称作make的tartget。其实make命令是make all的缩写，all是GNU Build System的默认target。</p>
+<p>下面是一些GNU编码标准指定的常用的tartget</p>
+<dl compact="compact">
+<dt>
+<code>make all</code>
+</dt>
+<dd>
+<a name="index-all"></a>
+<p>
+构建程序，依赖库，文档等 (与 <code>make</code>相同).
+</p>
+</dd>
+<dt>
+<code>make install</code>
+</dt>
+<dd>
+<a name="index-install"></a>
+<p>
+安装需要被安装的文件，将目录树下的文件拷贝到系统文件夹下
+</p>
+</dd>
+<dt>
+<code>make install-strip</code>
+</dt>
+<dd>
+<a name="index-install_002dstrip"></a>
+<p>
+与 <code>make install</code>类似, 跳过了一些debug的符号<small class="enddots">...</small>
+</p>
+</dd>
+<dt>
+<code>make uninstall</code>
+</dt>
+<dd>
+<a name="index-uninstall"></a>
+<p>
+与<code>make install</code>相反: 删除安装的文件（这个命令必须要在目录树下构建运行）
+</p>
+</dd>
+<dt>
+<code>make clean</code>
+</dt>
+<dd>
+<a name="index-clean"></a>
+<p>
+删除目录树下由 <code>make all</code>产生的文件.
+</p>
+</dd>
+<dt>
+<code>make distclean</code>
+</dt>
+<dd>
+<a name="index-distclean"></a>
+<p>
+删除由 <code>./configure</code> 创建的文件.
+</p>
+</dd>
+<dt>
+<code>make check</code>
+</dt>
+<dd>
+<a name="index-check"></a>
+<p>
+如果有测试的话就运行.
+</p>
+</dd>
+<dt>
+<code>make installcheck</code>
+</dt>
+<dd>
+<a name="index-installcheck"></a> &lt;p如果支持就检查安装的程序和依赖库
+</p>
+</dd>
+<dt>
+<code>make dist</code>
+</dt>
+<dd>
+<a name="index-dist"></a>
+<p>
+根据所有源代码重新生成 <samp><var>package</var>-<var>version</var>.tar.gz</samp>
+</p>
+</dd>
+</dl>
+<h3 id="标准目录变量">标准目录变量</h3>
+<p>GNU编码标准也规定了一些层次变量来表示安装目录，例如：</p>
+<table>
+<thead>
+<tr>
+<th>
+Directory variable
+</th>
+<th>
+Default value
+</th>
+</tr>
+</thead>
+<tr>
+<td>
+<code>prefix</code>
+</td>
+<td>
+<code>/usr/local</code>
+</td>
+</tr>
+<tr>
+<td>
+  <code><span class="nolinebreak">exec_prefix</span></code><!-- /@w -->
+</td>
+<td>
+<code><span class="math inline">\({prefix}&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt;&lt;td&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;code&gt;bindir&lt;/code&gt;&lt;!-- /@w --&gt;&lt;/td&gt;&lt;td&gt;&lt;code&gt;\)</span>{exec_prefix}/bin</code>
+</td>
+</tr>
+<tr>
+<td>
+    <code>libdir</code><!-- /@w -->
+</td>
+<td>
+<code><span class="math inline">\({exec_prefix}/lib&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt;&lt;td&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;hellip;&lt;!-- /@w --&gt;&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt;&lt;td&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;includedir&lt;/code&gt;&lt;!-- /@w --&gt;&lt;/td&gt;&lt;td&gt;&lt;code&gt;\)</span>{prefix}/include</code>
+</td>
+</tr>
+<tr>
+<td>
+  <code>datarootdir</code><!-- /@w -->
+</td>
+<td>
+<code><span class="math inline">\({prefix}/share&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt;&lt;td&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;code&gt;datadir&lt;/code&gt;&lt;!-- /@w --&gt;&lt;/td&gt;&lt;td&gt;&lt;code&gt;\)</span>{datarootdir}</code>
+</td>
+</tr>
+<tr>
+<td>
+    <code>mandir</code><!-- /@w -->
+</td>
+<td>
+<code><span class="math inline">\({datarootdir}/man&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt;&lt;td&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;code&gt;infodir&lt;/code&gt;&lt;!-- /@w --&gt;&lt;/td&gt;&lt;td&gt;&lt;code&gt;\)</span>{datarootdir}/info</code>
+</td>
+</tr>
+<tr>
+<td>
+    <code>docdir</code><!-- /@w -->
+</td>
+<td>
+<code><span class="math inline">\({datarootdir}/doc/\)</span>{PACKAGE}</code>
+</td>
+</tr>
+<tr>
+<td>
+  …<!-- /@w -->
+</td>
+</tr>
+</table>
+<p>每一个目录的角色都可以从名称中读取出来，所有的安装文件都会被安装到这些目录下。例如在amhello-1.0中，hello程序会被安装到bindir下，称作二进制目录。这个值的默认值是/usr/local/bin，用户也可以在调用configure的时候提供一个其他的值。再例如README会被安装到docdir，默认值是/usr/local/share/doc/amhello</p>
+<p>作为用户，如果想要把程序安装到自己的目录，可以使用如下的命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">~/amhello-1.0 % ./configure --prefix ~/usr</span><br><span class="line">…</span><br><span class="line">~/amhello-1.0 % make</span><br><span class="line">…</span><br><span class="line">~/amhello-1.0 % make install</span><br><span class="line">…</span><br></pre></td></tr></table></figure>
+<p>这会使程序被安装到<sub>/usr/bin/hello和</sub>/usr/share/doc/amhello/README.</p>
+<p>其他类似的文件夹选项利用<code>./configure --help</code>查看</p>
+<h3 id="标准配置变量">标准配置变量</h3>
+<p>GNU编码标准也定义了一些用于构建时的标准配置变量，其中一些包括:</p>
+<dl compact="compact">
+<dt>
+<code>CC</code>
+</dt>
+<dd>
+<p>
+C编译指令
+</p>
+</dd>
+<dt>
+<code>CFLAGS</code>
+</dt>
+<dd>
+<p>
+C 编译参数
+</p>
+</dd>
+<dt>
+<code>CXX</code>
+</dt>
+<dd>
+<p>
+C++ 编译指令
+</p>
+</dd>
+<dt>
+<code>CXXFLAGS</code>
+</dt>
+<dd>
+<p>
+C++ 编译参数
+</p>
+</dd>
+<dt>
+<code>LDFLAGS</code>
+</dt>
+<dd>
+<p>
+连接参数
+</p>
+</dd>
+<dt>
+<code>CPPFLAGS</code>
+</dt>
+<dd>
+<p>
+C/C++ 预编译参数
+</p>
+</dd>
+<dt>
+…
+</dt>
+</dl>
+<p>通常configure可以完成对这些变量完成正确的赋值，但是有时你可能想重写他们。例如你安装了多个版本的编译器并使用他们中的某一个，或者你可能会有些存在于编译器默认搜索路径之外的头文件，甚至有些连接器连接不到的依赖库。</p>
+<p>下面是一个调用configure的例子，强迫使用gcc-3作为C编译器，编译时使用<sub>/usr/include下的头文件，链接时使用</sub>/usr/lib下的依赖库。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~/amhello-1.0 % ./configure --prefix ~/usr CC=gcc-3 \</span><br><span class="line">CPPFLAGS=-I$HOME/usr/include LDFLAGS=-L$HOME/usr/lib</span><br></pre></td></tr></table></figure>
+<p>同样的，其他的变量可以查看./configure --help</p>
+<h3 id="通过config.site来覆盖默认的配置">通过config.site来覆盖默认的配置</h3>
+<p>当用类似的步骤来安装多个包时，可以通过创建一个文件来记录这些类似的配置。</p>
+<p>例如上面那个例子</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~/amhello-1.0 % ./configure --prefix ~/usr CC=gcc-3 \</span><br><span class="line">CPPFLAGS=-I$HOME/usr/include LDFLAGS=-L$HOME/usr/lib</span><br></pre></td></tr></table></figure>
+<p>假设要在~/usr下安装多个包并想要使用CC，CPPFLAGS和LDFLAGS的定义，可以通过下面的命令来创建config.site文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">test -z "$CC" &amp;&amp; CC=gcc-3</span><br><span class="line">test -z "$CPPFLAGS" &amp;&amp; CPPFLAGS=-I$HOME/usr/include</span><br><span class="line">test -z "$LDFLAGS" &amp;&amp; LDFLAGS=-L$HOME/usr/lib</span><br></pre></td></tr></table></figure>
+<p>现在任何使用~/usr前缀的configure脚本都会运行config.site病笛子上面的变量</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~/amhello-1.0 % ./configure --prefix ~/usr</span><br><span class="line">configure: loading site script /home/adl/usr/share/config.site</span><br><span class="line">…</span><br></pre></td></tr></table></figure>
+<p><em>有关这个特性的更多信息可以查看<a href="https://www.gnu.org/software/autoconf/manual/autoconf.html#Site-Defaults" target="_blank" rel="noopener">Site-Defaults</a></em></p>
+<h3 id="并行构建树">2.2.6 并行构建树</h3>
+<p>GNU Build System有两个不同的树，一个是源代码树，一个是构建树。</p>
+<p>源代码树的根文件夹是包含configure脚本的目录，包含所有的源文件。</p>
+<p>构建树的根目录是运行configure脚本的目录，运行之后这个目录下就是所有的程序，依赖库和其他由源代码派生出来的文件。构建树通常与源代码树有着相同的子目录结构，这些子目录都是由构建系统自动产生的。</p>
+<p>如果configure在存在的目录下运行，那源代码树和构建树就结合到一起，生成的文件在与源文件相同的目录下生成。上面的例子就是这种情况。</p>
+<p>用户一个常见的需求是想要把派生出来的文件都放到一个单独的目录下，以使源代码目录整洁。下面是一个将所有派生的文件都放到build文件中的例子。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">~ % tar zxf ~/amhello-1.0.tar.gz</span><br><span class="line">~ % cd amhello-1.0</span><br><span class="line">~/amhello-1.0 % mkdir build &amp;&amp; cd build</span><br><span class="line">~/amhello-1.0/build % ../configure</span><br><span class="line">…</span><br><span class="line">~/amhello-1.0/build % make</span><br><span class="line">…</span><br></pre></td></tr></table></figure>
+<p>这种将源目录和构建目录分开的构建方式通常叫做并行构建或<em>VPATH builds</em> 并行构建指的是构建目录隐藏了源代码目录而不是构建命令并发的执行。由于这个原因所以下面我们更倾向于使用<em>VPATH builds</em>来指代这种构建方式。</p>
+<p>VPATH builds有一些其他有趣的用处，例如使用不同是的方式来构建源代码。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">~ % tar zxf ~/amhello-1.0.tar.gz</span><br><span class="line">~ % cd amhello-1.0</span><br><span class="line">~/amhello-1.0 % mkdir debug optim &amp;&amp; cd debug</span><br><span class="line">~/amhello-1.0/debug % ../configure CFLAGS='-g -O0'</span><br><span class="line">…</span><br><span class="line">~/amhello-1.0/debug % make</span><br><span class="line">…</span><br><span class="line">~/amhello-1.0/debug % cd ../optim</span><br><span class="line">~/amhello-1.0/optim % ../configure CFLAGS='-O3 -fomit-frame-pointer'</span><br><span class="line">…</span><br><span class="line">~/amhello-1.0/optim % make</span><br><span class="line">…</span><br></pre></td></tr></table></figure>
+<p>如果使用网络文件系统，那么可以使用一个类似的方式来在不同的机器上构建一份相同的源代码。例如，现在有一份源代码被两个主机同时共享，两个主机分别为HOST1，HOST2，这两个主机可能位于不同的平台。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~ % cd /nfs/src</span><br><span class="line">/nfs/src % tar zxf ~/amhello-1.0.tar.gz</span><br></pre></td></tr></table></figure>
+<p>在第一台主机上可以传建一个本地的构建目录</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[HOST1] ~ % mkdir /tmp/amh &amp;&amp; cd /tmp/amh</span><br><span class="line">[HOST1] /tmp/amh % /nfs/src/amhello-1.0/configure</span><br><span class="line">...</span><br><span class="line">[HOST1] /tmp/amh % make &amp;&amp; sudo make install</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>在第二台主机上你甚至可以再相同的时间内做相同的事</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[HOST2] ~ % mkdir /tmp/amh &amp;&amp; cd /tmp/amh</span><br><span class="line">[HOST2] /tmp/amh % /nfs/src/amhello-1.0/configure</span><br><span class="line">...</span><br><span class="line">[HOST2] /tmp/amh % make &amp;&amp; sudo make install</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>在这个例子中，/nfs/src/amhello-1.0 目录完全可以是只读的。事实上， VPATH builds也是一种从只读媒体上构建系统的方式。</p>
+<h3 id="分步安装">2.2.7 分步安装</h3>
+<p>在上一节的例子中，两个主机共享一个源代码目录，但是编译和安装在每个主机上独立的运行。</p>
+<p>GNU Build System也支持多个主机通过网络来共享部分已安装的文件。实现的方式是通过区分独立于计算机架构和非独立于计算机架构的文件，同时也提供了两个Makefile的tartget来安装这两种文件。</p>
+<p>这两个target分别为install-exec和install-data，前者是用于依赖架构的文件，后者是用于独立于架构的文件。至今所使用的make install可以看做make install-exec install-data的缩写。</p>
+<p>从GNU构建系统的角度看，依赖架构和独立架构二者之间的区别仅仅就是指定他们安装目录的变量的值。在前一节(标准目录变量)中所有基于exec-prefix的变量都制定了独立架构文件的安装目录。剩下的变量指定了独立架构文件要安装的目录。</p>
+<p>在我们上面的那个网络的例子中，假设(1)我们想要直接在/usr中安装，并且(2)/usr/share被两个主机共享</p>
+<p>在第一个主机上，执行如下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[HOST1] ~ % mkdir /tmp/amh &amp;&amp; cd /tmp/amh</span><br><span class="line">[HOST1] /tmp/amh % /nfs/src/amhello-1.0/configure --prefix /usr</span><br><span class="line">...</span><br><span class="line">[HOST1] /tmp/amh % make &amp;&amp; sudo make install</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>在第二个主机上，我们只需要安装指定架构的文件，所以我们可以执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[HOST2] ~ % mkdir /tmp/amh &amp;&amp; cd /tmp/amh</span><br><span class="line">[HOST2] /tmp/amh % /nfs/src/amhello-1.0/configure --prefix /usr</span><br><span class="line">...</span><br><span class="line">[HOST2] /tmp/amh % make &amp;&amp; sudo make install-exec</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h3 id="交叉编译">2.2.8 交叉编译</h3>
+<p>交叉编译是在一个平台上构建另一个平台上运行的程序.在交叉编译中，区分出构建平台和运行平台。构建平台是执行编译任务的平台，而宿主平台是最终的二进制文件运行的平台。下面两条configure选项就是用于指定这了个平台的。</p>
+<p>--build=build</p>
+<p>这个指定了构建系统的平台</p>
+<p>--host=host</p>
+<p>这个指定了宿主平台</p>
+<p>当--host被指定后，configure会搜索相应的交叉编译套件。通常交叉编译工具都会用他们的目标平台作为名称的前缀。例如，MinGW32的交叉编译工具的名称是i586-mingw32msvc-gcc, i586-mingw32msvc-ld, i586-mingw32msvc-as等等</p>
+<p>下面是一个在GNU/LinuxPC上构建amhello-1.0的例子</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">~/amhello-1.0 % ./configure --build i686-pc-linux-gnu --host i586-mingw32msvc</span><br><span class="line">checking for a BSD-compatible install... /usr/bin/install -c</span><br><span class="line">checking whether build environment is sane... yes</span><br><span class="line">checking for gawk... gawk</span><br><span class="line">checking whether make sets $(MAKE)... yes</span><br><span class="line">checking for i586-mingw32msvc-strip... i586-mingw32msvc-strip</span><br><span class="line">checking for i586-mingw32msvc-gcc... i586-mingw32msvc-gcc</span><br><span class="line">checking for C compiler default output file name... a.exe</span><br><span class="line">checking whether the C compiler works... yes</span><br><span class="line">checking whether we are cross compiling... yes</span><br><span class="line">checking for suffix of executables... .exe</span><br><span class="line">checking for suffix of object files... o</span><br><span class="line">checking whether we are using the GNU C compiler... yes</span><br><span class="line">checking whether i586-mingw32msvc-gcc accepts -g... yes</span><br><span class="line">checking for i586-mingw32msvc-gcc option to accept ANSI C...</span><br><span class="line">…</span><br><span class="line">~/amhello-1.0 % make</span><br><span class="line">…</span><br><span class="line">~/amhello-1.0 % cd src; file hello.exe</span><br><span class="line">hello.exe: MS Windows PE 32-bit Intel 80386 console executable not relocatable</span><br></pre></td></tr></table></figure>
+<p>一般仅使用--host和--build就可以完成交叉编译。一个例外情况是需要编译的是一个交叉编译工具。此时需要第三个选项来指定目标架构。</p>
+<p>--target=target</p>
+<p>当编译编译器时，指定编译器对应的目标平台</p>
+<p>例如当安装GCC时，我们可以使用 --target=target来指定我们所构建的GCC是作为target平台的交叉编译器。混合使用--build和--target,就可以交叉编译一个交叉编译工具。这种类似的交叉编译方式通常称为<em>Canadian cross</em></p>
+<p>关于这几个选项的更多信息可以查看(Specifying-Names)[http://www.gnu.org/software/autoconf/manual/autoconf.html#Specifying-Names]</p>
+<h3 id="在运行时重命名程序">2.2.9 在运行时重命名程序</h3>
+<p>GNU构建系统提供了在安装之前自动重命名可执行文件和manpages名称的方法。在你要安装的系统上如果已经有了一个同名的程序并且你不想去覆盖，那么你就可以使用这个方法。例如，你想安装GNU tar并改名为gtar来区分宿主的tar。</p>
+<p>下面的几个configure选项就是用于改变安装程序的名称的。</p>
+<p>--program-prefix=prefix</p>
+<p>prefix将作为程序的前缀</p>
+<p>--program-suffix=suffix</p>
+<p>把suffix作为文件的后缀</p>
+<p>--program-transform-name=program</p>
+<p>运行sed program，其中program是已安装程序的名称。</p>
+<p>作为一个例子，下面的会把hello安装到/usr/local/bin/test-hello</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">~/amhello-1.0 % ./configure --program-prefix test-</span><br><span class="line">…</span><br><span class="line">~/amhello-1.0 % make</span><br><span class="line">…</span><br><span class="line">~/amhello-1.0 % sudo make install</span><br><span class="line">…</span><br></pre></td></tr></table></figure>
+<h3 id="使用destdir来构建二进制文件">2.2.10 使用DESTDIR来构建二进制文件</h3>
+<p>如果一个系统管理员想要在许多主机上安装或升级程序，而GNU构建系统的make install和make uninstall接口并不能满足这个要求。换句话说，GNU构建系统不能代替一个软件管理器。</p>
+<p>软件管理器必须要知道那些文件被程序安装了，所以make install并不能满足要求。</p>
+<p>The DESTDIR variable can be used to perform a staged installation.</p>
+<p>这个包应该被配置的仿佛将要被安装到最终的位置，但是当执行make install时，程序会被安装到DESTDIR所指定的绝对路径下。从这个目录可以很简单的查看那些文件被安装了，最终这些文件会通过一些方式被拷贝到最终的安装路径下。</p>
+<p>下面用一个例子说明如何创建一个包含被安装的所有文件的压缩包。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">~/amhello-1.0 % ./configure --prefix /usr</span><br><span class="line">…</span><br><span class="line">~/amhello-1.0 % make</span><br><span class="line">…</span><br><span class="line">~/amhello-1.0 % make DESTDIR=$HOME/inst install</span><br><span class="line">…</span><br><span class="line">~/amhello-1.0 % cd ~/inst</span><br><span class="line">~/inst % find . -type f -print &gt; ../files.lst</span><br><span class="line">~/inst % tar zcvf ~/amhello-1.0-i686.tar.gz `cat ../files.lst`</span><br><span class="line">./usr/bin/hello</span><br><span class="line">./usr/share/doc/amhello/README</span><br></pre></td></tr></table></figure>
+<p>运行上述命令之后，amhello-1.0-i686.tar.gz就可以被用于在许多主机上的根目录下解压了。</p>
+<p>在为许多不同的系统构建包时，可以使用make install-data和make install-exec命令很方便的把架构独立的文件放到同一个包里。</p>
+<h3 id="准备发布">2.2.11 准备发布</h3>
+<p>我们曾经提到过make dist。这个命令是收集所有的源文件和构建系统所必须的源文件来创建一个tar包，tar包的名字为package-version.tar.gz。</p>
+<p>另外一个更有用的命令式make distcheck,distcheck目标构造的tar包和dist一样，但是这个命令额外的确保了至今所说的命令都可以工作。</p>
+<ul>
+<li>这个命令尝试了一个完整编译过程，解压新构建的tar包，运行make，make check， make install，make installcheck甚至make dist。</li>
+<li>尝试在只读目录下VPATH 构建系统</li>
+<li>确保make clean, make distclean, make uninstall没有忽略任何一个文件。</li>
+<li>接茬DESTDIR安装工作。</li>
+</ul>
+<p>所有的这些工作都在一个临时的目录下进行所以不需要root权限。但是也要把真实的子目录结构作为一个实现的细节考虑，因为这是随时可以变的。不要全部都依赖于这个命令。</p>
+<p>如果运行make distcheck失败了，那就说明上述的一些操作无法正确的执行。一些用户可能会很沮丧。因此最好是成功运行make distcheck之后再发布程序。这个教程并不能保证构建的系统完美无瑕，但是能防止一些在安装时出现的不必要的错误。</p>
+<h3 id="自动依赖追踪">2.2.12 自动依赖追踪</h3>
+<p>自动依赖追踪是编译的一个副作用。每当构建系统编译源文件时，都会计算一个依赖库的列表。然后每当运行make并且依赖的文件被改变了时，依赖文件都会被重构。</p>
+<p>如果开发者不覆盖配置，默认情况下Automake会生成代码来自动进行依赖追踪（见<a href="https://www.gnu.org/software/automake/manual/automake.html#Dependencies" target="_blank" rel="noopener">Dependencies</a> ）。</p>
+<p>在执行configure时，你可以看到他在检查每一个它支持的依赖机制</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">~/amhello-1.0 % ./configure --prefix /usr</span><br><span class="line">…</span><br><span class="line">checking dependency style of gcc... gcc3</span><br><span class="line">…</span><br></pre></td></tr></table></figure>
+<p>因为依赖仅仅被算作编译时的一个副作用，所以在构建一个包时没有以来信息会被记录。这是完全可以的是因为所有的文件都需要被构建一次，make并不需要知道那些文件需要被重构。实际上，依赖追踪对于一些只构建一次的包完全没有用，所以，configure有一个选项来禁止。</p>
+<p>--disable-dependency-tracking</p>
+<p>加速只构建一次的软件包</p>
+<p>有一些编译器并没有提供有效的方法来派生出以来的列表，此时就需要单独运行一些程序来完成这项工作。由于单独运行非常的消耗性能，所以默认是禁止的。可以使用--enable-dependency-tracking选项来激活它们。</p>
+<p>--enable-dependency-tracking</p>
+<p>不禁止慢速的依赖提取。</p>
+<h3 id="嵌套包">嵌套包</h3>
+<p>虽然嵌套包并不推荐给想使用Autotools的人，但是在这个教程里还是有必要提及的。</p>
+<p>使用Autotool是创建的包可以被嵌套到任意的深度中。</p>
+<p>通常的步骤是包A把他需要的依赖库放到一个独立的子目录下，而依赖库B有着自己的GNU构建系统。那么A的configure脚本在运行时也会运行B的configure脚本，构建和安装A也会构建和安装B，生成发行版也会包含B。</p>
+<p>很有可能一个包下包含多个这种包。GCC就是使用了这种特性。这给了安装着一个独立的包configure，build和install，同时也允许开发这独立的工作在子目录下。</p>
+<p>当构建嵌套包时，传递给顶层configure的选项也会递归的传递给嵌套的包，如果一个包不能解析一个选项，就会忽略它，并假设对其他包有效。</p>
+<p>命令configure --help=recursive可以用于显示包括的包所支持的选项。</p>
+<h2 id="autotools是如何提供帮助的">Autotools是如何提供帮助的</h2>
+<p>下面是一些你可能不想亲自写GNU构建系统的原因。</p>
+<ul>
+<li>正如上面所写的，GNU构建系统有许多的特性，可能有一些用户需要的特性你没有完成因为你并不需要他们。</li>
+<li>实现这些特性可能非常困难而且很烦人。想象一下，你要书写正确的shell脚本，正确的Makefile，并且可能其中一些是为你不熟悉的系统架构编写的。</li>
+<li>你将会升级你的步骤来保证与GNU编码标准一致。</li>
+</ul>
+<p>GNU Autotools会隐藏所有的这些细节并提供</p>
+<ul>
+<li>工具来产生合适完整自包含的GNU构建工具。自包含意味着构建这个系统不会要求GNU工具。</li>
+<li>一个提供完善和提高的中心场所。</li>
+</ul>
+<p>但是也有一些原因你可能不会使用Autools，例如你可能已经使用了其他的构建系统，Autotools只有在你接受GNU构建系统的情况下才有用。</p>
+<h2 id="a-small-hello-world">A Small Hello World</h2>
+<p>在这一节中我们会重新创造一个amhello-1.0包。第一节讲述了如何调用Autotools来初始化GNU构建系统，第二部分解释了configure.ac和Makefil.am的含义。</p>
+<h3 id="创建amhello-1.0.tar.gz">创建amhello-1.0.tar.gz</h3>
+<p>下面就是我们如何创建这个包的步骤，这个包很简单，我们只需要使用5个文件就可以了。</p>
+<p>在一个干净的目录下创建下面的文件</p>
+<ul>
+<li>src/main.c是hello程序的源文件。我们把它存放到/src子目录下，因为之后当这个包发展起来后，会产生一个额外的man目录存放man的帮助文档，一个data目录存放数据文件等等。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;config.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">main (<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">puts</span> (<span class="string">"Hello World!"</span>);</span><br><span class="line">  <span class="built_in">puts</span> (<span class="string">"This is "</span> PACKAGE_STRING <span class="string">"."</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>README 包含了一些关于这个包的有限的文档</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~/amhello % cat README</span><br><span class="line">This is a demonstration package for GNU Automake.</span><br><span class="line">Type 'info Automake' to read the Automake manual.</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Makefile.am 和 src/Makefile.am包含了这两个文件Automake需要的指令</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">~/amhello % cat src/Makefile.am</span><br><span class="line">bin_PROGRAMS = hello</span><br><span class="line">hello_SOURCES = main.c</span><br><span class="line">~/amhello % cat Makefile.am</span><br><span class="line">SUBDIRS = src</span><br><span class="line">dist_doc_DATA = README</span><br></pre></td></tr></table></figure>
+<ul>
+<li>最后，configure.ac包含了用于产生configure脚本的Autoconf指令</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">~/amhello % cat configure.ac</span><br><span class="line">AC_INIT([amhello], [1.0], [bug-automake@gnu.org])</span><br><span class="line">AM_INIT_AUTOMAKE([-Wall -Werror foreign])</span><br><span class="line">AC_PROG_CC</span><br><span class="line">AC_CONFIG_HEADERS([config.h])</span><br><span class="line">AC_CONFIG_FILES([</span><br><span class="line"> Makefile</span><br><span class="line"> src/Makefile</span><br><span class="line">])</span><br><span class="line">AC_OUTPUT</span><br></pre></td></tr></table></figure>
+<p>当你写完这5个文件后，就可以运行Autotools来初始化构建系统。命令如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">~/amhello % autoreconf --install</span><br><span class="line">configure.ac: installing './install-sh'</span><br><span class="line">configure.ac: installing './missing'</span><br><span class="line">configure.ac: installing './compile'</span><br><span class="line">src/Makefile.am: installing './depcomp'</span><br></pre></td></tr></table></figure>
+<p>此时构建系统就完成了。</p>
+<p>除了命令输出的这三个脚本，你还可以看到autoconf创建的其他的四个文件 configure, config.h.in, Makefile.in, src/Makefile.in。最后三个会被configure脚本改编成config.h, Makefile和src/Makefile来适应系统。</p>
+<p>接下来我们运行configure</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">~/amhello % ./configure</span><br><span class="line">checking for a BSD-compatible install... /usr/bin/install -c</span><br><span class="line">checking whether build environment is sane... yes</span><br><span class="line">checking for gawk... no</span><br><span class="line">checking for mawk... mawk</span><br><span class="line">checking whether make sets $(MAKE)... yes</span><br><span class="line">checking for gcc... gcc</span><br><span class="line">checking for C compiler default output file name... a.out</span><br><span class="line">checking whether the C compiler works... yes</span><br><span class="line">checking whether we are cross compiling... no</span><br><span class="line">checking for suffix of executables...</span><br><span class="line">checking for suffix of object files... o</span><br><span class="line">checking whether we are using the GNU C compiler... yes</span><br><span class="line">checking whether gcc accepts -g... yes</span><br><span class="line">checking for gcc option to accept ISO C89... none needed</span><br><span class="line">checking for style of include used by make... GNU</span><br><span class="line">checking dependency style of gcc... gcc3</span><br><span class="line">configure: creating ./config.status</span><br><span class="line">config.status: creating Makefile</span><br><span class="line">config.status: creating src/Makefile</span><br><span class="line">config.status: creating config.h</span><br><span class="line">config.status: executing depfiles commands</span><br></pre></td></tr></table></figure>
+<p>你可以发现configure成功创建了适应系统的Makefile, src/Makefile, 和config.h。现在就可以运行我们所期待的所有目标了。例如</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">~/amhello % make</span><br><span class="line">…</span><br><span class="line">~/amhello % src/hello</span><br><span class="line">Hello World!</span><br><span class="line">This is amhello 1.0.</span><br><span class="line">~/amhello % make distcheck</span><br><span class="line">…</span><br><span class="line">=============================================</span><br><span class="line">amhello-1.0 archives ready for distribution:</span><br><span class="line">amhello-1.0.tar.gz</span><br><span class="line">=============================================</span><br></pre></td></tr></table></figure>
+<p>注意只有GNU构建系统不存在的时候才需要运行autoreconf。当你后来改动了Makefile.ac或configure.ac时，与之对应的构建系统会在运行make的时候自动生成。</p>
+<p>autoreconf是一个按正确顺序调用autoconf，automake等一些其他命令的脚本。如果你不了解他们，那么理解这些工具调用的顺序并不重要。但是由于Autoconf和AutoMake有着不同的教程，所以重要的是理解autoconf掌管着如何通过configure.ac生成configure脚本，automake是通过makefile.am和configure.ac来生成Makefile.in的。</p>
+<h3 id="amhello的configure文件详解">amhello的configure文件详解</h3>
+<p>首先先看一下configure.ac的内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">AC_INIT([amhello], [1.0], [bug-automake@gnu.org])</span><br><span class="line">AM_INIT_AUTOMAKE([-Wall -Werror foreign])</span><br><span class="line">AC_PROG_CC</span><br><span class="line">AC_CONFIG_HEADERS([config.h])</span><br><span class="line">AC_CONFIG_FILES([</span><br><span class="line"> Makefile</span><br><span class="line"> src/Makefile</span><br><span class="line">])</span><br><span class="line">AC_OUTPUT</span><br></pre></td></tr></table></figure>
+<p>autoconf（生成configure脚本）和automake（生成Makefile.in）都会读取这个文件。它包含了许多M4宏，这些宏最终都会被扩展成configure脚本的的shell代码。这里不会说明如何编写这个脚本，在Autoconf手册里有详细的一节来介绍(见<a href="https://www.gnu.org/software/autoconf/manual/autoconf.html#Writing-Autoconf-Input" target="_blank" rel="noopener">Writing-Autoconf-Input</a> ）</p>
+<p>configure.ac中以AC_ 为前缀的是Autoconf宏，在Autoconf手册中有详细的介绍(见<a href="https://www.gnu.org/software/autoconf/manual/autoconf.html#Autoconf-Macro-Index" target="_blank" rel="noopener">Autoconf-Macro-Index</a> )。AM_为前缀的是Automake宏，在Automake文档中有详细的介绍(见<a href="https://www.gnu.org/software/automake/manual/automake.html#Macro-Index" target="_blank" rel="noopener">Macro-Index</a> )</p>
+<p>AM_INIT_AUTOMAKE中的参数是一系列传递给automake的选项。-Wall和-Werror是令automake打开所有的Warning并将他们报告为error。这里我们讨论的是automake的Warning，例如Makefile.am中未知的指令。这个Warning与编译器的Warning之间没有任何关系，即使二者可能有着相同的名称。在编写一个软件包时使用这两个选项可以帮助你不遗漏任何的问题，这会让你以后很轻松。foreign选项告诉automake这个包不会与GNU标准完全一致。GNU包应该在发布时必须包含额外的文件例如ChangeLog，AUTHORS等等。在我们这个简单的例子中没有必要加入这些。</p>
+<p>AC_PROG_CC这一行会使configure脚本搜索一个C编译器并为CC赋值。由Automake生成的src/Makefile.in会使用CC来构建hello。所以当configure根据src/Makefile.in创建src/Makefile时，会用他找到的编译器来定义Makefile中的CC。如果要求Automake在Makefile.in中使用一个configure.ac未定义的CC时，他会建议你增加AC_PROG_CC的调用。</p>
+<p>AC_CONFIG_HEADERS([config.h])调用会收集由所有位于configure.ac中的其他宏定义的&quot;#define&quot;内容，然后存到config.h文件。在这个例子中，AC_INIT已经定义了许多宏。下面是在configure运行之后config.h的部分内容。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">…</span><br><span class="line"><span class="comment">/* Define to the address where bug reports for this package should be sent. */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> PACKAGE_BUGREPORT <span class="meta-string">"bug-automake@gnu.org"</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to the full name and version of this package. */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> PACKAGE_STRING <span class="meta-string">"amhello 1.0"</span></span></span><br><span class="line">…</span><br></pre></td></tr></table></figure>
+<p>你可能会注意到在src/main中也使用了config.h头文件，hello程序就可以使用PACKAGE_STRING宏了。在一个真实的软件包中，config.h会变得非常巨大，每一个#define都包含了系统的一个特性。</p>
+<p>AC_CONFIG_FILES宏声明了所有由configure根据*.in模板生成的文件。Automake也会遍历这个目录来找到他需要运行的Makefile.am文件。（很重要的一点是你的工程每添加一个目录，你就要添加一个Makefile到这个列表中，否则Automake永远不会运行你文件夹下的Makefile.am文件）</p>
+<p>最后AC_OUTPUT是一个结束命令，这个命令生成的脚本代码的作用是生成由AC_CONFIG_HEADERS和AC_CONFIG_FILES注册的文件。</p>
+<p>当开始一个新的包时，我们建议你通过写一个简单的 configure.ac文件开始，然后再逐渐增加一些其他的测试。autoscan命令也会建议一些你的包可能需要的测试(见<a href="http://www.gnu.org/software/autoconf/manual/autoconf.html#autoscan-Invocation" target="_blank" rel="noopener">autoscan-Invocation</a> )</p>
+<h3 id="amhello的makefile.am解释">2.4.3 amhello的Makefile.am解释</h3>
+<p>现在我们来看一下src/Makefile.am文件。这个文件包含了Automake用于构建和安装hello的指令。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bin_PROGRAMS = hello</span><br><span class="line">hello_SOURCES = main.c</span><br></pre></td></tr></table></figure>
+<p>Makefile.am和Makefile文件有着相同的语法规则。当automake加工Makefile.am是将整个文件复制到Makefile.in文件(会被configure转换为Makefile)中。会通过生成一些构建规则和一些其他的变量来反应些变量的定义。通常Makefile.am文件中只包含了上面列出的那些变量。但是也可以包含一些automake不会进行解释的其他的变量和规则的定义。</p>
+<p>以_PROGRAMS结尾的变量列出了最终Makefile应该生成的程序名称。从Automake的角度讲，_PROGRAMS后缀称作主语。Automake会将其他主语例如 _SCRIPTS, _DATA, _LIBRARIES等与对应的文件相关联。</p>
+<p>bin_PROGRAMS的bin部分会指定automake将程序安装到bindir。GNU构建系统有一系列的变量来表示目的目录并允许用户定制这些路径。任何一个这种类似的路径变量都可以作为前缀放在一个主语的前面（除了dir后缀）。以此来告诉automake将程序安装到哪。</p>
+<p>程序需要从源代码构建，所以每一个在_PROGRAMS中被列出的程序prog，automake会寻找另一个叫做prog_SOURCES变量，这个变量列出他的源代码。可能会有一个或多个源代码，他们会被一起编译和连接。</p>
+<p>automake同样知道当创建一个tar包来发布程序时，源代码也要被打包。所以hello_SOURCES变量的另一个作用是在使用make dist创建tar包时main.c也会是tar包的一部分。</p>
+<p>最后是最高层的Makefile.am的解释</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SUBDIRS = src</span><br><span class="line">dist_doc_DATA = README</span><br></pre></td></tr></table></figure>
+<p>SUBDIRS列出了所有在构建当前目录之前make应该先进入的目录。所以当我们在最高的目录结构上运行make时，make会进入src目录的原因就是定义了SUBDIRS变量。</p>
+<p>dist_doc_DATA变量使得README在发布和安装时被安装到docdir。由_DATA为后缀的变量列出的文件不会在发布时自动加入tar包，所以加上dist_前缀使他们也能发布。然但对README来说是多此一举的，因为automake会自动的发布他所遇到的所有README文件(其他由automake自动发布的文件可以通过automake --help)查看。第二行唯一重要的作用就是在make install时安装REAME</p>
+<p>这个例子中没有包含的就是在程序中如何获取安装目录的值(见<a href="https://www.gnu.org/software/automake/manual/automake.html#Standard-Directory-Variables" target="_blank" rel="noopener">Standard-Directory-Variables</a> )</p>
+<p>也就是如何把他们转换成宏变量。详细内容可查看(<a href="Defining-Directories">https://www.gnu.org/software/autoconf/manual/autoconf.html#Defining-Directories</a> )</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Makefile/" rel="tag"># Makefile</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/16/2016-11-16-Collinear-Points/" rel="next" title="归并排序">
+                <i class="fa fa-chevron-left"></i> 归并排序
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/28/2016-11-28-priority-queue-heap-sort/" rel="prev" title="优先队列、堆排序及其应用">
+                优先队列、堆排序及其应用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#automake的介绍"><span class="nav-number">1.</span> <span class="nav-text">Automake的介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#gnu-构建系统简介"><span class="nav-number">1.1.</span> <span class="nav-text">GNU 构建系统简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gnu-build-system使用方法"><span class="nav-number">1.2.</span> <span class="nav-text">GNU Build System使用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本的安装"><span class="nav-number">1.2.1.</span> <span class="nav-text">基本的安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标准makfefile-targets"><span class="nav-number">1.2.2.</span> <span class="nav-text">标准Makfefile targets</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标准目录变量"><span class="nav-number">1.2.3.</span> <span class="nav-text">标准目录变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标准配置变量"><span class="nav-number">1.2.4.</span> <span class="nav-text">标准配置变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过config.site来覆盖默认的配置"><span class="nav-number">1.2.5.</span> <span class="nav-text">通过config.site来覆盖默认的配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#并行构建树"><span class="nav-number">1.2.6.</span> <span class="nav-text">2.2.6 并行构建树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分步安装"><span class="nav-number">1.2.7.</span> <span class="nav-text">2.2.7 分步安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#交叉编译"><span class="nav-number">1.2.8.</span> <span class="nav-text">2.2.8 交叉编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在运行时重命名程序"><span class="nav-number">1.2.9.</span> <span class="nav-text">2.2.9 在运行时重命名程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用destdir来构建二进制文件"><span class="nav-number">1.2.10.</span> <span class="nav-text">2.2.10 使用DESTDIR来构建二进制文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备发布"><span class="nav-number">1.2.11.</span> <span class="nav-text">2.2.11 准备发布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动依赖追踪"><span class="nav-number">1.2.12.</span> <span class="nav-text">2.2.12 自动依赖追踪</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#嵌套包"><span class="nav-number">1.2.13.</span> <span class="nav-text">嵌套包</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#autotools是如何提供帮助的"><span class="nav-number">1.3.</span> <span class="nav-text">Autotools是如何提供帮助的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#a-small-hello-world"><span class="nav-number">1.4.</span> <span class="nav-text">A Small Hello World</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建amhello-1.0.tar.gz"><span class="nav-number">1.4.1.</span> <span class="nav-text">创建amhello-1.0.tar.gz</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#amhello的configure文件详解"><span class="nav-number">1.4.2.</span> <span class="nav-text">amhello的configure文件详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#amhello的makefile.am解释"><span class="nav-number">1.4.3.</span> <span class="nav-text">2.4.3 amhello的Makefile.am解释</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

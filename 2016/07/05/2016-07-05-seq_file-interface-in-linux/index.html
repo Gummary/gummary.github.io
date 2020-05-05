@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="linux,kernel,seq_file," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="分别用一个简单的例子来说明proc伪文件系统和seq_file接口">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux中的proc伪文件系统和seq_file接口">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;07&#x2F;05&#x2F;2016-07-05-seq_file-interface-in-linux&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="分别用一个简单的例子来说明proc伪文件系统和seq_file接口">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;NXLi4A7.png">
+<meta property="article:published_time" content="2016-07-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2017-01-21T04:50:08.000Z">
+<meta property="article:author" content="Gummary">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="kernel">
+<meta property="article:tag" content="seq_file">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;NXLi4A7.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/07/05/2016-07-05-seq_file-interface-in-linux/"/>
+
+
+
+
+
+  <title>Linux中的proc伪文件系统和seq_file接口 | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/07/05/2016-07-05-seq_file-interface-in-linux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux中的proc伪文件系统和seq_file接口</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-07-05T00:00:00+08:00">
+                2016-07-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/07/05/2016-07-05-seq_file-interface-in-linux/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2016/07/05/2016-07-05-seq_file-interface-in-linux/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>今天的操作系统课程实践是让基于proc写一个读取进程控制块信息的内核模块，开始以为这两个东西是捆绑到一起的，后来在网上查阅了一些资料发现这是两个东西。这篇博客先介绍一下什么是proc伪文件系统，然后再用一个简单的例子来说明一下seq_file接口。这两部分内容大多都是翻译自一些英文文章，和之前一样也会加入一些自己的理解。</p>
+<h1 id="proc伪文件系统">proc伪文件系统</h1>
+<p>在Linux中proc伪文件系统主要是用于内核和内核模块给应用进程发送信息，一开始是用与提供给应用程序一种简单的方法来获取进程的信息（这也是叫proc的原因），后来被用于内核为用户进程提供各种信息。</p>
+<p>和上一篇博文讲的设备差不多，使用proc文件系统，也就是创建一个proc文件必须要创建一个结构体，其中包含了指向操作该proc文件的指针，还有提供给<strong>init_module</strong>和<strong>cleanup_module</strong>注册和卸载模块的函数。</p>
+<p>proc文件系统并不是存放在硬盘上而是存放在内存中。</p>
+<p>在proc文件被打开或关闭时，模块编写者并不能得到通知，因此可能会出先proc文件被打开后，该模块被移除了的情况。</p>
+<p>下面是一个简单的例子来说明如何创建一个简单的proc文件，该文件的功能是每当读取这个文件时都会输出&quot;HelloWorld!&quot;</p>
+<p><em>下面这个代码仅能在2.6之前的内核上运行</em></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;linux/module.h&gt;	/* Specifically, a module */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;linux/kernel.h&gt;	/* We're doing kernel work */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;linux/proc_fs.h&gt;	/* Necessary because we use the proc fs */</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> procfs_name <span class="meta-string">"helloworld"</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 下面的结构体存储了proc文件的信息</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">proc_dir_entry</span> *<span class="title">Our_Proc_File</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">procfile_read(<span class="keyword">char</span> *<span class="built_in">buffer</span>,</span><br><span class="line">	      <span class="keyword">char</span> **buffer_location,</span><br><span class="line">	      <span class="keyword">off_t</span> offset, <span class="keyword">int</span> buffer_length, <span class="keyword">int</span> *eof, <span class="keyword">void</span> *data)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> ret;</span><br><span class="line">	</span><br><span class="line">	printk(KERN_INFO <span class="string">"procfile_read (/proc/%s) called\n"</span>, procfs_name);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	* 由于标准的read函数在没有不返回0的情况下会一直读取该文件，所以</span></span><br><span class="line"><span class="comment">	* 必须要加上if判断。</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">	<span class="keyword">if</span> (offset &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="comment">/* we have finished to read, return 0 */</span></span><br><span class="line">		ret  = <span class="number">0</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="comment">/* 填充缓存区，并返回大小*/</span></span><br><span class="line">		ret = <span class="built_in">sprintf</span>(<span class="built_in">buffer</span>, <span class="string">"HelloWorld!\n"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">init_module</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	Our_Proc_File = create_proc_entry(procfs_name, <span class="number">0644</span>, <span class="literal">NULL</span>);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> (Our_Proc_File == <span class="literal">NULL</span>) &#123;</span><br><span class="line">		remove_proc_entry(procfs_name, &amp;proc_root);</span><br><span class="line">		printk(KERN_ALERT <span class="string">"Error: Could not initialize /proc/%s\n"</span>,</span><br><span class="line">		       procfs_name);</span><br><span class="line">		<span class="keyword">return</span> -ENOMEM;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	Our_Proc_File-&gt;read_proc = procfile_read;</span><br><span class="line">	Our_Proc_File-&gt;owner 	 = THIS_MODULE;</span><br><span class="line">	Our_Proc_File-&gt;mode 	 = S_IFREG | S_IRUGO;</span><br><span class="line">	Our_Proc_File-&gt;uid 	 = <span class="number">0</span>;</span><br><span class="line">	Our_Proc_File-&gt;gid 	 = <span class="number">0</span>;</span><br><span class="line">	Our_Proc_File-&gt;<span class="built_in">size</span> 	 = <span class="number">37</span>;</span><br><span class="line"></span><br><span class="line">	printk(KERN_INFO <span class="string">"/proc/%s created\n"</span>, procfs_name);	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;	<span class="comment">/* everything is ok */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cleanup_module</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	remove_proc_entry(procfs_name, &amp;proc_root);</span><br><span class="line">	printk(KERN_INFO <span class="string">"/proc/%s removed\n"</span>, procfs_name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><em>开始还想把上面的移到3.10.下运行，结果今天问了一下老师，老师说上面这个方法在3.10.之后就被移出了，只能使用seq_file接口来对其进行读写</em></p>
+<h1 id="seq_file接口">seq_file接口</h1>
+<p>创建一个正确的proc文件是非常困难的，当输出边的特别大的时候，读取速度会非常慢，而且会出现一些错误，但是在linux2.6之后的内核中，包含了一系列的函数，用于快速简单的读写proc文件，这些函数就是seq_file接口。</p>
+<p>sqe_file接口包含在&lt;linux/sqe_file.h&gt;文件下，sqe_file包括了三个方面：</p>
+<ol type="1">
+<li>一个迭代器接口来逐步的获取文件内容。</li>
+<li>一些函数来格式化输出而不用担心输出的内存缓冲的大小等信息。</li>
+<li>将操作虚拟文件的函数封装成几个文件操作函数。</li>
+</ol>
+<p>下面将通过一个简单的例子来说明seq_file接口如何使用。这个模块将实现每读取一次都输出一些增长的整数。</p>
+<p>该模块的全部源代码位于http://lwn.net/Articles/22359/</p>
+<p>注：上面给出的源代码中的create_proc_entry已经在3.10.移除了，如果要使用的话进行如下的改变</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-	entry = create_proc_entry(<span class="string">"sequence"</span>, <span class="number">0</span>, <span class="literal">NULL</span>);</span><br><span class="line">-	<span class="keyword">if</span> (entry)</span><br><span class="line">-		entry-&gt;proc_fops = &amp;ct_file_ops;</span><br><span class="line">+	entry = proc_create(<span class="string">"sequence"</span>, <span class="number">0</span>, <span class="literal">NULL</span>, &amp;ct_file_ops);</span><br></pre></td></tr></table></figure>
+<h2 id="迭代器接口">迭代器接口</h2>
+<p>使用seq_file接口来实现一个虚拟文件的内核模块必须要实现一个简单的迭代器。这个迭代器可以逐步的读取数据。迭代器要有能力移动到一些和文件实现相关的特殊的位置，但对这些特殊位置的解释又取决于迭代器自身。假设用seq_file来实现读取防火墙规则，那么迭代器就可以把位置n解释成第n条规则。因此位置取决于文件是如何实现的，而不必去计算在文件中的偏移量。唯一的例外就是位置0代表着文件的开始。</p>
+<p>/proc/sequence的迭代器是将下一个要输出的数字作为位置。</p>
+<p>要使迭代器工作必须要有4个函数，分别为start，next，stop和show，下面将依次介绍这四个函数。</p>
+<h2 id="start">start</h2>
+<p>该函数接受一个位置参数然后返回一个要从某个位置开始读的迭代器。在sequence中start函数的实现如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> *<span class="title">ct_seq_start</span><span class="params">(struct seq_file *s, <span class="keyword">loff_t</span> *pos)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">loff_t</span> *spos = kmalloc(<span class="keyword">sizeof</span>(<span class="keyword">loff_t</span>), GFP_KERNEL);</span><br><span class="line">    <span class="keyword">if</span> (! spos)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    *spos = *pos;</span><br><span class="line">    <span class="keyword">return</span> spos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个迭代器的全部数据结构只是一个loff_t类型的值，sequence的迭代器没有上限，但是在大部分情况下你要检查是否到了结束，如果是就返回NULL</p>
+<p>对于一些更为复杂的应用，还可以使用seq_file结构体内的private变量。start函数还可以返回一个特殊的值，SEQ_START_TOKEN,用于表明offset为0，即文件的开头。</p>
+<h2 id="next">next</h2>
+<p>next函数的作用是把迭代器移动到sequence的下一个位置，在我们的例子中，只是将位置加1，在其他的应用中需要移动的是一些数据结构。next函数返回了一个新的迭代器，或者当sequence完成后返回NULL，下面是一个简单的版本：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> *<span class="title">ct_seq_next</span><span class="params">(struct seq_file *s, <span class="keyword">void</span> *v, <span class="keyword">loff_t</span> *pos)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">loff_t</span> *spos = v;</span><br><span class="line">    *pos = ++*spos;</span><br><span class="line">    <span class="keyword">return</span> spos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="stop">stop</h2>
+<p>stop函数是在迭代完成时被调用，作用是清理，如果在迭代的过程中申请了内存，那么就要在stop中释放掉。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ct_seq_stop</span><span class="params">(struct seq_file *s, <span class="keyword">void</span> *v)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    kfree(v);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="show">show</h2>
+<p>show函数会格式化迭代器所指向的数据并将其输出。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">ct_seq_show</span><span class="params">(struct seq_file *s, <span class="keyword">void</span> *v)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">loff_t</span> *spos = v;</span><br><span class="line">    seq_printf(s, <span class="string">"%lld\n"</span>, (<span class="keyword">long</span> <span class="keyword">long</span>)*spos);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果一切做的都正确的话，show函数会返回0，而一个负数意味着出现了错误，错误会返回到用户空间。这个函数也可以返回SEQ_SKIP，表示跳过当前值，如果在这之前show已经产生了一些输出，那么这些输出将会被遗弃。</p>
+<p>最后通过定义一个seq_operations结构体来完成对seq_file的定义。seq_operations中包含了那4个我们刚刚定义的函数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">seq_operations</span> <span class="title">ct_seq_ops</span> = &#123;</span></span><br><span class="line">    .start = ct_seq_start,</span><br><span class="line">    .next  = ct_seq_next,</span><br><span class="line">    .<span class="built_in">stop</span>  = ct_seq_stop,</span><br><span class="line">    .show  = ct_seq_show</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>值得注意的是由start返回和由其它函数操作的迭代器的内容对于seq_file接口来说是完全不透明的。 It can thus be anything that is useful in stepping through the data to be output. Counters can be useful, but it could also be a direct pointer into an array or linked list. Anything goes, as long as the programmer is aware that things can happen between calls to the iterator function.seq_file在start和stop之间不会进入sleep状态。</p>
+<h2 id="个函数调用的过程图">4个函数调用的过程图</h2>
+<p><img src="http://i.imgur.com/NXLi4A7.png" /></p>
+<h1 id="格式化输出">格式化输出</h1>
+<p>调用seq_file接口来实现内核空间向用户空间发送数据。</p>
+<p>大部分的输出都会使用seq_printf()函数，使用方式和printk很像，但是需要seq_file结构体指针作为参数。</p>
+<p>如果直接进行字符输出，那么可以使用下面的三个方法</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">seq_putc(struct seq_file *m, <span class="keyword">char</span> c);</span><br><span class="line">seq_puts(struct seq_file *m, <span class="keyword">const</span> <span class="keyword">char</span> *s);</span><br><span class="line">seq_escape(struct seq_file *m, <span class="keyword">const</span> <span class="keyword">char</span> *s, <span class="keyword">const</span> <span class="keyword">char</span> *esc);</span><br></pre></td></tr></table></figure>
+<p>前两个输出了一个字符和一个字符串。<strong>seq_excape</strong>和<strong>seq_puts</strong>类似，只是s中在esc的字符都会以八进制的形式输出。</p>
+<p>还有两个函数用于输出文件名</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">seq_path</span><span class="params">(struct seq_file *m, <span class="keyword">const</span> struct path *path,</span></span></span><br><span class="line"><span class="function"><span class="params">		     <span class="keyword">const</span> <span class="keyword">char</span> *esc)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">seq_path_root</span><span class="params">(struct seq_file *m, <span class="keyword">const</span> struct path *path,</span></span></span><br><span class="line"><span class="function"><span class="params">		  <span class="keyword">const</span> struct path *root, <span class="keyword">const</span> <span class="keyword">char</span> *esc)</span></span></span><br></pre></td></tr></table></figure>
+<p><strong>path</strong>表明了要输出的文件名，esc是不输出的字符集，调用<strong>seq_path</strong>将会输出一个相对于当前进程所在文件系统的根目录的地址 如果需要一个不同的根目录，可以调用第二个函数。如果该目录不可达，那么<strong>seq_path_root</strong>将返回<strong>SEQ_SKIP</strong></p>
+要产生更复杂的输出可能还要检查bool seq_has_overflowed(struct seq_file *m)，如果返回true还要避免seq_
+<output>
+<p>调用。</p>
+<p>seq_has_overflowed返回true代表着seq_file接口的缓冲区将会被遗弃，seq_show函数将尝试分配一个更大的缓冲区并重新输出。</p>
+<h1 id="完成模块">完成模块</h1>
+<p>现在我们已经完成了一系列的函数用于输出，但是还有把他们变成一个用户可见的文件。创建一个proc文件需要一些操作该文件的函数。seq_file已经完成了大部分的工作，但学你文件的作者仍需要完成open方法，open的实现在大部分情况下只有一行，和我们的例子一样</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">ct_open</span><span class="params">(struct inode *inode, struct file *file)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> seq_open(file, &amp;ct_seq_ops);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用seq_open之后会依次调用我们实现的seq_operations函数，然后准备迭代文件。</p>
+<p>成功打开之后，seq_open把seq_file的结构体指针指向了file-&gt;private_data数据域中，如果你有一个应用可以将一个迭代器用到多个文件中，那你可以将任意的指针存储到seq_file结构中的private变量，该值会在迭代函数中取回。</p>
+<p>seq_open还有一个装饰函数称作sqe_open_private，这个函数分配了一个全零的内存块将seq_file结构体的private指针指向这段内存，返回0表示分配成功。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">ct_open</span><span class="params">(struct inode *inode, struct file *file)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> seq_open_private(file, &amp;ct_seq_ops,</span><br><span class="line">				<span class="keyword">sizeof</span>(struct mystruct));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>seq_open_private还有一个变种__seq_open_private,这个函数功能和seq_open_private一样，只是返回值是指向内存块的指针，使用者可以用这个方法对内存块进行初始化，例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">ct_open</span><span class="params">(struct inode *inode, struct file *file)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">mystruct</span> *<span class="title">p</span> =</span></span><br><span class="line"><span class="class">		__<span class="title">seq_open_private</span>(<span class="title">file</span>, &amp;<span class="title">ct_seq_ops</span>, <span class="title">sizeof</span>(*<span class="title">p</span>));</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (!p)</span><br><span class="line">		<span class="keyword">return</span> -ENOMEM;</span><br><span class="line"></span><br><span class="line">	p-&gt;foo = bar; <span class="comment">/* initialize my stuff */</span></span><br><span class="line">		...</span><br><span class="line">	p-&gt;baz = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>作为与之相关的关闭函数，seq_release_private会释放掉释放的内存。</p>
+<p>其他的操作函数,read,llseek,release都被seq_file自身实现了，所以虚拟文件的file_operations结构体可以是:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">file_operations</span> <span class="title">ct_file_ops</span> = &#123;</span></span><br><span class="line">    .owner   = THIS_MODULE,</span><br><span class="line">    .<span class="built_in">open</span>    = ct_open,</span><br><span class="line">    .<span class="built_in">read</span>    = seq_read,</span><br><span class="line">    .llseek  = seq_lseek,</span><br><span class="line">    .<span class="built_in">release</span> = seq_release</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>创建/proc文件的最后一步就是创建他自己，例如sequence的初始化程序为:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">file_operations</span> <span class="title">ct_file_ops</span> = &#123;</span></span><br><span class="line">    .owner   = THIS_MODULE,</span><br><span class="line">    .<span class="built_in">open</span>    = ct_open,</span><br><span class="line">    .<span class="built_in">read</span>    = seq_read,</span><br><span class="line">    .llseek  = seq_lseek,</span><br><span class="line">    .<span class="built_in">release</span> = seq_release</span><br><span class="line">&#125;;</span><br><span class="line">module_init(ct_init);</span><br></pre></td></tr></table></figure>
+<h1 id="拓展">拓展</h1>
+<h2 id="seq_list">seq_list</h2>
+<p>如果你的文件是迭代一个链表，那么可以使用下面这三个函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">struct list_head *<span class="title">seq_list_start</span><span class="params">(struct list_head *head,<span class="keyword">loff_t</span> pos)</span></span>;</span><br><span class="line"><span class="function">struct list_head *<span class="title">seq_list_start_head</span><span class="params">(struct list_head *head,<span class="keyword">loff_t</span> pos)</span></span>;</span><br><span class="line"><span class="function">struct list_head *<span class="title">seq_list_next</span><span class="params">(<span class="keyword">void</span> *v, struct list_head *head,<span class="keyword">loff_t</span> *ppos)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>这些函数会把pos解释成在链表中的位置。start和stop函数中只需要将合适的链表头指针传递给seq_list_* helpers即可。</p>
+<h2 id="一个更简单的例子">一个更简单的例子</h2>
+<p>对于一些更为简单的虚拟文件，还有一个更为简单的接口，可以只定义show函数。open方法需要调用下面这个函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">single_open</span><span class="params">(struct file *file,</span></span></span><br><span class="line"><span class="function"><span class="params">	                <span class="keyword">int</span> (*show)(struct seq_file *m, <span class="keyword">void</span> *p),</span></span></span><br><span class="line"><span class="function"><span class="params">	                <span class="keyword">void</span> *data)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>在输出时会调用show函数，传递给single_open的data参数会被赋值给seq_file中的private指针。当使用single_open时，需要用single_release来替换seq_release以防止内存泄漏。</p>
+<h2 id="seq_file结构体">seq_file结构体</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">seq_file</span> &#123;</span></span><br><span class="line">	<span class="keyword">char</span> *buf;</span><br><span class="line">	<span class="keyword">size_t</span> <span class="built_in">size</span>;</span><br><span class="line">	<span class="keyword">size_t</span> from;</span><br><span class="line">	<span class="keyword">size_t</span> count;</span><br><span class="line">	<span class="keyword">loff_t</span> index;</span><br><span class="line">	<span class="keyword">loff_t</span> read_pos;</span><br><span class="line">	u64 version;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">mutex</span> <span class="title">lock</span>;</span></span><br><span class="line">	<span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">seq_operations</span> *<span class="title">op</span>;</span></span><br><span class="line">	<span class="keyword">int</span> poll_event;</span><br><span class="line">	<span class="keyword">void</span> *<span class="keyword">private</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="seq_read源代码分析">seq_read源代码分析</h2>
+<p>函数原型为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ssize_t</span> seq_read(struct file *file, <span class="keyword">char</span> __user *buf, <span class="keyword">size_t</span> <span class="built_in">size</span>, <span class="keyword">loff_t</span> *ppos);</span><br></pre></td></tr></table></figure>
+<p>其中，file表示要读取的文件，buf表示写入的缓冲区，size是要读的最大数量，ppos是当前位置。</p>
+<p>首先seq_read会对要读取的文件进行加锁，然后确定读取的位置</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mutex_lock(&amp;m-&gt;lock);</span><br><span class="line"><span class="comment">/* Don't assume *ppos is where we left it */</span></span><br><span class="line"><span class="keyword">if</span> (unlikely(*ppos != m-&gt;read_pos)) &#123;</span><br><span class="line">	m-&gt;read_pos = *ppos;</span><br><span class="line">	<span class="keyword">while</span> ((err = traverse(m, *ppos)) == -EAGAIN)</span><br><span class="line">		;</span><br><span class="line">	<span class="keyword">if</span> (err) &#123;</span><br><span class="line">		<span class="comment">/* With prejudice... */</span></span><br><span class="line">		m-&gt;read_pos = <span class="number">0</span>;</span><br><span class="line">		m-&gt;version = <span class="number">0</span>;</span><br><span class="line">		m-&gt;index = <span class="number">0</span>;</span><br><span class="line">		m-&gt;count = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">goto</span> Done;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后复制了一下file的version。之后判断是否已经分配了内存，如果没有就重新分配一个，然后判断内存是否为空，如果不为空就输出给用户，然后清空缓冲区。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">m-&gt;version = file-&gt;f_version;</span><br><span class="line">	<span class="comment">/* grab buffer if we didn't have one */</span></span><br><span class="line">	<span class="keyword">if</span> (!m-&gt;buf) &#123;</span><br><span class="line">		m-&gt;buf = kmalloc(m-&gt;<span class="built_in">size</span> = PAGE_SIZE, GFP_KERNEL);</span><br><span class="line">		<span class="keyword">if</span> (!m-&gt;buf)</span><br><span class="line">			<span class="keyword">goto</span> Enomem;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">/* if not empty - flush it first */</span></span><br><span class="line">	<span class="keyword">if</span> (m-&gt;count) &#123;</span><br><span class="line">		n = <span class="built_in">min</span>(m-&gt;count, <span class="built_in">size</span>);</span><br><span class="line">		err = copy_to_user(buf, m-&gt;buf + m-&gt;from, n);</span><br><span class="line">		<span class="keyword">if</span> (err)</span><br><span class="line">			<span class="keyword">goto</span> Efault;</span><br><span class="line">		m-&gt;count -= n;</span><br><span class="line">		m-&gt;from += n;</span><br><span class="line">		<span class="built_in">size</span> -= n;</span><br><span class="line">		buf += n;</span><br><span class="line">		copied += n;</span><br><span class="line">		<span class="keyword">if</span> (!m-&gt;count)</span><br><span class="line">			m-&gt;index++;</span><br><span class="line">		<span class="keyword">if</span> (!<span class="built_in">size</span>)</span><br><span class="line">			<span class="keyword">goto</span> Done;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>进行迭代操作，先调用start函数，然后进入循环进行迭代，依次调用show,show,next,stop,start函数，退出循环之后再调用stop函数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">pos = m-&gt;index;</span><br><span class="line">p = m-&gt;op-&gt;start(m, &amp;pos);</span><br><span class="line"><span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">	err = PTR_ERR(p);</span><br><span class="line">	<span class="keyword">if</span> (!p || IS_ERR(p))</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	err = m-&gt;op-&gt;show(m, p);</span><br><span class="line">	<span class="keyword">if</span> (err &lt; <span class="number">0</span>)</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">if</span> (unlikely(err))</span><br><span class="line">		m-&gt;count = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">if</span> (unlikely(!m-&gt;count)) &#123;</span><br><span class="line">		p = m-&gt;op-&gt;next(m, p, &amp;pos);</span><br><span class="line">		m-&gt;index = pos;</span><br><span class="line">		<span class="keyword">continue</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (m-&gt;count &lt; m-&gt;<span class="built_in">size</span>)</span><br><span class="line">		<span class="keyword">goto</span> Fill;</span><br><span class="line">	m-&gt;op-&gt;<span class="built_in">stop</span>(m, p);</span><br><span class="line">	kfree(m-&gt;buf);</span><br><span class="line">	m-&gt;buf = kmalloc(m-&gt;<span class="built_in">size</span> &lt;&lt;= <span class="number">1</span>, GFP_KERNEL);</span><br><span class="line">	<span class="keyword">if</span> (!m-&gt;buf)</span><br><span class="line">		<span class="keyword">goto</span> Enomem;</span><br><span class="line">	m-&gt;count = <span class="number">0</span>;</span><br><span class="line">	m-&gt;version = <span class="number">0</span>;</span><br><span class="line">	pos = m-&gt;index;</span><br><span class="line">	p = m-&gt;op-&gt;start(m, &amp;pos);</span><br><span class="line">&#125;</span><br><span class="line">m-&gt;op-&gt;<span class="built_in">stop</span>(m, p);</span><br><span class="line">m-&gt;count = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">goto</span> Done;</span><br></pre></td></tr></table></figure>
+<p>最后的第一个goto语句是填充，但是不知道用什么来填充，第二个是结束迭代，第三个和第四个用于处理错误。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">Fill:</span><br><span class="line">	<span class="comment">/* they want more? let's try to get some more */</span></span><br><span class="line">	<span class="keyword">while</span> (m-&gt;count &lt; <span class="built_in">size</span>) &#123;</span><br><span class="line">		<span class="keyword">size_t</span> offs = m-&gt;count;</span><br><span class="line">		<span class="keyword">loff_t</span> next = pos;</span><br><span class="line">		p = m-&gt;op-&gt;next(m, p, &amp;next);</span><br><span class="line">		<span class="keyword">if</span> (!p || IS_ERR(p)) &#123;</span><br><span class="line">			err = PTR_ERR(p);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		err = m-&gt;op-&gt;show(m, p);</span><br><span class="line">		<span class="keyword">if</span> (m-&gt;count == m-&gt;<span class="built_in">size</span> || err) &#123;</span><br><span class="line">			m-&gt;count = offs;</span><br><span class="line">			<span class="keyword">if</span> (likely(err &lt;= <span class="number">0</span>))</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		pos = next;</span><br><span class="line">	&#125;</span><br><span class="line">	m-&gt;op-&gt;<span class="built_in">stop</span>(m, p);</span><br><span class="line">	n = <span class="built_in">min</span>(m-&gt;count, <span class="built_in">size</span>);</span><br><span class="line">	err = copy_to_user(buf, m-&gt;buf, n);</span><br><span class="line">	<span class="keyword">if</span> (err)</span><br><span class="line">		<span class="keyword">goto</span> Efault;</span><br><span class="line">	copied += n;</span><br><span class="line">	m-&gt;count -= n;</span><br><span class="line">	<span class="keyword">if</span> (m-&gt;count)</span><br><span class="line">		m-&gt;from = n;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		pos++;</span><br><span class="line">	m-&gt;index = pos;</span><br><span class="line">Done:</span><br><span class="line">	<span class="keyword">if</span> (!copied)</span><br><span class="line">		copied = err;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		*ppos += copied;</span><br><span class="line">		m-&gt;read_pos += copied;</span><br><span class="line">	&#125;</span><br><span class="line">	file-&gt;f_version = m-&gt;version;</span><br><span class="line">	mutex_unlock(&amp;m-&gt;lock);</span><br><span class="line">	<span class="keyword">return</span> copied;</span><br><span class="line">Enomem:</span><br><span class="line">	err = -ENOMEM;</span><br><span class="line">	<span class="keyword">goto</span> Done;</span><br><span class="line">Efault:</span><br><span class="line">	err = -EFAULT;</span><br><span class="line">	<span class="keyword">goto</span> Done;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+            <a href="/tags/kernel/" rel="tag"># kernel</a>
+          
+            <a href="/tags/seq-file/" rel="tag"># seq_file</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/04/2016-07-04-black-magic-in-linux/" rel="next" title="Linux中的黑魔法——内核模块的编写">
+                <i class="fa fa-chevron-left"></i> Linux中的黑魔法——内核模块的编写
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/13/2016-07-13-file-operation-in-linux/" rel="prev" title="Linux中文件操作相关函数">
+                Linux中文件操作相关函数 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#proc伪文件系统"><span class="nav-number">1.</span> <span class="nav-text">proc伪文件系统</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#seq_file接口"><span class="nav-number">2.</span> <span class="nav-text">seq_file接口</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#迭代器接口"><span class="nav-number">2.1.</span> <span class="nav-text">迭代器接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#start"><span class="nav-number">2.2.</span> <span class="nav-text">start</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#next"><span class="nav-number">2.3.</span> <span class="nav-text">next</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stop"><span class="nav-number">2.4.</span> <span class="nav-text">stop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#show"><span class="nav-number">2.5.</span> <span class="nav-text">show</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#个函数调用的过程图"><span class="nav-number">2.6.</span> <span class="nav-text">4个函数调用的过程图</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#格式化输出"><span class="nav-number">3.</span> <span class="nav-text">格式化输出</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#完成模块"><span class="nav-number">4.</span> <span class="nav-text">完成模块</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#拓展"><span class="nav-number">5.</span> <span class="nav-text">拓展</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#seq_list"><span class="nav-number">5.1.</span> <span class="nav-text">seq_list</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一个更简单的例子"><span class="nav-number">5.2.</span> <span class="nav-text">一个更简单的例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#seq_file结构体"><span class="nav-number">5.3.</span> <span class="nav-text">seq_file结构体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#seq_read源代码分析"><span class="nav-number">5.4.</span> <span class="nav-text">seq_read源代码分析</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

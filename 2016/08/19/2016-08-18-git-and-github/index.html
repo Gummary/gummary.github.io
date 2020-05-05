@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="git,github," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="简单介绍如何使用git和github">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git与github">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;08&#x2F;19&#x2F;2016-08-18-git-and-github&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="简单介绍如何使用git和github">
+<meta property="article:published_time" content="2016-08-18T16:00:00.000Z">
+<meta property="article:modified_time" content="2017-01-21T04:50:08.000Z">
+<meta property="article:author" content="Gummary">
+<meta property="article:tag" content="git">
+<meta property="article:tag" content="github">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/08/19/2016-08-18-git-and-github/"/>
+
+
+
+
+
+  <title>git与github | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/08/19/2016-08-18-git-and-github/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">git与github</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-19T00:00:00+08:00">
+                2016-08-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9D%82%E6%96%87/" itemprop="url" rel="index">
+                    <span itemprop="name">杂文</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/08/19/2016-08-18-git-and-github/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2016/08/19/2016-08-18-git-and-github/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>今天下午闲着没事就系统的跟着廖雪峰老师的git教程学了一遍如何使用git和github，所以写一篇博文来总结一下今天学的。</p>
+<p>先附上廖老师的<a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000" target="_blank" rel="noopener">git教程地址</a></p>
+<h1 id="git简介">Git简介</h1>
+<p>Git是一个分布式版本控制系统，版本控制系统可以获得文件改动的信息，并且可以随时改变当前的软件版本。当然，git的作用还远远不止这些，在接下来会依次介绍git的主要功能。</p>
+<h1 id="创建git仓库与添加文件">创建Git仓库与添加文件</h1>
+<p>在Git中你的所有文件都放在仓库（repository）中，所以要使用Git来管理你的代码首先要创建一个仓库，然后将你的代码文件添加到仓库中。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mkdir learngit 		#新建目录</span><br><span class="line">cd learngit			#进入目录</span><br><span class="line">git init</span><br><span class="line">touch readme.md		#新建文件夹</span><br><span class="line">git add readme.md</span><br><span class="line">git commit -m "add readme.md"</span><br></pre></td></tr></table></figure>
+<p>第三行代码将当前初始化为一个git仓库，第5行将新建的文件添加到仓库，第6行将修改提交到仓库。</p>
+<h1 id="版本的回退">版本的回退</h1>
+<p>在git中可以使用<strong>git log</strong>命令来查看曾经提交的版本信息，输出的信息为从最近到最远的提交日志，具体内容为:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span></span></span><br><span class="line">commit 8710cc14b075717dff0ef621bb6a8208ac301fdd</span><br><span class="line">Author: Gummary &lt;714849762@qq.com&gt;</span><br><span class="line">Date:   Thu Aug 18 17:13:53 2016 +0800</span><br><span class="line"></span><br><span class="line">    append GPL</span><br><span class="line"></span><br><span class="line">commit a6a3648ceb524c31d0cf9316795e1ce093ac34cd</span><br><span class="line">Author: Gummary &lt;714849762@qq.com&gt;</span><br><span class="line">Date:   Thu Aug 18 17:12:53 2016 +0800</span><br><span class="line"></span><br><span class="line">    change readmefile</span><br><span class="line"></span><br><span class="line">commit ea70978c71dffb978bba562f77f9e6aa9bb0672b</span><br><span class="line">Author: Gummary &lt;714849762@qq.com&gt;</span><br><span class="line">Date:   Thu Aug 18 17:10:27 2016 +0800</span><br><span class="line"></span><br><span class="line">    write a readme file</span><br></pre></td></tr></table></figure>
+<p>commit后的为commit id，也就是版本号，每次commit之后都会生成一个commit id，版本的回退等操作都是根据这个版本号进行的。第二行为作者信息，然后是修改时间，最后是对每次提交做的说明。</p>
+<p>在Git中用HEAD来表示当前的版本，上一个版本就是HEAD<sup>，上上个版本为HEAD</sup>^,也可以用<sub>和具体的数字来表示第几个，比如说往上100个，就可用HEAD</sub>100来表示。</p>
+<p>Git中回退的命令是使用<strong>git reset</strong>来表示，比如说回退到上一个版本，就可用下面的命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard HEAD^</span><br></pre></td></tr></table></figure>
+<p>也可以用commit id来代替HEAD表示要回退的版本，这个id可以不用全写，只保留前6位即可。</p>
+<p>如果回退之后又想回到回退之前的版本，可以用<strong>git reflog</strong>命令来查看操作的记录。</p>
+<h1 id="撤销对文件的修改">撤销对文件的修改</h1>
+<p>这部分涉及到了git的工作区与暂存区的概念，工作区就是你当前写代码的目录，而暂存区位于.git文件夹下， 你每次add之后都将代码提交到了暂存区中，最后commit的时候是将暂存区的所有修改提交到了仓库中。详细的讲解可以查看廖老师的教程，这里就不详细说了。</p>
+<h2 id="在add之前撤销">在add之前撤销</h2>
+<p>如果你修改一个文件之后还没有add，那么修改仅仅存在于工作区，此时想要回退只能手动删除刚才修改的部分，然后通过git status可以看到文件已经被修改了，此时你可以通过<strong>git checkout -- file</strong>来丢弃工作区的修改。</p>
+<h2 id="在add之后commit之前撤销">在add之后commit之前撤销</h2>
+<p>如果文件修改完了并add之后，修改就存在与暂存区，这时想要撤销修改，就要使用<strong>git reset HEAD file</strong>和<strong>git checkout -- file</strong>来完成。</p>
+<h2 id="在commit之后">在commit之后</h2>
+<p>如果已经commit了，那修改就已经提交到仓库了，就只能使用<strong>git reset HEAD^</strong>命令来回到上一个版本了</p>
+<h1 id="删除文件">删除文件</h1>
+<p>如果一个文件已经commit到了版本库，此时要删掉他，可以用下列命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 删除本地文件</span><br><span class="line">rm filename</span><br><span class="line"># 在git版本库中删除</span><br><span class="line">git rm filename</span><br><span class="line">git commit -m &quot;rm filename&quot;</span><br></pre></td></tr></table></figure>
+<p>如果删除本地文件后发现删错了，那可以用<strong>git checkout -- test.txt</strong>命令恢复。</p>
+<h1 id="分支管理">分支管理</h1>
+<p>每一个软件在开发过程中都有一个主分支，用于发布稳定的版本，如果要开发新功能就新建一个分支，当开发完之后在合并。</p>
+<p>要使用一个分支首先要创建分支，命令为</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">创建并切换分支</span></span><br><span class="line">git checkout -b dev</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">相当于下面两条命令</span></span><br><span class="line">git branch dev</span><br><span class="line">git checkout dev</span><br></pre></td></tr></table></figure>
+<p>切换分支之后HEAD指向了dev分支上，在dev上进行修改之后，如果要合并到主分支，就切换到master分支然后合并</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git checkout master		#切换到主分支</span><br><span class="line">git merge dev			#合并分支</span><br><span class="line">git branch -d dev 		#删除分支</span><br></pre></td></tr></table></figure>
+<p>如果两个分支之间相同的文件有冲突，git会对文件进行修改，你必须手动打开文件进行修改之后再提交。</p>
+<p>在默认情况下git合并分支的时候是使用Fast-Forward模式，也就是直接将master和dev的指针进行合并，不会留下分支信息，如果要禁用这个功能，可以在合并时加入--no-off参数，命令如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge --no-ff -m "merge with no-ff" dev</span><br></pre></td></tr></table></figure>
+<p>使用如下命令可以看到分支的合并图</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git log --graph</span><br></pre></td></tr></table></figure>
+<h1 id="github">Github</h1>
+<h2 id="简介">简介</h2>
+<p>Github与Git本质上是一样的，Github只是一个远程的仓库，你可以将你本地仓库推送的Github上，这样所有人都能看到并下载你的代码，你也可以在Github上寻找其他优秀的代码，然后下载修改。</p>
+<h2 id="github的使用">Github的使用</h2>
+<p>从github上获取远程仓库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone git@github.com:&lt;name&gt;.git~</span><br></pre></td></tr></table></figure>
+<p>通过这种方法只能获得master分支，如果还要将远程的其他分支同步到本地，可以使用如下命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git  checkout -b dev origin&#x2F;dev</span><br></pre></td></tr></table></figure>
+<p>dev是本地分支的名字，origin/dev中的dev是远程分支的名字。</p>
+<p>commit完之后推送到远程仓库，如果要推送的分支不存在，远程仓库会自动创建</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull origin &lt;branchname&gt;</span><br></pre></td></tr></table></figure>
+<h1 id="多人协作的工作模式">多人协作的工作模式</h1>
+<blockquote>
+<p>节选自廖老师的教程</p>
+</blockquote>
+<ol type="1">
+<li><p>首先，可以试图用git push origin branch-name推送自己的修改；</p></li>
+<li><p>如果推送失败，则因为远程分支比你的本地更新，需要先用git pull试图合并；</p></li>
+<li><p>如果合并有冲突，则解决冲突，并在本地提交；</p></li>
+<li><p>没有冲突或者解决掉冲突后，再用git push origin branch-name推送就能成功！</p></li>
+</ol>
+<p>如果git pull提示“no tracking information”，则说明本地分支和远程分支的链接关系没有创建，用命令git branch --set-upstream branch-name origin/branch-name。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/git/" rel="tag"># git</a>
+          
+            <a href="/tags/github/" rel="tag"># github</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/07/2016-08-07-intelligent-home/" rel="next" title="世界上没有任何一件能让你搬回家的智能家居">
+                <i class="fa fa-chevron-left"></i> 世界上没有任何一件能让你搬回家的智能家居
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/08/2016-09-08-dedicated-to-the-spirit-that-lives-in-the-computer(4)/" rel="prev" title="SICP学习笔记（四）">
+                SICP学习笔记（四） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#git简介"><span class="nav-number">1.</span> <span class="nav-text">Git简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建git仓库与添加文件"><span class="nav-number">2.</span> <span class="nav-text">创建Git仓库与添加文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#版本的回退"><span class="nav-number">3.</span> <span class="nav-text">版本的回退</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#撤销对文件的修改"><span class="nav-number">4.</span> <span class="nav-text">撤销对文件的修改</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#在add之前撤销"><span class="nav-number">4.1.</span> <span class="nav-text">在add之前撤销</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在add之后commit之前撤销"><span class="nav-number">4.2.</span> <span class="nav-text">在add之后commit之前撤销</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在commit之后"><span class="nav-number">4.3.</span> <span class="nav-text">在commit之后</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#删除文件"><span class="nav-number">5.</span> <span class="nav-text">删除文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分支管理"><span class="nav-number">6.</span> <span class="nav-text">分支管理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#github"><span class="nav-number">7.</span> <span class="nav-text">Github</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">7.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#github的使用"><span class="nav-number">7.2.</span> <span class="nav-text">Github的使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多人协作的工作模式"><span class="nav-number">8.</span> <span class="nav-text">多人协作的工作模式</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

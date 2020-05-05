@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="linux,centos,samba," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在centos上搭建samba服务器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搭建Samba服务器">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;06&#x2F;02&#x2F;2016-06-02-install-samba-on-centos&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="在centos上搭建samba服务器">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;Kqc0uL9.png">
+<meta property="article:published_time" content="2016-06-01T16:00:00.000Z">
+<meta property="article:modified_time" content="2017-01-21T04:50:08.000Z">
+<meta property="article:author" content="Gummary">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="centos">
+<meta property="article:tag" content="samba">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;Kqc0uL9.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/06/02/2016-06-02-install-samba-on-centos/"/>
+
+
+
+
+
+  <title>搭建Samba服务器 | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/06/02/2016-06-02-install-samba-on-centos/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">搭建Samba服务器</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-06-02T00:00:00+08:00">
+                2016-06-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/06/02/2016-06-02-install-samba-on-centos/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2016/06/02/2016-06-02-install-samba-on-centos/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="服务器环境">服务器环境</h1>
+<p>系统： Centos6.7<br />
+已关闭防火墙和SELINUX</p>
+<h1 id="安装samba服务">安装Samba服务</h1>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install samba samba-client samba-swat</span><br></pre></td></tr></table></figure>
+<p>启动与重启服务器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">service smb start</span><br><span class="line">service nmb start</span><br></pre></td></tr></table></figure>
+<h1 id="配置samba服务器">配置Samba服务器</h1>
+<p>samba的配置文件为/etc/samba/smb.conf<br />
+该文件分为两大部分，<br />
+第一部分为Global Setting（55-245行），该设置都是与Samba服务整体运行环境有关的选项，它的设置项目是针对所有共享资源的。<br />
+第二部分为Share Definitions （246-尾行）该设置针对的是共享目录个别的设置，只对当前的共享资源起作用。<br />
+配置文件具体的使用看<a href="http://www.cnblogs.com/mchina/archive/2012/12/18/2816717.html" target="_blank" rel="noopener">这篇博客</a></p>
+<h1 id="samba的简单配置">Samba的简单配置</h1>
+<p>samba的配置文件的内容很多，所以可以建立一个备份。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mv /etc/samba/smb.conf /etc/samba/smb.conf.bak</span><br><span class="line">touch /etc/samba/smb.conf</span><br></pre></td></tr></table></figure>
+<h2 id="允许匿名访问samba共享的文件夹">允许匿名访问samba共享的文件夹</h2>
+<p>打开刚才创建的samba配置文件，写入内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">======================= Global Settings =====================================</span></span><br><span class="line"></span><br><span class="line">[global]                                                  //该设置与Samba服务整体运行环境有关，它的设置项目针对所有共享资源       </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> ----------------------- Network Related Options -------------------------</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> workgroup = NT-Domain-Name or Workgroup-Name, eg: MIDEARTH</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> server string is the equivalent of the NT Description field</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> netbios name can be used to specify a server name not tied to the hostname</span></span><br><span class="line"></span><br><span class="line">        workgroup = WORKGROUP                             //定义工作组，也就是windows中的工作组概念</span><br><span class="line">        server string = David Samba Server Version %v     //定义Samba服务器的简要说明</span><br><span class="line">        netbios name = DavidSamba                         //定义windows中显示出来的计算机名称</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> --------------------------- Logging Options -----------------------------</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Log File <span class="built_in">let</span> you specify <span class="built_in">where</span> to put logs and how to split them up.</span></span><br><span class="line"></span><br><span class="line">        log file = /var/log/samba/log.%m                  //定义Samba用户的日志文件，%m代表客户端主机名</span><br><span class="line">                                                          //Samba服务器会在指定的目录中为每个登陆主机建立不同的日志文件</span><br><span class="line"><span class="meta">#</span><span class="bash"> ----------------------- Standalone Server Options ------------------------</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Scurity can be <span class="built_in">set</span> to user, share(deprecated) or server(deprecated)</span></span><br><span class="line"></span><br><span class="line">        security = share                                  //共享级别，用户不需要账号和密码即可访问</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">============================ Share Definitions ==============================</span></span><br><span class="line"></span><br><span class="line">[public]                                                  //设置针对的是共享目录个别的设置，只对当前的共享资源起作用</span><br><span class="line">        comment = Public Stuff                            //对共享目录的说明文件，自己可以定义说明信息</span><br><span class="line">        path = /share                                     //用来指定共享的目录，必选项</span><br><span class="line">        public = yes                                      //所有人可查看,等效于guest ok = yes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 以上的配置通过匿名用户登录samba服务器后只能下载samba服务器的内容，如果要有读写权限，则要加上</span></span><br><span class="line">		writable = yes</span><br></pre></td></tr></table></figure>
+<h2 id="以用户登录的形式访问samba">以用户登录的形式访问samba</h2>
+<p>假设当前有一个student文件夹，只允许student组的成员。</p>
+<p>首先，建立一个student组，然后创建5个student用户，并加入到student组</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">groupadd student</span><br><span class="line"></span><br><span class="line">for ((i=1;i&lt;=5;i++))</span><br><span class="line">do</span><br><span class="line">        useradd -g student student$&#123;i&#125;</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>然后为每一个用户创建samba的用户名密码<br />
+<img src="http://i.imgur.com/Kqc0uL9.png" /> {: .image-left}</p>
+<p>最后将samba的配置文件改为</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[global]</span><br><span class="line"></span><br><span class="line">        workgroup = WORKGROUP</span><br><span class="line">        server string = David Samba Server Version %v</span><br><span class="line">        netbios name = MySamba</span><br><span class="line">        log file = /var/log/samba/log.%m</span><br><span class="line"></span><br><span class="line"><span class="meta">		#</span><span class="bash">设置为登录验证模式</span></span><br><span class="line">        security = user</span><br><span class="line"></span><br><span class="line">[public]</span><br><span class="line">        comment = Public Stuff</span><br><span class="line">        path = /share</span><br><span class="line">        public = yes</span><br><span class="line">        writable = yes</span><br><span class="line">        browseable = yes</span><br><span class="line">[student]</span><br><span class="line">        comment = Student</span><br><span class="line">        path = /student				//要共享的目录</span><br><span class="line">        writable = yes		</span><br><span class="line">        browseable = yes</span><br><span class="line">        valid users = @student		//访问的用户为student组中的成员</span><br><span class="line"></span><br><span class="line">~~~  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> samba服务器的使用 <span class="comment">#</span></span></span><br><span class="line"></span><br><span class="line">在windows下，直接打开运行，输入&lt;font color = "red"&gt;//samba服务器地址&lt;/font&gt; 如果为share模式下可直接访问，否则需要输入用户名和密码   </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">在linux下，有两种方式，一种为挂载的方式，一种使用smbclient   </span><br><span class="line">使用smbclient   </span><br><span class="line"></span><br><span class="line">~~~shell</span><br><span class="line"><span class="meta">#</span><span class="bash">匿名登陆</span></span><br><span class="line">smbclient  –L  //Samba服务器的ip地址</span><br><span class="line"><span class="meta">#</span><span class="bash">用户名登录</span></span><br><span class="line">smbclient  –L  //Samba服务器的ip地址  -U  Samba用户名</span><br></pre></td></tr></table></figure>
+<p>挂载方式</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount -t cifs -l //10.0.0.163/public /mnt/samba/</span><br></pre></td></tr></table></figure>
+<h1 id="参考文献">参考文献</h1>
+<p><a href="http://www.cnblogs.com/mchina/archive/2012/12/18/2816717.html" target="_blank" rel="noopener">CentOS 6.3下Samba服务器的安装与配置</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+            <a href="/tags/centos/" rel="tag"># centos</a>
+          
+            <a href="/tags/samba/" rel="tag"># samba</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/01/2016-06-01-install-nfs-on-centos/" rel="next" title="NFS服务器的搭建">
+                <i class="fa fa-chevron-left"></i> NFS服务器的搭建
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/06/03/2016-06-06-three-simple-shell-program/" rel="prev" title="三个简单的shell小程序">
+                三个简单的shell小程序 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#服务器环境"><span class="nav-number">1.</span> <span class="nav-text">服务器环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装samba服务"><span class="nav-number">2.</span> <span class="nav-text">安装Samba服务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置samba服务器"><span class="nav-number">3.</span> <span class="nav-text">配置Samba服务器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#samba的简单配置"><span class="nav-number">4.</span> <span class="nav-text">Samba的简单配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#允许匿名访问samba共享的文件夹"><span class="nav-number">4.1.</span> <span class="nav-text">允许匿名访问samba共享的文件夹</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#以用户登录的形式访问samba"><span class="nav-number">4.2.</span> <span class="nav-text">以用户登录的形式访问samba</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

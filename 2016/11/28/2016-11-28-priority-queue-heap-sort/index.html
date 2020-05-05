@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="PriorityQueue,HeapSort," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="优先队列，堆排序的实现及一个简单的应用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="优先队列、堆排序及其应用">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;11&#x2F;28&#x2F;2016-11-28-priority-queue-heap-sort&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="优先队列，堆排序的实现及一个简单的应用">
+<meta property="article:published_time" content="2016-11-27T16:00:00.000Z">
+<meta property="article:modified_time" content="2017-01-21T04:50:08.000Z">
+<meta property="article:author" content="Gummary">
+<meta property="article:tag" content="PriorityQueue">
+<meta property="article:tag" content="HeapSort">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/28/2016-11-28-priority-queue-heap-sort/"/>
+
+
+
+
+
+  <title>优先队列、堆排序及其应用 | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/28/2016-11-28-priority-queue-heap-sort/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">优先队列、堆排序及其应用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-28T00:00:00+08:00">
+                2016-11-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index">
+                    <span itemprop="name">Algorithm</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/11/28/2016-11-28-priority-queue-heap-sort/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2016/11/28/2016-11-28-priority-queue-heap-sort/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="优先队列">优先队列</h1>
+<h2 id="二叉堆">二叉堆</h2>
+<p>二叉堆是一组能够用堆有序的完全二叉树排序的元素，并在数组中按照层及存储。</p>
+<p>堆有序是指一个二叉树的所有顶点都大于等于(或小于等于)他的两个子顶点。</p>
+<p>对于一颗完全二叉树，完全可以使用数组来实现，所以二叉堆就可以直接用数组实现。这可以使我们实现对数级的插入和删除最大元素操作。</p>
+<p>通过计算数组的索引可以方便的在树中上下移动：a[k]的父节点的下表为k/2,两个子节点的下表分别为k<em>2,k</em>2+1.</p>
+<p>二叉树的根节点为最大元素成为大顶堆，否则称为小顶堆，以下的讨论均为大顶堆。</p>
+<h3 id="堆的有序化">堆的有序化</h3>
+<p>堆的有序化有两种方式，一种是自下而上(上浮)一种是自上而下(下沉)。前者是由于子节点由于某些原因比父节点大，所以需要自下而上的实现堆的有序化。后者是由于父节点由于某些原因变得比子节点小，所以需要自上而下的有序化。</p>
+<p><strong>上浮的实现</strong>是将大的子节点与小的父节点交换。但是可能交换之后仍然比父节点大，所以需要不停的交换直到该节点比父节点小或成为根节点。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">swim</span><span class="params">(<span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">while</span> (k &gt; <span class="number">1</span> &amp;&amp; less(k/<span class="number">2</span>, k)) &#123;</span><br><span class="line">	    exch(k, k/<span class="number">2</span>);</span><br><span class="line">	    k = k/<span class="number">2</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>下沉的实现</strong>是将小的父节点将他两个子节点中较大的一个交换。不停地进行该操作知道比两个子节点都小或到达堆底。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">sink</span><span class="params">(<span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">while</span> (<span class="number">2</span>*k &lt;= n) &#123;</span><br><span class="line">	    <span class="keyword">int</span> j = <span class="number">2</span>*k;</span><br><span class="line">	    <span class="keyword">if</span> (j &lt; n &amp;&amp; less(j, j+<span class="number">1</span>)) j++;</span><br><span class="line">	    <span class="keyword">if</span> (!less(k, j)) <span class="keyword">break</span>;</span><br><span class="line">	    exch(k, j);</span><br><span class="line">	    k = j;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><em>完全二叉树的最后一个父节点在数组中的位置为n/2,所以2 </em> k&lt;=n即可*</p>
+<h2 id="优先队列的实现">优先队列的实现</h2>
+<p>有了大顶堆的有序化算法就可以实现优先队列了。</p>
+<p>删除最大元素操作可以将数组的第一个元素和最后一个元素交换，令最后一个元素指向null，然后对第一个元素执行下沉操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Key <span class="title">delMax</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (isEmpty()) <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException(<span class="string">"Priority queue underflow"</span>);</span><br><span class="line">	Key max = pq[<span class="number">1</span>];</span><br><span class="line">	exch(<span class="number">1</span>, n--);</span><br><span class="line">	sink(<span class="number">1</span>);</span><br><span class="line">	pq[n+<span class="number">1</span>] = <span class="keyword">null</span>;     <span class="comment">// to avoid loiterig and help with garbage collection</span></span><br><span class="line">	<span class="keyword">if</span> ((n &gt; <span class="number">0</span>) &amp;&amp; (n == (pq.length - <span class="number">1</span>) / <span class="number">4</span>)) resize(pq.length / <span class="number">2</span>);</span><br><span class="line">	<span class="function"><span class="keyword">assert</span> <span class="title">isMaxHeap</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="keyword">return</span> max;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>插入元素是将新的元素放到数组的最后，然后队最后一个元素执行上浮操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(Key x)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// double size of array if necessary</span></span><br><span class="line">	<span class="keyword">if</span> (n &gt;= pq.length - <span class="number">1</span>) resize(<span class="number">2</span> * pq.length);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// add x, and percolate it up to maintain heap invariant</span></span><br><span class="line">	pq[++n] = x;</span><br><span class="line">	swim(n);</span><br><span class="line">	<span class="function"><span class="keyword">assert</span> <span class="title">isMaxHeap</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="http://algs4.cs.princeton.edu/24pq/MaxPQ.java.html" target="_blank" rel="noopener">完整代码</a></p>
+<h1 id="堆排序">堆排序</h1>
+<h2 id="实现">实现</h2>
+<p>首先从最后一个父节点开始，自右向左的构造大顶堆。构造完成后不停地将第一个元素与最后一个元素交换，销毁堆。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(Comparable[] pq)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> n = pq.length;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> k = n/<span class="number">2</span>; k &gt;= <span class="number">1</span>; k--)</span><br><span class="line">	    sink(pq, k, n);</span><br><span class="line">	<span class="keyword">while</span> (n &gt; <span class="number">1</span>) &#123;</span><br><span class="line">	    exch(pq, <span class="number">1</span>, n--);</span><br><span class="line">	    sink(pq, <span class="number">1</span>, n);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="http://algs4.cs.princeton.edu/24pq/Heap.java.html" target="_blank" rel="noopener">完整代码</a></p>
+<h2 id="性能">性能</h2>
+<p>在最坏的情况下可以保证使用~2NlgN次比较和恒定的额外空间。</p>
+<p>由于堆排序期间，元素很少与相邻元素相比较，所以操作系统中缓存的未命中次数远高于其他在相邻元素之间进行比较的算法。</p>
+<h1 id="优先队列使用实例">优先队列使用实例</h1>
+<p>利用优先队列可以快速的解决<a href="https://en.wikipedia.org/wiki/15_puzzle" target="_blank" rel="noopener">8-puzzle</a> 问题</p>
+<p>使用的算法称作<a href="http://en.wikipedia.org/wiki/A*_search_algorithm" target="_blank" rel="noopener">A*搜索算法</a> 。</p>
+<p>首先定义一种搜索节点的数据结构。每一个搜索节点包括到达此搜索节点所需要的步数，上一个搜索节点，当前的布局。</p>
+<p>首先将第一个搜索节点加入到优先队列中，然后删除最小优先级的搜索节点，将所有该结点的邻居(只用一步就可以通过该节点得到的布局)加入到优先队列中。重复这个操作直到胜利。</p>
+<p>详细的题目描述见<a href="http://coursera.cs.princeton.edu/algs4/assignments/8puzzle.html" target="_blank" rel="noopener">COS 226 Programming Assignment</a></p>
+<p>代码见<a href="https://gist.github.com/Gummary/7245b5e4968c1215d5db7408f7d63c9b" target="_blank" rel="noopener">Board.java</a>与<a href="https://gist.github.com/Gummary/94200c0a50f32c7cacd85e9bb06b746b" target="_blank" rel="noopener">Solver</a></p>
+<p>其中：</p>
+<ul>
+<li>Board中的twin方法只需交换任意两个非零的元素即可</li>
+<li>返回Iterable并不需要新创建一个类，只需要返回一个继承该接口的类即可。</li>
+<li>注意equal方法的实现，详细的说明见《算法（第四版）》1.2.5.8等价性一节的说明。</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PriorityQueue/" rel="tag"># PriorityQueue</a>
+          
+            <a href="/tags/HeapSort/" rel="tag"># HeapSort</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/23/2016-11-23-auto-make/" rel="next" title="自动构建Makefile">
+                <i class="fa fa-chevron-left"></i> 自动构建Makefile
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/29/2016-11-29-symbol-tables-and-bst/" rel="prev" title="符号表与二叉查找树">
+                符号表与二叉查找树 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#优先队列"><span class="nav-number">1.</span> <span class="nav-text">优先队列</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉堆"><span class="nav-number">1.1.</span> <span class="nav-text">二叉堆</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#堆的有序化"><span class="nav-number">1.1.1.</span> <span class="nav-text">堆的有序化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优先队列的实现"><span class="nav-number">1.2.</span> <span class="nav-text">优先队列的实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#堆排序"><span class="nav-number">2.</span> <span class="nav-text">堆排序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实现"><span class="nav-number">2.1.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#性能"><span class="nav-number">2.2.</span> <span class="nav-text">性能</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#优先队列使用实例"><span class="nav-number">3.</span> <span class="nav-text">优先队列使用实例</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

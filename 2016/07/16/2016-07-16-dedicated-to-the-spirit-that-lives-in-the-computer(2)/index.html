@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="SICP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="第1.3节的学习笔记及习题解答">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SICP学习笔记（二）">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;07&#x2F;16&#x2F;2016-07-16-dedicated-to-the-spirit-that-lives-in-the-computer(2)&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="第1.3节的学习笔记及习题解答">
+<meta property="article:published_time" content="2016-07-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2017-01-21T04:50:08.000Z">
+<meta property="article:author" content="Gummary">
+<meta property="article:tag" content="SICP">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/07/16/2016-07-16-dedicated-to-the-spirit-that-lives-in-the-computer(2)/"/>
+
+
+
+
+
+  <title>SICP学习笔记（二） | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/07/16/2016-07-16-dedicated-to-the-spirit-that-lives-in-the-computer(2)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SICP学习笔记（二）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-07-16T00:00:00+08:00">
+                2016-07-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SICP/" itemprop="url" rel="index">
+                    <span itemprop="name">SICP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/07/16/2016-07-16-dedicated-to-the-spirit-that-lives-in-the-computer(2)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2016/07/16/2016-07-16-dedicated-to-the-spirit-that-lives-in-the-computer(2)/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="节">1.3.1节</h1>
+<p>这一节先给了三个例子，然后将这三个例子中的基础模式抽象了出啦，简直可怕，以前从来没有这么思考过。</p>
+<p>sum这个公共模式表达了求和这个概念，也就是无论任何表达式，只要包含求和，都可以使用这个模式，这就是抽象的威力。</p>
+<p>要理解书上的那个公共模式，其实只需要理解其中的term和next就行。term用于求出函数在a处的值，next用于求取下一个a进行累加。</p>
+<h2 id="练习1.29">练习1.29</h2>
+<p>首先定义一个h，根据a，b的值计算出h的值。</p>
+<p>然后根据当前的y值求得当前是第几项，也就是求出k。</p>
+<p>最后是根据第几项求出y的值。根据题目给的式子，我们可以找到如下规律：</p>
+<ol type="1">
+<li>k=1 或n时直接求y</li>
+<li>当k为奇数时求y*4</li>
+<li>当k为偶数时求y*2</li>
+</ol>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">simpson-integral</span> f a b n)</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> h (<span class="name"><span class="builtin-name">/</span></span> (<span class="name"><span class="builtin-name">-</span></span> b a) n))</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">getk</span> at)</span><br><span class="line">		(<span class="name"><span class="builtin-name">/</span></span> (<span class="name"><span class="builtin-name">-</span></span> at a) h))</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">fun</span> at)</span><br><span class="line">		(<span class="name"><span class="builtin-name">cond</span></span> </span><br><span class="line">			((<span class="name"><span class="builtin-name">or</span></span> (<span class="name"><span class="builtin-name">=</span></span> (<span class="name">getk</span> at) <span class="number">0</span>) (<span class="name"><span class="builtin-name">=</span></span> (<span class="name">getk</span> at) n))</span><br><span class="line">				(<span class="name">f</span> (<span class="name"><span class="builtin-name">+</span></span> a (<span class="name"><span class="builtin-name">*</span></span> (<span class="name">getk</span> at) h))))</span><br><span class="line">			((<span class="name"><span class="builtin-name">even?</span></span> (<span class="name">getk</span> at))</span><br><span class="line">				(<span class="name"><span class="builtin-name">*</span></span> (<span class="name">f</span> (<span class="name"><span class="builtin-name">+</span></span> a (<span class="name"><span class="builtin-name">*</span></span> (<span class="name">getk</span> at) h))) <span class="number">2</span>))</span><br><span class="line">			(<span class="name"><span class="builtin-name">else</span></span> </span><br><span class="line">				(<span class="name"><span class="builtin-name">*</span></span> (<span class="name">f</span> (<span class="name"><span class="builtin-name">+</span></span> a (<span class="name"><span class="builtin-name">*</span></span> (<span class="name">getk</span> at) h))) <span class="number">4</span>)))) </span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">addh</span> at)</span><br><span class="line">		(<span class="name"><span class="builtin-name">+</span></span> at h))</span><br><span class="line">	(<span class="name"><span class="builtin-name">*</span></span> (<span class="name">sum</span> fun a addh b) (<span class="name"><span class="builtin-name">exact-&gt;inexact</span></span>(<span class="name"><span class="builtin-name">/</span></span> h <span class="number">3</span>))))</span><br></pre></td></tr></table></figure>
+<p>exact-&gt;inexact是为了让最后的结果以小数的形式写出，否则默认情况下为分数。</p>
+<p>做完之后到晚上看了看别人的代码，发现我的解法就是个逗比，最终竟然还解对了...简直就是奇迹...</p>
+<p>网上的做法是调用sum的时候是将0作为a，n作为b，结果我这个死脑筋a和a就脱不开关系了...</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">simpson-integral</span> f a b n)</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> h (<span class="name"><span class="builtin-name">/</span></span> (<span class="name"><span class="builtin-name">-</span></span> b a) n))</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">func</span> k)</span><br><span class="line">		(<span class="name">f</span> (<span class="name"><span class="builtin-name">+</span></span> a (<span class="name"><span class="builtin-name">*</span></span> k h))))</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">getyk</span> k)</span><br><span class="line">		(<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">or</span></span> (<span class="name"><span class="builtin-name">=</span></span> k <span class="number">0</span>) (<span class="name"><span class="builtin-name">=</span></span> k n)) (<span class="name">func</span> k))</span><br><span class="line">			((<span class="name"><span class="builtin-name">=</span></span> (<span class="name"><span class="builtin-name">even?</span></span> k) <span class="number">0</span>) (<span class="name"><span class="builtin-name">*</span></span> <span class="number">2</span> (<span class="name">func</span> k)))</span><br><span class="line">			(<span class="name"><span class="builtin-name">else</span></span> (<span class="name"><span class="builtin-name">*</span></span> <span class="number">4</span> (<span class="name">func</span> k)))))</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">addone</span> k)</span><br><span class="line">		(<span class="name"><span class="builtin-name">+</span></span> k <span class="number">1</span>))</span><br><span class="line">	(<span class="name">sum</span> getyk (<span class="name"><span class="builtin-name">exact-&gt;inexact</span></span> <span class="number">0</span>) addone n))</span><br></pre></td></tr></table></figure>
+<h2 id="练习1.30">练习1.30</h2>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">sum</span> term a next b)</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">iter</span> a result)</span><br><span class="line">		(<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">&gt;</span></span> a b)</span><br><span class="line">			result</span><br><span class="line">			(<span class="name">iter</span> (<span class="name">next</span> a) (<span class="name"><span class="builtin-name">+</span></span> result (<span class="name">term</span> a)))))</span><br><span class="line">	(<span class="name">iter</span> a <span class="number">0</span>))</span><br></pre></td></tr></table></figure>
+<h2 id="练习1.31">练习1.31</h2>
+<h3 id="a">(a)</h3>
+<p>product过程如下：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">product</span> term a next b)</span><br><span class="line">	(<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">&gt;</span></span> a b)</span><br><span class="line">		<span class="number">1</span></span><br><span class="line">		(<span class="name"><span class="builtin-name">*</span></span> (<span class="name">term</span> a)</span><br><span class="line">			(<span class="name">product</span> term (<span class="name">next</span> a) next b))))</span><br></pre></td></tr></table></figure>
+<p>阶乘的过程如下：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">addone</span> a)</span><br><span class="line">	(<span class="name"><span class="builtin-name">+</span></span> a <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">factorial</span> n)</span><br><span class="line">	(<span class="name">product</span> identity <span class="number">1</span> addone n))</span><br><span class="line"></span><br><span class="line"><span class="comment">;或者用lambda</span></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">factorial</span> n)</span><br><span class="line">    (<span class="name">product</span> (<span class="name"><span class="builtin-name">lambda</span></span> (x) x)</span><br><span class="line">             <span class="number">1</span></span><br><span class="line">             (<span class="name"><span class="builtin-name">lambda</span></span> (i) (<span class="name"><span class="builtin-name">+</span></span> i <span class="number">1</span>))</span><br><span class="line">             n))</span><br></pre></td></tr></table></figure>
+<p>根据式子可以得到如下规律：每个分式都由两个连续的值组成，如果是偶数，则做分子，分母是下一个值；如果是奇数，则做分母，分子也是他下一个值。由此我们可以得到term函数</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">pi</span>)</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">getvalue</span> a)</span><br><span class="line">		(<span class="name"><span class="builtin-name">cond</span></span> </span><br><span class="line">			((<span class="name"><span class="builtin-name">even?</span></span> a)</span><br><span class="line">				(<span class="name"><span class="builtin-name">exact-&gt;inexact</span></span>(<span class="name"><span class="builtin-name">/</span></span> a (<span class="name"><span class="builtin-name">+</span></span> a <span class="number">1</span>))))</span><br><span class="line">			(<span class="name"><span class="builtin-name">else</span></span> </span><br><span class="line">				(<span class="name"><span class="builtin-name">exact-&gt;inexact</span></span>(<span class="name"><span class="builtin-name">/</span></span> (<span class="name"><span class="builtin-name">+</span></span> a <span class="number">1</span>) a)))))</span><br><span class="line">	(<span class="name"><span class="builtin-name">exact-&gt;inexact</span></span>(<span class="name"><span class="builtin-name">*</span></span> (<span class="name">product</span> getvalue <span class="number">2</span> addone <span class="number">10000</span>) <span class="number">4</span>)))</span><br></pre></td></tr></table></figure>
+<h3 id="b">(b)</h3>
+<p>迭代版的product</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">product</span> term a next b)</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">iter</span> a result)</span><br><span class="line">		(<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">&gt;</span></span> a b)</span><br><span class="line">			result</span><br><span class="line">			(<span class="name">iter</span> (<span class="name">next</span> a) (<span class="name"><span class="builtin-name">*</span></span> result (<span class="name">term</span> a)))))</span><br><span class="line">	(<span class="name">iter</span> a <span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+<h2 id="练习1.32">练习1.32</h2>
+<h3 id="a-1">(a)</h3>
+<p>对比product和sum过程，我们仍然可以发现二者之间有很多相似的地方，也就是存在一个公共模式，这就是本题的accumulate</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">;accumulate 过程</span></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">accumulate</span> combiner null-value term a next b)</span><br><span class="line">	(<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">&gt;</span></span> a b)</span><br><span class="line">		null-value</span><br><span class="line">		(<span class="name">combiner</span> (<span class="name">term</span> a) (<span class="name">accumulate</span> combiner null-value term (<span class="name">next</span> a) next  b))))</span><br><span class="line"></span><br><span class="line"><span class="comment">; 基于accumulate的sum和product</span></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">sum</span> term a next b)</span><br><span class="line">	(<span class="name">accumulate</span> + <span class="number">0</span> term a next b))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">product</span> term a next b)</span><br><span class="line">	(<span class="name">accumulate</span> * <span class="number">1</span> term a next b))</span><br></pre></td></tr></table></figure>
+<h3 id="b-1">(b)</h3>
+<p>迭代版的accumulate</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">accumulate</span> combiner null-value term a next b)</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">iter</span> a result)</span><br><span class="line">		(<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">&gt;</span></span> a b)</span><br><span class="line">			result</span><br><span class="line">			(<span class="name">iter</span> (<span class="name">next</span> a) </span><br><span class="line">				  (<span class="name">combiner</span> result (<span class="name">term</span> a)))))</span><br><span class="line">	(<span class="name">iter</span> a null-value))</span><br></pre></td></tr></table></figure>
+<h1 id="节-1">1.3.2节</h1>
+<p>这一节主要讲了两个mit-scheme的语法规则，lambda和let。</p>
+<h2 id="lambda">lambda</h2>
+<p>lambda用于创建匿名过程， 使用lambda可以直接描述过程而不用定义任何辅助教程。</p>
+<p>lambda的使用方式如下：</p>
+(lambda (parameters1 parameters2 ....)
+<body>
+<p>)</p>
+<p>lambda定义的过程与define定义的过程之间唯一的不同就是lambda没有与环境中的任何名字相关联。</p>
+<h2 id="let">let</h2>
+<p>let通常用于局部变量，let的一般形式如下：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">&lt;var1&gt;</span> &lt;exp1&gt;)</span><br><span class="line">      (<span class="name">&lt;var2&gt;</span> &lt;exp2&gt;)</span><br><span class="line">      </span><br><span class="line">      (<span class="name">&lt;varn&gt;</span> &lt;expn&gt;))</span><br><span class="line">   &lt;body&gt;)</span><br></pre></td></tr></table></figure>
+<p>let可以这么理解：</p>
+在
+<body>
+<p>中，var1的值为exp1，var2的值为exp2，var3的值为exp3...</p>
+<p>let其实是lambda的语法糖，也就是let可以用如下的lambda形式表达：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">((<span class="name"><span class="builtin-name">lambda</span></span> ((&lt;var1&gt; &lt;var2&gt; &lt;var3&gt;....&lt;varn&gt;)</span><br><span class="line">		&lt;body&gt;))</span><br><span class="line">		&lt;exp1&gt; &lt;exp2&gt; &lt;exp3&gt;....&lt;exp1&gt;)</span><br></pre></td></tr></table></figure>
+<p>let表达式定义的局部变量仅使用在let体内。</p>
+<p>let可以使局部变量在使用的时候被定义。</p>
+<p>在let体内如果有变量与let中的var重名，那么使用的是let体外的变量，而不是let的var</p>
+<h2 id="练习1.34">练习1.34</h2>
+<p>我们一层一层的执行这个函数</p>
+<p>(f f)</p>
+<p>(f 2)</p>
+<p>(2 2)</p>
+<p>可以看到当执行3次之后，变成了(2 2)就会出现错误，The object 2 is not applicable。</p>
+<h1 id="section">1.3.3</h1>
+<p>这节的内容就是用于好好理解一下lambda和let的使用方法。</p>
+<p>看函数不动点的时候，费了点困难。然后上网找了找数学中有关lambda演算的知识，读完感觉自己高中的数学简直就是在算数，没有任何的思想在里面。</p>
+<p>看到将求根过程转换为求不动点时，蒙了一下，一开始没能理解二者之间是怎么联系起来的。看了看不动点的定义才理解。</p>
+<p>不动点就是求出一个值x，使得f(x)=x成立，在求平方根的时候，其实就是f(x)=y<sup>2，y</sup>2=x,也就是求出一个y=x/y，即求出y=x/y的不定点。</p>
+<h2 id="练习1.35">练习1.35</h2>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">phi</span>)</span><br><span class="line">	(<span class="name">fixed-point</span> (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name"><span class="builtin-name">+</span></span> <span class="number">1</span> (<span class="name"><span class="builtin-name">/</span></span> <span class="number">1</span> x))) <span class="number">1.0</span>))</span><br></pre></td></tr></table></figure>
+<h2 id="练习1.36">练习1.36</h2>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">;修改后的fixed-point</span></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> tolerance <span class="number">0.0001</span>)</span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">fixed-point</span> f first-guess)</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">close-enough?</span> v1 v2)</span><br><span class="line">		(<span class="name"><span class="builtin-name">&lt;</span></span> (<span class="name"><span class="builtin-name">abs</span></span> (<span class="name"><span class="builtin-name">-</span></span> v1 v2)) tolerance))</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">try-guess</span> guess)</span><br><span class="line">		(<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">next</span> (<span class="name">f</span> guess)))</span><br><span class="line">			(<span class="name"><span class="builtin-name">display</span></span> <span class="string">"Guess:"</span>)</span><br><span class="line">			(<span class="name"><span class="builtin-name">display</span></span> guess)</span><br><span class="line">			(<span class="name"><span class="builtin-name">display</span></span> <span class="string">"  Next:"</span>)</span><br><span class="line">			(<span class="name"><span class="builtin-name">display</span></span> next)</span><br><span class="line">			(<span class="name"><span class="builtin-name">newline</span></span>)</span><br><span class="line">			(<span class="name"><span class="builtin-name">if</span></span> (<span class="name">close-enough?</span> guess next)</span><br><span class="line">				next</span><br><span class="line">				(<span class="name">try-guess</span> next))))</span><br><span class="line">	(<span class="name">try-guess</span> first-guess))</span><br><span class="line"></span><br><span class="line"><span class="comment">; 求解方程的函数</span></span><br><span class="line">(<span class="name">fixed-point</span> (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name"><span class="builtin-name">/</span></span> (<span class="name"><span class="builtin-name">log</span></span> <span class="number">1000</span>) (<span class="name"><span class="builtin-name">log</span></span> x)))</span><br><span class="line">					<span class="number">2.0</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="练习1.37">练习1.37</h2>
+<h3 id="a-2">(a)</h3>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">cont-frac</span> n d k)</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">calculate</span> i)</span><br><span class="line">		(<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">=</span></span> i k)</span><br><span class="line">			(<span class="name"><span class="builtin-name">/</span></span> (<span class="name">n</span> i) (<span class="name">d</span> i))</span><br><span class="line">			(<span class="name"><span class="builtin-name">/</span></span> (<span class="name">n</span> i) (<span class="name"><span class="builtin-name">+</span></span> (<span class="name">d</span> i) (<span class="name">calculate</span> (<span class="name"><span class="builtin-name">+</span></span> i <span class="number">1</span>))))))</span><br><span class="line">	 (<span class="name">calculate</span> <span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+<h3 id="b-2">(b)</h3>
+<p>迭代版本的序列不能从1开始计算，也就是我们必须要从最后一项开始。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">cont-frac</span> n d k)</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">calculate</span> i result)</span><br><span class="line">		(<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">=</span></span> i <span class="number">0</span>)</span><br><span class="line">			result</span><br><span class="line">			(<span class="name">calculate</span> (<span class="name"><span class="builtin-name">-</span></span> i <span class="number">1</span>) (<span class="name"><span class="builtin-name">/</span></span> (<span class="name">n</span> i) (<span class="name"><span class="builtin-name">+</span></span> (<span class="name">d</span> i) result)))))</span><br><span class="line">	(<span class="name">calculate</span> k <span class="number">0</span>))</span><br></pre></td></tr></table></figure>
+<h2 id="练习1.38">练习1.38</h2>
+<p>这道题求D过程的简直找规律找的想死，最后用一种很逗比的方式做了出来。</p>
+<p>观察给出的序列可以认为这个序列是三个数一组，也就是可以通过位置取余3来表示某组中的第几个位置，在这序列中，如果当前位置取余3为0或1，则值为1；如果为2，则是(2*(i+1)/3),这个式子是化简(i-(i-2)/3)得到的。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">cont-frac</span> (<span class="name"><span class="builtin-name">lambda</span></span> (i) <span class="number">1</span>) </span><br><span class="line">	(<span class="name"><span class="builtin-name">lambda</span></span> (i) </span><br><span class="line">		(<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">=</span></span> (<span class="name"><span class="builtin-name">remainder</span></span> i <span class="number">3</span>) <span class="number">0</span>) <span class="number">1</span>)</span><br><span class="line">			((<span class="name"><span class="builtin-name">=</span></span> (<span class="name"><span class="builtin-name">remainder</span></span> i <span class="number">3</span>) <span class="number">1</span>) <span class="number">1</span>)</span><br><span class="line">			((<span class="name"><span class="builtin-name">=</span></span> (<span class="name"><span class="builtin-name">remainder</span></span> i <span class="number">3</span>) <span class="number">2</span>) (<span class="name"><span class="builtin-name">/</span></span> (<span class="name"><span class="builtin-name">*</span></span> <span class="number">2</span> (<span class="name"><span class="builtin-name">+</span></span> i <span class="number">1</span>)) <span class="number">3</span>)))) <span class="number">100.0</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="练习1.39">练习1.39</h2>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">tan-cf</span> x k)</span><br><span class="line">	(<span class="name">cont-frac</span> (<span class="name"><span class="builtin-name">lambda</span></span> (i) (<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">=</span></span> i <span class="number">1</span>)</span><br><span class="line">								x</span><br><span class="line">								(<span class="name"><span class="builtin-name">-</span></span> <span class="number">0</span> (<span class="name">square</span> x))))</span><br><span class="line">				</span><br><span class="line">				(<span class="name"><span class="builtin-name">lambda</span></span> (i) (<span class="name"><span class="builtin-name">-</span></span> (<span class="name"><span class="builtin-name">*</span></span> <span class="number">2</span> i) <span class="number">1</span>))</span><br><span class="line">				k))</span><br></pre></td></tr></table></figure>
+<h1 id="section-1">1.3.4</h1>
+<p>这一节就是讲lambda的用处了，定义一个过程将过程作为返回值返回。</p>
+<p>首先用平均阻尼作为一个例子，然后又讲了牛顿法，最后又讲了两者之间的联系。</p>
+<h2 id="平均阻尼">平均阻尼</h2>
+<p>平均阻尼就是计算f(x)和x的平均值，给定一个过程，然后利用lambda进行计算，这个比较简单就不详细说了。</p>
+<h2 id="牛顿法">牛顿法</h2>
+<p>牛顿法主要讲的是一个求解方程根的方法。如果g(x)可微，那g(x)=0的一个解就是f(x)的一个不动点，其中f(x)为</p>
+<p><span class="math display">\[
+f(x)=x-\frac{g(x)}{Dg(x)}
+\]</span></p>
+<p>其中Dg(x)为g(x)的导数。</p>
+<p>求解导数的运算也利用了lambda，输入一个函数然后返回该函数的导数，这是一个函数到另一个函数的转化。</p>
+<p>然后就可以将牛顿法转化为一个求解不动点的过程了。</p>
+<h2 id="牛顿法与平均阻尼">牛顿法与平均阻尼</h2>
+<p>利用牛顿法和平均阻尼都可以实现开发sqrt函数，二者都是将一个过程转换成另一个过程，然后找到转换后过程的不动点。</p>
+<h2 id="练习1.43">练习1.43</h2>
+<p>这个题一开始想挺简单的，结果做了一下没做出来，上网看了别人的解答才知道。</p>
+<p>有两种方法，一种是递归，一种是迭代。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">repeated</span> f n)</span><br><span class="line">	(<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">=</span></span> n <span class="number">1</span>)</span><br><span class="line">		f</span><br><span class="line">		(<span class="name">compose</span> f (<span class="name">repeated</span> f (<span class="name"><span class="builtin-name">-</span></span> n <span class="number">1</span>)))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">repeated</span> f n)</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">iter</span> repeated-f index)</span><br><span class="line">		(<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">=</span></span> index <span class="number">1</span>)</span><br><span class="line">			repeated-f</span><br><span class="line">			(<span class="name">iter</span> (<span class="name">compose</span> f repeated-f) (<span class="name"><span class="builtin-name">-</span></span> index <span class="number">1</span>))))</span><br><span class="line">	(<span class="name">iter</span> f n))</span><br></pre></td></tr></table></figure>
+<h2 id="练习1.45">练习1.45</h2>
+<p>这道题略微有点麻烦，我用了练习1.36的fixed-point函数，然后写了一个过程获得实验数据。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">average-damp</span> f)</span><br><span class="line">	(<span class="name"><span class="builtin-name">lambda</span></span> (x)</span><br><span class="line">		(<span class="name">average</span> x (<span class="name">f</span> x))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">damp-n-times</span> n)</span><br><span class="line">	(<span class="name">repeated</span> average-damp n))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">nth-root</span> n damp-time)</span><br><span class="line">	(<span class="name">fixed-point</span> ((<span class="name">damp-n-times</span> damp-time) (<span class="name"><span class="builtin-name">lambda</span></span> (y) (<span class="name"><span class="builtin-name">/</span></span> (<span class="name">fast-exp</span> <span class="number">2</span> n) (<span class="name">fast-exp</span> y (<span class="name"><span class="builtin-name">-</span></span> n <span class="number">1</span>))))) <span class="number">1.0</span>))</span><br></pre></td></tr></table></figure>
+<p>接受两个参数，n表示几次方根，damp-time表示进行平均阻尼的次数，然后先求2<sup>n，然后再对2</sup>n开n次方根，检查最后的结果是否是2和是否收敛，如果收敛则记录xian和damp-time的值。</p>
+<p>进行多次实验之后可以得到下列的数据：</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">2</th>
+<th style="text-align: center;">3</th>
+<th style="text-align: right;">4</th>
+<th style="text-align: right;">5</th>
+<th style="text-align: right;">6</th>
+<th style="text-align: right;">7</th>
+<th style="text-align: right;">8</th>
+<th style="text-align: right;">...</th>
+<th style="text-align: right;">14</th>
+<th style="text-align: right;">15</th>
+<th style="text-align: right;">16</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+</tr>
+</tbody>
+</table>
+<p>由此我们可以得到的规律就是需要进行平均阻尼的次数就是lg(n)向下取整。</p>
+<p>则求n次方根的过程如下：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">average-damp</span> f)</span><br><span class="line">	(<span class="name"><span class="builtin-name">lambda</span></span> (x)</span><br><span class="line">		(<span class="name">average</span> x (<span class="name">f</span> x))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">damp-n-times</span> n)</span><br><span class="line">	(<span class="name">repeated</span> average-damp n))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">n-root</span> n x)</span><br><span class="line">	(<span class="name">fixed-point</span> ((<span class="name">damp-n-times</span> (<span class="name">lg</span> n)) (<span class="name"><span class="builtin-name">lambda</span></span> (y) (<span class="name"><span class="builtin-name">/</span></span> x (<span class="name">fast-exp</span> y (<span class="name"><span class="builtin-name">-</span></span> n <span class="number">1</span>))))) <span class="number">1.0</span>))</span><br></pre></td></tr></table></figure>
+<p>根据输入的n求取要进行平局阻尼的次数，然后利用不动点的过程求n次方根。</p>
+<h2 id="练习1.46">练习1.46</h2>
+<p>这是我想的一种方法，但是网上的做法大多是定义了一个中间的过程，然后再进行求解的，不知道我这种对不对，结果倒是能出来。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">iter</span> good-enough? improve)</span><br><span class="line">	(<span class="name"><span class="builtin-name">lambda</span></span> (x)</span><br><span class="line">		(<span class="name"><span class="builtin-name">if</span></span> (<span class="name">good-enough?</span> x)</span><br><span class="line">			x</span><br><span class="line">			((<span class="name">iter</span> good-enough? improve) (<span class="name">improve</span> x)))))</span><br></pre></td></tr></table></figure>
+<p>两个重新定义的函数</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> tolerance <span class="number">0.00001</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name"><span class="builtin-name">sqrt</span></span> x)</span><br><span class="line">  (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">good-enough?</span> guess)</span><br><span class="line">    (<span class="name"><span class="builtin-name">&lt;</span></span> (<span class="name"><span class="builtin-name">abs</span></span> (<span class="name"><span class="builtin-name">-</span></span> (<span class="name">square</span> guess) x)) tolerance))</span><br><span class="line">  (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">f</span> guess)</span><br><span class="line">    (<span class="name">average</span> guess (<span class="name"><span class="builtin-name">/</span></span> x guess)))</span><br><span class="line">  ((<span class="name">iter</span> good-enough? f) <span class="number">1.0</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">fixed-point</span> f first-guess)</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">good-enough?</span> guess)</span><br><span class="line">		(<span class="name"><span class="builtin-name">&lt;</span></span> (<span class="name"><span class="builtin-name">abs</span></span> (<span class="name"><span class="builtin-name">-</span></span> (<span class="name">f</span> guess) guess)) tolerance))</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">improve</span> guess)</span><br><span class="line">		(<span class="name">f</span> guess))</span><br><span class="line">	((<span class="name">iter</span> good-enough? improve) first-guess))</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SICP/" rel="tag"># SICP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/13/2016-07-13-memory-managment-in-linux/" rel="next" title="Linux中的内存管理机制">
+                <i class="fa fa-chevron-left"></i> Linux中的内存管理机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/27/2016-07-27-dedicated-to-the-spirit-that-lives-in-the-computer(3)/" rel="prev" title="SICP学习笔记（三）">
+                SICP学习笔记（三） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#节"><span class="nav-number">1.</span> <span class="nav-text">1.3.1节</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#练习1.29"><span class="nav-number">1.1.</span> <span class="nav-text">练习1.29</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#练习1.30"><span class="nav-number">1.2.</span> <span class="nav-text">练习1.30</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#练习1.31"><span class="nav-number">1.3.</span> <span class="nav-text">练习1.31</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a"><span class="nav-number">1.3.1.</span> <span class="nav-text">(a)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#b"><span class="nav-number">1.3.2.</span> <span class="nav-text">(b)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#练习1.32"><span class="nav-number">1.4.</span> <span class="nav-text">练习1.32</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a-1"><span class="nav-number">1.4.1.</span> <span class="nav-text">(a)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#b-1"><span class="nav-number">1.4.2.</span> <span class="nav-text">(b)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#节-1"><span class="nav-number">2.</span> <span class="nav-text">1.3.2节</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#lambda"><span class="nav-number">2.1.</span> <span class="nav-text">lambda</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#let"><span class="nav-number">2.2.</span> <span class="nav-text">let</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#练习1.34"><span class="nav-number">2.3.</span> <span class="nav-text">练习1.34</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#section"><span class="nav-number">3.</span> <span class="nav-text">1.3.3</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#练习1.35"><span class="nav-number">3.1.</span> <span class="nav-text">练习1.35</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#练习1.36"><span class="nav-number">3.2.</span> <span class="nav-text">练习1.36</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#练习1.37"><span class="nav-number">3.3.</span> <span class="nav-text">练习1.37</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a-2"><span class="nav-number">3.3.1.</span> <span class="nav-text">(a)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#b-2"><span class="nav-number">3.3.2.</span> <span class="nav-text">(b)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#练习1.38"><span class="nav-number">3.4.</span> <span class="nav-text">练习1.38</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#练习1.39"><span class="nav-number">3.5.</span> <span class="nav-text">练习1.39</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#section-1"><span class="nav-number">4.</span> <span class="nav-text">1.3.4</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#平均阻尼"><span class="nav-number">4.1.</span> <span class="nav-text">平均阻尼</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#牛顿法"><span class="nav-number">4.2.</span> <span class="nav-text">牛顿法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#牛顿法与平均阻尼"><span class="nav-number">4.3.</span> <span class="nav-text">牛顿法与平均阻尼</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#练习1.43"><span class="nav-number">4.4.</span> <span class="nav-text">练习1.43</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#练习1.45"><span class="nav-number">4.5.</span> <span class="nav-text">练习1.45</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#练习1.46"><span class="nav-number">4.6.</span> <span class="nav-text">练习1.46</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

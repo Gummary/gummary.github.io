@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="SICP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="第2.3节的学习笔记及习题解答">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SICP学习笔记（五）">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;09&#x2F;14&#x2F;2016-09-14-dedicated-to-the-spirit-that-lives-in-the-computer(5)&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="第2.3节的学习笔记及习题解答">
+<meta property="article:published_time" content="2016-09-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2017-01-21T04:50:08.000Z">
+<meta property="article:author" content="Gummary">
+<meta property="article:tag" content="SICP">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/09/14/2016-09-14-dedicated-to-the-spirit-that-lives-in-the-computer(5)/"/>
+
+
+
+
+
+  <title>SICP学习笔记（五） | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/14/2016-09-14-dedicated-to-the-spirit-that-lives-in-the-computer(5)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SICP学习笔记（五）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-14T00:00:00+08:00">
+                2016-09-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SICP/" itemprop="url" rel="index">
+                    <span itemprop="name">SICP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/09/14/2016-09-14-dedicated-to-the-spirit-that-lives-in-the-computer(5)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2016/09/14/2016-09-14-dedicated-to-the-spirit-that-lives-in-the-computer(5)/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这一节先讲了lisp中'的使用，我的理解就是引入了字符串，然后引入了三个实例。第一个实例用于阐述符号操作，第二个实例介绍了三种数据的表示方法，最后讲了Huffman编码。</p>
+<h2 id="引号">2.3.1 引号</h2>
+<p>这一节介绍了如何用引号来引进字符串，然后利用基本过程eq? 写了一个非常有用的函数memq？判断一个值是否在另一个表里。</p>
+<h3 id="练习2.54">练习2.54</h3>
+<p>直接根据题目的描述写出一个递归的过程即可。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name"><span class="builtin-name">equal?</span></span> x y)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">and</span></span> (<span class="name"><span class="builtin-name">not</span></span> (<span class="name"><span class="builtin-name">pair?</span></span> x)) (<span class="name"><span class="builtin-name">not</span></span> (<span class="name"><span class="builtin-name">pair?</span></span> y))) (<span class="name"><span class="builtin-name">eq?</span></span> x y))</span><br><span class="line">        ((<span class="name"><span class="builtin-name">and</span></span> (<span class="name"><span class="builtin-name">pair?</span></span> x) (<span class="name"><span class="builtin-name">pair?</span></span> y))</span><br><span class="line">         (<span class="name"><span class="builtin-name">and</span></span> (<span class="name"><span class="builtin-name">equal?</span></span> (<span class="name"><span class="builtin-name">car</span></span> x) (<span class="name"><span class="builtin-name">car</span></span> y)) (<span class="name"><span class="builtin-name">equal?</span></span> (<span class="name"><span class="builtin-name">cdr</span></span> x) (<span class="name"><span class="builtin-name">cdr</span></span> y))))</span><br><span class="line">        (<span class="name"><span class="builtin-name">else</span></span> false)))</span><br></pre></td></tr></table></figure>
+<h3 id="练习2.55">练习2.55</h3>
+<p>''abracadabra会被解释成'(quote abracadabra) ，第一个'修饰的是一个链表，所以car这个链表返回的是quote</p>
+<h2 id="符号数据">符号数据</h2>
+<p>首先利用愿望思维构造出了一些判断表达式，这些表达式构造出了一层抽象屏蔽，利用这些表达式就可以根据求导的公式写出求导的过程。</p>
+<p>在需要化简的时候只需要修改表达式中make-sum和make-product过程即可，不需要修改上层求导的过程，由此可以看出抽象屏蔽的威力。</p>
+<h3 id="练习2.56">练习2.56</h3>
+<p>首先，判断第一个是否为**来判断是否为乘幂，然后根据幂的构造写出求底和求幂的过程。</p>
+<p>特别注意的是make-exponentiation，就是u=1时，多次幂恒为1,这点书上没说。</p>
+<p>最后利用两次make-product求出导数即可。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">exponentiation?</span> x)</span><br><span class="line">  (<span class="name"><span class="builtin-name">and</span></span> (<span class="name"><span class="builtin-name">pair?</span></span> x)</span><br><span class="line">       (<span class="name"><span class="builtin-name">eq?</span></span> (<span class="name"><span class="builtin-name">car</span></span> x) <span class="symbol">'**</span>)))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">base</span> x)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cadr</span></span> x))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">exponent</span> x)</span><br><span class="line">  (<span class="name">caddr</span> x))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">make-exponentiation</span> u n)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name">=number?</span> u <span class="number">1</span>) <span class="number">1</span>)</span><br><span class="line">        ((<span class="name">=number?</span> n <span class="number">0</span>) <span class="number">1</span>)</span><br><span class="line">        ((<span class="name">=number?</span> n <span class="number">1</span>) u)</span><br><span class="line">        (<span class="name"><span class="builtin-name">else</span></span> (<span class="name"><span class="builtin-name">list</span></span> <span class="symbol">'**</span> u n))))</span><br><span class="line">        </span><br><span class="line">       </span><br><span class="line">(<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name">exponentiation?</span> exp)</span><br><span class="line">       (<span class="name">make-product</span></span><br><span class="line">         (<span class="name">make-product</span> (<span class="name">exponent</span> exp)</span><br><span class="line">                       (<span class="name">make-exponentiation</span> (<span class="name">base</span> exp)</span><br><span class="line">                                            (<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">number?</span></span> exponent exp))</span><br></pre></td></tr></table></figure>
+<h3 id="练习2.57">练习2.57</h3>
+<p>这个题一开始我理解错意思了，然后没能做出来，在网上找了一份答案，说下我的理解。</p>
+<p>解这道题其实只需要修改augend和multiplicand一个过程即可，一个非常简单的方法就是将后面多出来的加数和乘数改成两个想乘或相加即可。方法就是对后面的加数乘数利用accumulate反复调用make-sum和make-product</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">augend</span> s)</span><br><span class="line">  (<span class="name">accumulate</span> make-sum <span class="number">0</span> (<span class="name">cddr</span> s)))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">multiplicand</span> p)</span><br><span class="line">  (<span class="name">accumulate</span> make-product <span class="number">1</span> (<span class="name">cddr</span> s)))</span><br></pre></td></tr></table></figure>
+<h3 id="练习2.58">练习2.58</h3>
+<p>这个题只考虑了a（因为比较简单233）,只需要修改一下顺序即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">(define (make-sum a1 a2)</span><br><span class="line">  (cond ((&#x3D;number? a1 0) a2)</span><br><span class="line">        ((&#x3D;number? a2 0) a1)</span><br><span class="line">        ((and (number? a1) (number? a2)) (+ a1 a2))</span><br><span class="line">        (else (list a1 &#39;+ a2))))</span><br><span class="line"></span><br><span class="line">(define (make-product m1 m2)</span><br><span class="line">  (cond ((or (&#x3D;number? m1 0) (&#x3D;number? m2 0)) 0)</span><br><span class="line">        ((&#x3D;number? m1 1) m2)</span><br><span class="line">        ((&#x3D;number? m2 1) m1)</span><br><span class="line">        ((and (number? m1) (number? m2)) (* m1 m2))</span><br><span class="line">        (else (list m1 &#39;* m2))))                 </span><br><span class="line"></span><br><span class="line">(define (sum? x)</span><br><span class="line">  (and (pair? x) (eq? (cadr x) &#39;*)))</span><br><span class="line"></span><br><span class="line">(define (addend s)</span><br><span class="line">  (car s))</span><br><span class="line"></span><br><span class="line">(define (augend s)</span><br><span class="line">  (caddr s))</span><br><span class="line"></span><br><span class="line">(define (product? x )</span><br><span class="line">  (and (pair? x) (eq? (cadr x) &#39;+)))</span><br><span class="line"></span><br><span class="line">(define (multiplier p)</span><br><span class="line">  (car p))</span><br><span class="line"></span><br><span class="line">(define (multiplicand p)</span><br><span class="line">  (caddr p))</span><br></pre></td></tr></table></figure>
+<h2 id="集合的表示">集合的表示</h2>
+<p>这一节介绍了三种表示集合的方法，未排序的表 ，排序的表还有二叉树。虽然内部的实现方式不同，但是只要实现了对应的操作，就可以称之为集合，而那些操作就构成了一层抽象屏蔽。</p>
+<h3 id="练习2.59">练习2.59</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(define (union-set set1 set2)</span><br><span class="line">  (cond ((null? set1) set2)</span><br><span class="line">        ((null? set2) set1)</span><br><span class="line">        ((element-of-set? (car set1) set2) (union-set (cdr set1) set2))</span><br><span class="line">        (else (cons (car set1) (union-set (cdr set1) set2)))))</span><br></pre></td></tr></table></figure>
+<h3 id="练习2.60">练习2.60</h3>
+<p>这道题求交集的过程比较麻烦，因为表里有重复的元素所以在组合时要先把表中重复的元素去掉。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">(define (element-of-set? x set)</span><br><span class="line">  (cond ((null? set) false)</span><br><span class="line">        ((equal? x (car set)) true)</span><br><span class="line">        (else (element-of-set? x (cdr set)))))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">(define (adjoin-set x set)</span><br><span class="line">  (cons x set))</span><br><span class="line">  </span><br><span class="line">(define (union-set set1 set2)</span><br><span class="line">  (append set1 set2))</span><br><span class="line"></span><br><span class="line">(define (remove-set-element x set)</span><br><span class="line">  (define (iter rest result)</span><br><span class="line">    (cond ((null? rest) result)</span><br><span class="line">          ((equal? x (car rest))</span><br><span class="line">           (append result (iter (cdr rest) result)))</span><br><span class="line">          (else (append (adjoin-set (car rest) result) (iter (cdr rest) result)))))</span><br><span class="line">  (iter set &#39;()))</span><br><span class="line">  </span><br><span class="line">(define (intersection-set set1 set2)</span><br><span class="line">  (cond ((or (null? set1) (null? set2)) &#39;())</span><br><span class="line">        ((element-of-set? (car set1) set2)</span><br><span class="line">         (cons (car set1)</span><br><span class="line">               (intersection-set (cdr set1)</span><br><span class="line">                                 (remove-set-element (car set1) set2))))</span><br><span class="line">        (else (intersection-set (cdr set1) set2))))</span><br></pre></td></tr></table></figure>
+<h3 id="练习2.61">练习2.61</h3>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">adjoin-set</span> x set)</span><br><span class="line">  (<span class="name"><span class="builtin-name">if</span></span> (<span class="name">element-of-set</span> x set)</span><br><span class="line">    set</span><br><span class="line">    (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">null?</span></span> set) (<span class="name"><span class="builtin-name">list</span></span> x))</span><br><span class="line">          ((<span class="name"><span class="builtin-name">&gt;</span></span> (<span class="name"><span class="builtin-name">car</span></span> set) x) (<span class="name"><span class="builtin-name">cons</span></span> x set))</span><br><span class="line">          ((<span class="name"><span class="builtin-name">&lt;</span></span> (<span class="name"><span class="builtin-name">car</span></span> set) x) (<span class="name"><span class="builtin-name">cons</span></span> (<span class="name"><span class="builtin-name">car</span></span> set) (<span class="name">adjoin-set</span> x (<span class="name"><span class="builtin-name">cdr</span></span> set))))))</span><br></pre></td></tr></table></figure>
+<h3 id="练习2.62">练习2.62</h3>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">union-set</span> set1 set2)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">null?</span></span> set1) set2)</span><br><span class="line">        ((<span class="name"><span class="builtin-name">null?</span></span> set2) set1)</span><br><span class="line">        ((<span class="name"><span class="builtin-name">=</span></span> (<span class="name"><span class="builtin-name">car</span></span> set1) (<span class="name"><span class="builtin-name">car</span></span> set2))</span><br><span class="line">         (<span class="name"><span class="builtin-name">cons</span></span> (<span class="name"><span class="builtin-name">car</span></span> set1) (<span class="name">union-set</span> (<span class="name"><span class="builtin-name">cdr</span></span> set1) (<span class="name"><span class="builtin-name">cdr</span></span> set2))))</span><br><span class="line">        ((<span class="name"><span class="builtin-name">&lt;</span></span> (<span class="name"><span class="builtin-name">car</span></span> set1) (<span class="name"><span class="builtin-name">car</span></span> set2))</span><br><span class="line">         (<span class="name"><span class="builtin-name">cons</span></span> (<span class="name"><span class="builtin-name">car</span></span> set1) (<span class="name">union-set</span> (<span class="name"><span class="builtin-name">cdr</span></span> set1) set2)))</span><br><span class="line">        ((<span class="name"><span class="builtin-name">&gt;</span></span> (<span class="name"><span class="builtin-name">car</span></span> set1) (<span class="name"><span class="builtin-name">car</span></span> set2))</span><br><span class="line">         (<span class="name"><span class="builtin-name">cons</span></span> (<span class="name"><span class="builtin-name">car</span></span> set2) (<span class="name">union-set</span> set1 (<span class="name"><span class="builtin-name">cdr</span></span> set2))))))</span><br></pre></td></tr></table></figure>
+<h3 id="练习2.63">练习2.63</h3>
+<p>没做出来Orz，在外网找了篇答案翻译一下</p>
+<p><a href="http://community.schemewiki.org/?sicp-ex-2.63" target="_blank" rel="noopener">原文</a></p>
+<p>a）在图2-16中的三颗树可被表示为</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> fig2-16-1 '(<span class="number">7</span> (<span class="number">3</span> (<span class="number">1</span> () ()) (<span class="number">5</span> () ())) (<span class="number">9</span> () (<span class="number">11</span> () ())))) </span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> fig2-16-2 '(<span class="number">3</span> (<span class="number">1</span> () ()) (<span class="number">7</span> (<span class="number">5</span> () ()) (<span class="number">9</span> () (<span class="number">11</span> () ()))))) </span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> fig2-16-3 '(<span class="number">5</span> (<span class="number">3</span> (<span class="number">1</span> () ()) ()) (<span class="number">9</span> (<span class="number">7</span> () ()) (<span class="number">11</span> () ()))))</span><br></pre></td></tr></table></figure>
+<p>使用这两个过程都产生相同的list</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">1</span> <span class="number">3</span> <span class="number">5</span> <span class="number">7</span> <span class="number">9</span> <span class="number">11</span>)</span><br></pre></td></tr></table></figure>
+<ol start="2" type="a">
+<li></li>
+</ol>
+<p>假设T(n)为平衡一个有n个节点的树所用的时间</p>
+<p>对于tree-list-1来说我们有 <strong>T(n) = 2<em>T(n/2)+O(n/2)<strong> （因为append是线性级的） 根据<a href="https://zh.wikipedia.org/zh/主定理" target="_blank" rel="noopener">主定理</a>，我们有</strong>T(n) = O(n</em>log n)</strong></p>
+<p>对于tree-list-2来说我们有 **T(n) = 2*T(n/2) + O(1)<strong> 根据<a href="https://zh.wikipedia.org/zh/主定理" target="_blank" rel="noopener">主定理</a>，我们有</strong> T(n) = O(n)**</p>
+<h3 id="练习2.64">练习2.64</h3>
+<p>这题也没做出来，还是找了篇题解翻译了一下Orz</p>
+<p><a href="http://community.schemewiki.org/?sicp-ex-2.64" target="_blank" rel="noopener">原文</a></p>
+<p>a)PARTIAL-TREE把一个链表分成了三部分：中间部分为THIS-ENTRY，比中间小的，还有比中间大的。然后他创建了一颗二叉树，根节点为THIS-ENTRY，左子树为比中间小的，右子树为比中间大的。</p>
+<p>b)将有序表分成两部分分别是由(QUOTIENT (- N 1) 2) 和 (- N (+ LEFT-SIZE 1))来完成的，这两个过程都花费的是常量级的时间，链接左右子树的过程是由 (MAKE-TREE THIS-ENTRY LEFT-TREE RIGHT-TREE)完成的，这个也是常量级的时间，因此，花费的时间为</p>
+<p><strong>T(n) = 2T(n/2) + Θ(1)</strong></p>
+<p>根据主定理，我们有a = 2, b = 2, f(n) = Θ(1). 因此, T(n) = Θ(n).</p>
+<p>list-&gt;tree所用的时间为partial-tree和length所用的时间之和，二者的时间均为O(n)，所以list-&gt;tree所用的时间为O(n)</p>
+<h3 id="练习2.65">练习2.65</h3>
+<p>先将两颗树转换成有序表，然后调用有序表的合并，得到结果再将有序表转换成二叉树即可。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">load</span></span> <span class="string">"ordered"</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">union-set-tree</span> tree1 tree2)</span><br><span class="line">  (<span class="name">list-&gt;tree</span> (<span class="name">union-set</span> (<span class="name">tree-&gt;list</span> tree1) (<span class="name">tree-list</span> tree2))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">intersection-set</span> tree1 tree2)</span><br><span class="line">  (<span class="name">list-&gt;tree</span> (<span class="name">intersection-set</span> (<span class="name">tree-&gt;list</span> tree1) (<span class="name">tree-&gt;list</span> tree2))))</span><br></pre></td></tr></table></figure>
+<h3 id="练习2.66">练习2.66</h3>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">lookup</span> given-key set-of-records)</span><br><span class="line">(<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">null?</span></span> set-of-records) false)</span><br><span class="line">      ((<span class="name"><span class="builtin-name">equal?</span></span> given-key (<span class="name">entry</span> set-of-records)) true)</span><br><span class="line">      ((<span class="name"><span class="builtin-name">&gt;</span></span> given-key (<span class="name">entry</span> set-of-records))</span><br><span class="line">       (<span class="name">lookup</span> given-key (<span class="name">right-branch</span> set-of-records)))</span><br><span class="line">      ((<span class="name"><span class="builtin-name">&lt;</span></span> given-key (<span class="name">entry</span> set-of-records))</span><br><span class="line">       (<span class="name">lookup</span> given-key (<span class="name">left-branch</span> set-of-records)))))</span><br></pre></td></tr></table></figure>
+<h2 id="huffman树的表示">Huffman树的表示</h2>
+<h3 id="练习2.67">练习2.67</h3>
+<p>解码得到的结果为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(a d a b b c a)</span><br></pre></td></tr></table></figure>
+<h3 id="练习2.69">练习2.69</h3>
+<p>一开始把这个题想简单了，然后在网上照了一篇思路清晰的题解写的</p>
+<p>每一个字母都对应这一个编码，求出每个编码然后将他们append起来即可。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">encode</span> message tree)</span><br><span class="line">  (<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">null?</span></span> message)</span><br><span class="line">    '()</span><br><span class="line">    (<span class="name"><span class="builtin-name">append</span></span> (<span class="name">encode-symbol</span> (<span class="name"><span class="builtin-name">car</span></span> message) tree)</span><br><span class="line">            (<span class="name">encode</span> (<span class="name"><span class="builtin-name">cdr</span></span> message) tree))))</span><br><span class="line">  </span><br><span class="line">  <span class="comment">;; 求出每一个符号的编码          </span></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">encode-symbol</span> message tree)</span><br><span class="line">  (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">lb</span> (<span class="name">left-branch</span> tree))</span><br><span class="line">        (<span class="name">rb</span> (<span class="name">right-branch</span> tree)))</span><br><span class="line">    (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name">intree?</span> message lb)</span><br><span class="line">           (<span class="name"><span class="builtin-name">if</span></span> (<span class="name">leaf?</span> lb)</span><br><span class="line">             '(<span class="number">0</span>)</span><br><span class="line">             (<span class="name"><span class="builtin-name">cons</span></span> <span class="number">0</span> (<span class="name">encode-symbol</span> message lb))))</span><br><span class="line">          ((<span class="name">intree?</span> message rb)</span><br><span class="line">           (<span class="name"><span class="builtin-name">if</span></span> (<span class="name">leaf?</span> rb)</span><br><span class="line">             '(<span class="number">1</span>)</span><br><span class="line">             (<span class="name"><span class="builtin-name">cons</span></span> <span class="number">1</span> (<span class="name">encode-symbol</span> message rb))))</span><br><span class="line">          (<span class="name"><span class="builtin-name">else</span></span> error <span class="string">"bad symbol -- ENCODE-SYMBOL"</span> message))))</span><br><span class="line">          </span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">element-of-set?</span> x set)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">null?</span></span> set) false)</span><br><span class="line">        ((<span class="name"><span class="builtin-name">equal?</span></span> x (<span class="name"><span class="builtin-name">car</span></span> set)) true)</span><br><span class="line">        (<span class="name"><span class="builtin-name">else</span></span> (<span class="name">element-of-set?</span> x (<span class="name"><span class="builtin-name">cdr</span></span> set)))))</span><br><span class="line"></span><br><span class="line"><span class="comment">;; 判断message是否在该分支中</span></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">intree?</span> message branch)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name">leaf?</span> branch)</span><br><span class="line">         (<span class="name"><span class="builtin-name">equal?</span></span> message (<span class="name">symbol-leaf</span> branch)))</span><br><span class="line">        (<span class="name"><span class="builtin-name">else</span></span> (<span class="name">element-of-set?</span> message (<span class="name">symbols</span> branch)))))</span><br><span class="line">~~~                     </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 练习2.69</span><br><span class="line"></span><br><span class="line">adjoin-set产生的是一个有序表，所以只要每次取开头的两个元素然后组成一个tree，直到最后列表中只剩了一个元素即可得出答案</span><br><span class="line"></span><br><span class="line">~~~scheme</span><br><span class="line">(<span class="name"><span class="builtin-name">load</span></span> <span class="string">"huffmantree"</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">successive-merge</span> leafs)</span><br><span class="line">  (<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">=</span></span> (<span class="name"><span class="builtin-name">length</span></span> leafs) <span class="number">1</span>)</span><br><span class="line">    leafs</span><br><span class="line">    (<span class="name">successive-merge</span> (<span class="name">adjoin-set</span> (<span class="name">make-code-tree</span> (<span class="name"><span class="builtin-name">car</span></span> leafs) (<span class="name"><span class="builtin-name">cadr</span></span> leafs))</span><br><span class="line">                                  (<span class="name">cddr</span> leafs)))))</span><br></pre></td></tr></table></figure>
+<h3 id="练习2.71">练习2.71</h3>
+<p>最频繁的符号用1个二进制位，最不频繁的符号用n-1位</p>
+<h3 id="练习2.72">练习2.72</h3>
+<p>对于最频繁的符号，只需要搜索一次即可，所以时间复杂度为O(1)，而最不频繁的结果需要将每一个子树都搜索一遍，需要搜索n-1个节点，所需的时间为O(n) + O(n-1) + ... + O(1)，所以时间复杂度为O(n^2)</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SICP/" rel="tag"># SICP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/08/2016-09-08-dedicated-to-the-spirit-that-lives-in-the-computer(4)/" rel="next" title="SICP学习笔记（四）">
+                <i class="fa fa-chevron-left"></i> SICP学习笔记（四）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/18/2016-09-18-telegram-bot/" rel="prev" title="创建一个Telegram自动回复机器人">
+                创建一个Telegram自动回复机器人 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#引号"><span class="nav-number">1.</span> <span class="nav-text">2.3.1 引号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.54"><span class="nav-number">1.1.</span> <span class="nav-text">练习2.54</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.55"><span class="nav-number">1.2.</span> <span class="nav-text">练习2.55</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#符号数据"><span class="nav-number">2.</span> <span class="nav-text">符号数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.56"><span class="nav-number">2.1.</span> <span class="nav-text">练习2.56</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.57"><span class="nav-number">2.2.</span> <span class="nav-text">练习2.57</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.58"><span class="nav-number">2.3.</span> <span class="nav-text">练习2.58</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集合的表示"><span class="nav-number">3.</span> <span class="nav-text">集合的表示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.59"><span class="nav-number">3.1.</span> <span class="nav-text">练习2.59</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.60"><span class="nav-number">3.2.</span> <span class="nav-text">练习2.60</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.61"><span class="nav-number">3.3.</span> <span class="nav-text">练习2.61</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.62"><span class="nav-number">3.4.</span> <span class="nav-text">练习2.62</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.63"><span class="nav-number">3.5.</span> <span class="nav-text">练习2.63</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.64"><span class="nav-number">3.6.</span> <span class="nav-text">练习2.64</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.65"><span class="nav-number">3.7.</span> <span class="nav-text">练习2.65</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.66"><span class="nav-number">3.8.</span> <span class="nav-text">练习2.66</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#huffman树的表示"><span class="nav-number">4.</span> <span class="nav-text">Huffman树的表示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.67"><span class="nav-number">4.1.</span> <span class="nav-text">练习2.67</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.69"><span class="nav-number">4.2.</span> <span class="nav-text">练习2.69</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.71"><span class="nav-number">4.3.</span> <span class="nav-text">练习2.71</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.72"><span class="nav-number">4.4.</span> <span class="nav-text">练习2.72</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="linux,Memory Managment,IA32," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="介绍Linux中的内存管理机制及Inter的IA32的寻址机制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux中的内存管理机制">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;07&#x2F;13&#x2F;2016-07-13-memory-managment-in-linux&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="介绍Linux中的内存管理机制及Inter的IA32的寻址机制">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;S35mIpA.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;H2nLIcs.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;R0RzHT5.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;eJFwuva.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;b3ANJEt.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;bgwKz5y.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;4ce9zuw.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;dg78vdi.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;9BxXeMv.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;B9estZf.png">
+<meta property="article:published_time" content="2016-07-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2017-01-21T04:50:08.000Z">
+<meta property="article:author" content="Gummary">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="Memory Managment">
+<meta property="article:tag" content="IA32">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;S35mIpA.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/07/13/2016-07-13-memory-managment-in-linux/"/>
+
+
+
+
+
+  <title>Linux中的内存管理机制 | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/07/13/2016-07-13-memory-managment-in-linux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux中的内存管理机制</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-07-13T00:00:00+08:00">
+                2016-07-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/07/13/2016-07-13-memory-managment-in-linux/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2016/07/13/2016-07-13-memory-managment-in-linux/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="ia32的寻址机制">IA32的寻址机制</h1>
+<h2 id="ia32的段机制">IA32的段机制</h2>
+<h3 id="段选择符">段选择符</h3>
+<p>在IA32架构中共有6个段寄存器，分别是CS、DS、SS、ES、FS、GS。其中CS是代码段寄存器，SS为栈寄存器，剩下的四个为数据段寄存器。</p>
+<p>这6个寄存器均为16位的寄存器，分别存放着段选择符，段选择符的结构如下</p>
+<p><img src="http://i.imgur.com/S35mIpA.png" /></p>
+<p>其中，第0和1位标识该段的特权级，0~3，0最高，3最低。第2位标识该段是全局段描述符还是局部段描述符。剩下的是索引，所有全局和局部段描述符的总量为2^13.</p>
+<h3 id="全局段表与段描述符">全局段表与段描述符</h3>
+<p>在IA32系统中还有两个寄存器，一个是GDTR，一个是LDTR，分别指明了全局段表与局部段表在内存中的位置。</p>
+<p>全局段表中存放的是段描述符，IA32架构中的一个段描述符的大小为8字节组成，包含了基地址、段偏移量和一些控制位。段描述符的结构如下：</p>
+<p><img src="http://i.imgur.com/H2nLIcs.png" /></p>
+<p>段基地址为段描述符的第2，3，4，7字节，总长度为32位。段最大偏移量为第0，1字节和第6字节的第4位，总长度为20位。</p>
+<h3 id="ia32中的段地址映射">IA32中的段地址映射</h3>
+<p>有了上述的基础之后就可以查看IA32架构中的段地址映射机制了。</p>
+<p>首先CPU发出一个逻辑地址，该逻辑地址可以表示为selector（16位段选择符）:offset（32位段内偏移）。将段选择符装入段选择符寄存器，然后将段内偏移装入其他的某个寄存器中。根据段选择符的的第2位的到是全局段还是局部段，然后获得其中Index的值，将index*8再加上GDTR或LDTR即可得到在段描述符，之所以乘8是因为一个段描述符是8个字节。根据段选择符的特权级位和段描述符的段界限等特权位进行一系列的检查之后，将offset与段描述符中的基地址相加即可得到32位的线性地址。</p>
+<p><img src="http://i.imgur.com/R0RzHT5.png" /></p>
+<h2 id="ia32的页面映射机制">IA32的页面映射机制</h2>
+<h3 id="页面映射过程">页面映射过程</h3>
+<p>如果系统没有使用IA32的页面映射机制，那么经过段映射之后得到的地址就是实际的物理地址，如果启用了页面映射机制，那么经过段映射之后得到的仅仅是一个线性地址，还要进行页面映射之后才能得到实际的物理地址。</p>
+<p>当页面的大小为4KB时，采用的是二级索引，线性地址被分为三部分，分别是Offset，Table，Directory。</p>
+<p>offset:线性地址中的第0<sub>11位，表示每页的大小为4KB Table：线性地址中的12</sub>21位，表示每个页表含有1K个记录项，每项占用4K Directory：线性地址中的第22~31位，表示每个页目录包含1K个记录项，每项占用4B</p>
+<p>将线性地址通过页面映射机制转换为实际物理地址的过程如下</p>
+<ol type="1">
+<li>取出32位线性地址的高十位作为Directory的索引，将这个索引*4后加上CR3中的页目录起始地址（CR3为IA32的控制寄存器）得到Table的内存地址。</li>
+<li>读取Directory中的页目录项（PDE），取出高20位，然后低20位补0即得到Table的首地址</li>
+<li>取出线性地址的12~21位作为Table中的索引，加上Table的首地址记得到页表项（PTE）。</li>
+<li>读取PTE的高20位（物理帧号）作为物理地址的高20位，取出线性地址的低12位作为物理地址的第12位，组成最终的物理地址。</li>
+</ol>
+<p>转换流程如下：</p>
+<p><img src="http://i.imgur.com/eJFwuva.png" /></p>
+<p>CR3寄存器的结构如下：</p>
+<p><img src="http://i.imgur.com/b3ANJEt.png" /></p>
+<p>PDE的结构如下：</p>
+<p><img src="http://i.imgur.com/bgwKz5y.png" /></p>
+<p>PTE的结构如下：</p>
+<p><img src="http://i.imgur.com/4ce9zuw.png" /></p>
+<h1 id="linux中段地址映射机制">Linux中段地址映射机制</h1>
+<p>与IA32结构相适应，Linux中也采用了段页式的机制，但是Linux弱化了段的作用，强调了页的作用。</p>
+<p>Linux的设计人员将段的基地址直接设为0，段的界限为4GB，在这种设定下任意给出一个偏移量，则0+偏移量=线性地址。</p>
+<p>Linux中定义了32个段，在Linux的源代码中可以看到每个段的说明（arch/x86/include/asm/segment.h）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> GDT_ENTRY_DEFAULT_USER_CS	14</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> GDT_ENTRY_DEFAULT_USER_DS	15</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> GDT_ENTRY_KERNEL_BASE		(12)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> GDT_ENTRY_KERNEL_CS		(GDT_ENTRY_KERNEL_BASE+0)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> GDT_ENTRY_KERNEL_DS		(GDT_ENTRY_KERNEL_BASE+1)</span></span><br></pre></td></tr></table></figure>
+<p>由上面的代码片段可以看出，GDT段描述符表中第12项，13项分别为内核代码段和内核数据段。第14项，15项代表用户代码段和用户数据段。一般的Linux进程仅仅使用第12~14段对指令和数据进行寻址。</p>
+<p>有了上述的段的位置，再找到全局段表GDT的物理地址即可找到该段的段选择符。</p>
+<h1 id="linux中的页面映射机制">Linux中的页面映射机制</h1>
+<p>为了应对32位和64位系统的不同需要，从2.16.11内核开始Linux采用了四级分页模型，如下图所示：</p>
+<p><img src="http://i.imgur.com/dg78vdi.png" /></p>
+<p>当启用的页表级数少于4时，需要根据情况将不使用的页表跳过，例如在使用三级页表是，将PUD的指针设为和PGD相同，都指向PMD，则PUD相当于跳过。</p>
+<h1 id="linux中进程的虚拟地址空间">Linux中进程的虚拟地址空间</h1>
+<p>IA32架构上Linux的线性地址空间为4GB，Linux的虚拟地址空间也为4GB。Linux将这4GB的虚拟空间分为了两部分，最高的1GB称为内核空间，较低的3GB由各个进程使用，称为用户空间。在Linux中每个进程都可以通过系统调用进入内核空间，所以可以看做每个进程都拥有4GB的空间。Linux的虚拟地址空间如下：</p>
+<p><img src="http://i.imgur.com/9BxXeMv.png" /></p>
+<p>虽然每个进程都可以由3GB的用户空间，但是在这个虚拟的内存中用户进程并不能执行，必须将用户空间的虚地址映射到物理地址来完成，而这种映射关系的建立与管理是根据段页式的内存管理机制完成的。</p>
+<p>在每一个进程的task_struct结构体中包含了一个mm变量，这个变量为struct mm_struct结构体。这个结构体称为内存描述符，该描述符的成员变量给出了进程虚拟地址空间的信息。</p>
+<p>mm_struct结构体的重要成员变量作用如下图：</p>
+<p><img src="http://i.imgur.com/B9estZf.png" /></p>
+<p>mm_struct中还有一个重要的成员变量mmap，这是一个struct vma_area_struct类型的变量，vma称为京城的虚拟存储区域，一个vma是虚拟空间中的一个连续的区域，这个区域中的信息具有相同的操作和访问权限。也就是说Linux将用户空间分成了一个个的vma区域，每个虚拟区域的来源和权限都不一定相同，因此Linux要将用户空间分割管理。</p>
+<p>可以使用$cat /proc/<pid/maps> 命令来查看linux中某个进程的vma区域信息。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+            <a href="/tags/Memory-Managment/" rel="tag"># Memory Managment</a>
+          
+            <a href="/tags/IA32/" rel="tag"># IA32</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/13/2016-07-13-file-operation-in-linux/" rel="next" title="Linux中文件操作相关函数">
+                <i class="fa fa-chevron-left"></i> Linux中文件操作相关函数
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/16/2016-07-16-dedicated-to-the-spirit-that-lives-in-the-computer(2)/" rel="prev" title="SICP学习笔记（二）">
+                SICP学习笔记（二） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ia32的寻址机制"><span class="nav-number">1.</span> <span class="nav-text">IA32的寻址机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ia32的段机制"><span class="nav-number">1.1.</span> <span class="nav-text">IA32的段机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#段选择符"><span class="nav-number">1.1.1.</span> <span class="nav-text">段选择符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#全局段表与段描述符"><span class="nav-number">1.1.2.</span> <span class="nav-text">全局段表与段描述符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ia32中的段地址映射"><span class="nav-number">1.1.3.</span> <span class="nav-text">IA32中的段地址映射</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ia32的页面映射机制"><span class="nav-number">1.2.</span> <span class="nav-text">IA32的页面映射机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#页面映射过程"><span class="nav-number">1.2.1.</span> <span class="nav-text">页面映射过程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#linux中段地址映射机制"><span class="nav-number">2.</span> <span class="nav-text">Linux中段地址映射机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#linux中的页面映射机制"><span class="nav-number">3.</span> <span class="nav-text">Linux中的页面映射机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#linux中进程的虚拟地址空间"><span class="nav-number">4.</span> <span class="nav-text">Linux中进程的虚拟地址空间</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

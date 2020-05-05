@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="SICP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="第2.4节，2.5节的学习笔记及习题解答">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SICP学习笔记（六）">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;09&#x2F;21&#x2F;2016-09-21-dedicated-to-the-spirit-that-lives-in-the-computer(6)&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="第2.4节，2.5节的学习笔记及习题解答">
+<meta property="article:published_time" content="2016-09-20T16:00:00.000Z">
+<meta property="article:modified_time" content="2017-01-21T04:50:08.000Z">
+<meta property="article:author" content="Gummary">
+<meta property="article:tag" content="SICP">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/09/21/2016-09-21-dedicated-to-the-spirit-that-lives-in-the-computer(6)/"/>
+
+
+
+
+
+  <title>SICP学习笔记（六） | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/21/2016-09-21-dedicated-to-the-spirit-that-lives-in-the-computer(6)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SICP学习笔记（六）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-21T00:00:00+08:00">
+                2016-09-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SICP/" itemprop="url" rel="index">
+                    <span itemprop="name">SICP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/09/21/2016-09-21-dedicated-to-the-spirit-that-lives-in-the-computer(6)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2016/09/21/2016-09-21-dedicated-to-the-spirit-that-lives-in-the-computer(6)/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>终于把第二章看完辣，虽然有好多习题都没做Orz</p>
+<h1 id="节">2.4节</h1>
+<p>1、数据抽象是一种构造系统的方法学，采用这种方法可以使一个程序中的大部分描述能与这一过程所操作的数据对象的具体表示无关</p>
+<p>2、数据抽象是控制复杂性的强有力工具。通过对数据对象基础表示的屏蔽，我们就可以将设计一个大程序的任务，分割为一组可以分别处理的较小任务。</p>
+<p>3、数据屏蔽还可用于隔离不同的设计选择，以便允许不同的设计选择在同一个程序中共存。</p>
+<p>4、愿望思维</p>
+<h4 id="练习2.73">练习2.73</h4>
+<ol type="a">
+<li><p>根据数据的不同类型将其导入不同的求导过程中。number?，same-variable?都是判断，不需要区分</p></li>
+<li></li>
+</ol>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> <span class="comment">;; b </span></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">install-sum-product-package</span>) </span><br><span class="line">  (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">sum-deriv</span> expr var) </span><br><span class="line">    (<span class="name">make-sum</span> (<span class="name">deriv</span> (<span class="name">addend</span> expr) var) </span><br><span class="line">	      (<span class="name">deriv</span> (<span class="name">augend</span> expr) var))) </span><br><span class="line">  (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">addend</span> expr) (<span class="name"><span class="builtin-name">car</span></span> expr)) </span><br><span class="line">  (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">augend</span> expr) (<span class="name"><span class="builtin-name">cadr</span></span> expr)) </span><br><span class="line">  (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">make-sum</span> x1 x2) </span><br><span class="line">    (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">and</span></span> (<span class="name"><span class="builtin-name">number?</span></span> x1) (<span class="name"><span class="builtin-name">number?</span></span> x2)) (<span class="name"><span class="builtin-name">+</span></span> x1 x2)) </span><br><span class="line">	  ((<span class="name">=number?</span> x1 <span class="number">0</span>) x2) </span><br><span class="line">	  ((<span class="name">=number?</span> x2 <span class="number">0</span>) x1) </span><br><span class="line">	  (<span class="name"><span class="builtin-name">else</span></span> (<span class="name"><span class="builtin-name">list</span></span> <span class="symbol">'+</span> x1 x2)))) </span><br><span class="line">  (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">mul-deriv</span> expr var) </span><br><span class="line">    (<span class="name">make-sum</span> (<span class="name">make-product</span> (<span class="name">multiplier</span> expr) </span><br><span class="line">			    (<span class="name">deriv</span> (<span class="name">multiplicand</span> expr) var)) </span><br><span class="line">	      (<span class="name">make-product</span> (<span class="name">multiplicand</span> expr) </span><br><span class="line">			    (<span class="name">deriv</span> (<span class="name">multiplier</span> expr) var)))) </span><br><span class="line">  (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">multiplier</span> expr) (<span class="name"><span class="builtin-name">car</span></span> expr)) </span><br><span class="line">  (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">multiplicand</span> expr) (<span class="name"><span class="builtin-name">cadr</span></span> expr)) </span><br><span class="line">  (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">make-product</span> x1 x2) </span><br><span class="line">    (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">and</span></span> (<span class="name"><span class="builtin-name">number?</span></span> x1) (<span class="name"><span class="builtin-name">number?</span></span> x2)) (<span class="name"><span class="builtin-name">*</span></span> x1 x2)) </span><br><span class="line">	  ((<span class="name">=number?</span> x1 <span class="number">1</span>) x2) </span><br><span class="line">	  ((<span class="name">=number?</span> x2 <span class="number">1</span>) x2) </span><br><span class="line">	  ((<span class="name"><span class="builtin-name">or</span></span> (<span class="name">=number?</span> x1 <span class="number">0</span>) (<span class="name">=number?</span> x2 <span class="number">0</span>)) <span class="number">0</span>) </span><br><span class="line">	  (<span class="name"><span class="builtin-name">else</span></span> (<span class="name"><span class="builtin-name">list</span></span> <span class="symbol">'*</span> x1 x2)))) </span><br><span class="line">  (<span class="name">put</span> <span class="symbol">'deriv</span> <span class="symbol">'+</span> sum-deriv) </span><br><span class="line">  (<span class="name">put</span> <span class="symbol">'deriv</span> <span class="symbol">'*</span> mul-deriv)</span><br><span class="line">  <span class="symbol">'done</span>)</span><br></pre></td></tr></table></figure>
+<ol start="3" type="a">
+<li></li>
+</ol>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">exponentation-deriv</span> expr var) </span><br><span class="line">      (<span class="name">make-product</span> (<span class="name">exponent</span> expr) </span><br><span class="line">      (<span class="name">make-product</span></span><br><span class="line">	(<span class="name">make-exponentiation</span> (<span class="name">base</span> expr)</span><br><span class="line">			     (<span class="name">make-sum</span> (<span class="name">exponent</span> expr) <span class="number">-1</span>)) </span><br><span class="line">	(<span class="name">deriv</span> (<span class="name">base</span> expr) var)))) </span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">exponent</span> expr) </span><br><span class="line">      (<span class="name"><span class="builtin-name">cadr</span></span> expr)) </span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">base</span> expr) </span><br><span class="line">      (<span class="name"><span class="builtin-name">car</span></span> expr)) </span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">make-exponentiation</span> base exponent) </span><br><span class="line">  (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name">=number?</span> exponent <span class="number">0</span>) <span class="number">1</span>) </span><br><span class="line"> ((<span class="name">=number?</span> exponent <span class="number">1</span>) base) </span><br><span class="line"> ((<span class="name">=number?</span> base <span class="number">1</span>) <span class="number">1</span>) </span><br><span class="line"> (<span class="name"><span class="builtin-name">else</span></span> (<span class="name"><span class="builtin-name">list</span></span> <span class="symbol">'**</span> base exponent)))) </span><br><span class="line"></span><br><span class="line">(<span class="name">put</span> <span class="symbol">'deriv</span> <span class="symbol">'**</span> exponentiation-deriv)</span><br></pre></td></tr></table></figure>
+<p>d)只需要改变put的顺序即可</p>
+<h4 id="练习2.75">练习2.75</h4>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">make-from-mag-ang</span> r a) </span><br><span class="line">  (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">dispatch</span> op) </span><br><span class="line">        (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">eq?</span></span> op <span class="symbol">'real-part</span>) (<span class="name"><span class="builtin-name">*</span></span> r (<span class="name"><span class="builtin-name">cos</span></span> a))) </span><br><span class="line">              ((<span class="name"><span class="builtin-name">eq?</span></span> op <span class="symbol">'imag-part</span>) (<span class="name"><span class="builtin-name">*</span></span> r (<span class="name"><span class="builtin-name">sin</span></span> a))) </span><br><span class="line">              ((<span class="name"><span class="builtin-name">eq?</span></span> op <span class="symbol">'magnitude</span>) r) </span><br><span class="line">              ((<span class="name"><span class="builtin-name">eq?</span></span> op <span class="symbol">'angle</span>) a) </span><br><span class="line">              (<span class="name"><span class="builtin-name">else</span></span> (<span class="name">error</span> <span class="string">"Unkown op --- MAKE-FROM-MAG-ANG"</span> op)))) </span><br><span class="line">  dispatch)</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.76">练习2.76</h4>
+<p>消息传递适合加入新类型时，而数据导向适合添加新的操作.</p>
+<h1 id="section">2.5</h1>
+<p>1、不同的数据类型之间并不是完全独立的，我们可以通过某些方式将一种数据类型看作另一种数据类型，这种方式就称做强制。</p>
+<p>2、通过建立数据的层次型结构，通过对数据的raise和drop可以实现不同类型之间的转换。</p>
+<h4 id="练习2.77">练习2.77</h4>
+<p>通用型数据包中并没有magnitude这个操作,所以会出现错误.</p>
+<p>apply-generic被调用了两次,第一次去除了complex,然后在调用magnitude的使用去除了rctangular/polar.</p>
+<h4 id="练习2.78">练习2.78</h4>
+<p>由于在使用apply-generic的时候要获得数据类型,所以在type-tag中要返回scheme-number</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">attach-tag</span> type-tag contents)</span><br><span class="line">  (<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">number?</span></span> content)</span><br><span class="line">    content</span><br><span class="line">    (<span class="name"><span class="builtin-name">cons</span></span> type-tag contents)))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">type-tag</span> datum)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">number?</span></span> datum) <span class="symbol">'scheme-number</span>)</span><br><span class="line">	((<span class="name"><span class="builtin-name">pair?</span></span> datum) (<span class="name"><span class="builtin-name">car</span></span> datum))</span><br><span class="line">	(<span class="name"><span class="builtin-name">else</span></span> (<span class="name">error</span> <span class="string">"Wrong datum --TYPE-TAG"</span> datum))))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">contents</span> datum)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">number?</span></span> datum) datum)</span><br><span class="line">	((<span class="name"><span class="builtin-name">pair?</span></span> datum) (<span class="name"><span class="builtin-name">cdr</span></span> datum))</span><br><span class="line">	(<span class="name"><span class="builtin-name">else</span></span> (<span class="name">error</span> <span class="string">"Wrong datum -- CONTENTS"</span> datum))))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.79">练习2.79</h4>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">equ?</span> x y)</span><br><span class="line">  (<span class="name">apply-generic</span> <span class="symbol">'equ?</span> x y))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">install-scheme-number-package</span>)</span><br><span class="line">  <span class="comment">;; ...</span></span><br><span class="line">  (<span class="name">put</span> <span class="symbol">'equ?</span> '(scheme-number scheme-number)</span><br><span class="line">       (<span class="name"><span class="builtin-name">lambda</span></span> (x y) (<span class="name"><span class="builtin-name">=</span></span> x y)))</span><br><span class="line">  <span class="symbol">'done</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">install-rational-package</span>)</span><br><span class="line">  <span class="comment">;; ...</span></span><br><span class="line">  (<span class="name">put</span> <span class="symbol">'equ?</span> '(rational rational)</span><br><span class="line">       (<span class="name"><span class="builtin-name">lambda</span></span> (x y) (<span class="name"><span class="builtin-name">and</span></span> (<span class="name"><span class="builtin-name">=</span></span> (<span class="name">number</span> x) (<span class="name">number</span> y))</span><br><span class="line">			  (<span class="name"><span class="builtin-name">=</span></span> (<span class="name">denom</span> x) (<span class="name">denom</span> y)))))</span><br><span class="line">  <span class="symbol">'done</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">install-complex-package</span>)</span><br><span class="line">  <span class="comment">;; ...</span></span><br><span class="line">  (<span class="name">put</span> <span class="symbol">'equ?</span> '(complex complex)</span><br><span class="line">       (<span class="name"><span class="builtin-name">lambda</span></span> (x y)</span><br><span class="line">	 (<span class="name"><span class="builtin-name">and</span></span> (<span class="name"><span class="builtin-name">=</span></span> (<span class="name"><span class="builtin-name">real-part</span></span> x) (<span class="name"><span class="builtin-name">real-part</span></span> y))</span><br><span class="line">	      (<span class="name"><span class="builtin-name">=</span></span> (<span class="name"><span class="builtin-name">imag-part</span></span> x) (<span class="name"><span class="builtin-name">imag-part</span></span> y)))))</span><br><span class="line">  <span class="symbol">'done</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.80">练习2.80</h4>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">install-scheme-number-package</span>)</span><br><span class="line">  <span class="comment">;; ...</span></span><br><span class="line">  (<span class="name">put</span> <span class="symbol">'=zero?</span> '(scheme-number)</span><br><span class="line">       (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name"><span class="builtin-name">=</span></span> x <span class="number">0</span>)))</span><br><span class="line">  <span class="symbol">'done</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">install-rational-package</span>)</span><br><span class="line">  <span class="comment">;; ...</span></span><br><span class="line">  (<span class="name">put</span> <span class="symbol">'=zero?</span> '(rational)</span><br><span class="line">       (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name"><span class="builtin-name">=</span></span> (<span class="name">numer</span> x) <span class="number">0</span>)))</span><br><span class="line">  <span class="symbol">'done</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">install-complex-package</span>)</span><br><span class="line">  <span class="comment">;; ...</span></span><br><span class="line">  (<span class="name">put</span> <span class="symbol">'=zero?</span> '(complex)</span><br><span class="line">       (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name"><span class="builtin-name">=</span></span> (<span class="name"><span class="builtin-name">real-part</span></span> x) (<span class="name"><span class="builtin-name">imag-part</span></span> x) <span class="number">0</span>)))</span><br><span class="line">  <span class="symbol">'done</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.81">练习2.81</h4>
+<ol type="a">
+<li>不会，会进入无限递归</li>
+<li>会出现无限递归的情况，如果两个数据类型相同且没有相关的操作，apply-generic会进行强制转换，但是Louis又将其转换为了原来的类型又调用了一次apply-generic，如此反复就进入了无限递归</li>
+<li></li>
+</ol>
+<p>判断一下是否为同类型的即可</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">apply-generic</span> op . args)</span><br><span class="line">  (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">type-tags</span> (<span class="name"><span class="builtin-name">map</span></span> type-tag args)))</span><br><span class="line">    (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">proc</span> (<span class="name">get</span> op type-tags)))</span><br><span class="line">      (<span class="name"><span class="builtin-name">if</span></span> proc</span><br><span class="line">	(<span class="name"><span class="builtin-name">apply</span></span> proc (<span class="name"><span class="builtin-name">map</span></span> content args))</span><br><span class="line">	(<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">=</span></span> (<span class="name"><span class="builtin-name">length</span></span> args) <span class="number">2</span>)</span><br><span class="line">	  (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">type1</span> (<span class="name"><span class="builtin-name">car</span></span> type-tags))</span><br><span class="line">		(<span class="name">type2</span> (<span class="name"><span class="builtin-name">cadr</span></span> type-tags)))</span><br><span class="line">	    (<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">equal?</span></span> type1 type2)</span><br><span class="line">	      (<span class="name">error</span> <span class="string">"No method for these args"</span> (<span class="name"><span class="builtin-name">list</span></span> op type-tags))</span><br><span class="line">	      (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">a1</span> (<span class="name"><span class="builtin-name">car</span></span> args))</span><br><span class="line">		    (<span class="name">a2</span> (<span class="name"><span class="builtin-name">cadr</span></span> args)))</span><br><span class="line">		(<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">a1-&gt;a2</span> (<span class="name">get-coercion</span> type1 type2))</span><br><span class="line">		      (<span class="name">a2-&gt;a1</span> (<span class="name">get-coercion</span> type2 type1)))</span><br><span class="line">		  (<span class="name"><span class="builtin-name">cond</span></span> (<span class="name">a1-&gt;a2</span></span><br><span class="line">			  (<span class="name">apply-generic</span> op (<span class="name">a1-&gt;a2</span> a1) a2))</span><br><span class="line">			(<span class="name">a2-&gt;a1</span></span><br><span class="line">			  (<span class="name">apply-generic</span> op (<span class="name">a2-&gt;a1</span> a2) a1))</span><br><span class="line">			(<span class="name"><span class="builtin-name">else</span></span> (<span class="name">error</span> <span class="string">"No method for these args"</span> (<span class="name"><span class="builtin-name">list</span></span> op type-tags))))))))</span><br><span class="line">	  (<span class="name">error</span> <span class="string">"No method for these args"</span> (<span class="name"><span class="builtin-name">list</span></span> op type-tags)))))))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.83">练习2.83</h4>
+<p>根据提示进行raise即可</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">raise</span> x)</span><br><span class="line">  (<span class="name">apply-generic</span> <span class="symbol">'raise</span> x))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">install-scheme-number-package</span>)</span><br><span class="line">  <span class="comment">;; ...</span></span><br><span class="line">  (<span class="name">put</span> <span class="symbol">'raise</span> '(scheme-number)</span><br><span class="line">       (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">make-rational</span> x <span class="number">1</span>)))</span><br><span class="line">  <span class="symbol">'done</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">install-rational-package</span>)</span><br><span class="line">  <span class="comment">;; ...</span></span><br><span class="line">  (<span class="name">put</span> <span class="symbol">'raise</span> '(rational)</span><br><span class="line">       (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">make-real</span> (<span class="name"><span class="builtin-name">/</span></span> (<span class="name">numer</span> r) (<span class="name">denom</span> r)))))</span><br><span class="line">  <span class="symbol">'done</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">install-real-package</span>)</span><br><span class="line">  <span class="comment">;; ...</span></span><br><span class="line">  (<span class="name">put</span> <span class="symbol">'raise</span> '(real)</span><br><span class="line">       (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">make-complex-from-real-image</span> x <span class="number">0</span>)))</span><br><span class="line">  <span class="symbol">'done</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.84">练习2.84</h4>
+<p>定义一个过程，将一个类型强制到另一个类型，如果不成功返回false，否则转换，然后先判断能否将a1专成a2，再判断能否将a2转成a1,如果都不行则error</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">apply-generic</span> op . args)</span><br><span class="line">  (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">raise-into</span> s t)</span><br><span class="line">    (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">stype</span> (<span class="name">type-tag</span> s))</span><br><span class="line">	  (<span class="name">ttype</span> (<span class="name">type-tag</span> t)))</span><br><span class="line">      (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">equal?</span></span> stype ttype) s)</span><br><span class="line">	    ((<span class="name">get</span> <span class="symbol">'raise</span> (<span class="name"><span class="builtin-name">list</span></span> s))</span><br><span class="line">	     (<span class="name">raise-into</span> ((<span class="name">get</span> <span class="symbol">'raise</span> (<span class="name"><span class="builtin-name">list</span></span> stype)) stype) t))</span><br><span class="line">	    (<span class="name"><span class="builtin-name">else</span></span> false))))</span><br><span class="line">  (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">type-tags</span> (<span class="name"><span class="builtin-name">map</span></span> type-tag args)))</span><br><span class="line">    (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">proc</span> (<span class="name">get</span> op type-tags)))</span><br><span class="line">      (<span class="name"><span class="builtin-name">if</span></span> proc</span><br><span class="line">	(<span class="name"><span class="builtin-name">apply</span></span> proc (<span class="name"><span class="builtin-name">map</span></span> contents args))</span><br><span class="line">	(<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">=</span></span> (<span class="name"><span class="builtin-name">length</span></span> args) <span class="number">2</span>)</span><br><span class="line">	  (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">a1</span> (<span class="name"><span class="builtin-name">car</span></span> args))</span><br><span class="line">		(<span class="name">a2</span> (<span class="name"><span class="builtin-name">cadr</span></span> args)))</span><br><span class="line">	    (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name">raise-into</span> a1 a2)</span><br><span class="line">		   (<span class="name">apply-generic</span> op (<span class="name">raise-into</span> a1 a2) a2))</span><br><span class="line">		  ((<span class="name">raise-into</span> a2 a1)</span><br><span class="line">		   (<span class="name">apply-generic</span> op a1 (<span class="name">raise-into</span> a2 a1)))</span><br><span class="line">		  (<span class="name"><span class="builtin-name">else</span></span> (<span class="name">error</span> <span class="string">"No method for these types"</span> </span><br><span class="line">			       (<span class="name"><span class="builtin-name">list</span></span> op type-tags)))))</span><br><span class="line">	  (<span class="name">error</span> <span class="string">"No method for these types"</span></span><br><span class="line">		 (<span class="name"><span class="builtin-name">list</span></span> op type-tags)))))))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.85">练习2.85</h4>
+<p>判断当前类型，如果为整数，说明已经降到最低了，否则递归的drop，如果失败则返回当前值</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">drop</span> x)</span><br><span class="line">  (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">project-x</span> ((<span class="name">get</span> <span class="symbol">'project</span> (<span class="name">type-tag</span> x)) x)))</span><br><span class="line">    (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">equal?</span></span> <span class="symbol">'scheme-number</span> (<span class="name">type-tag</span> x)) x)</span><br><span class="line">	  ((<span class="name">equ?</span> x project-x)</span><br><span class="line">	   (<span class="name">drop</span> project-x))</span><br><span class="line">	  (<span class="name"><span class="builtin-name">else</span></span> x))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">install-scheme-number-package</span>)</span><br><span class="line">  <span class="comment">;; ...</span></span><br><span class="line">  (<span class="name">put</span>  <span class="symbol">'project</span> '(scheme-number)</span><br><span class="line">	(<span class="name"><span class="builtin-name">lambda</span></span> (x) x))</span><br><span class="line">  <span class="symbol">'done</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">install-rational-package</span>)</span><br><span class="line">  <span class="comment">;; ...</span></span><br><span class="line">  (<span class="name">put</span> <span class="symbol">'project</span> '(rational)</span><br><span class="line">       (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">make-scheme-number</span> (<span class="name"><span class="builtin-name">round</span></span> (<span class="name"><span class="builtin-name">/</span></span> (<span class="name">numer</span> x) (<span class="name">denom</span> x))))))</span><br><span class="line">  <span class="symbol">'done</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">install-real-package</span>)</span><br><span class="line">  <span class="comment">;; ...</span></span><br><span class="line">  (<span class="name">put</span> <span class="symbol">'project</span> '(real)</span><br><span class="line">       (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name"><span class="builtin-name">round</span></span> x)))</span><br><span class="line">  <span class="symbol">'done</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">install-complex-package</span>)</span><br><span class="line">  <span class="comment">;; ...</span></span><br><span class="line">  (<span class="name">put</span> <span class="symbol">'project</span> '(complex)</span><br><span class="line">       (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name"><span class="builtin-name">real-part</span></span> x)))</span><br><span class="line">  <span class="symbol">'done</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.86">练习2.86</h4>
+<p>由于复数的实部和虚部不一定仅仅是整数了，所以不能使用+,-等操作，要使用add，mul等通用型数据操作。</p>
+<p>至于处理sine和cosine只需要加两个通用型操作sine,cosine，将其安装到整数包中，返回sin和cos的结果即可。</p>
+<h4 id="练习2.87">练习2.87</h4>
+<p>如果是整数则判断是否为零，如果为多项式则一定不可能为0</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">install-polynomial-package</span>)</span><br><span class="line">  <span class="comment">;; ...</span></span><br><span class="line">  (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">=zero?</span> poly)</span><br><span class="line">    (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">poly?</span> x)</span><br><span class="line">      (<span class="name"><span class="builtin-name">pair?</span></span> x))</span><br><span class="line">    (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">number?</span></span> x) (<span class="name"><span class="builtin-name">=</span></span> x <span class="number">0</span>))</span><br><span class="line">	  ((<span class="name">poly?</span> x) false)</span><br><span class="line">	  (<span class="name"><span class="builtin-name">else</span></span> (<span class="name">error</span> <span class="string">"Unknown type"</span>))))</span><br><span class="line">  (<span class="name">put</span> <span class="symbol">'=zero?</span> '(polynomial) =zero?))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.88">练习2.88</h4>
+<p>首先为每一个算数包添加一个求负的negate操作，然后将多项式的系数都变负。最后利用add-poly将多项式相加即可</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">sub-poly</span> p1 p2)</span><br><span class="line">  (<span class="name"><span class="builtin-name">if</span></span> (<span class="name">same-variable?</span> (<span class="name">variable</span> p1) (<span class="name">variable</span> p2))</span><br><span class="line">    (<span class="name">make-poly</span> (<span class="name">varliable</span> p1)</span><br><span class="line">	       (<span class="name">add-poly</span> p1 (<span class="name">negate</span> p2)))</span><br><span class="line">    (<span class="name">error</span> <span class="string">"Polys not in the same var -- SUB-POLY"</span></span><br><span class="line">	   (<span class="name"><span class="builtin-name">list</span></span> p1 p2))))</span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">negate-poly</span> p)</span><br><span class="line">  (<span class="name">make-polynomaial</span> (<span class="name">variable</span> p)</span><br><span class="line">		    (<span class="name">negate-terms</span> (<span class="name">term-list</span> p))))</span><br><span class="line">(<span class="name">put</span> <span class="symbol">'negate</span> '(polynomial)</span><br><span class="line">     negate-poly)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">(<span class="name">put</span> <span class="symbol">'sub</span> '(polynomial polynomial)</span><br><span class="line">     sub-poly)</span><br><span class="line">     </span><br><span class="line">     </span><br><span class="line"><span class="comment">;; 第一种方法，使用addjoin-term</span></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">negate-terms</span> termlist)</span><br><span class="line">  (<span class="name"><span class="builtin-name">if</span></span> (<span class="name">empty-termlist?</span> termlsit)</span><br><span class="line">    the-empty-termlist</span><br><span class="line">    (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">t</span> (<span class="name">first-term</span> termlist)))</span><br><span class="line">      (<span class="name">adjoin-term</span> (<span class="name">make-term</span> (<span class="name">order</span> term)</span><br><span class="line">			      (<span class="name">negate</span> (<span class="name">coeff</span> term)))</span><br><span class="line">		   (<span class="name">negate-terms</span> (<span class="name">rest-terms</span> termlist))))))</span><br><span class="line"></span><br><span class="line"><span class="comment">;; 第二种方法，使用map</span></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">negate-terms</span> termlist)</span><br><span class="line">  (<span class="name"><span class="builtin-name">if</span></span> (<span class="name">empty-termlist?</span> termlsit)</span><br><span class="line">    the-empty-termlist</span><br><span class="line">    (<span class="name"><span class="builtin-name">map</span></span> (<span class="name"><span class="builtin-name">lambda</span></span> (term) (<span class="name">make-term</span> (<span class="name">order</span> term)</span><br><span class="line">				   (<span class="name">negate</span> term)))</span><br><span class="line">	 (<span class="name">termlist</span>))))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.89">练习2.89</h4>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">first-term</span> term-list) </span><br><span class="line">  (<span class="name"><span class="builtin-name">list</span></span> (<span class="name"><span class="builtin-name">car</span></span> term-list) (<span class="name"><span class="builtin-name">-</span></span> (<span class="name"><span class="builtin-name">length</span></span> term-list) <span class="number">1</span>))) </span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">adjoin-term</span> term term-list) </span><br><span class="line">  (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">exponent</span> (<span class="name">order</span> term)) </span><br><span class="line">	(<span class="name">len</span> (<span class="name"><span class="builtin-name">length</span></span> term-list))) </span><br><span class="line">    (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">iter-adjoin</span> times terms) </span><br><span class="line">      (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name">=zero?</span> (<span class="name">coeff</span> term)) </span><br><span class="line">	     terms)) </span><br><span class="line">      ((<span class="name"><span class="builtin-name">=</span></span> exponent times) </span><br><span class="line">       (<span class="name"><span class="builtin-name">cons</span></span> (<span class="name">coeff</span> term) terms)) </span><br><span class="line">      (<span class="name"><span class="builtin-name">else</span></span> (<span class="name">iter-adjoin</span> (<span class="name"><span class="builtin-name">+</span></span> times <span class="number">1</span>)  </span><br><span class="line">			 (<span class="name"><span class="builtin-name">cons</span></span> <span class="number">0</span> terms)))) </span><br><span class="line">    (<span class="name">iter-adjoin</span> len term-list)))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.91">练习2.91</h4>
+<p>递归计算的剩余部分中的第一项为商，第二项为余式，new-t是当前的商，最终结果的商要将new-t加到剩余部分的第一项中</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">div-terms</span> L1 L2)</span><br><span class="line">  (<span class="name"><span class="builtin-name">if</span></span> (<span class="name">empty-termlist?</span> L1)</span><br><span class="line">    (<span class="name"><span class="builtin-name">list</span></span> (<span class="name">the-empty-termlist</span>) (<span class="name">the-empty-termlist</span>))</span><br><span class="line">    (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">t1</span> (<span class="name">first-term</span> L1))</span><br><span class="line">	  (<span class="name">t2</span> (<span class="name">first-term</span> L2)))</span><br><span class="line">      (<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">&gt;</span></span> (<span class="name">order</span> t2) (<span class="name">order</span> t1))</span><br><span class="line">	(<span class="name"><span class="builtin-name">list</span></span> (<span class="name">the-empty-termlist</span>) L1)</span><br><span class="line">	(<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">new-c</span> (<span class="name">div</span> (<span class="name">coeff</span> t1) (<span class="name">coeff</span> t2)))</span><br><span class="line">	      (<span class="name">new-o</span> (<span class="name"><span class="builtin-name">-</span></span> (<span class="name">order</span> t1) (<span class="name">order</span> t2))))</span><br><span class="line">	  (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">rest-of-result</span></span><br><span class="line">		  (<span class="name">div-terms</span> (<span class="name">sub</span> L1 </span><br><span class="line">				  (<span class="name">mul</span> (<span class="name"><span class="builtin-name">list</span></span> (<span class="name">make-term</span> new-o new-c))</span><br><span class="line">				       L2))</span><br><span class="line">			     L2)))</span><br><span class="line">	    (<span class="name"><span class="builtin-name">list</span></span> (<span class="name">adjoin-term</span> new-t</span><br><span class="line">			       (<span class="name"><span class="builtin-name">car</span></span> rest-of-result))</span><br><span class="line">		  (<span class="name"><span class="builtin-name">cadr</span></span> (<span class="name">rest-of-result</span>)))))))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">div-poly</span> p1 p2)</span><br><span class="line">  (<span class="name"><span class="builtin-name">if</span></span> (<span class="name">same-variable?</span> (<span class="name">variable</span> p1) (<span class="name">variable</span> p2))</span><br><span class="line">    (<span class="name">make-poly</span> (<span class="name">variable</span> p1)</span><br><span class="line">	       (<span class="name">div-terms</span> (<span class="name">term-lst</span> p1) (<span class="name">term-list</span> p2)))</span><br><span class="line">    (<span class="name">error</span> <span class="string">"Polys not in same var -- DIV-POLY"</span></span><br><span class="line">	   (<span class="name"><span class="builtin-name">list</span></span> p1 p2))))</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SICP/" rel="tag"># SICP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/18/2016-09-18-telegram-bot/" rel="next" title="创建一个Telegram自动回复机器人">
+                <i class="fa fa-chevron-left"></i> 创建一个Telegram自动回复机器人
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/27/2016-09-27-dedicated-to-the-spirit-that-lives-in-the-computer(7)/" rel="prev" title="SICP学习笔记（七）">
+                SICP学习笔记（七） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#节"><span class="nav-number">1.</span> <span class="nav-text">2.4节</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.73"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">练习2.73</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.75"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">练习2.75</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.76"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">练习2.76</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#section"><span class="nav-number">2.</span> <span class="nav-text">2.5</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.77"><span class="nav-number">2.0.0.1.</span> <span class="nav-text">练习2.77</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.78"><span class="nav-number">2.0.0.2.</span> <span class="nav-text">练习2.78</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.79"><span class="nav-number">2.0.0.3.</span> <span class="nav-text">练习2.79</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.80"><span class="nav-number">2.0.0.4.</span> <span class="nav-text">练习2.80</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.81"><span class="nav-number">2.0.0.5.</span> <span class="nav-text">练习2.81</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.83"><span class="nav-number">2.0.0.6.</span> <span class="nav-text">练习2.83</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.84"><span class="nav-number">2.0.0.7.</span> <span class="nav-text">练习2.84</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.85"><span class="nav-number">2.0.0.8.</span> <span class="nav-text">练习2.85</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.86"><span class="nav-number">2.0.0.9.</span> <span class="nav-text">练习2.86</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.87"><span class="nav-number">2.0.0.10.</span> <span class="nav-text">练习2.87</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.88"><span class="nav-number">2.0.0.11.</span> <span class="nav-text">练习2.88</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.89"><span class="nav-number">2.0.0.12.</span> <span class="nav-text">练习2.89</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.91"><span class="nav-number">2.0.0.13.</span> <span class="nav-text">练习2.91</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

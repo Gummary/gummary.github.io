@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="SICP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="第1.1节1.2节的学习笔记及部分习题解答">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SICP学习笔记（一）">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;06&#x2F;30&#x2F;2016-06-29-dedicated-to-the-spirit-that-lives-in-the-computer(1)&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="第1.1节1.2节的学习笔记及部分习题解答">
+<meta property="og:image" content="http:&#x2F;&#x2F;sicp.readthedocs.io&#x2F;en&#x2F;latest&#x2F;_images&#x2F;14.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;EBz6PdH.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;qRA8xrI.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;YiJpKXR.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;uHZFlNU.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;siqkV82.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;asAXowB.png">
+<meta property="article:published_time" content="2016-06-29T16:00:00.000Z">
+<meta property="article:modified_time" content="2017-01-21T04:50:08.000Z">
+<meta property="article:author" content="Gummary">
+<meta property="article:tag" content="SICP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;sicp.readthedocs.io&#x2F;en&#x2F;latest&#x2F;_images&#x2F;14.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/06/30/2016-06-29-dedicated-to-the-spirit-that-lives-in-the-computer(1)/"/>
+
+
+
+
+
+  <title>SICP学习笔记（一） | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/06/30/2016-06-29-dedicated-to-the-spirit-that-lives-in-the-computer(1)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SICP学习笔记（一）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-06-30T00:00:00+08:00">
+                2016-06-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SICP/" itemprop="url" rel="index">
+                    <span itemprop="name">SICP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/06/30/2016-06-29-dedicated-to-the-spirit-that-lives-in-the-computer(1)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2016/06/30/2016-06-29-dedicated-to-the-spirit-that-lives-in-the-computer(1)/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="节">1.1节</h1>
+<p>1、程序的环境所扮演的角色就是用于确定表达式中各个符号的意义，为求值的过程提供了一种上下文。</p>
+<p>2、过程作为黑箱抽象</p>
+<p>将一个程序分解成多各子模块，每个子模块都完成了一件可以清楚表明的工作，这使得他们可以被用作定义其他过程。</p>
+<h2 id="牛顿法求平方根">牛顿法求平方根</h2>
+<p>牛顿法求平方根的思想就是给定一个有关x平方根的猜测y，我们可以根据这两个值求出y与x/y的平均值average，这个average比y这个猜测更接近于x的平方根，如果average达不到我们的要求（比如精度不够),我们可以利用刚才的方法和新猜测average继续求x的平方根，直到达到要求为止。</p>
+<p>python版的如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">goodenough</span><span class="params">(x,guess)</span>:</span></span><br><span class="line">	<span class="keyword">if</span> abs(x-guess*guess) &lt; <span class="number">0.0001</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">improve_guess</span><span class="params">(x,guess)</span>:</span></span><br><span class="line">	quotient = x/guess</span><br><span class="line">	<span class="keyword">return</span> float((guess+quotient)/<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">square_iter</span><span class="params">(x,guess)</span>:</span></span><br><span class="line">	<span class="keyword">if</span> goodenough(x,guess):</span><br><span class="line">		<span class="keyword">return</span> guess</span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		guess = improve_guess(x,guess)</span><br><span class="line">		<span class="keyword">return</span> square_iter(x,guess)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">square</span><span class="params">(x)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> square_iter(x,<span class="number">1.0</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">	<span class="keyword">print</span> square(<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<p>scheme版的如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">sqrt-iter</span> guess x)</span><br><span class="line">  (<span class="name"><span class="builtin-name">if</span></span> (<span class="name">good-enough?</span> guess x)</span><br><span class="line">    guess</span><br><span class="line">    (<span class="name">sqrt-iter</span> (<span class="name">improve</span> guess x) x)))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">improve</span> guess x)</span><br><span class="line">  (<span class="name">average</span> guess (<span class="name"><span class="builtin-name">/</span></span> x guess)))</span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">average</span> x y)</span><br><span class="line">  (<span class="name"><span class="builtin-name">/</span></span> (<span class="name"><span class="builtin-name">+</span></span> x y) <span class="number">2</span>))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">good-enough?</span> guess x)</span><br><span class="line">  (<span class="name"><span class="builtin-name">&lt;</span></span> (<span class="name"><span class="builtin-name">abs</span></span> (<span class="name"><span class="builtin-name">-</span></span> (<span class="name">square</span> guess) x)) <span class="number">0.001</span>))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">square</span> x) (<span class="name"><span class="builtin-name">*</span></span> x x))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name"><span class="builtin-name">sqrt</span></span> x)</span><br><span class="line">  (<span class="name">sqrt-iter</span> <span class="number">1.0</span> x))</span><br><span class="line">~</span><br></pre></td></tr></table></figure>
+<h1 id="节-1">1.2节</h1>
+<p>1、迭代计算过程就是用固定数目的变量来表示一个状态，有一套固定的规则来进行状态之间的转换，还有一个判断结束的标志。</p>
+<p>2、递归计算过程与递归过程辨析。</p>
+<p>递归计算过程是指在在计算的过程种由解释器维护之前计算的轨迹（栈），而递归过程是指函数在运行的过程中直接或间接地调用了自身.</p>
+<p>3、在C等编程语言中，函数的自身调用自身一般都是递归计算，如果要实现迭代就需要通过while循环等结构实现。</p>
+<h2 id="换零钱的方式">换零钱的方式</h2>
+<p>假设有n种不同面值的硬币，兑换a元钱</p>
+<p>边界条件：<br />
+1. 若 a &lt; 0，则有0种方式 2. 若 a = 0，则有1种方式 3. 若 d = 0，则有0中方式</p>
+<p>将换钱的方式分成两部分<br />
+- 不使用面值为d的硬币，使用其他所有面值的硬币兑换的方式数量，加上 - 至少使用一次面值为d的硬币来换a-d元钱的方式数量</p>
+<p>python递归版本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_value</span><span class="params">(num)</span>:</span></span><br><span class="line">	<span class="keyword">if</span> num == <span class="number">1</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">	<span class="keyword">elif</span> num == <span class="number">2</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="number">5</span></span><br><span class="line">	<span class="keyword">elif</span> num == <span class="number">3</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="number">10</span></span><br><span class="line">	<span class="keyword">elif</span> num == <span class="number">4</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="number">25</span></span><br><span class="line">	<span class="keyword">elif</span> num == <span class="number">5</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="number">50</span></span><br><span class="line">	<span class="keyword">else</span> :</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">change_iter</span><span class="params">(money,coin)</span>:</span></span><br><span class="line">	value = get_value(coin)</span><br><span class="line">	<span class="keyword">if</span> money == <span class="number">0</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">	<span class="keyword">if</span> money &lt; <span class="number">0</span> <span class="keyword">or</span> coin == <span class="number">0</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> change_iter(money,(coin - <span class="number">1</span>)) + change_iter((money - value),coin)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">change_money</span><span class="params">(money)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> change_iter(money,<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">	<span class="keyword">print</span> change_money(<span class="number">100</span>)</span><br></pre></td></tr></table></figure>
+<p>这个例子如果一开始想的话还是蛮复杂的（对我而言= =),不过如果自己画个图的话就明白了。</p>
+<p>比如例1.4的图为：</p>
+<p><img src="http://sicp.readthedocs.io/en/latest/_images/14.png" /></p>
+<p><em>图片截取自http://sicp.readthedocs.io/en/latest/chp1/14.html</em></p>
+<p>至于非递归的方式还没想出来 = =</p>
+<h2 id="例1.11解答">例1.11解答</h2>
+<p>这道题想了好久，最后看了看斐波那契的解答之后才知道了思路，和斐波那契数列的解法差不多，只不过多了一个变量。</p>
+<p>scheme的迭代版本，递归版本太简单就不写了</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">f-iter</span> a b c count)</span><br><span class="line">        (<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">=</span></span> <span class="number">0</span> count)</span><br><span class="line">        c</span><br><span class="line">        (<span class="name">f-iter</span> (<span class="name"><span class="builtin-name">+</span></span> a (<span class="name"><span class="builtin-name">*</span></span> <span class="number">2</span> b) (<span class="name"><span class="builtin-name">*</span></span> <span class="number">3</span> c)) a b (<span class="name"><span class="builtin-name">-</span></span> count <span class="number">1</span>))))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">f</span> n)</span><br><span class="line">        (<span class="name">f-iter</span> <span class="number">2</span> <span class="number">1</span> <span class="number">0</span> n))</span><br></pre></td></tr></table></figure>
+<p>python的迭代版本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f_iter</span><span class="params">(n)</span>:</span></span><br><span class="line">	count = n</span><br><span class="line">	a = <span class="number">2</span></span><br><span class="line">	b = <span class="number">1</span></span><br><span class="line">	c = <span class="number">0</span></span><br><span class="line">	<span class="keyword">while</span> count &gt; <span class="number">0</span>:</span><br><span class="line">		count-=<span class="number">1</span></span><br><span class="line">		temp = a</span><br><span class="line">		a = a + <span class="number">2</span>*b + <span class="number">3</span>*c</span><br><span class="line">		c = b</span><br><span class="line">		b = temp</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> c</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">	<span class="keyword">print</span> f_iter(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="增长的阶">增长的阶</h2>
+<p>函数增长的阶其实就是在执行过程中时间和内存的开销，但是还是不知道怎么求，练习1.14和练习1.15的增长的阶都不会求，有时间在看看一下。</p>
+<h2 id="求幂">1.2.4 求幂</h2>
+<p>关于求幂书上主要讲了两种做法，第一种递归和迭代分别需要的步数均为Θ(n)，需要的空间分别为Θ(n)，Θ(1)，详细的代码就不贴了。</p>
+<p>第二种方法将需要的步数降到了Θ(logn)，算法就是用连续平方的方式替换连续乘，以书上求 \( b^{8} \) 为例：</p>
+<p>将</p>
+<p><span class="math display">\[b*(b*(b*(b*(b*(b*(b*b))))))\]</span></p>
+<p>转换成</p>
+<p>\[ b^2=b*b \]</p>
+<p>\[ b<sup>4=b</sup>2*b^2 \]</p>
+<p>\[ b<sup>8=b</sup>4*b^4 \]</p>
+<p>这样可以有效的减少递归的次数，递归的代码也不贴了，下面将递归的方式转换为迭代的方式求，也就是练习1.16</p>
+<p>就是利用题目提示的关系</p>
+<p><span class="math display">\[
+(b^{frac{n}{2}})^2=(b^2)^frac{n}{2}
+\]</span></p>
+<p>求即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(define (fast-expt b n)</span><br><span class="line">	(expt-iter b n 1))</span><br><span class="line"></span><br><span class="line">(define (expt-iter b n a)</span><br><span class="line">	(cond (&#x3D; n 0) 0</span><br><span class="line">		(even? n) (expt-iter (square b) (&#x2F; n 2) a)</span><br><span class="line">		(else (expt-iter b (- n 1) (* a b)))))</span><br></pre></td></tr></table></figure>
+<h2 id="练习1.17-练习1.18">练习1.17 &amp; 练习1.18</h2>
+<p>这两个练习其实和求幂差不多。</p>
+<p>练习1.17是根据提供的3个过程，利用递归的方式求出两个数的乘积。以8*6为例，公式的转换为：</p>
+<p><span class="math display">\[8+8+8+8+8+8+8+8\]</span></p>
+<p>转换为：</p>
+<p><span class="math display">\[(double 8)\]</span></p>
+<p><span class="math display">\[(double 8)+(double 8)\]</span></p>
+<p><span class="math display">\[(double 8)+(double 8)+(double 8)\]</span></p>
+<p>而练习1.18是根据提供的三个函数将1.17的递归过程改成迭代过程</p>
+<p>1.17的代码：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">multi</span> a b)</span><br><span class="line">	(<span class="name"><span class="builtin-name">cond</span></span> (<span class="name"><span class="builtin-name">=</span></span> b <span class="number">0</span>) <span class="number">0</span></span><br><span class="line">		(<span class="name"><span class="builtin-name">even?</span></span> b) (<span class="name">double</span> (<span class="name">multi</span> a (<span class="name">halve</span> b)))</span><br><span class="line">		(<span class="name"><span class="builtin-name">else</span></span> (<span class="name"><span class="builtin-name">+</span></span> a (<span class="name">multi</span> a (<span class="name"><span class="builtin-name">-</span></span> b <span class="number">1</span>))))))</span><br></pre></td></tr></table></figure>
+<p>1.18的代码：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">multi</span> a b)</span><br><span class="line">	(<span class="name">multi-iter</span> a b <span class="number">0</span>))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">multi-iter</span> a b ans)</span><br><span class="line">	(<span class="name"><span class="builtin-name">cond</span></span> (<span class="name"><span class="builtin-name">=</span></span> <span class="number">0</span> b) ans)</span><br><span class="line">	(<span class="name"><span class="builtin-name">even?</span></span> b) (<span class="name">multi-iter</span> (<span class="name">double</span> a) (<span class="name">halve</span> b) ans)</span><br><span class="line">	(<span class="name"><span class="builtin-name">else</span></span> (<span class="name">multi-iter</span> a (<span class="name"><span class="builtin-name">-</span></span> b <span class="number">1</span>) (<span class="name"><span class="builtin-name">+</span></span> a ans))))</span><br></pre></td></tr></table></figure>
+<h2 id="练习1.19">练习1.19</h2>
+<p>刚开始看的时候没读懂，又看了一遍英文原版的题目之后知道是什么意思了。 \( T_{pq} \) 的作用就是将整数对(a,b)变换成（bq+aq+ap,bp+aq)，而例1.19要求的是一个 \( T_{p'q'} \) 对(a,b)的变换等价于将 \( T_{pq} \) 运用到(a,b)两次。</p>
+<p>对(a,b)应用第一次变换 \( T_{pq} \) 得到</p>
+<p><span class="math display">\[
+\left\{ 
+\begin{array}{c}
+a \leftarrow bq + a(p+q), \\ 
+b \leftarrow bp+aq. 
+\end{array}
+\right. 
+\]</span></p>
+<p>对(a,b)应用第二次变换 \( T_{pq} \) 得到</p>
+<p><span class="math display">\[
+\left\{ 
+\begin{array}{c}
+a \leftarrow (bp+aq)q + (bq + a(p + q))(p + q) = b(2pq + q^2) + a(p^2 + q^2 +2pq + q^2), \\
+b \leftarrow (bp+aq)p + (bq + a(p+q))q = b(p^2 + q^2) + a(2pq + q^2).
+\end{array}
+\right. 
+\]</span></p>
+<p>而应用一次 \( T_{p'q'} \) 得到：</p>
+<p><span class="math display">\[
+\left\{ 
+\begin{array}{c}
+a \leftarrow bq&#39; + a(p&#39;+q&#39;), \\
+b \leftarrow bp&#39;+aq&#39;. 
+\end{array}
+\right. 
+\]</span></p>
+<p>对比第二个和第三个式子可以得到</p>
+<p><span class="math display">\[
+\left\{ 
+\begin{array}{c}
+p&#39; = p^2+q^2 \\
+q&#39; = 2pq+q^2 
+\end{array}
+\right. 
+\]</span></p>
+<p>将求幂的思路应用到这个题上就可以得到一个对数级的求斐波那契数的算法。如果n为偶数则用 \( T_p'q' \) 令n = n/2,如果是奇数就用 \( T_pq \) 令n=n-1。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">fib</span> n)</span><br><span class="line">    (<span class="name">fib-iter</span> <span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span> n))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">fib-iter</span> a b p q count)</span><br><span class="line">    (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">=</span></span> count <span class="number">0</span>)</span><br><span class="line">            b)</span><br><span class="line">          ((<span class="name"><span class="builtin-name">even?</span></span> count)</span><br><span class="line">            (<span class="name">fib-iter</span> a </span><br><span class="line">                      b</span><br><span class="line">                      (<span class="name"><span class="builtin-name">+</span></span> (<span class="name">square</span> p) (<span class="name">square</span> q)) </span><br><span class="line">                      (<span class="name"><span class="builtin-name">+</span></span> (<span class="name"><span class="builtin-name">*</span></span> <span class="number">2</span> p q) (<span class="name">square</span> q))   </span><br><span class="line">                      (<span class="name"><span class="builtin-name">/</span></span> count <span class="number">2</span>)))</span><br><span class="line">          (<span class="name"><span class="builtin-name">else</span></span></span><br><span class="line">            (<span class="name">fib-iter</span> (<span class="name"><span class="builtin-name">+</span></span> (<span class="name"><span class="builtin-name">*</span></span> b q) (<span class="name"><span class="builtin-name">*</span></span> a q) (<span class="name"><span class="builtin-name">*</span></span> a p))</span><br><span class="line">                      (<span class="name"><span class="builtin-name">+</span></span> (<span class="name"><span class="builtin-name">*</span></span> b p) (<span class="name"><span class="builtin-name">*</span></span> a q))</span><br><span class="line">                      p</span><br><span class="line">                      q</span><br><span class="line">                      (<span class="name"><span class="builtin-name">-</span></span> count <span class="number">1</span>)))))</span><br></pre></td></tr></table></figure>
+<h2 id="最大公约数">最大公约数</h2>
+<p>欧几里得算法：a,b的公约数也是b和a与b的余数的公约数。</p>
+<p>即：</p>
+<p>若r为a除以b的余数，则GCD(a,b) = GCD(b,r)</p>
+<p>这样一直计算下去将得到一个数对,第二个数为0，第一个数为a与b的最大公约数</p>
+<p>代码为:</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name"><span class="builtin-name">gcd</span></span> a b)</span><br><span class="line">	(<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">=</span></span> b <span class="number">0</span>)</span><br><span class="line">		a</span><br><span class="line">		(<span class="name"><span class="builtin-name">gcd</span></span> b (<span class="name"><span class="builtin-name">remainder</span></span> a b))))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">GCD</span><span class="params">(a,b)</span>:</span></span><br><span class="line">	<span class="keyword">if</span> b == <span class="number">0</span>:</span><br><span class="line">		<span class="keyword">return</span> a</span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		<span class="keyword">return</span> GCD(b,a%b)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">GCD_iter</span><span class="params">(a,b)</span>:</span></span><br><span class="line">	<span class="keyword">while</span> b!=<span class="number">0</span>:</span><br><span class="line">		t = b</span><br><span class="line">		b = a%b</span><br><span class="line">		a = t</span><br><span class="line">	<span class="keyword">return</span> a</span><br></pre></td></tr></table></figure>
+<p><strong>Lamé定理</strong>：如果欧几里得算法需要k步计算出两个数的最大公约数，那么两个数中较小的那个数一定大于等于第k个斐波那契数。</p>
+<p>证明:</p>
+<p><img src="http://i.imgur.com/EBz6PdH.png" /></p>
+<h2 id="素数检测">素数检测</h2>
+<h3 id="寻找因子">寻找因子</h3>
+<p>第一种判断因子的方法是找出他的因子。具有 \( () \) 的增长阶。用从2开始的增长阶去检查是否能整出n。代码如下，和书上的一致</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">smallest-divisor</span> n)</span><br><span class="line">  (<span class="name">find-divisor</span> n <span class="number">2</span>))</span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">find-divisor</span> n test-divisor)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">&gt;</span></span> (<span class="name">square</span> test-divisor) n) n)</span><br><span class="line">        ((<span class="name">divides?</span> test-divisor n) test-divisor)</span><br><span class="line">        (<span class="name"><span class="builtin-name">else</span></span> (<span class="name">find-divisor</span> n (<span class="name"><span class="builtin-name">+</span></span> test-divisor <span class="number">1</span>)))))</span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">divides?</span> a b)</span><br><span class="line">  (<span class="name"><span class="builtin-name">=</span></span> (<span class="name"><span class="builtin-name">remainder</span></span> b a) <span class="number">0</span>))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">prime?</span> n)</span><br><span class="line">  (<span class="name"><span class="builtin-name">=</span></span> n (<span class="name">smallest-divisor</span> n)))</span><br></pre></td></tr></table></figure>
+<h3 id="费马检查">费马检查</h3>
+<p>费马检查是第二种检查素数的方式，具有\( (logn) \)的增长阶</p>
+<p>先看一下费马小定理：如果n是一个素数，a是任意一个小于n的正整数，那么a^n与a同余。所谓同余就是指两个数取余n得到的余数相同。有关费马小定理的详细介绍可以看一下<a href="https://zh.wikipedia.org/wiki/%E8%B4%B9%E9%A9%AC%E5%B0%8F%E5%AE%9A%E7%90%86" target="_blank" rel="noopener">wiki</a></p>
+<p>有了这个定理，我们就可以得到一个判断一个数是否为素数的算法。先随机取一个小于n的正整数a，然后求出a^n，求出余数，如果这个余数不为n，则必定不是素数，如果是n，那么有很大的概率n是素数，再随机取一个a进行检查，通过一定量的检查可以将n不是素数的概率降到很低，让我们可以认为n就是素数，这就是费马检查。但是，有一些数能够骗过费马检查，但是在一亿个数内只有255个，所以可以忽略不计。</p>
+<p>费马检查的scheme代码：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">expmod</span> base exp m)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">=</span></span> exp <span class="number">0</span>) <span class="number">1</span>)</span><br><span class="line">        ((<span class="name"><span class="builtin-name">even?</span></span> exp)</span><br><span class="line">         (<span class="name"><span class="builtin-name">remainder</span></span> (<span class="name">square</span> (<span class="name">expmod</span> base (<span class="name"><span class="builtin-name">/</span></span> exp <span class="number">2</span>) m))</span><br><span class="line">                    m))</span><br><span class="line">        (<span class="name"><span class="builtin-name">else</span></span></span><br><span class="line">         (<span class="name"><span class="builtin-name">remainder</span></span> (<span class="name"><span class="builtin-name">*</span></span> base (<span class="name">expmod</span> base (<span class="name"><span class="builtin-name">-</span></span> exp <span class="number">1</span>) m))</span><br><span class="line">                    m)))) </span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">fermat-test</span> n)</span><br><span class="line">  (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">try-it</span> a)</span><br><span class="line">    (<span class="name"><span class="builtin-name">=</span></span> (<span class="name">expmod</span> a n n) a))</span><br><span class="line">  (<span class="name">try-it</span> (<span class="name"><span class="builtin-name">+</span></span> <span class="number">1</span> (<span class="name">random</span> (<span class="name"><span class="builtin-name">-</span></span> n <span class="number">1</span>)))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">fast-prime?</span> n times)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">=</span></span> times <span class="number">0</span>) true)</span><br><span class="line">        ((<span class="name">fermat-test</span> n) (<span class="name">fast-prime?</span> n (<span class="name"><span class="builtin-name">-</span></span> times <span class="number">1</span>)))</span><br><span class="line">        (<span class="name"><span class="builtin-name">else</span></span> false)))</span><br></pre></td></tr></table></figure>
+<p>其中expmod这个部分用了一点数学上的技巧。</p>
+<p><img src="http://i.imgur.com/qRA8xrI.png" /></p>
+<p>根据这个技巧我们在求 b^e 取余m时，我们就可以判断e是否为偶数，如果为偶数，就求取 \( b^{e/2} \) 取m的余数，求他的平方再求取模m的余数。如果为奇数，就用将e减一变成偶数求出余数乘上b即可。</p>
+<p>还有一个问题一开始没搞懂是求出一个数的幂对另一个数取模的结果后为什么要跟a自身比较，费马小定理说的是跟a取余n比较，后来发现还是自己数学基础不行。a是一个小于n的数，所以a取余n仍然是a嘛，这么简单的问题却想了好久，唉。</p>
+<h3 id="练习1.22">练习1.22</h3>
+<p>原题给的过程是在是太蛋疼了，为了尊重原题没有改动给的函数，所以只能检测两次素数，第一次判断是否为素数，如果是则直接调用题目给的那个过程，如果不是素数则找下一个素数，直到满足题目的范围。</p>
+<p>要检测连续奇数的素性，所以还要有一个过程来产生下一个奇数。最后定义一个过程用于求出大于n的m个素数。</p>
+<p>还有一点需要注意的是新版的runtime返回的是按秒计算的值，这里使用real-time-clock代替runtime，real-time-clock返回的是毫秒级的。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">; exercise1_22.scm</span></span><br><span class="line"></span><br><span class="line"><span class="comment">; contain prime? produce</span></span><br><span class="line">(<span class="name"><span class="builtin-name">load</span></span> <span class="string">"smallest_divisor.scm"</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">timed-prime-test</span> n)</span><br><span class="line">  (<span class="name"><span class="builtin-name">newline</span></span>)</span><br><span class="line">  (<span class="name"><span class="builtin-name">display</span></span> n)</span><br><span class="line">  (<span class="name">start-prime-test</span> n (<span class="name">real-time-clock</span>)))</span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">start-prime-test</span> n start-time)</span><br><span class="line">  (<span class="name"><span class="builtin-name">if</span></span> (<span class="name">prime?</span> n)</span><br><span class="line">      (<span class="name">report-prime</span> (<span class="name"><span class="builtin-name">-</span></span> (<span class="name">real-time-clock</span>) start-time))))</span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">report-prime</span> elapsed-time)</span><br><span class="line">  (<span class="name"><span class="builtin-name">display</span></span> <span class="string">" *** "</span>)</span><br><span class="line">  (<span class="name"><span class="builtin-name">display</span></span> elapsed-time))</span><br><span class="line"></span><br><span class="line"><span class="comment">; find the first odd after n</span></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">next-odd</span> n)</span><br><span class="line">	(<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">even?</span></span> n) (<span class="name"><span class="builtin-name">+</span></span> n <span class="number">1</span>)</span><br><span class="line">		(<span class="name"><span class="builtin-name">+</span></span> n <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">search-for-primes</span> base count)</span><br><span class="line">	(<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">=</span></span> count <span class="number">0</span>) (<span class="name"><span class="builtin-name">display</span></span> <span class="string">"End"</span>))</span><br><span class="line">		((<span class="name">prime?</span> base) </span><br><span class="line">			(<span class="name">timed-prime-test</span> base)</span><br><span class="line">			(<span class="name">search-for-primes</span> (<span class="name">next-even</span> base) (<span class="name"><span class="builtin-name">-</span></span> count <span class="number">1</span>)))</span><br><span class="line">		(<span class="name"><span class="builtin-name">else</span></span> (<span class="name">search-for-primes</span> (<span class="name">next-even</span> base) count))))</span><br></pre></td></tr></table></figure>
+<p>用书上的数据跑的话结果都为0，所以我就改成了最小从100000开始。</p>
+<p><img src="http://i.imgur.com/YiJpKXR.png" /></p>
+<h3 id="练习1.23">练习1.23</h3>
+<p>只需要添加一个next过程，修改一下test-divisor过程即可</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">load</span></span> <span class="string">"exercise1_22.scm"</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">next</span> n)</span><br><span class="line">	(<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">=</span></span> n <span class="number">2</span>) </span><br><span class="line">		<span class="number">3</span></span><br><span class="line">		(<span class="name"><span class="builtin-name">+</span></span> n <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">find-divisor</span> n test-divisor)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">&gt;</span></span> (<span class="name">square</span> test-divisor) n) n)</span><br><span class="line">        ((<span class="name">divides?</span> test-divisor n) test-divisor)</span><br><span class="line">        (<span class="name"><span class="builtin-name">else</span></span> (<span class="name">find-divisor</span> n (<span class="name">next</span> test-divisor)))))</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>scheme中有一个机制是如果有两个函数重名那么后来load的函数会覆盖前面的函数</p>
+</blockquote>
+<p><img src="http://i.imgur.com/uHZFlNU.png" /></p>
+<p>可以看到花费的时间明显减少了。</p>
+<h3 id="练习1.24">练习1.24</h3>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">load</span></span> <span class="string">"fermat.scm"</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">next-odd</span> n)</span><br><span class="line">	(<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">even?</span></span> n) (<span class="name"><span class="builtin-name">+</span></span> n <span class="number">1</span>)</span><br><span class="line">		(<span class="name"><span class="builtin-name">+</span></span> n <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">timed-prime-test</span> n)</span><br><span class="line">  (<span class="name"><span class="builtin-name">newline</span></span>)</span><br><span class="line">  (<span class="name"><span class="builtin-name">display</span></span> n)</span><br><span class="line">  (<span class="name">start-prime-test</span> n (<span class="name">real-time-clock</span>)))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">start-prime-test</span> n start-time)</span><br><span class="line">  (<span class="name"><span class="builtin-name">if</span></span> (<span class="name">fast-prime?</span> n <span class="number">10</span>)</span><br><span class="line">      (<span class="name">report-prime</span> (<span class="name"><span class="builtin-name">-</span></span> (<span class="name">real-time-clock</span>) start-time))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">report-prime</span> elapsed-time)</span><br><span class="line">  (<span class="name"><span class="builtin-name">display</span></span> <span class="string">" *** "</span>)</span><br><span class="line">  (<span class="name"><span class="builtin-name">display</span></span> elapsed-time))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">search-for-primes</span> base count)</span><br><span class="line">	(<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">=</span></span> count <span class="number">0</span>) (<span class="name"><span class="builtin-name">display</span></span> <span class="string">"End"</span>))</span><br><span class="line">		((<span class="name">fast-prime?</span> base <span class="number">10</span>) </span><br><span class="line">			(<span class="name">timed-prime-test</span> base) </span><br><span class="line">			(<span class="name">search-for-primes</span> (<span class="name">next-odd</span> base) (<span class="name"><span class="builtin-name">-</span></span> count <span class="number">1</span>)))</span><br><span class="line">		(<span class="name"><span class="builtin-name">else</span></span> (<span class="name">search-for-primes</span> (<span class="name">next-odd</span> base) count))))</span><br></pre></td></tr></table></figure>
+<p>上面就是修改后的代码</p>
+<p><img src="http://i.imgur.com/siqkV82.png" /></p>
+<p>通过与练习1.22（左侧）的测试结果对比可以看到，当base的值较少的时候，二者的速度差不多，当base的值变大之后，可以看到使用fast-prime?简直就是在吊打prime?方法。</p>
+<h3 id="练习1.25">练习1.25</h3>
+<p>刚开始学这一节的时候我也是这么想的，当时只是感觉书上的方法只是提高了运行速度，没有深入的去想这种方法怎么错了，当我把这道题的代码运行之后才发现这个想法是多么恐怖。</p>
+<p>当n很大的时候，虽然用了fast-expt但是要计算的值仍然非常巨大，假设n=10000000，随机取得的a的值为2，那么2^10000000简直爆炸，跟不用说比2大的数了。</p>
+<p>所以并不能有效的检测</p>
+<h3 id="练习1.28">练习1.28</h3>
+<p>开始看这道题没看懂，没搞明白“1取模n的非平凡平方根”是什么意思，后来上网查了有关数论的知识才搞明白。</p>
+<p>先说一下Miller-Rabin检查：如果n是一个素数，x是[1,n-1]范围内的一个随机数，若x^2 mod n = 1,那么必有x=1，或x=n-1</p>
+<p>证明：</p>
+<p><img src="http://i.imgur.com/asAXowB.png" /></p>
+<p>有了这个我们就可以得到一个检测素数的方法。</p>
+<p>在进行费马检查之前首先检测一下是否遇到了非凡平方根，如果遇到了就返回0，如果没有就进行费马检查。</p>
+<p>下面这个代码有一个缺陷就是nontrivial-square-root过程被执行了很多次，其实执行一次就够了。不过这种方法是根据书上的要求写的。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">expmod</span> base exp m)</span><br><span class="line">	(<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">=</span></span> exp <span class="number">0</span>) <span class="number">1</span>)</span><br><span class="line">		((<span class="name">nontrivial-square-root</span> base m) <span class="number">0</span>)</span><br><span class="line">		((<span class="name"><span class="builtin-name">even?</span></span> exp) </span><br><span class="line">			(<span class="name"><span class="builtin-name">remainder</span></span> (<span class="name">square</span> (<span class="name">expmod</span> base (<span class="name"><span class="builtin-name">/</span></span> exp <span class="number">2</span>) m)) </span><br><span class="line">				m))</span><br><span class="line">		(<span class="name"><span class="builtin-name">else</span></span></span><br><span class="line">			(<span class="name"><span class="builtin-name">remainder</span></span> (<span class="name"><span class="builtin-name">*</span></span> base (<span class="name">expmod</span> base (<span class="name"><span class="builtin-name">-</span></span> exp <span class="number">1</span>) m)) </span><br><span class="line">				m))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">nontrivial-square-root</span> base m)</span><br><span class="line">	(<span class="name"><span class="builtin-name">and</span></span> (<span class="name"><span class="builtin-name">not</span></span> (<span class="name"><span class="builtin-name">=</span></span> base <span class="number">1</span>))</span><br><span class="line">		(<span class="name"><span class="builtin-name">not</span></span> (<span class="name"><span class="builtin-name">=</span></span> base (<span class="name"><span class="builtin-name">-</span></span> m <span class="number">1</span>)))</span><br><span class="line">		(<span class="name"><span class="builtin-name">=</span></span> (<span class="name"><span class="builtin-name">remainder</span></span> (<span class="name">square</span> base) m) <span class="number">1</span>)))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">non-zero-random</span> x)</span><br><span class="line">      (<span class="name"><span class="builtin-name">let</span></span>((<span class="name">r</span> (<span class="name">random</span> x)))</span><br><span class="line">     (<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">not</span></span> (<span class="name"><span class="builtin-name">=</span></span> r <span class="number">0</span>))</span><br><span class="line">         r</span><br><span class="line">             (<span class="name">zero-to-n-randomx</span>))))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">test</span> n times)</span><br><span class="line">	(<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">=</span></span> times <span class="number">0</span>) true)</span><br><span class="line">		((<span class="name"><span class="builtin-name">=</span></span> (<span class="name">expmod</span> (<span class="name">non-zero-random</span> n) (<span class="name"><span class="builtin-name">-</span></span> n <span class="number">1</span>) n) <span class="number">1</span>) </span><br><span class="line">			(<span class="name">test</span> n (<span class="name"><span class="builtin-name">-</span></span> times <span class="number">1</span>)))</span><br><span class="line">		(<span class="name"><span class="builtin-name">else</span></span> false)))</span><br></pre></td></tr></table></figure>
+<p>我对原题进行一定的改动，加了一个中间函数，但是当要检查的素数特别大时，至少要测试一半的数据，测试量也变得特别大，导致时间变慢。但是如果减少测试数量，会将Carmichael数认定为素数。</p>
+<p>也就是说Miller-Rabin也是一个概率算法。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">expmod</span> base exp m)</span><br><span class="line">	(<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">=</span></span> exp <span class="number">0</span>) <span class="number">1</span>)</span><br><span class="line">		((<span class="name"><span class="builtin-name">even?</span></span> exp) </span><br><span class="line">			(<span class="name"><span class="builtin-name">remainder</span></span> (<span class="name">square</span> (<span class="name">expmod</span> base (<span class="name"><span class="builtin-name">/</span></span> exp <span class="number">2</span>) m)) </span><br><span class="line">				m))</span><br><span class="line">		(<span class="name"><span class="builtin-name">else</span></span></span><br><span class="line">			(<span class="name"><span class="builtin-name">remainder</span></span> (<span class="name"><span class="builtin-name">*</span></span> base (<span class="name">expmod</span> base (<span class="name"><span class="builtin-name">-</span></span> exp <span class="number">1</span>) m)) </span><br><span class="line">				m))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">nontrivial-square-root</span> base m)</span><br><span class="line">	(<span class="name"><span class="builtin-name">and</span></span> (<span class="name"><span class="builtin-name">not</span></span> (<span class="name"><span class="builtin-name">=</span></span> base <span class="number">1</span>))</span><br><span class="line">		(<span class="name"><span class="builtin-name">not</span></span> (<span class="name"><span class="builtin-name">=</span></span> base (<span class="name"><span class="builtin-name">-</span></span> m <span class="number">1</span>)))</span><br><span class="line">		(<span class="name"><span class="builtin-name">=</span></span> (<span class="name"><span class="builtin-name">remainder</span></span> (<span class="name">square</span> base) m) <span class="number">1</span>)))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">non-zero-random</span> x)</span><br><span class="line">      (<span class="name"><span class="builtin-name">let</span></span>((<span class="name">r</span> (<span class="name">random</span> x)))</span><br><span class="line">     (<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">not</span></span> (<span class="name"><span class="builtin-name">=</span></span> r <span class="number">0</span>))</span><br><span class="line">         r</span><br><span class="line">        (<span class="name">non-zero-random</span> x))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">middle-check</span> base n)</span><br><span class="line">	(<span class="name"><span class="builtin-name">if</span></span> (<span class="name">nontrivial-square-root</span> base n)</span><br><span class="line">		<span class="number">0</span></span><br><span class="line">		(<span class="name">expmod</span> base n n)))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">test</span> n times)</span><br><span class="line">	(<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">=</span></span> times <span class="number">0</span>) true)</span><br><span class="line">		((<span class="name"><span class="builtin-name">=</span></span> (<span class="name">middle-check</span> (<span class="name">non-zero-random</span> n) n) <span class="number">0</span>) </span><br><span class="line">			false)</span><br><span class="line">		(<span class="name"><span class="builtin-name">else</span></span> (<span class="name">test</span> n (<span class="name"><span class="builtin-name">-</span></span> times <span class="number">1</span>)))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">mr-prime?</span> n)</span><br><span class="line">	(<span class="name">test</span> n (<span class="name"><span class="builtin-name">/</span></span> n <span class="number">2</span>)))</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SICP/" rel="tag"># SICP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/29/2016-06-29-dedicated-to-the-spirit-that-lives-in-the-computer(0)/" rel="next" title="献给寄宿于计算机中的灵魂">
+                <i class="fa fa-chevron-left"></i> 献给寄宿于计算机中的灵魂
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/04/2016-07-04-black-magic-in-linux/" rel="prev" title="Linux中的黑魔法——内核模块的编写">
+                Linux中的黑魔法——内核模块的编写 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#节"><span class="nav-number">1.</span> <span class="nav-text">1.1节</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#牛顿法求平方根"><span class="nav-number">1.1.</span> <span class="nav-text">牛顿法求平方根</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#节-1"><span class="nav-number">2.</span> <span class="nav-text">1.2节</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#换零钱的方式"><span class="nav-number">2.1.</span> <span class="nav-text">换零钱的方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#例1.11解答"><span class="nav-number">2.2.</span> <span class="nav-text">例1.11解答</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#增长的阶"><span class="nav-number">2.3.</span> <span class="nav-text">增长的阶</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#求幂"><span class="nav-number">2.4.</span> <span class="nav-text">1.2.4 求幂</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#练习1.17-练习1.18"><span class="nav-number">2.5.</span> <span class="nav-text">练习1.17 &amp; 练习1.18</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#练习1.19"><span class="nav-number">2.6.</span> <span class="nav-text">练习1.19</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最大公约数"><span class="nav-number">2.7.</span> <span class="nav-text">最大公约数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#素数检测"><span class="nav-number">2.8.</span> <span class="nav-text">素数检测</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#寻找因子"><span class="nav-number">2.8.1.</span> <span class="nav-text">寻找因子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#费马检查"><span class="nav-number">2.8.2.</span> <span class="nav-text">费马检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习1.22"><span class="nav-number">2.8.3.</span> <span class="nav-text">练习1.22</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习1.23"><span class="nav-number">2.8.4.</span> <span class="nav-text">练习1.23</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习1.24"><span class="nav-number">2.8.5.</span> <span class="nav-text">练习1.24</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习1.25"><span class="nav-number">2.8.6.</span> <span class="nav-text">练习1.25</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习1.28"><span class="nav-number">2.8.7.</span> <span class="nav-text">练习1.28</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

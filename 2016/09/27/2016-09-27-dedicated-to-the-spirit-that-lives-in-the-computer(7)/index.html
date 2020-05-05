@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="SICP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="第3.1，3.2，3.3节的学习笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SICP学习笔记（七）">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;09&#x2F;27&#x2F;2016-09-27-dedicated-to-the-spirit-that-lives-in-the-computer(7)&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="第3.1，3.2，3.3节的学习笔记">
+<meta property="og:image" content="https:&#x2F;&#x2F;mitpress.mit.edu&#x2F;sicp&#x2F;full-text&#x2F;book&#x2F;ch3-Z-G-7.gif">
+<meta property="og:image" content="https:&#x2F;&#x2F;mitpress.mit.edu&#x2F;sicp&#x2F;full-text&#x2F;book&#x2F;ch3-Z-G-8.gif">
+<meta property="og:image" content="https:&#x2F;&#x2F;mitpress.mit.edu&#x2F;sicp&#x2F;full-text&#x2F;book&#x2F;ch3-Z-G-9.gif">
+<meta property="og:image" content="https:&#x2F;&#x2F;mitpress.mit.edu&#x2F;sicp&#x2F;full-text&#x2F;book&#x2F;ch3-Z-G-10.gif">
+<meta property="og:image" content="https:&#x2F;&#x2F;mitpress.mit.edu&#x2F;sicp&#x2F;full-text&#x2F;book&#x2F;ch3-Z-G-11.gif">
+<meta property="article:published_time" content="2016-09-26T16:00:00.000Z">
+<meta property="article:modified_time" content="2017-01-21T04:50:08.000Z">
+<meta property="article:author" content="Gummary">
+<meta property="article:tag" content="SICP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;mitpress.mit.edu&#x2F;sicp&#x2F;full-text&#x2F;book&#x2F;ch3-Z-G-7.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/09/27/2016-09-27-dedicated-to-the-spirit-that-lives-in-the-computer(7)/"/>
+
+
+
+
+
+  <title>SICP学习笔记（七） | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/27/2016-09-27-dedicated-to-the-spirit-that-lives-in-the-computer(7)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SICP学习笔记（七）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-27T00:00:00+08:00">
+                2016-09-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SICP/" itemprop="url" rel="index">
+                    <span itemprop="name">SICP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/09/27/2016-09-27-dedicated-to-the-spirit-that-lives-in-the-computer(7)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2016/09/27/2016-09-27-dedicated-to-the-spirit-that-lives-in-the-computer(7)/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前几天心血来潮想专门做一个习题集放答案，然后fork了一个jekyll的模板，想把域名解析过去结果失败了，还把博客搞崩了QAQ，修了一晚上，这篇博客也就拖到了第二天.....</p>
+<p>大约在十一习题集的网站完成施工，把每一个题的答案都放到习题集里，这样笔记和解答就分开啦，笔记部分也不会显得特别冗长=。=</p>
+<h2 id="赋值与局部变量">3.1赋值与局部变量</h2>
+<p>1、(set! &lt; name&gt; &lt; new-value&gt;) 将修改&lt; name&gt;使其值变为&lt; new-value&gt;。</p>
+<p>2、let可以创建起一个包含局部变量的环境，其他过程只能间接的通过过程来访问这个局部变量。</p>
+<p>3、使用set!之后求值的代换模型就不适用于这些过程了。</p>
+<p>4、使用赋值可以将随时间变化的量隐藏到局部变量中，与不变的过程分离，使系统更加模块化。</p>
+<p>5、使用赋值使一个系统中的符号不仅仅是代表他的值，而是一个指针，指针指向的位置处的值可以随意改变。</p>
+<p>6、使用赋值使还要考虑时的顺序。</p>
+<h2 id="求值的环境模型">3.2 求值的环境模型</h2>
+<p>1、环境是框架的一个序列，每一个框架中都存在着一些约束，将名字约束到某一个值上。每一个变量最多只能有一个约束。每一个框架还有一个指针，指向他前一个框架即外围环境，后面框架中的约束可以覆盖前一个约束中的值。全局变量没有外围环境。</p>
+<p>2、求值规则</p>
+<ul>
+<li>通过在一个环境中求值lambda表达式将会创建起一个过程。这个过程是一个序对，由lambda表达式的正文和一个指向环境的指针构成，指针指向的是创建这个过程的环境。</li>
+<li>将一集参数应用到一个过程将会创建一个新的框架，在这个框架中参数被约束到了调用时的实际参数，然后在新框架中求值过程体。新框架的外围环境就是做为被应用的那个过程对象的一部分环境。</li>
+</ul>
+<p>3、set!行为是首先在环境中确定有关变量的约束位置，然后修改这个约束，使之表示为新值。</p>
+<p>4、将环境模型应用到一个命令式过程</p>
+<p>首先利用lambda表达式求值产生了三个过程，三个过程分别是三个对偶，环境指针均指向了全局环境。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">square</span> x)</span><br><span class="line">  (<span class="name"><span class="builtin-name">*</span></span> x x))</span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">sum-of-squares</span> x y)</span><br><span class="line">  (<span class="name"><span class="builtin-name">+</span></span> (<span class="name">square</span> x) (<span class="name">square</span> y)))</span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">f</span> a)</span><br><span class="line">  (<span class="name">sum-of-squares</span> (<span class="name"><span class="builtin-name">+</span></span> a <span class="number">1</span>) (<span class="name"><span class="builtin-name">*</span></span> a <span class="number">2</span>)))</span><br><span class="line">~~~  </span><br><span class="line"></span><br><span class="line">![](https://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-5.gif) </span><br><span class="line"></span><br><span class="line">如果我们求值(f 5)，会创建一个框架E1，将参数a约束到5,(f a）计算(sum-of-squares (+ a 1) (* a 2))时，现在当前框架中找sum-of-squares,没有所以向前一个框架即全局框架找，找到之后由创建了一个框架E2，将sum-of-squares中的x和y约束到了6和10,然后继续求值，创建了两个环境E3和E4，将x分别约束到了6和10。最后通过求值之后获得(f 5)的值。</span><br><span class="line"></span><br><span class="line">![](https://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-6.gif) </span><br><span class="line"></span><br><span class="line">通过不同的环境可以使所有名字为x的局部变量互不相同。</span><br><span class="line"></span><br><span class="line">5、将环境模型应用到包含赋值的过程中</span><br><span class="line"></span><br><span class="line">~~~scheme</span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">make-withdraw</span> balance)</span><br><span class="line">  (<span class="name"><span class="builtin-name">lambda</span></span> (amount)</span><br><span class="line">    (<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">&gt;=</span></span> balance amount)</span><br><span class="line">        (<span class="name"><span class="builtin-name">begin</span></span> (<span class="name"><span class="builtin-name">set!</span></span> balance (<span class="name"><span class="builtin-name">-</span></span> balance amount))</span><br><span class="line">               balance)</span><br><span class="line">        <span class="string">"Insufficient funds"</span>)))</span><br><span class="line">        </span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> W1 (<span class="name">make-withdraw</span> <span class="number">100</span>))</span><br><span class="line"></span><br><span class="line">(<span class="name">W1</span> <span class="number">50</span>)</span><br></pre></td></tr></table></figure>
+<p>首先，定义make-withdraw过程定义了一个序对，参数是balance，过程体为lambda表达式，环境指针指向了全局环境。</p>
+<p><img src="https://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-7.gif" /></p>
+<p>定义W1后将会产生一个新的框架E1，E1中将make-withdraw中的balance约束到100，同时W1是一个过程，参数为amount，过程题为lambda表达式，环境指针指向的应该是E1。</p>
+<p><img src="https://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-8.gif" /></p>
+<p>当求值(W1 50)时，又会建立一个新的框架，在这个框架中将amount约束到了50,由于是W1创建的框架，所以新框架的外围环境指针指向了E1。 在求值W1的表达式时，首先在新框架中找到amount的约束，然后在E1中找到balance的约束，执行set!操作之后将E1中的balance修改为了50,当执行完成之后，amount所在的框架被回收，而W1仍存在于全局环境中，所以E1框架继续存在，但值被修改为50.如果再一次对W1求值，仍会建立起一个新的框架，在新框架中amount将会被约束成一个新的值。</p>
+<p><img src="https://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-9.gif" /></p>
+<p><img src="https://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-10.gif" /></p>
+<p>如果我们再利用make-withdraw定义一个W2，也会产生一个跟E1互补冲突的新框架E2。</p>
+<p><img src="https://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-11.gif" /></p>
+<h2 id="用变动的数据做模拟">3.3用变动的数据做模拟</h2>
+<p>1、对于可以变动的符合数据来说，除了要写出构造函数和选择函数，还要为变动的复合数据提供改变函数来修改有关的数据对象。</p>
+<p>2、set-car!与set-cdr!都是修改序对的指针指向的位置。</p>
+<p>3、eq?检查的是x和y是否为同一个对象，即指针是否相等。</p>
+<p>4、序列的实现是通过构造一个链表，然后用一个序对的两个值分别指向链表的头和尾。序列为空的情况是头指针为空。插入元素和删除元素是通过修改头尾指针的值来实现的。</p>
+<p>5、一维表格的实现是通过维护一个链表，链表中的元素是一个序对，序对的第一个元素为表格的key，第二个为value。</p>
+<p>6、二维表格的实现是通过为何一个链表，但是节点指向的元素仍然是一个链表，第二个链表中的节点才是key与value的序对组合。</p>
+<h2 id="参考资料">参考资料:</h2>
+<ol type="1">
+<li>https://mitpress.mit.edu/sicp/full-text/book/book-Z-H-21.html#%_sec_3.2.2</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SICP/" rel="tag"># SICP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/21/2016-09-21-dedicated-to-the-spirit-that-lives-in-the-computer(6)/" rel="next" title="SICP学习笔记（六）">
+                <i class="fa fa-chevron-left"></i> SICP学习笔记（六）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/23/2016-10-23-dedicated-to-the-spirit-that-lives-in-the-computer(8)/" rel="prev" title="SICP学习笔记（八）">
+                SICP学习笔记（八） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#赋值与局部变量"><span class="nav-number">1.</span> <span class="nav-text">3.1赋值与局部变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#求值的环境模型"><span class="nav-number">2.</span> <span class="nav-text">3.2 求值的环境模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用变动的数据做模拟"><span class="nav-number">3.</span> <span class="nav-text">3.3用变动的数据做模拟</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料:</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

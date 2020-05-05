@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="SICP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="第2.2节的学习笔记及习题解答">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SICP学习笔记（四）">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;09&#x2F;08&#x2F;2016-09-08-dedicated-to-the-spirit-that-lives-in-the-computer(4)&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="第2.2节的学习笔记及习题解答">
+<meta property="article:published_time" content="2016-09-07T16:00:00.000Z">
+<meta property="article:modified_time" content="2017-01-21T04:50:08.000Z">
+<meta property="article:author" content="Gummary">
+<meta property="article:tag" content="SICP">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/09/08/2016-09-08-dedicated-to-the-spirit-that-lives-in-the-computer(4)/"/>
+
+
+
+
+
+  <title>SICP学习笔记（四） | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/08/2016-09-08-dedicated-to-the-spirit-that-lives-in-the-computer(4)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SICP学习笔记（四）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-08T00:00:00+08:00">
+                2016-09-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SICP/" itemprop="url" rel="index">
+                    <span itemprop="name">SICP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/09/08/2016-09-08-dedicated-to-the-spirit-that-lives-in-the-computer(4)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2016/09/08/2016-09-08-dedicated-to-the-spirit-that-lives-in-the-computer(4)/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="section">2.2.1</h2>
+<p>在Lisp中新建一个列表时使用list的关键字，list其实是由许多cons组成的。理解一个list与一个cons之间的区别非常重要，在后面的许多习题中都会应用到。</p>
+<p>使用list连接的每个元素都占用了一个序对，而cons组合的元素是两个元素占一个序对。</p>
+<p>比如(list a b)和(cons a b)，要取出a和b的值的方法分别为</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> v1 (<span class="name"><span class="builtin-name">list</span></span> a b))</span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> v2 (<span class="name"><span class="builtin-name">cons</span></span> a b))</span><br><span class="line"></span><br><span class="line"><span class="comment">; list</span></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">car</span></span> v1) 		<span class="comment">; geta </span></span><br><span class="line">(<span class="name"><span class="builtin-name">car</span></span> (<span class="name"><span class="builtin-name">cdr</span></span> v1))	<span class="comment">;getb   same as (cadr v1)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">; cons</span></span><br><span class="line">(<span class="name"><span class="builtin-name">car</span></span> v2)</span><br><span class="line">(<span class="name"><span class="builtin-name">cdr</span></span> v2)</span><br></pre></td></tr></table></figure>
+<p>如果要用cons向一个序列中添加元素，那么该值只能放到cons的一个参数，否则就会变成一个包含序列的二元序列</p>
+<p>然后是nil，相当于C语言中的NULL，但是我这个版本的mit-scheme没有，到网上查了一下只能用'()来代替，书上也对这点做了说明，所以如果要在程序中使用nil关键字的话你必须要自己定义一个</p>
+<p>(define nil '())</p>
+<h3 id="表操作">表操作</h3>
+<p>书上用Lisp实现了对表的求长度，取值，追加操作，这里就不多说了，直接看练习</p>
+<h4 id="练习2.17">练习2.17</h4>
+<p>判断当前元素的下一个是否为空，如果是则说明当前为最后一个元素，然后返回。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">last-pair</span> items)</span><br><span class="line">	(<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">null?</span></span> (<span class="name"><span class="builtin-name">cdr</span></span> items))</span><br><span class="line">		(<span class="name"><span class="builtin-name">car</span></span> items)</span><br><span class="line">		(<span class="name">last-pair</span> (<span class="name"><span class="builtin-name">cdr</span></span> items))))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.18">练习2.18</h4>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">reserve</span> items)</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">iter</span> l ans)</span><br><span class="line">		(<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">null?</span></span> l)</span><br><span class="line">			ans</span><br><span class="line">			(<span class="name">iter</span> (<span class="name"><span class="builtin-name">cdr</span></span> l) (<span class="name"><span class="builtin-name">cons</span></span> (<span class="name"><span class="builtin-name">car</span></span> l) ans))))</span><br><span class="line">	(<span class="name">iter</span> items '()))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.19">练习2.19</h4>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">first-denomination</span> coin-values)</span><br><span class="line">        (<span class="name"><span class="builtin-name">car</span></span> coin-values))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">except-first-denomination</span> coin-values)</span><br><span class="line">        (<span class="name"><span class="builtin-name">cdr</span></span> (<span class="name">coin-values</span>)))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">no-more?</span> coin-values)</span><br><span class="line">        (<span class="name"><span class="builtin-name">null?</span></span> coin-values))</span><br><span class="line"></span><br><span class="line"><span class="comment">; a more simple way</span></span><br><span class="line">  (<span class="name"><span class="builtin-name">define</span></span> first-denomination  car)</span><br><span class="line">        </span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> except-first-denomination  cdr)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> no-more?  null?)</span><br></pre></td></tr></table></figure>
+<p>不会影响cc的结果，因为这是通过递归list中的每一个元素都会被访问到。</p>
+<h4 id="练习2.20">练习2.20</h4>
+<p>如果要在一个列表的最后添加元素，就必须先将这个元素变成一个lsit，然后使用append方法。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">; contains append</span></span><br><span class="line">(<span class="name"><span class="builtin-name">load</span></span> <span class="string">"funclist"</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">same-parity</span> first . other)</span><br><span class="line">  (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">iter</span> items  ans)</span><br><span class="line">    (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">null?</span></span> items) ans)</span><br><span class="line">          ((<span class="name">r</span> (<span class="name"><span class="builtin-name">car</span></span> items))</span><br><span class="line">           (<span class="name">iter</span> (<span class="name"><span class="builtin-name">cdr</span></span> items) (<span class="name"><span class="builtin-name">append</span></span> ans (<span class="name"><span class="builtin-name">list</span></span> (<span class="name"><span class="builtin-name">car</span></span> items)))))</span><br><span class="line">          (<span class="name"><span class="builtin-name">else</span></span> (<span class="name">iter</span> (<span class="name"><span class="builtin-name">cdr</span></span> items) ans))))</span><br><span class="line">  (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">r</span> i)</span><br><span class="line">    (<span class="name"><span class="builtin-name">=</span></span> (<span class="name"><span class="builtin-name">remainder</span></span> i <span class="number">2</span>) (<span class="name"><span class="builtin-name">remainder</span></span> first <span class="number">2</span>)))</span><br><span class="line">  (<span class="name">iter</span> other (<span class="name"><span class="builtin-name">list</span></span> first)))</span><br></pre></td></tr></table></figure>
+<h3 id="对表的映射">对表的映射</h3>
+<p>这一小节讲了一个非常重要的过程，map。map建立的是一层抽象屏蔽，屏蔽了底层对每个元素的递归访问这一过程，我们只需要写一个处理元素的过程即可实现将一个表映射成另一个表。</p>
+<h4 id="练习2.21">练习2.21</h4>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">load</span></span> <span class="string">"map.scm"</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">square</span> x)</span><br><span class="line">	(<span class="name"><span class="builtin-name">*</span></span> x x))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">square-list</span> items)</span><br><span class="line">	(<span class="name"><span class="builtin-name">map</span></span> items</span><br><span class="line">		(<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">square</span> x))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">square-list</span> items)</span><br><span class="line">  (<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">null?</span></span> items)</span><br><span class="line">      '()</span><br><span class="line">      (<span class="name"><span class="builtin-name">cons</span></span> (<span class="name">square</span> (<span class="name"><span class="builtin-name">car</span></span> items)) (<span class="name">square-list</span> (<span class="name"><span class="builtin-name">cdr</span></span> items)))))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.22">练习2.22</h4>
+<p>这道练习就是我前面提到的利用cons向list中添加元素，第一个方法是因为将之后的元素放到了ans的前面，所以是一个倒序的，如果要生成正确的答案就要在最后对answer做一步反转操作。</p>
+<p>第二个方法不正确是因为最后生成的是一个嵌套的序列，与list的定义不一致，正确的做法我在练习2.20已经提到过了。</p>
+<h4 id="练习2.23">练习2.23</h4>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name"><span class="builtin-name">for-each</span></span> proc list)</span><br><span class="line">	(<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">null?</span></span> list)</span><br><span class="line">		<span class="literal">#t</span></span><br><span class="line">		(<span class="name">proc</span> (<span class="name"><span class="builtin-name">car</span></span> list))</span><br><span class="line">		(<span class="name"><span class="builtin-name">for-each</span></span> proc (<span class="name"><span class="builtin-name">cdr</span></span> list))))</span><br></pre></td></tr></table></figure>
+<h2 id="层次型结构">层次型结构</h2>
+<p>介绍在lisp中来表示一棵树，也就是使用序列来嵌套序列。</p>
+<p>然后介绍了用递归的思想来处理树的有关问题，并给出了一个求树叶子数量的例子。</p>
+<h4 id="练习2.26">练习2.26</h4>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">append</span></span> x y)</span><br><span class="line">(<span class="name">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span> <span class="number">6</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">cons</span></span> x y)</span><br><span class="line">((<span class="name">1</span> <span class="number">2</span> <span class="number">3</span>) (<span class="name">4</span> <span class="number">5</span> <span class="number">6</span>))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">list</span></span> x y)</span><br><span class="line">((<span class="name">1</span> <span class="number">2</span> <span class="number">3</span>) (<span class="name">1</span> <span class="number">2</span> <span class="number">3</span>))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.27">练习2.27</h4>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">deep-reverse</span> tree)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">null?</span></span> tree) '())</span><br><span class="line">        ((<span class="name"><span class="builtin-name">not</span></span> (<span class="name"><span class="builtin-name">pair?</span></span> tree)) tree)</span><br><span class="line">        (<span class="name"><span class="builtin-name">else</span></span> (<span class="name"><span class="builtin-name">append</span></span> (<span class="name">deep-reverse</span> (<span class="name"><span class="builtin-name">cdr</span></span> tree))</span><br><span class="line">                      (<span class="name"><span class="builtin-name">list</span></span> (<span class="name">deep-reverse</span> (<span class="name"><span class="builtin-name">car</span></span> tree)))))))</span><br></pre></td></tr></table></figure>
+<p>最后一行使用append 的原因是最后生成的都是子树，是一个列表，所以要用append，而append的对象必须是序列，所以要用list来将树叶变成序列。</p>
+<h4 id="练习2.28">练习2.28</h4>
+<p>注意第3行的list</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">fringe</span> tree)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">null?</span></span> tree) '())</span><br><span class="line">        ((<span class="name"><span class="builtin-name">not</span></span> (<span class="name"><span class="builtin-name">pair?</span></span> tree)) (<span class="name"><span class="builtin-name">list</span></span> tree))</span><br><span class="line">        (<span class="name"><span class="builtin-name">else</span></span> (<span class="name"><span class="builtin-name">append</span></span> (<span class="name">fringe</span> (<span class="name"><span class="builtin-name">car</span></span> tree))</span><br><span class="line">                      (<span class="name">fringe</span> (<span class="name"><span class="builtin-name">cdr</span></span> tree))))))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.29">练习2.29</h4>
+<p>首先定义一些测试数据</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> level-1-mobile</span><br><span class="line">  (<span class="name">make-mobile</span> (<span class="name">make-branch</span> <span class="number">2</span> <span class="number">1</span>)</span><br><span class="line">               (<span class="name">make-branch</span> <span class="number">1</span> <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line"> (<span class="name"><span class="builtin-name">define</span></span> level-2-mobile</span><br><span class="line">   (<span class="name">make-mobile</span> (<span class="name">make-branch</span> <span class="number">3</span> level-1-mobile)</span><br><span class="line">                (<span class="name">make-branch</span> <span class="number">9</span> <span class="number">1</span>)))</span><br><span class="line"></span><br><span class="line"> (<span class="name"><span class="builtin-name">define</span></span> level-3-mobile</span><br><span class="line">   (<span class="name">make-mobile</span> (<span class="name">make-branch</span> <span class="number">4</span> level-2-mobile)</span><br><span class="line">                (<span class="name">make-branch</span> <span class="number">8</span> <span class="number">2</span>)))</span><br></pre></td></tr></table></figure>
+<p><strong>a)</strong>因为题目使用的是list将两个元素组合起来，所以不能直接cdr获得第二个元素</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">left-branch</span> mobile)</span><br><span class="line">        (<span class="name"><span class="builtin-name">car</span></span> mobile))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">right-branch</span> mobile)</span><br><span class="line">        (<span class="name"><span class="builtin-name">car</span></span> (<span class="name"><span class="builtin-name">cdr</span></span> mobile)))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">branch-length</span> branch)</span><br><span class="line">        (<span class="name"><span class="builtin-name">car</span></span> branch))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">branch-structure</span> branch)</span><br><span class="line">        (<span class="name"><span class="builtin-name">car</span></span> (<span class="name"><span class="builtin-name">cdr</span></span> branch)))</span><br></pre></td></tr></table></figure>
+<p><strong>b)</strong>我们可以通过判断右分支是序对还是值来区分为weight和mobile</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">branch-weight</span> branch)</span><br><span class="line">  (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">s</span> (<span class="name">branch-structure</span> branch)))</span><br><span class="line">    (<span class="name"><span class="builtin-name">if</span></span> (<span class="name">is-mobile?</span> s)</span><br><span class="line">      (<span class="name">total-weight</span> s)</span><br><span class="line">      s)))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">total-weight</span> tree)</span><br><span class="line">  (<span class="name"><span class="builtin-name">+</span></span> (<span class="name">branch-weight</span> (<span class="name">left-branch</span> tree))</span><br><span class="line">     (<span class="name">branch-weight</span> (<span class="name">right-branch</span> tree))))</span><br></pre></td></tr></table></figure>
+<p><strong>c)</strong>判定一个活动题是否平衡是根据两个条件来的，第一个是左分支的力矩等于右分支的力矩，第二个是左右分支都也都平衡，所以要写两个过程，分别求力矩和判断分支是否平衡。</p>
+<p>求力矩可以通过b题的求重量函数和题目给出的length求出<br />
+判断分支是否平衡先判断是否为mobile，如果是mobile则调用求平衡的函数，如果是重量则说明平衡。</p>
+<p>可得程序为</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">branch-balanced?</span> branch)</span><br><span class="line">  (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">s</span> (<span class="name">branch-structure</span> branch)))</span><br><span class="line">    (<span class="name"><span class="builtin-name">if</span></span> (<span class="name">is-mobile?</span> s)</span><br><span class="line">      (<span class="name">balanced?</span> s)</span><br><span class="line">      true)))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">branch-torque</span> branch)</span><br><span class="line">  (<span class="name"><span class="builtin-name">*</span></span> (<span class="name">branch-length</span> branch)</span><br><span class="line">     (<span class="name">branch-weight</span> branch)))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">balanced?</span> tree)</span><br><span class="line">  (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">left</span> (<span class="name">left-branch</span> tree))</span><br><span class="line">        (<span class="name">right</span> (<span class="name">right-branch</span> tree)))</span><br><span class="line">    (<span class="name"><span class="builtin-name">and</span></span> (<span class="name"><span class="builtin-name">=</span></span> (<span class="name">branch-torque</span> left)</span><br><span class="line">            (<span class="name">branch-torque</span> right))</span><br><span class="line">         (<span class="name">branch-balanced?</span> left)</span><br><span class="line">         (<span class="name">branch-balanced?</span> right))))</span><br></pre></td></tr></table></figure>
+<p><strong>(d</strong>在a题中定义的四个函数为b题c题建立起了一层抽象屏蔽，所以我们完全不需要更改上层的代码，只需要修改a题的四个过程即可。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">left-branch</span> mobile)</span><br><span class="line">     (<span class="name"><span class="builtin-name">car</span></span> mobile))</span><br><span class="line"> (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">right-branch</span> mobile)</span><br><span class="line">      (<span class="name"><span class="builtin-name">cdr</span></span> mobile))</span><br><span class="line"></span><br><span class="line"> (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">branch-length</span> branch)</span><br><span class="line">      (<span class="name"><span class="builtin-name">car</span></span> branch))</span><br><span class="line"> (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">branch-structure</span> branch)</span><br><span class="line">      (<span class="name"><span class="builtin-name">cdr</span></span> branch))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.30">练习2.30</h4>
+<p>对照书上的scale-tree写即可</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">square-tree</span> tree)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">null?</span></span> tree) '())</span><br><span class="line">        ((<span class="name"><span class="builtin-name">not</span></span> (<span class="name"><span class="builtin-name">pair?</span></span> tree)) (<span class="name"><span class="builtin-name">*</span></span> tree tree))</span><br><span class="line">        (<span class="name"><span class="builtin-name">else</span></span> (<span class="name"><span class="builtin-name">cons</span></span> (<span class="name">square-tree</span> (<span class="name"><span class="builtin-name">car</span></span> tree))</span><br><span class="line">                    (<span class="name">square-tree</span> (<span class="name"><span class="builtin-name">cdr</span></span> tree))))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">load</span></span> <span class="string">"map"</span>)</span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">square-tree</span> tree)</span><br><span class="line">  (<span class="name"><span class="builtin-name">map</span></span> (<span class="name"><span class="builtin-name">lambda</span></span> (sub-tree)</span><br><span class="line">         (<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">pair?</span></span> sub-tree)</span><br><span class="line">           (<span class="name">square-tree</span> sub-tree)</span><br><span class="line">           (<span class="name"><span class="builtin-name">*</span></span> sub-tree sub-tree)))</span><br><span class="line">       tree))</span><br><span class="line">~~~                </span><br><span class="line">		</span><br><span class="line">#### 练习2.31</span><br><span class="line"></span><br><span class="line">将tree看成子树的序列，然后对这个序列应用map</span><br><span class="line"></span><br><span class="line">~~~scheme</span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">tree-map</span> proc tree)</span><br><span class="line">  (<span class="name"><span class="builtin-name">map</span></span> (<span class="name"><span class="builtin-name">lambda</span></span> (sub-tree) </span><br><span class="line">         (<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">pair?</span></span> sub-tree)</span><br><span class="line">           (<span class="name">tree-map</span> proc sub-tree)</span><br><span class="line">           (<span class="name">proc</span> sub-tree)))</span><br><span class="line">       tree))</span><br><span class="line">~~~       </span><br><span class="line"></span><br><span class="line">#### 练习2.32</span><br><span class="line"></span><br><span class="line">生成一个序列的所有子集，在C或其他语言里实现这个过程炒鸡麻烦，在算法书上还专门开了一节来讲这个问题，但是在Lisp下仅仅使用了几行代码即可实现。</span><br><span class="line"></span><br><span class="line">先看他给的代码，在let语句中，让rest作为除了序列第一个元素外剩下的元素的真子集，我们先不考虑这是如何实现的，先记住。</span><br><span class="line"></span><br><span class="line">我们先看例子的第一层，rest为((),(2),(3),(2,3))，也就是将这个真子集集合和剩下的真子集集合连接起来，而对比最终的结果，可以看出剩下的真子集集合中的每一个真子集都比rest中的多了一个1,由此我们就可以得到map中的过程，就是将rest中的每一个真子集都加上1即可</span><br><span class="line"></span><br><span class="line">~~~scheme</span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">subsets</span> s)</span><br><span class="line">  (<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">null?</span></span> s)</span><br><span class="line">      (<span class="name"><span class="builtin-name">list</span></span> '())</span><br><span class="line">      (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">rest</span> (<span class="name">subsets</span> (<span class="name"><span class="builtin-name">cdr</span></span> s))))</span><br><span class="line">        (<span class="name"><span class="builtin-name">append</span></span> rest (<span class="name"><span class="builtin-name">map</span></span> (<span class="name"><span class="builtin-name">lambda</span></span> (items)</span><br><span class="line">                            (<span class="name"><span class="builtin-name">cons</span></span> (<span class="name"><span class="builtin-name">car</span></span> s) items))</span><br><span class="line">                          rest)))))</span><br></pre></td></tr></table></figure>
+<h2 id="section-1">2.2.3</h2>
+<p>这一小节介绍了一个重要的设计思想——使用约定的界面，也就是几个过程之间处理的数据类型都是规定好的，最终将这些过程组合起来形成另一个复杂的过程。</p>
+<p>使用这种设计方式的好处就是可以得到几个独立的过程，因为他们处理的数据类型都是相同的，所以可以随意的组合来形成其他更为复杂的过程，大大提高的程序的灵活性。</p>
+<h3 id="序列操作">序列操作</h3>
+<h4 id="练习2.33">练习2.33</h4>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">; load accumulate</span></span><br><span class="line">(<span class="name"><span class="builtin-name">load</span></span> <span class="string">"seq_operations"</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name"><span class="builtin-name">map</span></span> proc sequence)</span><br><span class="line">        (<span class="name">accumulate</span> (<span class="name"><span class="builtin-name">lambda</span></span> (x y)</span><br><span class="line">                (<span class="name"><span class="builtin-name">cons</span></span> (<span class="name">proc</span> x) y))</span><br><span class="line">                nil</span><br><span class="line">                sequence))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">my-append</span> list1 list2)</span><br><span class="line">        (<span class="name">accumulate</span> cons</span><br><span class="line">                    list2</span><br><span class="line">                    list1))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name"><span class="builtin-name">length</span></span> sequence)</span><br><span class="line">        (<span class="name">accumulate</span> (<span class="name"><span class="builtin-name">lambda</span></span> (x y)</span><br><span class="line">                        (<span class="name"><span class="builtin-name">+</span></span> <span class="number">1</span> y))</span><br><span class="line">                        <span class="number">0</span></span><br><span class="line">                        sequence))</span><br><span class="line">~~~                  </span><br><span class="line"></span><br><span class="line">#### 练习2.34</span><br></pre></td></tr></table></figure>
+<p>; load accumulate (load &quot;seq_operations&quot;)</p>
+<p>(define (horner-eval x coefficient-sequence) (accumulate (lambda (this-coeff higher-terms) (+ this-coeff (* higher-terms x))) 0 coefficient-sequence)) <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### 练习2.35</span><br><span class="line"></span><br><span class="line">map过程生成了一个全是1的序列，每有一个树叶序列中就有一个1，accumulate即将他们加起来</span><br></pre></td></tr></table></figure> (load &quot;seq_operations&quot;)</p>
+<p>(define (count-leaves t) (accumulate + 0 (map (lambda (node) (if (pair? node) (count-leaves node) 1)) t))) <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### 练习2.36</span><br><span class="line"></span><br><span class="line">一开始没细看题目，以为是要将每个子序列的元素进行操作，后来在网上找了其他的题解才发现是对每个子序列相同位置的元素进行操作。</span><br><span class="line"></span><br><span class="line">~~~scheme</span><br><span class="line">(load &quot;seq_operations&quot;)</span><br><span class="line"></span><br><span class="line">(define (accumulate-n op init seqs)</span><br><span class="line">        (if (null? (car seqs))</span><br><span class="line">        nil</span><br><span class="line">        (cons (accumulate op init (map car seqs))</span><br><span class="line">                (accumulate-n op init (map cdr seqs)))))</span><br></pre></td></tr></table></figure></p>
+<h4 id="练习2.37">练习2.37</h4>
+<p>矩阵与向量相乘就是让矩阵中的每一行都与该向量相称组成一个新的向量，直接利用map过程即可。</p>
+<p>转置矩阵就是取出矩阵中每个向量中的第一个元素第组成一个新向量，然后第二个，第三个...所以可以直接利用accumulate-n过程。</p>
+<p>矩阵和矩阵相乘，就是让一个矩阵与另一个矩阵的转置矩阵中的每一个向量相乘</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">matrix-*-vector</span> m v)</span><br><span class="line">  (<span class="name"><span class="builtin-name">map</span></span> (<span class="name"><span class="builtin-name">lambda</span></span> (x)</span><br><span class="line">         (<span class="name">dot-product</span> x v))</span><br><span class="line">       m))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">transpose</span> mat)</span><br><span class="line">  (<span class="name">accumulate-n</span> cons '() mat))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">matrix-*-matrix</span> m n)</span><br><span class="line">  (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">cols</span> (<span class="name">transpose</span> n)))</span><br><span class="line">    (<span class="name"><span class="builtin-name">map</span></span> (<span class="name"><span class="builtin-name">lambda</span></span> (vec)</span><br><span class="line">           (<span class="name">matrix-*-vector</span> cols vec))</span><br><span class="line">         m)))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.39">练习2.39</h4>
+<p>这个题主要就是分清lambda表达式中的哪一个参数是结果哪一个是数，在fold-left中x作为结果，而y是一个数，也就是序列中的元素，所以要用list将其变为序列然后用appen连接起来，fold-right同理。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">load</span></span> <span class="string">"exercise2_38"</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name"><span class="builtin-name">reverse</span></span> sequence)</span><br><span class="line">  (<span class="name">fold-right</span> (<span class="name"><span class="builtin-name">lambda</span></span> (x y)</span><br><span class="line">                (<span class="name"><span class="builtin-name">append</span></span> y (<span class="name"><span class="builtin-name">list</span></span> x)))</span><br><span class="line">              nil</span><br><span class="line">              sequence))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name"><span class="builtin-name">reverse</span></span> sequence)</span><br><span class="line">  (<span class="name">fold-left</span> (<span class="name"><span class="builtin-name">lambda</span></span> (x y)</span><br><span class="line">               (<span class="name"><span class="builtin-name">append</span></span> (<span class="name"><span class="builtin-name">list</span></span> y) x))</span><br><span class="line">             nil</span><br><span class="line">             sequence))</span><br></pre></td></tr></table></figure>
+<h3 id="嵌套映射">嵌套映射</h3>
+<h4 id="练习2.40">练习2.40</h4>
+<p>这个题其实就是将原式子中的flatmap部分提取出来即可。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">load</span></span> <span class="string">"nested-mappings"</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">unique-pairs</span> n)</span><br><span class="line">  (<span class="name">flatmap</span> (<span class="name"><span class="builtin-name">lambda</span></span> (i)</span><br><span class="line">             (<span class="name"><span class="builtin-name">map</span></span> (<span class="name"><span class="builtin-name">lambda</span></span> (j)</span><br><span class="line">                    (<span class="name"><span class="builtin-name">list</span></span> i j))</span><br><span class="line">                  (<span class="name">enumerate-interval</span> <span class="number">1</span> (<span class="name"><span class="builtin-name">-</span></span> i <span class="number">1</span>))))</span><br><span class="line">           (<span class="name">enumerate-interval</span> <span class="number">1</span> n)))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">prime-sum-pairs</span> n)</span><br><span class="line">  (<span class="name"><span class="builtin-name">map</span></span> make-pair-sum</span><br><span class="line">       (<span class="name">filter</span> prime-sum?</span><br><span class="line">               (<span class="name">unique-pairs</span> n))))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.41">练习2.41</h4>
+<p>产生一个三元组就要映射两次，第一次根据i映射出j第二次根据映射的j映射出k，最后通过过滤器删除和不是s的三元组即可</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">ordered-triples-sum</span> n s)</span><br><span class="line">  (<span class="name">fileter</span> (<span class="name"><span class="builtin-name">lambda</span></span> (items) (<span class="name"><span class="builtin-name">=</span></span> (<span class="name">accumulate</span> + <span class="number">0</span> items) s))</span><br><span class="line">           (<span class="name">flatmap</span></span><br><span class="line">             (<span class="name"><span class="builtin-name">lambda</span></span> (i)</span><br><span class="line">               (<span class="name">flatmap</span> (<span class="name"><span class="builtin-name">lambda</span></span> (j)</span><br><span class="line">                          (<span class="name"><span class="builtin-name">map</span></span> (<span class="name"><span class="builtin-name">lambda</span></span> (k) (<span class="name"><span class="builtin-name">list</span></span> i j k))</span><br><span class="line">                               (<span class="name">enumerate-interval</span> <span class="number">1</span> (<span class="name"><span class="builtin-name">-</span></span> j <span class="number">1</span>))))</span><br><span class="line">                        (<span class="name">enumerate-interval</span> <span class="number">1</span> (<span class="name"><span class="builtin-name">-</span></span> i <span class="number">1</span>))))</span><br><span class="line">             (<span class="name">enumerate-interval</span> <span class="number">1</span> n))))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.42">练习2.42</h4>
+<p>这个好难，暂时还没想出来，想出来再填坑</p>
+<h2 id="section-2">2.2.4</h2>
+<p>这节介绍了一个简单的图形语言，为数据抽象和闭包提供了一个实例。</p>
+<p>首先介绍了画家这个元素，然后介绍了4个对画家的操作，根据这些过程又抽象出了一个高阶的过程，根据这个高阶过程创建出一些其他画家操作，而所有的这些过程都是用来操作画家的，操作的结果仍然是一个画家，根据这些生成的画家还可以进一步的定义更为高阶的过程。</p>
+<p>介绍完高阶的过程后又介绍了如何来实现画家，先为画家实现做了一个铺垫，介绍了如何实现一个框架。然后介绍了画家的具体实现，如果一个过程能够根据一个具体的做图过程并根据给定的框架做参数并在这个框架内画出一个图形，那这个过程就可以作为一个画家。书上的例子是根据基本过程drawline在框架中画出线段。最后介绍了画家的变化与组合，也就是如何实现反转画家之类的过程。</p>
+<p>在这个图形语言当中，画家被实现为一个接受框架为参数的过程，这就建立起一个强有力的抽象屏蔽，可以屏蔽底层的画图细节，不论是画直线还是填充灰度等等</p>
+<h4 id="练习2.45">练习2.45</h4>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">split</span> f g)</span><br><span class="line">  (<span class="name"><span class="builtin-name">lambda</span></span> (painter n)</span><br><span class="line">    (<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">=</span></span> n <span class="number">0</span>)</span><br><span class="line">      painter</span><br><span class="line">      (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">smaller</span> (((<span class="name">split</span> f g) painter (<span class="name"><span class="builtin-name">-</span></span> n <span class="number">1</span>)))))</span><br><span class="line">        (<span class="name">f</span> painter (<span class="name">g</span> smaller smaller))))))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.46">练习2.46</h4>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">make-vect</span> x y)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cons</span></span> x y))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">xcor-vect</span> v)</span><br><span class="line">  (<span class="name"><span class="builtin-name">car</span></span> v))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">ycor-vect</span> v)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cdr</span></span> v))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">add-vect</span> vector1 vector2)</span><br><span class="line">  (<span class="name">make-vect</span> (<span class="name"><span class="builtin-name">+</span></span> (<span class="name">xcor-vect</span> vector1)</span><br><span class="line">                (<span class="name">xcor-vect</span> vector2))</span><br><span class="line">             (<span class="name"><span class="builtin-name">+</span></span> (<span class="name">ycor-vect</span> vector1)</span><br><span class="line">                (<span class="name">ycor-vect</span> vector2))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">sub-vect</span> vector1 vector2)</span><br><span class="line">  (<span class="name">make-vect</span> (<span class="name"><span class="builtin-name">-</span></span> (<span class="name">xcor-vect</span> vector1)</span><br><span class="line">                (<span class="name">xcor-vect</span> vector2))</span><br><span class="line">             (<span class="name"><span class="builtin-name">-</span></span> (<span class="name">ycor-vect</span> vector1)</span><br><span class="line">                (<span class="name">ycor-vect</span> vector2))))</span><br><span class="line">                </span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">scale-vect</span> s v)</span><br><span class="line">  (<span class="name">make-vect</span> (<span class="name"><span class="builtin-name">*</span></span> s (<span class="name">xcor-vect</span> v))</span><br><span class="line">             (<span class="name"><span class="builtin-name">*</span></span> s (<span class="name">ycor-vect</span> v))))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.47">练习2.47</h4>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">;;  (list origin edge1 edge2)</span></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">origin-frame</span> frame)</span><br><span class="line">  (<span class="name"><span class="builtin-name">car</span></span> frame))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">edge1-frame</span> frame)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cadr</span></span> frame))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">edge2-frame</span> frame)</span><br><span class="line">  (<span class="name">caddr</span> frame))</span><br><span class="line"></span><br><span class="line"><span class="comment">;;  (cons origin (cons edge1 edge2))</span></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">origin-frame</span> frame)</span><br><span class="line">  (<span class="name"><span class="builtin-name">car</span></span> frame))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">edge1-frame</span> frame)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cadr</span></span> frame))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">edge2-frame</span> frame)</span><br><span class="line">  (<span class="name">cddr</span> frame))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.48">练习2.48</h4>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">make-segments</span> v1 v2)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cons</span></span> v1 v2))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">start-segment</span> s)</span><br><span class="line">  (<span class="name"><span class="builtin-name">car</span></span> s))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">end-segment</span> s)</span><br><span class="line">  (<span class="name"><span class="builtin-name">cdr</span></span> s))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.49">练习2.49</h4>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> lb (<span class="name">make-vect</span> <span class="number">0</span> <span class="number">0</span>))</span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> lt (<span class="name">make-vect</span> <span class="number">0</span> <span class="number">1</span>))</span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> rb (<span class="name">make-vect</span> <span class="number">1</span> <span class="number">0</span>))</span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> rt (<span class="name">make-vect</span> <span class="number">11</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">;; a)</span></span><br><span class="line"></span><br><span class="line">(<span class="name">segments-&gt;painter</span> (<span class="name"><span class="builtin-name">list</span></span></span><br><span class="line">                     (<span class="name">make-vect</span> lb lt)</span><br><span class="line">                     (<span class="name">make-vect</span> rb rt)</span><br><span class="line">                     (<span class="name">make-vect</span> lb rb)</span><br><span class="line">                     (<span class="name">make-vect</span> lt rt)))</span><br><span class="line"></span><br><span class="line"><span class="comment">;; b)</span></span><br><span class="line"></span><br><span class="line">(<span class="name">segments-&gt;painter</span> (<span class="name"><span class="builtin-name">list</span></span></span><br><span class="line">                     (<span class="name">make-vect</span> lt rb)</span><br><span class="line">                     (<span class="name">make-vect</span> lb rt)))  </span><br><span class="line">  </span><br><span class="line"><span class="comment">;; c)</span></span><br><span class="line"></span><br><span class="line"> (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">l</span> (<span class="name">make-vect</span> <span class="number">0</span> <span class="number">0.5</span>))</span><br><span class="line">       (<span class="name">t</span> (<span class="name">make-vect</span> <span class="number">0.5</span> <span class="number">1</span>))</span><br><span class="line">       (<span class="name">r</span> (<span class="name">make-vect</span> <span class="number">1</span> <span class="number">0.5</span>))</span><br><span class="line">       (<span class="name">b</span> (<span class="name">make-vect</span> <span class="number">0.5</span> <span class="number">0</span>)))</span><br><span class="line"></span><br><span class="line">(<span class="name">segments-&gt;painter</span> (<span class="name"><span class="builtin-name">list</span></span></span><br><span class="line">                     (<span class="name">make-segment</span> l t)</span><br><span class="line">                     (<span class="name">make-segment</span> t r)</span><br><span class="line">                     (<span class="name">make-segment</span> r b)</span><br><span class="line">                     (<span class="name">make-segment</span> b l))))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.50">练习2.50</h4>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">                                          </span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">flip-horiz</span> painter)</span><br><span class="line">  (<span class="name">transfor-painter</span> painte</span><br><span class="line">                    (<span class="name">make-rect</span> <span class="number">1</span> <span class="number">0</span>)</span><br><span class="line">                    (<span class="name">make-rect</span> <span class="number">1</span> <span class="number">1</span>)</span><br><span class="line">                    (<span class="name">make-rect</span> <span class="number">0</span> <span class="number">0</span>)))</span><br><span class="line"></span><br><span class="line"><span class="comment">;; 180</span></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">flip-180</span> painter)</span><br><span class="line">  (<span class="name">transfor-painter</span> painter</span><br><span class="line">                    (<span class="name">make-rect</span> <span class="number">1</span> <span class="number">1</span>)</span><br><span class="line">                    (<span class="name">make-rect</span> <span class="number">0</span> <span class="number">1</span>)</span><br><span class="line">                    (<span class="name">make-rect</span> <span class="number">1</span> <span class="number">0</span>)))</span><br><span class="line"></span><br><span class="line"><span class="comment">;; 270</span></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">flip-270</span> painter)</span><br><span class="line">  (<span class="name">transfor-painter</span> painter</span><br><span class="line">                    (<span class="name">make-rect</span> <span class="number">0</span> <span class="number">1</span>)</span><br><span class="line">                    (<span class="name">make-rect</span> <span class="number">0</span> <span class="number">0</span>)</span><br><span class="line">                    (<span class="name">make-rect</span> <span class="number">1</span> <span class="number">1</span>)))</span><br></pre></td></tr></table></figure>
+<h4 id="练习2.51">练习2.51</h4>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">below</span> painter1 painter2)</span><br><span class="line">  (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">split-point</span> (<span class="name">make-vect</span> <span class="number">0.0</span> <span class="number">0.5</span>)))</span><br><span class="line">    ((<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">paint-up</span></span><br><span class="line">             (<span class="name">transform-painter</span> painter2</span><br><span class="line">                                split-point</span><br><span class="line">                                (<span class="name">make-vect</span> <span class="number">0.0</span> <span class="number">1.0</span>)</span><br><span class="line">                                (<span class="name">make-vect</span> <span class="number">1.0</span> <span class="number">0.5</span>)))</span><br><span class="line">           (<span class="name">paint-bottom</span></span><br><span class="line">             (<span class="name">transform-painter</span> painter1</span><br><span class="line">                                (<span class="name">make-vect</span> <span class="number">0.0</span> <span class="number">0.0</span>)</span><br><span class="line">                                split-point</span><br><span class="line">                                (<span class="name">make-vect</span> <span class="number">1.0</span> <span class="number">0.0</span>))))</span><br><span class="line">       (<span class="name"><span class="builtin-name">lambda</span></span> (frame</span><br><span class="line">                 (paint-up frame)</span><br><span class="line">                 (paint-down frame)))))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">below</span> painter1 painter2)</span><br><span class="line">  (<span class="name">rotate270</span> (<span class="name">beside</span> (<span class="name">rorate90</span> painter2) (<span class="name">rotate90</span> painter1))))</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SICP/" rel="tag"># SICP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/19/2016-08-18-git-and-github/" rel="next" title="git与github">
+                <i class="fa fa-chevron-left"></i> git与github
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/14/2016-09-14-dedicated-to-the-spirit-that-lives-in-the-computer(5)/" rel="prev" title="SICP学习笔记（五）">
+                SICP学习笔记（五） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#section"><span class="nav-number">1.</span> <span class="nav-text">2.2.1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#表操作"><span class="nav-number">1.1.</span> <span class="nav-text">表操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.17"><span class="nav-number">1.1.1.</span> <span class="nav-text">练习2.17</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.18"><span class="nav-number">1.1.2.</span> <span class="nav-text">练习2.18</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.19"><span class="nav-number">1.1.3.</span> <span class="nav-text">练习2.19</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.20"><span class="nav-number">1.1.4.</span> <span class="nav-text">练习2.20</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对表的映射"><span class="nav-number">1.2.</span> <span class="nav-text">对表的映射</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.21"><span class="nav-number">1.2.1.</span> <span class="nav-text">练习2.21</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.22"><span class="nav-number">1.2.2.</span> <span class="nav-text">练习2.22</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.23"><span class="nav-number">1.2.3.</span> <span class="nav-text">练习2.23</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#层次型结构"><span class="nav-number">2.</span> <span class="nav-text">层次型结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.26"><span class="nav-number">2.0.1.</span> <span class="nav-text">练习2.26</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.27"><span class="nav-number">2.0.2.</span> <span class="nav-text">练习2.27</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.28"><span class="nav-number">2.0.3.</span> <span class="nav-text">练习2.28</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.29"><span class="nav-number">2.0.4.</span> <span class="nav-text">练习2.29</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.30"><span class="nav-number">2.0.5.</span> <span class="nav-text">练习2.30</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-1"><span class="nav-number">3.</span> <span class="nav-text">2.2.3</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#序列操作"><span class="nav-number">3.1.</span> <span class="nav-text">序列操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.33"><span class="nav-number">3.1.1.</span> <span class="nav-text">练习2.33</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.37"><span class="nav-number">3.1.2.</span> <span class="nav-text">练习2.37</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.39"><span class="nav-number">3.1.3.</span> <span class="nav-text">练习2.39</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#嵌套映射"><span class="nav-number">3.2.</span> <span class="nav-text">嵌套映射</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.40"><span class="nav-number">3.2.1.</span> <span class="nav-text">练习2.40</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.41"><span class="nav-number">3.2.2.</span> <span class="nav-text">练习2.41</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.42"><span class="nav-number">3.2.3.</span> <span class="nav-text">练习2.42</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-2"><span class="nav-number">4.</span> <span class="nav-text">2.2.4</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.45"><span class="nav-number">4.0.1.</span> <span class="nav-text">练习2.45</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.46"><span class="nav-number">4.0.2.</span> <span class="nav-text">练习2.46</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.47"><span class="nav-number">4.0.3.</span> <span class="nav-text">练习2.47</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.48"><span class="nav-number">4.0.4.</span> <span class="nav-text">练习2.48</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.49"><span class="nav-number">4.0.5.</span> <span class="nav-text">练习2.49</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.50"><span class="nav-number">4.0.6.</span> <span class="nav-text">练习2.50</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2.51"><span class="nav-number">4.0.7.</span> <span class="nav-text">练习2.51</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

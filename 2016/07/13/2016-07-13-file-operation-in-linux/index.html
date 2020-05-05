@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="linux,File Operation," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="介绍Linux中的有关文件操作的系统调用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux中文件操作相关函数">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;07&#x2F;13&#x2F;2016-07-13-file-operation-in-linux&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="介绍Linux中的有关文件操作的系统调用">
+<meta property="article:published_time" content="2016-07-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2017-01-21T04:50:08.000Z">
+<meta property="article:author" content="Gummary">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="File Operation">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/07/13/2016-07-13-file-operation-in-linux/"/>
+
+
+
+
+
+  <title>Linux中文件操作相关函数 | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/07/13/2016-07-13-file-operation-in-linux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux中文件操作相关函数</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-07-13T00:00:00+08:00">
+                2016-07-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/07/13/2016-07-13-file-operation-in-linux/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2016/07/13/2016-07-13-file-operation-in-linux/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近做的操作系统实训好多都用到了文件操作，比如对proc文件的操作，对设备文件的操作等等，结果每次用的时候都要上网查一下，比较慢，所以就想自己整理一下，内容大约都是翻译自man帮助文档。</p>
+<h1 id="open">Open</h1>
+<h2 id="头文件与函数原型">头文件与函数原型</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">open</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *pathname, <span class="keyword">int</span> flags)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">open</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *pathname, <span class="keyword">int</span> flags, <span class="keyword">mode_t</span> mode)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">creat</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *pathname, <span class="keyword">mode_t</span> mode)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">openat</span><span class="params">(<span class="keyword">int</span> dirfd, <span class="keyword">const</span> <span class="keyword">char</span> *pathname, <span class="keyword">int</span> flags)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">openat</span><span class="params">(<span class="keyword">int</span> dirfd, <span class="keyword">const</span> <span class="keyword">char</span> *pathname, <span class="keyword">int</span> flags, <span class="keyword">mode_t</span> mode)</span></span>;</span><br></pre></td></tr></table></figure>
+<h2 id="介绍">介绍</h2>
+<p><strong>open</strong>函数打开由pathname指定的文件名，返回一个文件描述符。文件描述符是一个非负的整数，这个整数是当前进程所使用的最小文件描述符。文件描述符通常用于后续的I/O操作函数来指向这个打开的文件。</p>
+<p>文件的偏移量被设置到文件的开头。</p>
+<p>调用<strong>open</strong>函数会创建一个文件描述结构，存放在系统内的一个打开文件的表内。这个结构记录了文件的偏移量和文件的状态标志。文件描述符是对文件描述结构的一个引用。如果pathname再打开文件后被删除了或指向了其他的文件，文件描述符不受影响。</p>
+<p>参数中的<strong>flags</strong>必须包含下列的几个标志之一：<strong>O_RDONLY</strong>, <strong>O_WRONLY</strong>, 和 <strong>O_RDWR</strong>。分别是以只读，只写和读写方式打开文件。</p>
+<p>还有一些其他的标志，不同的flag可以使用or结合。下面介绍几个常用的标志。</p>
+<p>O_APPEND</p>
+<p>以追加的形式访问，文件的读写指针指向文件的最后。 在NFS文件系统中，如果有多个程序同时对一个文件进行追加读写操作，可能会导致文件损坏。</p>
+<p>O_CREAT</p>
+<p>如果文件不存在那么创建这个文件，uid被设置为当前进程的uid，gid被设置为当前进程得gid或父目录的gid。mode参数指定了创建文件的属性，如果<strong>flags</strong>中包括<strong>O_CREAT</strong> 或 <strong>O_TMPFILE</strong>，那么必须要有mode参数，如果没有这个两个参数，那么mode被忽略。</p>
+<p>mode参数可以是下列的任意一个：</p>
+<p>S_IRUSR 00400 user has read permission</p>
+<p>S_IWUSR 00200 user has write permission</p>
+<p>S_IXUSR 00100 user has execute permission</p>
+<p>S_IRWXG 00070 group has read, write, and execute permission</p>
+<p>S_IRGRP 00040 group has read permission</p>
+<p>S_IWGRP 00020 group has write permission</p>
+<p>S_IXGRP 00010 group has execute permission</p>
+<p>S_IRWXO 00007 others have read, write, and execute permission</p>
+<p>S_IROTH 00004 others have read permission</p>
+<p>S_IWOTH 00002 others have write permission</p>
+<p>S_IXOTH 00001 others have execute permission</p>
+<p>Linux还可以使用下列的标志：</p>
+<p>S_ISUID 0004000 set-user-ID bit</p>
+<p>S_ISGID 0002000 set-group-ID bit (see stat(2))</p>
+<p>S_ISVTX 0001000 sticky bit (see stat(2))</p>
+<p>O_EXCL</p>
+<p>设置这个标志位确保创建文件，如果<strong>pathname</strong>已经存在并设置了<strong>O_CREAT</strong>标志，那么<strong>open</strong>函数会调用失败。</p>
+<p>如果<strong>pathname</strong>指向的是一个连接文件，那么即使是设置了这两个文件，那么不管连接指向哪里都会失败。</p>
+<h2 id="返回值">返回值</h2>
+<p>open，openat(),creat()函数返回的均是新的文件描述符，如果返回-1则发生了错误，errno也会被设置为合适的值。</p>
+<h1 id="read">Read</h1>
+<h2 id="头文件与函数原型-1">头文件与函数原型</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ssize_t</span> <span class="built_in">read</span>(<span class="keyword">int</span> fd, <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> count);</span><br></pre></td></tr></table></figure>
+<h2 id="介绍-1">介绍</h2>
+<p>read函数从由<strong>fd</strong>指向的文件中读取<strong>count</strong>个字节存放到buf中。</p>
+<p>如果文件支持seek，则<strong>read</strong>函数将文件的读写指针将加上<strong>count</strong>个字节。如果读写指针位于文件的最后，那么read会返回0。</p>
+<h2 id="返回值-1">返回值</h2>
+<p>如果读取成功，<strong>read</strong>函数会返回读取的字节数，文件的读取位置也会增加相应的值。</p>
+<p>如果发生错误会返回-1，<strong>errno</strong>也会被设置为相应的值。</p>
+<h1 id="write">Write</h1>
+<h2 id="头文件与函数原型-2">头文件与函数原型</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ssize_t</span> <span class="built_in">write</span>(<span class="keyword">int</span> fd, <span class="keyword">const</span> <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> count);</span><br></pre></td></tr></table></figure>
+<h2 id="介绍-2">介绍</h2>
+<p>从由buf指向的缓冲区中读取最多count个字节的数据写入到fd指向的文件。write函数也会改变文件的读写指针，位置的增量为实际写入的字节数量。</p>
+<h2 id="返回值-2">返回值</h2>
+<p>写入成功返回写入的字节数，发生错误返回-1，errno也会设置为合适的值。</p>
+<h1 id="lseek">lseek</h1>
+<h2 id="头文件及函数原型">头文件及函数原型</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">off_t</span> lseek(<span class="keyword">int</span> fd, <span class="keyword">off_t</span> offset, <span class="keyword">int</span> whence);</span><br></pre></td></tr></table></figure>
+<h2 id="介绍-3">介绍</h2>
+<p><strong>lseek</strong>函数将修改文件的读写指针位置。改变的的值取决于offset和whence这两个值。</p>
+<p>whence可以是以下的的值：</p>
+<p><strong>SEEK_SET</strong></p>
+<p>文件的读写指针位于<strong>offset</strong>处</p>
+<p><strong>SEEK_CUR</strong></p>
+<p>文件的读写指针被设置到当前的位置加offset处</p>
+<p><strong>SEEK_END</strong></p>
+<p>文件的读写指针被设置到文件的最后加offset处</p>
+<p>移动的位置允许超过文件的大小，但是文件的大小不会改变，如果后来写入了数据，那么中间的hole会被设置为'\0'</p>
+<h2 id="返回值-3">返回值</h2>
+<p>如果调用成功，那么返回的位置是移动成功后的位置，如果移动失败返回-1，errno也会设置为相应的值。</p>
+<h1 id="close">Close</h1>
+<h2 id="头文件与函数原型-3">头文件与函数原型</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">close</span><span class="params">(<span class="keyword">int</span> fd)</span></span>;</span><br></pre></td></tr></table></figure>
+<h2 id="介绍-4">介绍</h2>
+<p><strong>close</strong>()关闭一个文件，fd不会指向任何的文件。如果fd是最后一个指向文件的文件描述符，则这个文件描述会被删除。</p>
+<h2 id="返回值-4">返回值</h2>
+<p>如果返回0则执行成功，否则，返回-1，errno也会设定为合适的值</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+            <a href="/tags/File-Operation/" rel="tag"># File Operation</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/05/2016-07-05-seq_file-interface-in-linux/" rel="next" title="Linux中的proc伪文件系统和seq_file接口">
+                <i class="fa fa-chevron-left"></i> Linux中的proc伪文件系统和seq_file接口
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/13/2016-07-13-memory-managment-in-linux/" rel="prev" title="Linux中的内存管理机制">
+                Linux中的内存管理机制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#open"><span class="nav-number">1.</span> <span class="nav-text">Open</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#头文件与函数原型"><span class="nav-number">1.1.</span> <span class="nav-text">头文件与函数原型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍"><span class="nav-number">1.2.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#返回值"><span class="nav-number">1.3.</span> <span class="nav-text">返回值</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#read"><span class="nav-number">2.</span> <span class="nav-text">Read</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#头文件与函数原型-1"><span class="nav-number">2.1.</span> <span class="nav-text">头文件与函数原型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍-1"><span class="nav-number">2.2.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#返回值-1"><span class="nav-number">2.3.</span> <span class="nav-text">返回值</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#write"><span class="nav-number">3.</span> <span class="nav-text">Write</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#头文件与函数原型-2"><span class="nav-number">3.1.</span> <span class="nav-text">头文件与函数原型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍-2"><span class="nav-number">3.2.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#返回值-2"><span class="nav-number">3.3.</span> <span class="nav-text">返回值</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#lseek"><span class="nav-number">4.</span> <span class="nav-text">lseek</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#头文件及函数原型"><span class="nav-number">4.1.</span> <span class="nav-text">头文件及函数原型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍-3"><span class="nav-number">4.2.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#返回值-3"><span class="nav-number">4.3.</span> <span class="nav-text">返回值</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#close"><span class="nav-number">5.</span> <span class="nav-text">Close</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#头文件与函数原型-3"><span class="nav-number">5.1.</span> <span class="nav-text">头文件与函数原型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍-4"><span class="nav-number">5.2.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#返回值-4"><span class="nav-number">5.3.</span> <span class="nav-text">返回值</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

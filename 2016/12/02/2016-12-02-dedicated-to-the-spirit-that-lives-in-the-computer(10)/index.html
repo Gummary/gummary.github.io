@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="SICP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="第5.1,5.2,5.3节的学习笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SICP学习笔记（十）">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;12&#x2F;02&#x2F;2016-12-02-dedicated-to-the-spirit-that-lives-in-the-computer(10)&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="第5.1,5.2,5.3节的学习笔记">
+<meta property="og:image" content="https:&#x2F;&#x2F;mitpress.mit.edu&#x2F;sicp&#x2F;full-text&#x2F;book&#x2F;ch5-Z-G-7.gif">
+<meta property="og:image" content="https:&#x2F;&#x2F;mitpress.mit.edu&#x2F;sicp&#x2F;full-text&#x2F;book&#x2F;ch5-Z-G-8.gif">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;C455AoL.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;sd0a4oO.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;V65n6rw.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;or8AVTN.png">
+<meta property="article:published_time" content="2016-12-01T16:00:00.000Z">
+<meta property="article:modified_time" content="2017-01-21T04:50:08.000Z">
+<meta property="article:author" content="Gummary">
+<meta property="article:tag" content="SICP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;mitpress.mit.edu&#x2F;sicp&#x2F;full-text&#x2F;book&#x2F;ch5-Z-G-7.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/02/2016-12-02-dedicated-to-the-spirit-that-lives-in-the-computer(10)/"/>
+
+
+
+
+
+  <title>SICP学习笔记（十） | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/02/2016-12-02-dedicated-to-the-spirit-that-lives-in-the-computer(10)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SICP学习笔记（十）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-02T00:00:00+08:00">
+                2016-12-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SICP/" itemprop="url" rel="index">
+                    <span itemprop="name">SICP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/12/02/2016-12-02-dedicated-to-the-spirit-that-lives-in-the-computer(10)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2016/12/02/2016-12-02-dedicated-to-the-spirit-that-lives-in-the-computer(10)/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><em>不要问我4.3 4.4哪去了，被吃掉了Orz</em></p>
+<h1 id="寄存器机器">5.1 寄存器机器</h1>
+<p>利用Lisp描述了一部计算机器是如何运作的，规定了7种机器语言，通过这七条机器语言就可以完成lisp程序。</p>
+<p>函数的调用使用堆栈来实现，每调用一次子程序就将当前pc的值压如栈中。子程序调用结束后弹出栈顶元素，执行该指令。</p>
+<p>通过栈也可以完成递归调用，不过此时要将会被改变的值也压入栈中。</p>
+<h1 id="寄存器机器的模拟器">5.2 寄存器机器的模拟器</h1>
+<p>这个模拟器机器的作用就是根据给定的寄存器机器的指令序列，模拟这些指令的执行。</p>
+<p>构造一个机器模拟器是通过make-machine完成，该操作以寄存器的名称，操作的名称及操作序列为参数。执行的操作为</p>
+<ol type="1">
+<li>为所有的寄存器都分配空间。</li>
+<li>将操作安装到机器中，为操作序列提供具体的操作过程。</li>
+<li>根据上一步安装的操作，将操作序列翻译成机器可以一些可以执行的操作。</li>
+</ol>
+<p>第一步第二步只需将所有的寄存器和操作分别组成寄存器表和操作表即可。</p>
+<p>第三步需要分两步，第一步为汇编程序，扫描控制器序列中的每一行，构造出指令列表和标号列表。第二步为指令列表中的每一项都生成一个相应的执行过程。</p>
+<p>经过第三部分析之后就将机器指令分析为一些lisp可以执行的操作了，调用excute即可完成相应的操作。</p>
+<h1 id="存储分配和废料收集">5.3 存储分配和废料收集</h1>
+<h2 id="存储分配">存储分配</h2>
+<p>计算机的内存是由一个个的存储单元组成的，可以根据序号访问每一个存储单元，而且访问每一个存储单元所花费的时间与序号的大小无关。</p>
+<p>向量使用一些存储单元组成的数据结构，可以利用vector-ref实现对向量指定序号的元素进行访问。利用vector-set!对指定元素进行赋值。</p>
+<p>我们可以利用两个向量实现Lisp序对结构的表示。</p>
+<p><img src="https://mitpress.mit.edu/sicp/full-text/book/ch5-Z-G-7.gif" /></p>
+<p>注意其中的p5,n3,e0均为指针，指针中包含了有关数据类型的信息。</p>
+<h2 id="废料收集">废料收集</h2>
+<p>实现废料收集的目的是利用有限的内存来实现无穷存储的假象。</p>
+<h3 id="停止并复制废料收集的基本思想">停止并复制废料收集的基本思想</h3>
+<p>将存储器分成两部分，一部分称为“工作存储区”，另一部分称为”自由存储区“。首先在工作存储区为数据分配内存，当工作存储区满了之后，将其中所有有用的序对都复制到自由存储区，然后交换两个存储区的角色。</p>
+<h3 id="停止病复制废料收集的实现">停止病复制废料收集的实现</h3>
+<p>在系统中设置一个root寄存器，通过root寄存器可以访问所有可访问的数据，剩下的数据就属于废料。实现的方法是把所有寄存器的内容都放到一个表中，然后让root指向这个表。</p>
+<p>将系统分成两对向量，分别为the-cars、the-cdrs和new-cars、new-cdrs。前者为工作存储区，后者为空闲存储区。下图为废料收集前和废料收集后存储区重新分配的过程。</p>
+<p><img src="https://mitpress.mit.edu/sicp/full-text/book/ch5-Z-G-8.gif" /></p>
+<p>废料收集开始前首先设置两个指针，free和scan。分别指向新存储区的起始位置。然后将root所指向的位置的内容复制到新存储区的起始位置，令root指向新存储区的起始位置。对原来root中的car设置为broken-heart，表示当前的内容已经被移走，然后将将cdr指向新的存储位置。下图中tn表示工作存储区的内容，下图中tn表示工作存储的指针，nn表示空闲存储区的指针。</p>
+<p>root,scan,free的值分别为0,0,1</p>
+<figure>
+<img src="http://i.imgur.com/C455AoL.png" alt="g0" /><figcaption>g0</figcaption>
+</figure>
+<p><img src="http://i.imgur.com/sd0a4oO.png" /></p>
+<p>拷贝完root的内容之后即进入废料收集程序的基本循环。scan现在指向的是已经移入到空闲存储区内的指针，但是指针所指向的仍然为工作存储区的某一个存储单元，现在就要把该内容复制到空闲存储区内，复制到一个新的位置后更新scan所在的存储单元的指针内容。</p>
+<p>复制工作存储区的内容时可能会遇到两种情况。第一种是这一对象已经被移走，即the-car的内容为broken-heart,the-cdr为前向指针，指向新的存储位置，此时将scan赋值为前向指针的内容，并更新原scan所指的序对的内容为新scan的值。</p>
+<p>如果没有移走，则将the-car和the-cdr的内容复制到free的位置，然后更新scan内的值，更新free的值。</p>
+<p>下面两个图表示的是第一种情况，结束后root，scan，free的值为0,0,2</p>
+<p><img src="http://i.imgur.com/V65n6rw.png" /></p>
+<p><img src="http://i.imgur.com/or8AVTN.png" /></p>
+<p>基本过程结束的标志就是scan超过free指针。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SICP/" rel="tag"># SICP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/29/2016-11-29-symbol-tables-and-bst/" rel="next" title="符号表与二叉查找树">
+                <i class="fa fa-chevron-left"></i> 符号表与二叉查找树
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/21/2017-01-21-slide-verify-code/" rel="prev" title="geetest验证码破解">
+                geetest验证码破解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#寄存器机器"><span class="nav-number">1.</span> <span class="nav-text">5.1 寄存器机器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#寄存器机器的模拟器"><span class="nav-number">2.</span> <span class="nav-text">5.2 寄存器机器的模拟器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#存储分配和废料收集"><span class="nav-number">3.</span> <span class="nav-text">5.3 存储分配和废料收集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#存储分配"><span class="nav-number">3.1.</span> <span class="nav-text">存储分配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#废料收集"><span class="nav-number">3.2.</span> <span class="nav-text">废料收集</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#停止并复制废料收集的基本思想"><span class="nav-number">3.2.1.</span> <span class="nav-text">停止并复制废料收集的基本思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#停止病复制废料收集的实现"><span class="nav-number">3.2.2.</span> <span class="nav-text">停止病复制废料收集的实现</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

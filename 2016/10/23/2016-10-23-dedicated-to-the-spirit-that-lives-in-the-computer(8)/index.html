@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="SICP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="第3.4,3.5节的学习笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SICP学习笔记（八）">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;10&#x2F;23&#x2F;2016-10-23-dedicated-to-the-spirit-that-lives-in-the-computer(8)&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="第3.4,3.5节的学习笔记">
+<meta property="og:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;wRvabNw.png">
+<meta property="article:published_time" content="2016-10-22T16:00:00.000Z">
+<meta property="article:modified_time" content="2017-01-21T04:50:08.000Z">
+<meta property="article:author" content="Gummary">
+<meta property="article:tag" content="SICP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;i.imgur.com&#x2F;wRvabNw.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/10/23/2016-10-23-dedicated-to-the-spirit-that-lives-in-the-computer(8)/"/>
+
+
+
+
+
+  <title>SICP学习笔记（八） | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/10/23/2016-10-23-dedicated-to-the-spirit-that-lives-in-the-computer(8)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SICP学习笔记（八）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-23T00:00:00+08:00">
+                2016-10-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SICP/" itemprop="url" rel="index">
+                    <span itemprop="name">SICP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/10/23/2016-10-23-dedicated-to-the-spirit-that-lives-in-the-computer(8)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2016/10/23/2016-10-23-dedicated-to-the-spirit-that-lives-in-the-computer(8)/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="并发时间是一个本质问题">3.4 并发：时间是一个本质问题</h2>
+<p>如果将计算过程分解成一些片段，片段之间联系较少，那么就可以使这些片段相对独立的运行，分配给不同的CPU，提高运算的速度，但是如果这里面包含了赋值语句，那么就可能会使问题变得更复杂。</p>
+<h3 id="并发系统中时间的性质">3.4.1 并发系统中时间的性质</h3>
+<p>在同一时间多个计算过程对一个变量执行修改操作，那么就有可能因为执行顺序的不同或命令产生交错而产生错误的结果。</p>
+<p>使用了set!的计算过程还会因为各个赋值的顺序不同产生不同的结果。</p>
+<p>要使并发程序正确执行，就要对并发程序做一些限制</p>
+<ul>
+<li>修改任意共享状态变量的的两个操作都不允许同时执行。</li>
+<li>保证并发系统产生的结果与各个进程按<strong>某种方式</strong>顺序执行产生的结果相同。</li>
+</ul>
+<h3 id="控制并发的机制">3.4.2 控制并发的机制</h3>
+<p>做出一些一般性的机制，使我们可能限制并行程序之间交错的情况，以保证是程序具有正确的行为方式。</p>
+<p>串行化组就是是一个过程的集合，在同一时间内只有一个在集合内的过程可以执行。如果当前有一个位于该集合内的过程在执行，而另一个进程企图执行该集合内的某一个过程，那么他必须等到前一个过程执行完。</p>
+<p>对于只有一个共享变量的情况来说，把访问该变量和修改该变量放到同一个过程中，然后把所有这种过程放到同一个串行化组中，就可以保证读取该变量和修改该变量的操作不会并行的执行。</p>
+<p>如果有多个共享变量，那么问题就会更加复杂，必须要将这多个共享变量都串行化在一起。</p>
+<p>实现串行化的方法是使用mutex。mutex可以被获取或释放，mutex被获取之后，任何想要获取该mutex的其他过程必须等该mutex被释放才可以。所以在运行一个过程p之前，先令p获取mutex，在p运行结束之后释放该mutex，这就保障了不会有其他过程与p交叉执行。</p>
+<p>mutex可以用true和false来实现，mutex初始化为false，获取一个mutex就是将其变true，释放就是改为false，但是执行修改的操作必须是原子的，不能被其他过程所中断。</p>
+<p>使用串行化组还可能会导致死锁，即两个过程之间互相等待，解决死锁的方式之一是为每一个共享的资源编号，每次都从最低编号获取。</p>
+<p>如果无法避免死锁那么就必须有一种退出死锁的方式。</p>
+<p>下图节选自<em>Operating System Concept(9th)</em>，这是在操作系统中解决思索的三种方法，更多细节可查看该书。</p>
+<figure>
+<img src="http://i.imgur.com/wRvabNw.png" alt="Screenshot from 2016-10-21 08-46-05" /><figcaption>Screenshot from 2016-10-21 08-46-05</figcaption>
+</figure>
+<h2 id="流">3.5 流</h2>
+<p>通过流可以构造出一个时间的序列，其中的每一个元素都是在某一时间的值，这样我们就可以只关注这个时间的序列就可以不关注其中值的变化，也就减轻了复制带来的负载性。</p>
+<h3 id="流作为延时的表">3.5.1 流作为延时的表</h3>
+<p>构造流的基本思想是构造一个特殊的表结构，这个表中只有部分已经构造出来了，另一部分还未完成，如果某个过程需要未构造出来的那部分数据，那么流会自动的计算出需要的部分，而这个交互对使用流的过程来说是完全透明的。从过程的角度来看，整个流仿佛已经全部构造出来了。</p>
+<p>实现流的一种方式是使用cons构造一个序对，序对的第一个元素已经求出相应的值，而cdr只是一个允诺，允诺在使用cdr时会计算出这部分。</p>
+<p>对于延时求值，可以将其看做由需要驱动的程序设计，流处理的每个阶段都仅仅活动到满足下一阶段需要的程度。</p>
+<p>流的一种优化是采用记忆化过程，记录流中已经计算过的值。</p>
+<h3 id="无穷流">3.5.2 无穷流</h3>
+<p>通过延时求值，我们可以让流永远的构造下去，产生无穷流。</p>
+<p>描述流的一种方式是通过构造出一个过程来显示的构造流，另一种方式是在将一个流作为延时求值的参数隐式的构造出一个另一个流。</p>
+<h3 id="流计算模式的使用">3.5.3 流计算模式的使用</h3>
+<p>利用流我们可以将一个迭代的过程转化成一个时间序列，这个序列中的每一个元素都是该序列在某一时刻的值。</p>
+<p>我们也可以将一个嵌套循环推广到无穷流，用于产生一些普通循环无法完成的工作。</p>
+<p>对于信号处理系统来说，如果用流来表示信号，那流中的值可以表示为一个信号在顺序的一系列时间间隔上的值。</p>
+<h3 id="流和延时求值">3.5.4 流和延时求值</h3>
+<p>如果在计算过程中需要某一个未计算出的值，可能会需要显示的调用delay过程来延时对该值的使用。</p>
+<p>这就有可能产生两个功能相同但是参数不同的过程，避免这种情况的方式之一是所有的过程都使用延时参数，这就使过程变成了规范序求值，但是这也会有一些副作用。</p>
+<h3 id="函数式程序的模块化和对象的模块化">3.5.5 函数式程序的模块化和对象的模块化</h3>
+<p>引进赋值的主要收益是可以增项系统的模块化，将一些状态封装到一些局部变量里，而流模型又可以提供等价的模块化而又不用赋值。</p>
+<p>时间的函数式编程是用一种数据结构来模拟时间，用函数来操作这个结构，这样做可以使函数变成一个良好的数学函数，输出完全由输入决定，但是这个函数又是有状态的，因为模拟的时间为这个函数赋予了状态。</p>
+<p>使用函数式编程可以有效的解决并发，但是在不同对象交互方面又会引入新的问题。</p>
+<h2 id="碎碎念">碎碎念</h2>
+<p>终于把第三章看完了，收获真的很大，对最近的java课程设计有很大帮助。第三章最后的几道题还没做，有的是因为忘了背景，比如微分方程的求解，积分器的概念等等，有的是知道思路但是不想写了Orz,后来找个时间补一下吧。</p>
+<p>至于第四章和第五章，尽力在这个学期看完吧，因为还有CSAPP没翻，算法也在看，而我同时看几本书的效率好低，而且还有计算机组成原理快结课了要复习，web程序设计还有课程设计(╯‵□′)╯︵┻━┻，加油吧w</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SICP/" rel="tag"># SICP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/27/2016-09-27-dedicated-to-the-spirit-that-lives-in-the-computer(7)/" rel="next" title="SICP学习笔记（七）">
+                <i class="fa fa-chevron-left"></i> SICP学习笔记（七）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/25/2016-10-25-java-nullpointexception/" rel="prev" title="NullPointException in actionPerformed">
+                NullPointException in actionPerformed <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#并发时间是一个本质问题"><span class="nav-number">1.</span> <span class="nav-text">3.4 并发：时间是一个本质问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#并发系统中时间的性质"><span class="nav-number">1.1.</span> <span class="nav-text">3.4.1 并发系统中时间的性质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#控制并发的机制"><span class="nav-number">1.2.</span> <span class="nav-text">3.4.2 控制并发的机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#流"><span class="nav-number">2.</span> <span class="nav-text">3.5 流</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#流作为延时的表"><span class="nav-number">2.1.</span> <span class="nav-text">3.5.1 流作为延时的表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无穷流"><span class="nav-number">2.2.</span> <span class="nav-text">3.5.2 无穷流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#流计算模式的使用"><span class="nav-number">2.3.</span> <span class="nav-text">3.5.3 流计算模式的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#流和延时求值"><span class="nav-number">2.4.</span> <span class="nav-text">3.5.4 流和延时求值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数式程序的模块化和对象的模块化"><span class="nav-number">2.5.</span> <span class="nav-text">3.5.5 函数式程序的模块化和对象的模块化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#碎碎念"><span class="nav-number">3.</span> <span class="nav-text">碎碎念</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

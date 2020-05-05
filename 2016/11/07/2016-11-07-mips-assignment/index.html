@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="MIPS,Assembler," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="两道简单的MIPS汇编程序设计题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MIPS汇编程序设计">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;11&#x2F;07&#x2F;2016-11-07-mips-assignment&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="两道简单的MIPS汇编程序设计题">
+<meta property="article:published_time" content="2016-11-06T16:00:00.000Z">
+<meta property="article:modified_time" content="2017-01-21T04:50:08.000Z">
+<meta property="article:author" content="Gummary">
+<meta property="article:tag" content="MIPS">
+<meta property="article:tag" content="Assembler">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/07/2016-11-07-mips-assignment/"/>
+
+
+
+
+
+  <title>MIPS汇编程序设计 | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/07/2016-11-07-mips-assignment/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MIPS汇编程序设计</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-07T00:00:00+08:00">
+                2016-11-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机组成原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/11/07/2016-11-07-mips-assignment/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2016/11/07/2016-11-07-mips-assignment/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="用系统功能调用实现简单输入输出">用系统功能调用实现简单输入输出</h1>
+<h2 id="题目要求">题目要求</h2>
+<p>利用系统功能调用从键盘输入，转换后在屏幕上显示，具体要求如下：</p>
+<ol type="1">
+<li><p>如果输入的是字母（A<sub>Z，区分大小写）或数字（0</sub>9），则将其转换成对应的英文单词后在屏幕上显示，对应关系见下表</p></li>
+<li><p>若输入的不是字母或数字，则在屏幕上输出字符“*”，</p></li>
+<li><p>每输入一个字符，即时转换并在屏幕上显示，</p></li>
+<li><p>支持反复输入，直到按“?”键结束程序。</p></li>
+</ol>
+<h2 id="思路">思路</h2>
+<p>Step 1. Get the Input c<br />
+Step 2. If c equals to '?' , exit,otherwize go to Setp 3.<br />
+Step 3. Analyze weather c is a letter or a number, if it's true,then get the word and go to Step 1. Otherwize go to Step 4.<br />
+Step 4. Call the syscall to ptint '*'. Goto Step 1.</p>
+<h2 id="具体实现">具体实现</h2>
+<p>在MARS的官网上有一个系统调用的表，通过编写相应的汇编代码可以调用一些系统服务比如获取控制台的输入，向控制台输出数据等。具体可参见MARS的<a href="http://courses.missouristate.edu/KenVollmar/mars/Help/SyscallHelp.html" target="_blank" rel="noopener">网站</a></p>
+<p>关于MIPS的指令大全可以查看<a href="https://en.wikipedia.org/wiki/MIPS_instruction_set#MIPS_assembly_language" target="_blank" rel="noopener">wiki</a></p>
+<p>代码如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line">	 .data</span><br><span class="line">u_word:     .asciiz</span><br><span class="line">            &quot;Alpha &quot;,&quot;Bravo &quot;,&quot;China &quot;,&quot;Delta &quot;,&quot;Echo &quot;,&quot;Foxtrot &quot;,</span><br><span class="line">            &quot;Golf &quot;,&quot;Hotel &quot;,&quot;India &quot;,&quot;Juliet &quot;,&quot;Kilo &quot;,&quot;Lima &quot;,</span><br><span class="line">            &quot;Mary &quot;,&quot;November &quot;,&quot;Oscar &quot;,&quot;Paper &quot;,&quot;Quebec &quot;,&quot;Research &quot;,</span><br><span class="line">            &quot;Sierra &quot;,&quot;Tango &quot;,&quot;Uniform &quot;,&quot;Victor &quot;,&quot;Whisky &quot;,&quot;X-ray &quot;,</span><br><span class="line">            &quot;Yankee &quot;,&quot;Zulu &quot;</span><br><span class="line">uw_offset:  .word</span><br><span class="line">            0,7,14,21,28,34,43,49,56,63,71,</span><br><span class="line">            77,83,89,99,106,113,121,131,</span><br><span class="line">            139,146,155,163,171,178,186</span><br><span class="line">l_word:     .asciiz</span><br><span class="line">            &quot;alpha &quot;,&quot;bravo &quot;,&quot;china &quot;,&quot;delta &quot;,&quot;echo &quot;,&quot;foxtrot &quot;,</span><br><span class="line">            &quot;golf &quot;,&quot;hotel &quot;,&quot;india &quot;,&quot;juliet &quot;,&quot;kilo &quot;,&quot;lima &quot;,</span><br><span class="line">            &quot;mary &quot;,&quot;november &quot;,&quot;oscar &quot;,&quot;paper &quot;,&quot;quebec &quot;,&quot;research &quot;,</span><br><span class="line">            &quot;sierra &quot;,&quot;tango &quot;,&quot;uniform &quot;,&quot;victor &quot;,&quot;whisky &quot;,&quot;x-ray &quot;,</span><br><span class="line">            &quot;yankee &quot;,&quot;zulu &quot;</span><br><span class="line">lw_offset:  .word</span><br><span class="line">            0,7,14,21,28,34,43,49,56,63,71,</span><br><span class="line">            77,83,89,99,106,113,121,131,</span><br><span class="line">            139,146,155,163,171,178,186</span><br><span class="line">number:     .asciiz</span><br><span class="line">            &quot;Zero &quot;, &quot;First &quot;, &quot;Second &quot;, &quot;Third &quot;, &quot;Fourth &quot;,</span><br><span class="line">            &quot;Fifth &quot;, &quot;Sixth &quot;, &quot;Seventh &quot;,&quot;Eighth &quot;,&quot;Ninth &quot;</span><br><span class="line">n_offset:   .word</span><br><span class="line">            0,6,13,21,28,36,43,50,59,67</span><br><span class="line">            </span><br><span class="line">	.text</span><br><span class="line">main:	li $v0,12</span><br><span class="line">	syscall</span><br><span class="line">	sub $t1, $v0, 63 # is &#39;?&quot; ?</span><br><span class="line"> 	beqz $t1, exit</span><br><span class="line">ll:	j islower</span><br><span class="line"></span><br><span class="line"># 判断v0是否在t1~t2之间</span><br><span class="line">judege:		sub $t3, $v0, $t2	</span><br><span class="line">			subi $t3, $t3, 1	# let the range of t3 between -1 and -26</span><br><span class="line">			slt $t3, $t3, $0 	</span><br><span class="line">			sub $t4, $t1, $v0	</span><br><span class="line">			subi $t4, $t4, 1</span><br><span class="line">			slt $t4, $t4, $0 	</span><br><span class="line">			and $t5, $t3, $t4</span><br><span class="line">			jr $31</span><br><span class="line">	</span><br><span class="line">islower:	li $t1, &#39;a&#39;</span><br><span class="line">			li $t2, &#39;z&#39;</span><br><span class="line">			jal judege</span><br><span class="line">			beqz $t5, isupper	</span><br><span class="line">			sub $t6, $v0, $t1	# t6 &#x3D; v0 - &#39;a&#39;</span><br><span class="line">			sll $t6, $t6, 2</span><br><span class="line">			la  $s0, lw_offset </span><br><span class="line">			add $s0, $s0, $t6</span><br><span class="line">			lw $s1, ($s0)</span><br><span class="line">			la $a0, l_word</span><br><span class="line">			add $a0, $s1, $a0</span><br><span class="line">			li $v0, 4</span><br><span class="line">			syscall	</span><br><span class="line">			j main	</span><br><span class="line">		 	</span><br><span class="line"></span><br><span class="line">isupper:	li $t1, &#39;A&#39;</span><br><span class="line">			li $t2, &#39;Z&#39;</span><br><span class="line">			jal judege</span><br><span class="line">			beqz $t5, isnum	</span><br><span class="line">			sub $t6, $v0, $t1</span><br><span class="line">			sll $t6, $t6, 2</span><br><span class="line">			la  $s0, uw_offset </span><br><span class="line">			add $s0, $s0, $t6</span><br><span class="line">			lw $s1, ($s0)</span><br><span class="line">			la $a0, u_word</span><br><span class="line">			add $a0, $s1, $a0</span><br><span class="line">			li $v0, 4</span><br><span class="line">			syscall	</span><br><span class="line">			j main</span><br><span class="line">		</span><br><span class="line">isnum:		li $t1, &#39;0&#39;</span><br><span class="line">			li $t2, &#39;9&#39;</span><br><span class="line">			jal judege</span><br><span class="line">			beqz $t5, other</span><br><span class="line">			sub $t6, $v0, $t1</span><br><span class="line">			sll $t6, $t6, 2</span><br><span class="line">			la  $s0, n_offset </span><br><span class="line">			add $s0, $s0, $t6</span><br><span class="line">			lw $s1, ($s0)</span><br><span class="line">			la $a0, number</span><br><span class="line">			add $a0, $s1, $a0</span><br><span class="line">			li $v0, 4</span><br><span class="line">			syscall	</span><br><span class="line">			j main</span><br><span class="line">																		</span><br><span class="line">other:		li $a0, &#39;*&#39;</span><br><span class="line">			la $v0, 11</span><br><span class="line">			syscall</span><br><span class="line">			j main																																																</span><br><span class="line">	</span><br><span class="line">exit:	li $v0, 10</span><br></pre></td></tr></table></figure>
+<ol type="1">
+<li>.data表示数据段，里面可以存放一些数组之类的，前面的值是该数组地址的值</li>
+<li>.text是代码段</li>
+<li>如果获取的字符是范围的断点，那么相减之后为0，在MIPS没找到一个判断值是否为0然后置1的指令，所以就曲线救国= =，让其减1，令范围从(-25, 0)变成了(-26, -1),如果在这个范围内则一定是负数，用slt指令与0比较一下即可。</li>
+<li>jal命令是跳转到另一条语句然后将跳转之前的语句的下一条语句的地址保存到$31寄存器中。</li>
+</ol>
+<h1 id="字符串查找比较">字符串查找比较</h1>
+<p>利用系统功能调用从键盘输入一个字符串，然后输入单个字符，查找该字符串中是否有该字符（区分大小写）。具体要求如下：</p>
+<ol type="1">
+<li>如果找到，则在屏幕上显示：</li>
+</ol>
+<p>Success! Location: X</p>
+<p>其中，X为该字符在字符串中第一次出现的位置</p>
+<ol start="2" type="1">
+<li>如果没找到，则在屏幕上显示：</li>
+</ol>
+<p>Fail!</p>
+<ol start="3" type="1">
+<li><p>输入一个字符串后，可以反复输入希望查询的字符，直到按“?”键结束程序</p></li>
+<li><p>每个输入字符独占一行，输出查找结果独占一行，位置编码从1开始。</p></li>
+</ol>
+<p>提示：为避免歧义，字符串内不包含&quot;?&quot;符号</p>
+<p>格式示例如下：</p>
+<p>abcdefgh</p>
+<p>a</p>
+<p>Success! Location: 1</p>
+<p>x</p>
+<h2 id="思路-1">思路</h2>
+<p>Step 1. 读取一个字符串 Step 2. 读取一个字符 Step 3. 判断是否为'?'，如果是退出程序；否，执行Step 4 Step 4. 获取字符串的首地址，从首地址开始遍历，如果找到就计算位置输出转到Step 2，如果读到最后就输出失败转到Step 2</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">    .data</span><br><span class="line">success:    .asciiz &quot;Success! Location:&quot;</span><br><span class="line">fail:        .asciiz &quot;Fail!\r\n&quot;</span><br><span class="line">end:        .asciiz &quot;\r\n&quot;</span><br><span class="line">buf:            .space 100</span><br><span class="line"></span><br><span class="line">    .text</span><br><span class="line">main:    la $a0, buf # address of input buffer</span><br><span class="line">    la $a1, 100 # maximum number of characters to read</span><br><span class="line">    li $v0, 8 # read string</span><br><span class="line">    syscall</span><br><span class="line">    </span><br><span class="line">loop:    li $v0, 12        # get input char</span><br><span class="line">    syscall    </span><br><span class="line">    move $s0, $v0        # store the char in s0</span><br><span class="line">    subiu $t0, $s0, &#39;?&#39;    # t0 &#x3D; s0 - &#39;?&#39;</span><br><span class="line">    beqz $t0, exit        # if t0 &#x3D;&#x3D; 0 then exit</span><br><span class="line">    la $s1, buf</span><br><span class="line">    j find</span><br><span class="line">    </span><br><span class="line">find:    lb $t0, ($s1)</span><br><span class="line">    beqz $t0, printfail</span><br><span class="line">    sub $t0, $t0, $s0</span><br><span class="line">    beqz $t0, printsuccess</span><br><span class="line">    addi $s1, $s1, 1</span><br><span class="line">    j find</span><br><span class="line"></span><br><span class="line">printsuccess:    la $a0, success        # print success</span><br><span class="line">        li $v0, 4</span><br><span class="line">        syscall</span><br><span class="line">        la $t0, buf</span><br><span class="line">        sub $t0, $s1, $t0</span><br><span class="line">        addi $t0, $t0, 1</span><br><span class="line">        move $a0, $t0        #print location</span><br><span class="line">        li $v0, 1</span><br><span class="line">        syscall</span><br><span class="line">        la $a0, end</span><br><span class="line">        li $v0, 4</span><br><span class="line">        syscall</span><br><span class="line">        j loop</span><br><span class="line">                </span><br><span class="line">    </span><br><span class="line">printfail:     la $a0, fail</span><br><span class="line">        li $v0, 4</span><br><span class="line">        syscall</span><br><span class="line">        j loop        </span><br><span class="line">    </span><br><span class="line">exit:    li $v0, 10</span><br><span class="line">    syscall</span><br></pre></td></tr></table></figure>
+<ol type="1">
+<li>lw是一次读取一个字，而在MIPS中数据是对齐的，所以使用lw读取一个字节时可能会报错。而lb是读取字节的指令。</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MIPS/" rel="tag"># MIPS</a>
+          
+            <a href="/tags/Assembler/" rel="tag"># Assembler</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/25/2016-10-25-java-nullpointexception/" rel="next" title="NullPointException in actionPerformed">
+                <i class="fa fa-chevron-left"></i> NullPointException in actionPerformed
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/15/2016-11-15--Deques-and-Randomized-Queues/" rel="prev" title="Deque和随机队列">
+                Deque和随机队列 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#用系统功能调用实现简单输入输出"><span class="nav-number">1.</span> <span class="nav-text">用系统功能调用实现简单输入输出</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目要求"><span class="nav-number">1.1.</span> <span class="nav-text">题目要求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思路"><span class="nav-number">1.2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具体实现"><span class="nav-number">1.3.</span> <span class="nav-text">具体实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#字符串查找比较"><span class="nav-number">2.</span> <span class="nav-text">字符串查找比较</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#思路-1"><span class="nav-number">2.1.</span> <span class="nav-text">思路</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

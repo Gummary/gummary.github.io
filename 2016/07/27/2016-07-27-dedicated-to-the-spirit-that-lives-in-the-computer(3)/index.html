@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="SICP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="第2.1节的学习笔记及习题解答">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SICP学习笔记（三）">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;07&#x2F;27&#x2F;2016-07-27-dedicated-to-the-spirit-that-lives-in-the-computer(3)&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="第2.1节的学习笔记及习题解答">
+<meta property="article:published_time" content="2016-07-26T16:00:00.000Z">
+<meta property="article:modified_time" content="2017-01-21T04:50:08.000Z">
+<meta property="article:author" content="Gummary">
+<meta property="article:tag" content="SICP">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/07/27/2016-07-27-dedicated-to-the-spirit-that-lives-in-the-computer(3)/"/>
+
+
+
+
+
+  <title>SICP学习笔记（三） | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/07/27/2016-07-27-dedicated-to-the-spirit-that-lives-in-the-computer(3)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SICP学习笔记（三）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-07-27T00:00:00+08:00">
+                2016-07-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SICP/" itemprop="url" rel="index">
+                    <span itemprop="name">SICP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/07/27/2016-07-27-dedicated-to-the-spirit-that-lives-in-the-computer(3)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2016/07/27/2016-07-27-dedicated-to-the-spirit-that-lives-in-the-computer(3)/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>自从买了守望先锋之后简直沉迷其中无法自拔，墨迹了三四天才把第二章第一节看完，根据题目来看这一节仅仅是一个导引，简单的介绍一下数据抽象，但是课后练习简直可怕。</p>
+<h2 id="section">2.1.1</h2>
+<p>这一节实现了一个简单的有理数运算系统，同时介绍了scheme中序对的使用。还介绍了一种策略——<strong>wishful thinking</strong>，也就是先假设某些过程已经实现了，然后直接利用这些过程，我的理解就是自顶向下设计，先假设下层已经实现好了，然后实现上层的功能。</p>
+<h3 id="练习2.1">练习2.1</h3>
+<p>一开始我想的是通过计算分子分母的乘积是否小于零来判断是否为负，实现起来很复杂，参考了一下网上的做法之后发现我的简直就是智障。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">make-rat</span> n d)</span><br><span class="line">    (<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">&lt;</span></span> d <span class="number">0</span>)</span><br><span class="line">        (<span class="name"><span class="builtin-name">cons</span></span> (<span class="name"><span class="builtin-name">-</span></span> n) (<span class="name"><span class="builtin-name">-</span></span> d))</span><br><span class="line">        (<span class="name"><span class="builtin-name">cons</span></span> n d)))</span><br></pre></td></tr></table></figure>
+<h2 id="section-1">2.1.2</h2>
+<p>这一节讲了数据抽象的基本思想，也就是为一个特定的数据结构定义一些特定的过程（比如加减乘除），所有对该数据结构的操作都基于这些过程进行。然后讲了抽象屏蔽，我的理解就是分层，将一个程序分层，每一层为上层提供一些过程，同时使用下层提供的过程来实现本层的过程。这样做的好处就是可以提高程序的灵活性，便于修改和维护。</p>
+<h3 id="练习2.2">练习2.2</h3>
+<p>这道题比较简单，直接贴代码了</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">average</span> a b)</span><br><span class="line">	(<span class="name"><span class="builtin-name">/</span></span> (<span class="name"><span class="builtin-name">+</span></span> a b) <span class="number">2</span>))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">make-segment</span> start-point end-point)</span><br><span class="line">	(<span class="name"><span class="builtin-name">cons</span></span> start-point end-point))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">start-segment</span> seg)</span><br><span class="line">	(<span class="name"><span class="builtin-name">car</span></span> seg))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">end-segment</span> seg)</span><br><span class="line">	(<span class="name"><span class="builtin-name">cdr</span></span> seg))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">make-point</span> x y)</span><br><span class="line">	(<span class="name"><span class="builtin-name">cons</span></span> x y))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">x-point</span> point)</span><br><span class="line">	(<span class="name"><span class="builtin-name">car</span></span> point))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">y-point</span> point)</span><br><span class="line">	(<span class="name"><span class="builtin-name">cdr</span></span> point))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">mid-point</span> seg)</span><br><span class="line">	(<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">sp</span> (<span class="name">start-segment</span> seg))</span><br><span class="line">		(<span class="name">ep</span> (<span class="name">end-segment</span> seg)))</span><br><span class="line">	(<span class="name">make-point</span> (<span class="name">average</span> 	(<span class="name">x-point</span> sp) </span><br><span class="line">							(<span class="name">x-point</span> ep))</span><br><span class="line">				(<span class="name">average</span> 	(<span class="name">y-point</span> sp) </span><br><span class="line">							(<span class="name">y-point</span> ep)))))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">print-point</span> p)</span><br><span class="line">  (<span class="name"><span class="builtin-name">newline</span></span>)</span><br><span class="line">  (<span class="name"><span class="builtin-name">display</span></span> <span class="string">"("</span>)</span><br><span class="line">  (<span class="name"><span class="builtin-name">display</span></span> (<span class="name">x-point</span> p))</span><br><span class="line">  (<span class="name"><span class="builtin-name">display</span></span> <span class="string">","</span>)</span><br><span class="line">  (<span class="name"><span class="builtin-name">display</span></span> (<span class="name">y-point</span> p))</span><br><span class="line">  (<span class="name"><span class="builtin-name">display</span></span> <span class="string">")"</span>))</span><br></pre></td></tr></table></figure>
+<h3 id="练习2.3">练习2.3</h3>
+<p>首先我们利用<strong>wishful thinking</strong>思想来求面积和周长。面积和周长函数分别接受一个矩形作为参数，假设现在已经有了求取长和宽的过程，那我们可以直接求面积和周长了。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">rect-perimeter</span> rect)</span><br><span class="line">	(<span class="name"><span class="builtin-name">+</span></span> </span><br><span class="line">		(<span class="name"><span class="builtin-name">*</span></span> <span class="number">2</span> (<span class="name">rect-length</span> rect)) </span><br><span class="line">		(<span class="name"><span class="builtin-name">*</span></span> <span class="number">2</span> (<span class="name">rect-width</span> rect))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">rect-area</span> rect)</span><br><span class="line">	(<span class="name"><span class="builtin-name">*</span></span> (<span class="name">rect-length</span> rect)</span><br><span class="line">		(<span class="name">rect-width</span> rect)))</span><br></pre></td></tr></table></figure>
+<p>然后题目要求用两种方式来实现矩形和获得矩形长宽的过程。</p>
+<p>我的第一种方式是采用输入左上和右下两个点的坐标来唯一确定一个矩形，则长和宽就是两点之间坐标的差。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">make-rect</span> lt-point rb-point)</span><br><span class="line">	(<span class="name"><span class="builtin-name">cons</span></span> lt-point rb-point))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">rect-width</span> rect)</span><br><span class="line">	(<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">lt-point</span> (<span class="name"><span class="builtin-name">car</span></span> rect))</span><br><span class="line">		(<span class="name">rb-point</span> (<span class="name"><span class="builtin-name">cdr</span></span> rect)))</span><br><span class="line">	(<span class="name"><span class="builtin-name">-</span></span> (<span class="name"><span class="builtin-name">cdr</span></span> lt-point) (<span class="name"><span class="builtin-name">cdr</span></span> (<span class="name">rb-point</span>)))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">rect-length</span> rect)</span><br><span class="line">	(<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">lt-point</span> (<span class="name"><span class="builtin-name">car</span></span> rect))</span><br><span class="line">		(<span class="name">rb-point</span> (<span class="name"><span class="builtin-name">cdr</span></span> rect)))</span><br><span class="line">	(<span class="name"><span class="builtin-name">-</span></span> (<span class="name"><span class="builtin-name">car</span></span> lt-point) (<span class="name"><span class="builtin-name">car</span></span> (<span class="name">rb-point</span>)))))</span><br></pre></td></tr></table></figure>
+<p>后来在网上看到了一种比我这个实现更好，考虑更复杂吗，比我的更抽象的一种，思路也是输入两个点来实现。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">;; Point </span></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">make-point</span> x y) (<span class="name"><span class="builtin-name">cons</span></span> x y)) </span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">x-point</span> p) (<span class="name"><span class="builtin-name">car</span></span> p)) </span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">y-point</span> p) (<span class="name"><span class="builtin-name">cdr</span></span> p)) </span><br><span class="line"> </span><br><span class="line"><span class="comment">;; Rectangle - 1st implementation </span></span><br><span class="line"> </span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">make-rect</span> bottom-left top-right) </span><br><span class="line">  (<span class="name"><span class="builtin-name">cons</span></span> bottom-left top-right)) </span><br><span class="line"> </span><br><span class="line"><span class="comment">;; "Internal accessors", not to be used directly by clients.  Not sure </span></span><br><span class="line"><span class="comment">;; how to signify this in scheme. </span></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">bottom-left</span> rect) (<span class="name"><span class="builtin-name">car</span></span> rect)) </span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">bottom-right</span> rect) </span><br><span class="line">  (<span class="name">make-point</span> (<span class="name">x-point</span> (<span class="name"><span class="builtin-name">cdr</span></span> rect)) </span><br><span class="line">              (<span class="name">y-point</span> (<span class="name"><span class="builtin-name">car</span></span> rect)))) </span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">top-left</span> rect) </span><br><span class="line">  (<span class="name">make-point</span> (<span class="name">x-point</span> (<span class="name"><span class="builtin-name">car</span></span> rect)) </span><br><span class="line">              (<span class="name">y-point</span> (<span class="name"><span class="builtin-name">cdr</span></span> rect)))) </span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">top-right</span> rect) (<span class="name"><span class="builtin-name">cdr</span></span> rect)) </span><br><span class="line"> </span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">width-rect</span> rect) </span><br><span class="line">  (<span class="name"><span class="builtin-name">abs</span></span> (<span class="name"><span class="builtin-name">-</span></span> (<span class="name">x-point</span> (<span class="name">bottom-left</span> rect)) </span><br><span class="line">          (<span class="name">x-point</span> (<span class="name">bottom-right</span> rect))))) </span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">height-rect</span> rect) </span><br><span class="line">  (<span class="name"><span class="builtin-name">abs</span></span> (<span class="name"><span class="builtin-name">-</span></span> (<span class="name">y-point</span> (<span class="name">bottom-left</span> rect)) </span><br><span class="line">          (<span class="name">y-point</span> (<span class="name">top-left</span> rect))))) </span><br><span class="line"> </span><br><span class="line"><span class="comment">;; Public methods. </span></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">area-rect</span> rect) </span><br><span class="line">  (<span class="name"><span class="builtin-name">*</span></span> (<span class="name">width-rect</span> rect) (<span class="name">height-rect</span> rect))) </span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">perimeter-rect</span> rect) </span><br><span class="line">  (<span class="name"><span class="builtin-name">*</span></span> (<span class="name"><span class="builtin-name">+</span></span> (<span class="name">width-rect</span> rect) (<span class="name">height-rect</span> rect)) <span class="number">2</span>)) </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="comment">;; Usage: </span></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> r (<span class="name">make-rect</span> (<span class="name">make-point</span> <span class="number">1</span> <span class="number">1</span>) </span><br><span class="line">                     (<span class="name">make-point</span> <span class="number">3</span> <span class="number">7</span>))) </span><br><span class="line">(<span class="name">area-rect</span> r) </span><br><span class="line">(<span class="name">perimeter-rect</span> r)</span><br></pre></td></tr></table></figure>
+<p>第二种方式是给定两条边来实现，这两条边必须为垂直的</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">make-rect</span> left-seg bottom-seg)</span><br><span class="line">	(<span class="name"><span class="builtin-name">cons</span></span> left-seg bottom-seg))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">rect-width</span> rect)</span><br><span class="line">	(<span class="name"><span class="builtin-name">-</span></span> (<span class="name">y-point</span> (<span class="name">start-segment</span> (<span class="name"><span class="builtin-name">car</span></span> rect))) </span><br><span class="line">		(<span class="name">y-point</span> (<span class="name">start-segment</span> (<span class="name"><span class="builtin-name">cdr</span></span> rect)))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">rect-length</span> rect)</span><br><span class="line">	(<span class="name"><span class="builtin-name">-</span></span> (<span class="name">x-point</span> (<span class="name">end-segment</span> (<span class="name"><span class="builtin-name">car</span></span> rect))) </span><br><span class="line">		(<span class="name">x-point</span> (<span class="name">end-segment</span> (<span class="name"><span class="builtin-name">cdr</span></span> rect)))))</span><br></pre></td></tr></table></figure>
+<p>关于这道题的实现方式还有好多，具体可以看<a href="http://community.schemewiki.org/?sicp-ex-2.3" target="_blank" rel="noopener">这篇题解</a></p>
+<h2 id="section-2">2.1.3</h2>
+<p>从这节开始画风就变了，难度加大。</p>
+<p>这一节的题目直接就是一个问题，数据意味着什么，当时这个标题的时候还真是蒙了一下，当时想的是数据不就是数或数的集合吗。然后继续看书，书上给了一个数据的一般定义：</p>
+<blockquote>
+<p><em>In general, we can think of data as defined by some collection of selectors and constructors, together with specified conditions that these procedures must fulfill in order to be a valid representation</em></p>
+</blockquote>
+<p>当时看这段话还没什么感觉，看了书上讲的序对的实现才明白。</p>
+<p>序对就是将两个东西组合起来，然后还可以随意取出其中的任意一个。也就是说任何能够满足这两个条件的过程都可以实现序对，然后书上就给了一个例子来实现序对。这个例子没有使用任何的数，仅仅利用过程就实现了序对，并且没有依赖传入的是什么，这个过程都可以将其组合成一个序对。</p>
+<p>这个过程可以作为模糊数据与过程界限的一个典型，对于上层来说，cons返回的应该就是一个数对，但是实际上它是一个过程。</p>
+<h3 id="练习2.4">练习2.4</h3>
+<p>这个练习给了序对的另一种实现方式，先证明第一问</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">; 原表达式</span></span><br><span class="line">(<span class="name"><span class="builtin-name">car</span></span> (<span class="name"><span class="builtin-name">cons</span></span> x y))</span><br><span class="line"></span><br><span class="line"><span class="comment">; 替换cons</span></span><br><span class="line">(<span class="name"><span class="builtin-name">car</span></span> (<span class="name"><span class="builtin-name">lambda</span></span> (m) (<span class="name">m</span> x y)))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">; 替换car</span></span><br><span class="line">((<span class="name"><span class="builtin-name">lambda</span></span> (m) (<span class="name">m</span> x y)) </span><br><span class="line">	((<span class="name"><span class="builtin-name">lambda</span></span> (p q)) p))</span><br><span class="line"></span><br><span class="line"><span class="comment">; 将传入参数得到x</span></span><br><span class="line">(<span class="name">x</span>)</span><br></pre></td></tr></table></figure>
+<p>cdr的实现</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name"><span class="builtin-name">cdr</span></span> z)</span><br><span class="line">	(<span class="name">z</span> (<span class="name"><span class="builtin-name">lambda</span></span> (p q) (<span class="name">q</span>))))</span><br></pre></td></tr></table></figure>
+<h3 id="练习2.5">练习2.5</h3>
+<p>这个题我根据的是2<sup>n无法被3整除，3</sup>n无法被2整除，所以我就先将2^a * 3^b求出来作为cons的值，然后car就迭代除以2，直到余数为1;cdr是除以3，直到余数为1。但是这样做的话无法组合负数以及其他的数据结构:(</p>
+<p>代码如下：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name"><span class="builtin-name">cons</span></span> x y)</span><br><span class="line">	(<span class="name"><span class="builtin-name">*</span></span> (<span class="name">fast-exp</span> <span class="number">2</span> x)</span><br><span class="line">		(<span class="name">fast-exp</span> <span class="number">3</span> y)))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name"><span class="builtin-name">car</span></span> c)</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">iter</span> v result)</span><br><span class="line">		(<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">=</span></span> (<span class="name"><span class="builtin-name">remainder</span></span> v <span class="number">2</span>) <span class="number">1</span>)</span><br><span class="line">			result</span><br><span class="line">			(<span class="name">iter</span> (<span class="name"><span class="builtin-name">/</span></span> v <span class="number">2</span>) (<span class="name"><span class="builtin-name">+</span></span> result <span class="number">1</span>))))</span><br><span class="line">	(<span class="name">iter</span> c <span class="number">0</span>))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name"><span class="builtin-name">cdr</span></span> c)</span><br><span class="line">	(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">iter</span> v result)</span><br><span class="line">		(<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">=</span></span> (<span class="name"><span class="builtin-name">remainder</span></span> v <span class="number">3</span>) <span class="number">1</span>)</span><br><span class="line">			result</span><br><span class="line">			(<span class="name">iter</span> (<span class="name"><span class="builtin-name">/</span></span> v <span class="number">3</span>) (<span class="name"><span class="builtin-name">+</span></span> result <span class="number">1</span>))))</span><br><span class="line">	(<span class="name">iter</span> c <span class="number">0</span>))</span><br></pre></td></tr></table></figure>
+<h3 id="练习2.6">练习2.6</h3>
+<p>这道题应该是目前困住我时间最久的，实在是太抽象了，看了好几遍连题目给的四行代码都没看懂，最后没办法上网查了一下才把这个题解出来，其他的文章都是用一篇博文来写这个题解，我这里就简单的记录一下。</p>
+<p>在看着道题之前先抛弃以前对数的所有概念，同时问下自己0,1,2,3.....代表着什么，然后再来看这个题。</p>
+<p>首先，0,1,2,3...只是人们用来计数的方式，在古代没有这些阿拉伯数字的时候，有结绳计数，中国古代有<a href="https://zh.wikipedia.org/wiki/%E7%AE%97%E7%AD%B9" target="_blank" rel="noopener">算筹</a>，其实这些都是计数系统。换句话说，任何能够表达出0,1,2....这些数的意义的过程都可以组成一个计数系统来代替他们。</p>
+<p>那么回到我们这道题，先看一下zero和add-1过程的定义</p>
+<p>zero是返回了一个过程，这个过程接受一个参数f，然后又返回了一个过程，第二个过程接受一个参数x，然后什么都不做直接返回x</p>
+<p>add-1接受一个参数n，然后返回一个过程，该过程接受一个过程f作为参数，然后又返回一个过程，第二个过程也接受了一个参数x，然后先对f应用n，在对返回值应用x，然后将返回值应用给f后返回。</p>
+<p>然后我们现根据题目给的提示进行代换来求one,two.</p>
+<p>one：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">; 原表达式</span></span><br><span class="line">(<span class="name">add-1</span> zero)</span><br><span class="line"></span><br><span class="line"><span class="comment">; 替换zero</span></span><br><span class="line">(<span class="name">add-1</span> (<span class="name"><span class="builtin-name">lambda</span></span> (f) (<span class="name"><span class="builtin-name">lambda</span></span> (x) x)))</span><br><span class="line"></span><br><span class="line"><span class="comment">; 将n替换为zero</span></span><br><span class="line">((<span class="name"><span class="builtin-name">lambda</span></span> (f) (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">f</span> (((<span class="name"><span class="builtin-name">lambda</span></span> (x) x)) x)))))</span><br><span class="line"></span><br><span class="line"><span class="comment">; zero什么都不做直接返回x得到如下过程</span></span><br><span class="line">((<span class="name"><span class="builtin-name">lambda</span></span> (f) (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">f</span> x))))</span><br><span class="line"></span><br><span class="line"><span class="comment">; 由此我们可以得到one的定义如下</span></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> one </span><br><span class="line">	(<span class="name"><span class="builtin-name">lambda</span></span> (f)</span><br><span class="line">		(<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">f</span> x))))</span><br></pre></td></tr></table></figure>
+<p>two:</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name">add-1</span> one)</span><br><span class="line"></span><br><span class="line">(<span class="name">add-1</span> (<span class="name"><span class="builtin-name">lambda</span></span> (f) (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">f</span> x))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">lambda</span></span> (f) (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">f</span> (((<span class="name"><span class="builtin-name">lambda</span></span> (f) (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">f</span> x))) f) x))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">lambda</span></span> (f) (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">f</span> ((<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">f</span> x)) x))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">lambda</span></span> (f) (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">f</span> (<span class="name">f</span> x))))</span><br><span class="line"></span><br><span class="line"><span class="comment">; 最后我们可以得到two的定义</span></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> two</span><br><span class="line">	(<span class="name"><span class="builtin-name">lambda</span></span> (f)</span><br><span class="line">		(<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">f</span> (<span class="name">f</span> x)))))</span><br></pre></td></tr></table></figure>
+<p>将zero，one，two放到一起</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> zero (<span class="name"><span class="builtin-name">lambda</span></span> (f) (<span class="name"><span class="builtin-name">lambda</span></span> (x) x)))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> one  (<span class="name"><span class="builtin-name">lambda</span></span> (f) (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">f</span> x))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> two  (<span class="name"><span class="builtin-name">lambda</span></span> (f) (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">f</span> (<span class="name">f</span> x)))))</span><br></pre></td></tr></table></figure>
+<p>如果你观察够仔细的话可以看到，0,1,2不就代表着应用f的次数吗，没错！这就是解本题的关键，对x应用f的次数就是对0,1,2..的定义。可能你会有疑惑，这个0,1,2有什么关系，其实我们可以这样反问自己一下，为什么定义出来的过程一定要返回0，我用别的来表示不行吗？在这里我们用应用f的次数来表示这些值。</p>
+<p>有了上述的理解之后，在对照着add-1的定义，+的定义也就明朗了</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name"><span class="builtin-name">+</span></span> m n)</span><br><span class="line">	(<span class="name"><span class="builtin-name">lambda</span></span> (f)</span><br><span class="line">		(<span class="name"><span class="builtin-name">lambda</span></span> (x) ((<span class="name">m</span> f) ((<span class="name">n</span> f) x)))))</span><br></pre></td></tr></table></figure>
+<p>我们可以用(+ one two)来验证一下</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">+</span></span> one two)</span><br><span class="line"></span><br><span class="line"><span class="comment">; 替换one和two</span></span><br><span class="line">(<span class="name"><span class="builtin-name">+</span></span> </span><br><span class="line">	(<span class="name"><span class="builtin-name">lambda</span></span> (f) (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">f</span> x))) </span><br><span class="line">	(<span class="name"><span class="builtin-name">lambda</span></span> (f) (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">f</span> (<span class="name">f</span> x)))))</span><br><span class="line"></span><br><span class="line"><span class="comment">; 替换+</span></span><br><span class="line">(<span class="name"><span class="builtin-name">lambda</span></span> (f) </span><br><span class="line">	(<span class="name"><span class="builtin-name">lambda</span></span> (x) </span><br><span class="line">		(((<span class="name"><span class="builtin-name">lambda</span></span> (f) (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">f</span> x))) f) </span><br><span class="line">			(((<span class="name"><span class="builtin-name">lambda</span></span> (f) (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">f</span> (<span class="name">f</span> x)))) f) x))))</span><br><span class="line"></span><br><span class="line"><span class="comment">; 求出one</span></span><br><span class="line">(<span class="name"><span class="builtin-name">lambda</span></span> (f) </span><br><span class="line">	(<span class="name"><span class="builtin-name">lambda</span></span> (x) </span><br><span class="line">		((<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">f</span> x)) </span><br><span class="line">			(((<span class="name"><span class="builtin-name">lambda</span></span> (f) (<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">f</span> (<span class="name">f</span> x)))) f) x))))</span><br><span class="line"></span><br><span class="line"><span class="comment">; 求出two</span></span><br><span class="line">(<span class="name"><span class="builtin-name">lambda</span></span> (f) </span><br><span class="line">	(<span class="name"><span class="builtin-name">lambda</span></span> (x) </span><br><span class="line">		((<span class="name"><span class="builtin-name">lambda</span></span> (x) (<span class="name">f</span> x)) </span><br><span class="line">			(<span class="name">f</span> (<span class="name">f</span> x)))))</span><br><span class="line"></span><br><span class="line"><span class="comment">; 将two带入one得到最终结果</span></span><br><span class="line">(<span class="name"><span class="builtin-name">lambda</span></span> (f) </span><br><span class="line">	(<span class="name"><span class="builtin-name">lambda</span></span> (x) </span><br><span class="line">		(<span class="name">f</span> (<span class="name">f</span> (<span class="name">f</span> x)))))</span><br></pre></td></tr></table></figure>
+<p>可以看到和我们猜想的一模一样！应用了3次f，说明我们的+过程是正确的！</p>
+<h2 id="section-3">2.1.4</h2>
+<p>这一节练习的难度简直坑爹，内容比较简单，定义了几个过程，就不细说了，直接看练习吧。</p>
+<h3 id="练习2.7">练习2.7</h3>
+<p>这一节的内容仍用了<strong>wishful thinking</strong>的思想，这个练习就让你把他补全，代码如下:</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">make-interval</span> a b) (<span class="name"><span class="builtin-name">cons</span></span> a b))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">upper-bound</span> i)</span><br><span class="line">	(<span class="name"><span class="builtin-name">cdr</span></span> i))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">lower-bound</span> i)</span><br><span class="line">	(<span class="name"><span class="builtin-name">car</span></span> i))</span><br></pre></td></tr></table></figure>
+<h3 id="练习2.8">练习2.8</h3>
+<p>一开始自己只是简单的根据加法的做法，用左边界减左边界，右边界减右边界， 后来在网上看了一下题解，发现自己还是太navie。</p>
+<p>由书上写的，通过乘法推出了除法，我们也可以通过加法推出减法。加法就是一个数加上另一个数的相反数。而对于区间来说，相反数是指左右边界交换然后各取相反数。由此，我们可以得到减法为:</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">sub-interval</span> a b)</span><br><span class="line">	(<span class="name">add-interval</span> </span><br><span class="line">		a </span><br><span class="line">		(<span class="name">make-interval</span> (<span class="name"><span class="builtin-name">-</span></span> (<span class="name">lower-bound</span> b)) (<span class="name"><span class="builtin-name">-</span></span> (<span class="name">upper-bound</span> b)))))</span><br></pre></td></tr></table></figure>
+<p>如果不用加法的话</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">sub-interval</span> x y) </span><br><span class="line">  (<span class="name">make-interval</span> (<span class="name"><span class="builtin-name">-</span></span> (<span class="name">lower-bound</span> x) (<span class="name">upper-bound</span> y)) </span><br><span class="line">                 (<span class="name"><span class="builtin-name">-</span></span> (<span class="name">upper-bound</span> x) (<span class="name">lower-bound</span> y))))</span><br></pre></td></tr></table></figure>
+<p>其实道理都是一样的</p>
+<h3 id="练习2.9">练习2.9</h3>
+<p>加减很简单，用两个区间试一下就可以了，但是乘和除开始没看懂，仍是搜了一下题解。</p>
+<p>这个题要证明的是乘积或商的宽度是两个乘数或除数宽度的函数，那什么函数。函数就是说输入相同那输出也应该相同。所以我们可以通过两对拥有相同宽度的区间进行判断，看结果是否相同。</p>
+<p>例如:</p>
+<p>[0, 10] * [0, 2] = [0, 20] (width = 10)</p>
+<p>[-5, 5] * [-1, 1] = [-5, 5] (width = 5)</p>
+<p>所以说并不相同。</p>
+<h3 id="练习2.10">练习2.10</h3>
+<p>只需要判断一下上下届相乘是否小于零即可</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">div-interval</span> x y)</span><br><span class="line">  (<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">&lt;</span></span> (<span class="name"><span class="builtin-name">*</span></span> (<span class="name">upper-bound</span> y) (<span class="name">lower-bound</span> y)) <span class="number">0</span>)</span><br><span class="line">  	(<span class="name">error</span> <span class="string">"wrong"</span>)</span><br><span class="line">  	(<span class="name">mul-interval</span> x </span><br><span class="line">                (<span class="name">make-interval</span> (<span class="name"><span class="builtin-name">/</span></span> <span class="number">1.0</span> (<span class="name">upper-bound</span> y))</span><br><span class="line">                               (<span class="name"><span class="builtin-name">/</span></span> <span class="number">1.0</span> (<span class="name">lower-bound</span> y))))))</span><br></pre></td></tr></table></figure>
+<h3 id="练习2.11">练习2.11</h3>
+<p>又一道没做出来的Orz</p>
+<p>自己一开始是画图做，结果越画越乱，到最后直接弃坑了。搜了一下题解后才明白。</p>
+<p>先说一下9种情况怎么来的。每个区间都有三种情况,上下界都为正、上下节都为负，上下界中有正有负。所以两个区间相乘共有3*3=9种乘法.</p>
+<p>还有一个问题是当两个区间都跨越0的时候，要考虑一下上下区间的问题，要做4次乘法</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">mul-interval</span> x y) </span><br><span class="line">  <span class="comment">;; endpoint-sign returns: </span></span><br><span class="line">  <span class="comment">;;     +1 if both endpoints non-negative, </span></span><br><span class="line">  <span class="comment">;;     -1 if both negative, </span></span><br><span class="line">  <span class="comment">;;      0 if opposite sign </span></span><br><span class="line">  (<span class="name"><span class="builtin-name">define</span></span> (<span class="name">endpoint-sign</span> i) </span><br><span class="line">    (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">and</span></span> (<span class="name"><span class="builtin-name">&gt;=</span></span> (<span class="name">upper-bound</span> i) <span class="number">0</span>) </span><br><span class="line">                (<span class="name"><span class="builtin-name">&gt;=</span></span> (<span class="name">lower-bound</span> i) <span class="number">0</span>)) </span><br><span class="line">           <span class="number">1</span>) </span><br><span class="line">          ((<span class="name"><span class="builtin-name">and</span></span> (<span class="name"><span class="builtin-name">&lt;</span></span> (<span class="name">upper-bound</span> i) <span class="number">0</span>) </span><br><span class="line">                (<span class="name"><span class="builtin-name">&lt;</span></span> (<span class="name">lower-bound</span> i) <span class="number">0</span>)) </span><br><span class="line">           <span class="number">-1</span>) </span><br><span class="line">          (<span class="name"><span class="builtin-name">else</span></span> <span class="number">0</span>))) </span><br><span class="line"> </span><br><span class="line">  (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">es-x</span> (<span class="name">endpoint-sign</span> x)) </span><br><span class="line">        (<span class="name">es-y</span> (<span class="name">endpoint-sign</span> y)) </span><br><span class="line">        (<span class="name">x-up</span> (<span class="name">upper-bound</span> x)) </span><br><span class="line">        (<span class="name">x-lo</span> (<span class="name">lower-bound</span> x)) </span><br><span class="line">        (<span class="name">y-up</span> (<span class="name">upper-bound</span> y)) </span><br><span class="line">        (<span class="name">y-lo</span> (<span class="name">lower-bound</span> y))) </span><br><span class="line"> </span><br><span class="line">    (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">&gt;</span></span> es-x <span class="number">0</span>) <span class="comment">;; both x endpoints are +ve or 0 </span></span><br><span class="line">           (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">&gt;</span></span> es-y <span class="number">0</span>) </span><br><span class="line">                  (<span class="name">make-interval</span> (<span class="name"><span class="builtin-name">*</span></span> x-lo y-lo) (<span class="name"><span class="builtin-name">*</span></span> x-up y-up))) </span><br><span class="line">                 ((<span class="name"><span class="builtin-name">&lt;</span></span> es-y <span class="number">0</span>) </span><br><span class="line">                  (<span class="name">make-interval</span> (<span class="name"><span class="builtin-name">*</span></span> x-up y-lo) (<span class="name"><span class="builtin-name">*</span></span> x-lo y-up))) </span><br><span class="line">                 (<span class="name"><span class="builtin-name">else</span></span> </span><br><span class="line">                  (<span class="name">make-interval</span> (<span class="name"><span class="builtin-name">*</span></span> x-up y-lo) (<span class="name"><span class="builtin-name">*</span></span> x-up y-up))))) </span><br><span class="line"> </span><br><span class="line">          ((<span class="name"><span class="builtin-name">&lt;</span></span> es-x <span class="number">0</span>) <span class="comment">;; both x endpoints are -ve </span></span><br><span class="line">           (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">&gt;</span></span> es-y <span class="number">0</span>) </span><br><span class="line">                  (<span class="name">make-interval</span> (<span class="name"><span class="builtin-name">*</span></span> x-lo y-up) (<span class="name"><span class="builtin-name">*</span></span> x-up y-lo))) </span><br><span class="line">                 ((<span class="name"><span class="builtin-name">&lt;</span></span> es-y <span class="number">0</span>) </span><br><span class="line">                  (<span class="name">make-interval</span> (<span class="name"><span class="builtin-name">*</span></span> x-up y-up) (<span class="name"><span class="builtin-name">*</span></span> x-lo y-lo))) </span><br><span class="line">                 (<span class="name"><span class="builtin-name">else</span></span> </span><br><span class="line">                  (<span class="name">make-interval</span> (<span class="name"><span class="builtin-name">*</span></span> x-lo y-up) (<span class="name"><span class="builtin-name">*</span></span> x-lo y-lo))))) </span><br><span class="line"> </span><br><span class="line">          (<span class="name"><span class="builtin-name">else</span></span>  <span class="comment">;; x spans 0 </span></span><br><span class="line">           (<span class="name"><span class="builtin-name">cond</span></span> ((<span class="name"><span class="builtin-name">&gt;</span></span> es-y <span class="number">0</span>) </span><br><span class="line">                  (<span class="name">make-interval</span> (<span class="name"><span class="builtin-name">*</span></span> x-lo y-up) (<span class="name"><span class="builtin-name">*</span></span> x-up y-up))) </span><br><span class="line">                 ((<span class="name"><span class="builtin-name">&lt;</span></span> es-y <span class="number">0</span>) </span><br><span class="line">                  (<span class="name">make-interval</span> (<span class="name"><span class="builtin-name">*</span></span> x-up y-lo) (<span class="name"><span class="builtin-name">*</span></span> x-lo y-lo))) </span><br><span class="line">                 (<span class="name"><span class="builtin-name">else</span></span> </span><br><span class="line">                  <span class="comment">;; Both x and y span 0 ... need to check values </span></span><br><span class="line">                  (<span class="name">make-interval</span> (<span class="name"><span class="builtin-name">min</span></span> (<span class="name"><span class="builtin-name">*</span></span> x-lo y-up) (<span class="name"><span class="builtin-name">*</span></span> x-up y-lo)) </span><br><span class="line">                                 (<span class="name"><span class="builtin-name">max</span></span> (<span class="name"><span class="builtin-name">*</span></span> x-lo y-lo) (<span class="name"><span class="builtin-name">*</span></span> x-up y-up)))))))))</span><br></pre></td></tr></table></figure>
+<h3 id="练习2.12">练习2.12</h3>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">make-center-percent</span> c p)</span><br><span class="line">	(<span class="name">make-interval</span> (<span class="name"><span class="builtin-name">-</span></span> c (<span class="name"><span class="builtin-name">*</span></span> c (<span class="name"><span class="builtin-name">*</span></span> p <span class="number">0.01</span>))) (<span class="name"><span class="builtin-name">+</span></span> c (<span class="name"><span class="builtin-name">*</span></span> c (<span class="name"><span class="builtin-name">*</span></span> p <span class="number">0.01</span>)))))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> (<span class="name">percent</span> c)</span><br><span class="line">	(<span class="name"><span class="builtin-name">*</span></span> <span class="number">100</span> (<span class="name"><span class="builtin-name">/</span></span> (<span class="name">center</span> c) (<span class="name">width</span> c))))</span><br></pre></td></tr></table></figure>
+<p>假设有两个区间，中间值分别为x,y，误差百分比为dx,dy，则两个区间可表示为:</p>
+<p>[x - x<em>dx, x + x</em>dx] [y - y<em>dy, y + y</em>dy]</p>
+<p>两个区间相乘之后的结果为</p>
+<p>[x<em>y</em>(1-(dx+dy))+x<em>y</em>dx<em>dy,x</em>y<em>(1+(dx+dy))+x</em>y<em>dx</em>dy]</p>
+<p>由于dx，dy比较小，所以可以忽略，变为：</p>
+<p>[x<em>y</em>(1-(dx+dy)),x<em>y</em>(1+(dx+dy))]</p>
+<p>得到最后的结论，两区间相乘的结果的误差值可以近似为两区间误差之和</p>
+<h3 id="练习2.14练习2.16">练习2.14——练习2.16</h3>
+<p>这三道题难度简直*狗。</p>
+<p>练习2.14不知道为什么每次测试都报错，说我传递给even?的参数不正确，但是我根本没调用这个函数，只能归结为玄学了。</p>
+<p>2.15和2.16没怎么思考就直接搜了题解，结果中文的还没找到！没办法找了个英文版的，对<a href="http://community.schemewiki.org/?sicp-ex-2.14-2.15-2.16" target="_blank" rel="noopener">那篇题解</a>进行简单的翻译一下吧。</p>
+<p>这三个问题其实都是关于区间的一致性（唯一确定一个区间），假设我们有两个数A和B位于以下两个区间中</p>
+<p>A = [2,8]<br />
+B = [2,8]</p>
+<p>A可能是3.782，B可能是5.42。</p>
+<p>如果让A/A，那么结果一定是1（假设A不为0），如果A/B，那么结果是未知的，只能说位于区间[0.25,4]中。</p>
+<p>但是在我们这个系统当中，没有任何有关一致性的判定，也就是说A/A的结果也位于[0.25,4]当中。</p>
+<p>所以每当进行的代数运算中包含区间时，都要小心的对待其中相同的区间，因为这重新引入了不确定性。</p>
+<p>练习2.14中Lem是正确的，第一个式子中R1，R2各引入了两遍，第二个只有一遍，所以结果不一致。</p>
+<p>练习2.15 Eva说的也是正确的，不确定的因素减少了，所以更好。</p>
+<p>练习2.16 出现不同结果的原因就是因为没有对一致性做一个定义。所以如果要设计一个没有缺陷的区间算书包就必须为区间一致性做一个定义。</p>
+<p>关于练习2.16一个更详细的解释可以看<a href="http://wiki.drewhess.com/wiki/SICP_exercise_2.16" target="_blank" rel="noopener">这篇文章</a></p>
+<h2 id="参考资料">参考资料</h2>
+<ol type="1">
+<li>http://community.schemewiki.org/?sicp-solutions</li>
+<li>http://wiki.drewhess.com/wiki/SICP_exercise_2.16</li>
+<li>https://mitpress.mit.edu/sicp/full-text/book/book-Z-H-14.html#%_sec_2.1.4</li>
+<li>https://github.com/GTxx/SICP/blob/master/CH2/SICP-2.07-2.16.md</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SICP/" rel="tag"># SICP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/16/2016-07-16-dedicated-to-the-spirit-that-lives-in-the-computer(2)/" rel="next" title="SICP学习笔记（二）">
+                <i class="fa fa-chevron-left"></i> SICP学习笔记（二）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/28/2016-07-28-qt-font-size-in-embedded-linux/" rel="prev" title="ARM板上qt字体变小解决方案">
+                ARM板上qt字体变小解决方案 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#section"><span class="nav-number">1.</span> <span class="nav-text">2.1.1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.1"><span class="nav-number">1.1.</span> <span class="nav-text">练习2.1</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-1"><span class="nav-number">2.</span> <span class="nav-text">2.1.2</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.2"><span class="nav-number">2.1.</span> <span class="nav-text">练习2.2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.3"><span class="nav-number">2.2.</span> <span class="nav-text">练习2.3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-2"><span class="nav-number">3.</span> <span class="nav-text">2.1.3</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.4"><span class="nav-number">3.1.</span> <span class="nav-text">练习2.4</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.5"><span class="nav-number">3.2.</span> <span class="nav-text">练习2.5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.6"><span class="nav-number">3.3.</span> <span class="nav-text">练习2.6</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-3"><span class="nav-number">4.</span> <span class="nav-text">2.1.4</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.7"><span class="nav-number">4.1.</span> <span class="nav-text">练习2.7</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.8"><span class="nav-number">4.2.</span> <span class="nav-text">练习2.8</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.9"><span class="nav-number">4.3.</span> <span class="nav-text">练习2.9</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.10"><span class="nav-number">4.4.</span> <span class="nav-text">练习2.10</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.11"><span class="nav-number">4.5.</span> <span class="nav-text">练习2.11</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.12"><span class="nav-number">4.6.</span> <span class="nav-text">练习2.12</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习2.14练习2.16"><span class="nav-number">4.7.</span> <span class="nav-text">练习2.14——练习2.16</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
