@@ -242,6 +242,230 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/05/chapter3-dl-probability-and-information-theory/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/05/chapter3-dl-probability-and-information-theory/" itemprop="url">深度学习笔记之概率论信息论基础</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-05T20:40:35+08:00">
+                2020-05-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/05/05/chapter3-dl-probability-and-information-theory/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/05/05/chapter3-dl-probability-and-information-theory/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="几个概念">几个概念</h2>
+<p>概率用来描述某个事物发生的可能性。 逻辑学指的是，给定一些前提，判断一件事是否发生。而概率论指的是给定一些前提发生的概率，判断一件事发生的概率。</p>
+<p>随机变量是指一个变量可以随机的取不同的值。随机变量可以是连续或者离散的。</p>
+<p>概率分布用来描述一个或多个随机变量取某几个值的可能性。</p>
+<h3 id="离散随机变量和概率质量函数pmf">离散随机变量和概率质量函数(pmf)</h3>
+<p>PMF是一个函数，将随机变量x的状态映射到发生每个状态的概率。PMF必须满足以下三个条件：</p>
+<ol type="1">
+<li>P的定义域必须为x的所有状态。</li>
+<li><span class="math inline">\(\forall x\in\text{x},0\leq P(x) \leq 1\)</span></li>
+<li><span class="math inline">\(\sum_{x\in\text{x}}P(x) = 1\)</span></li>
+</ol>
+<h3 id="连续随机变量与概率密度函数pdf">连续随机变量与概率密度函数(PDF)</h3>
+<p>一个概率密度函数p要满足的性质为：</p>
+<ol type="1">
+<li>p的定义域必须为x的所有取值</li>
+<li><span class="math inline">\(\forall x \in\text{x},\,p(x)\geq 0\)</span></li>
+<li><span class="math inline">\(\int p(x) = 1\)</span></li>
+</ol>
+<p>PDF没有直接给出概率，而是在无穷小区间<span class="math inline">\(\delta x\)</span>内，概率为<span class="math inline">\(p(x)\delta x\)</span>.那么在一个区间内的概率即可用积分计算。</p>
+<h2 id="边缘概率">边缘概率</h2>
+<p>边缘概率分布指的是给定一个联合概率分布，求其中某一个子集的概率分布。</p>
+<p>对于离散联合分布<span class="math inline">\(P(x,y)\)</span>：</p>
+<p><span class="math display">\[
+\begin{aligned}
+    P(x) = \sum_yP(x, \text{y}=y)
+\end{aligned}
+\]</span></p>
+<p>对于连续的联合概率分布<span class="math inline">\(P(x,y)\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+    P(x) = \int P(x, y)dy
+\end{aligned}
+\]</span></p>
+<p>y的分布同理。</p>
+<h2 id="条件概率">条件概率</h2>
+<p>条件概率是指在给定某些事件发生概率时，求某个事件的发生概率。</p>
+<p>如在给定<span class="math inline">\(\text{x}=x\)</span>发生的概率时，求<span class="math inline">\(\text{y}=y\)</span>发生的概率：</p>
+<p><span class="math display">\[
+p(\text{y}=y | \text{x} = x) = \frac{P(\text{y}=y,\text{x}=x)}{p(\text{x}=x)} 
+\]</span></p>
+<p>条件概率的链式法则：</p>
+<p><span class="math display">\[
+P(\text{x}^{(1)}, \ldots, \text{x}^{(n)}) = P(\text{x}^{(1)}) \Pi_{i=2}^n P(\text{x}^{(i)} \mid \text{x}^{(1)}, \ldots, \text{x}^{(i-1)}) .
+\]</span></p>
+<p>如</p>
+<p><span class="math display">\[
+p(a,b,c) = p(a|b,c)p(b|c)p(c)
+\]</span></p>
+<h2 id="独立与条件独立">独立与条件独立</h2>
+<p>独立：</p>
+<p><span class="math display">\[
+p(\text{x}=x,\text{y}=y) = p(\text{x}=x)p(\text{y}=y)
+\]</span></p>
+<p>条件独立：</p>
+<p><span class="math display">\[
+p(\text{x}=x,\text{y}=y|\text{z}=z) = p(\text{x}=x|\text{z}=z)p(\text{y}=y|\text{z}=z)
+\]</span></p>
+<h2 id="期望方差和协方差">期望、方差和协方差</h2>
+<p>对于函数f，给定一个随机变量x，其期望是指f作用到x上时的平均值：</p>
+<p><span class="math display">\[
+\mathbb{E}_{x\sim p}[f(x)] = \begin{cases}
+    \sum_x p(x)f(x)  \\
+    \int p(x)f(x)dx
+\end{cases}
+\]</span></p>
+<p>方差是指f作用到x上之后，f(x)的值的差异。</p>
+<p><span class="math display">\[
+\text{Var}(x) = \mathbb{E}[(f(x)-\mathbb{E}[f(x)])^2]
+\]</span></p>
+<p>协方差用来描绘两个随机变量线性相关的程度。</p>
+<p>如果协方差是0则一定没有线性关系，但不一定独立。如果两个随机变量相互独立，则一定不相关。</p>
+<h2 id="贝叶斯规则">贝叶斯规则</h2>
+<p><span class="math display">\[
+P(x|y) = \frac{P(y|x)P(x)}{P(y)}
+\]</span></p>
+<h2 id="信息论">信息论</h2>
+<p>信息论的基本想法是一个不太可能的事件居然发生了，要比一个非常可能的事件发生，能提供更多的信息。</p>
+<p>一个事件<span class="math inline">\(\text{x}=x\)</span>的自信息为:</p>
+<p><span class="math display">\[
+I(x) = -\text{log}P(x)
+\]</span></p>
+<p>单位是net，一net是指以概率<span class="math inline">\(\frac{1}{e}\)</span>观测到某个事件时获得的信息量。</p>
+<p>整个概率分布中的不确定性的总量通常用香农熵量化：</p>
+<p><span class="math display">\[
+H(x) = \mathbb{E}(I(x))
+\]</span></p>
+<p>KL散度通常用于衡量两个分布的差异：</p>
+<p><span class="math display">\[
+D_{KL}(P||Q) = \mathbb{E}_{x\sim P}(\text{log}P(x)-\text{log}Q(x))
+\]</span></p>
+<p>交叉熵：</p>
+<p><span class="math display">\[
+H(P,Q) = D_{KL}(P||Q) + H(P) = - \mathbb{E}_{x\sim P}[\text{log}Q(x)]
+\]</span></p>
+<p>针对Q最小化H同样可以最小化KL散度，因为前面那一项通常与Q无关。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/18/meituan-interview/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1445,141 +1669,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/23/load-process/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Gummary">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="炼丹炉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/12/23/load-process/" itemprop="url">可执行文件装载与进程</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-23T18:54:26+08:00">
-                2019-12-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/12/23/load-process/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2019/12/23/load-process/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="进程虚拟空间">进程虚拟空间</h1>
-<p>32位操作系统的虚拟空间大小为<span class="math inline">\(2^{32}\)</span>B,也即4GB；64位操作系统为<span class="math inline">\(2^{64}\)</span>B。在32为Linux操作系统中，虚拟空间的分配是一部分用于操作系统(0xC0000000-0xFFFFFFFF),剩余部分供进程使用</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/12/23/load-process/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1630,7 +1719,7 @@
               
                 <a href="/archives/%7C%7Carchive">
               
-                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-count">58</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1652,7 +1741,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-count">49</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
