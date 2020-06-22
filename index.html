@@ -322,69 +322,15 @@
 
       
         
-          
-            <a id="more"></a>
-<h1 id="java中的nio">JAVA中的NIO</h1>
+          <h1 id="java中的nio">JAVA中的NIO</h1>
 <p>NIO是为了加快程序处理IO的速度重新编写的一套JAVA IO包。与原来的<code>java.io.*</code>的最大的不同在于NIO是以块来处理数据而之前是以流的形式处理数据。</p>
-<h2 id="channel与buffer">channel与buffer</h2>
-<p>channel与buffer是NIO中的核心，channel可以看作<code>java.io</code>中的流，而buffer是存放数据的容器。任何送入channel的数据必须放在buffer中，而从channel中读出的数据都被读入一个buffer中。</p>
-<p>buffer可以看作是一个数组。<strong>buffer</strong>的种类有很多，其中<code>ByteBuffer</code>是最常用的，提供了对byte类型的读写。</p>
-<p><strong>channels</strong>与流的最大不同之处在于，<strong>channels</strong>是双向的，也即既可以向其中发数据也可以从其中读数据。</p>
-<h2 id="使用nio进行读写">使用NIO进行读写</h2>
-<h3 id="读操作">读操作</h3>
-<p>使用NIO进行读操作是利用channel向一个buffer中写入，主要分三步：</p>
-<ol type="1">
-<li>获取Channel对象</li>
-<li>创建Buffer对象</li>
-<li>从Channel中读取数据存入到Buffer中</li>
-</ol>
-<p>例如，从文件中读数据：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// step 1</span></span><br><span class="line">FileInputStream fin = <span class="keyword">new</span> FileInputStream( <span class="string">"readandshow.txt"</span> );</span><br><span class="line">FileChannel fc = fin.getChannel();</span><br><span class="line"><span class="comment">// step 2</span></span><br><span class="line">ByteBuffer buffer = ByteBuffer.allocate( <span class="number">1024</span> );</span><br><span class="line"><span class="comment">// step 3</span></span><br><span class="line">fc.read( buffer );</span><br></pre></td></tr></table></figure>
-<h3 id="写操作">写操作</h3>
-<p>与从文件中读数据类似</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// step 1</span></span><br><span class="line">FileInputStream fin = <span class="keyword">new</span> FileInputStream( <span class="string">"readandshow.txt"</span> );</span><br><span class="line">FileChannel fc = fin.getChannel();</span><br><span class="line"><span class="comment">// step 2</span></span><br><span class="line">ByteBuffer buffer = ByteBuffer.allocate( <span class="number">1024</span> );</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;message.length; ++i) &#123;</span><br><span class="line">    buffer.put( message[i] );</span><br><span class="line">&#125;</span><br><span class="line">buffer.flip();</span><br><span class="line"><span class="comment">// step 3</span></span><br><span class="line">fc.write( buffer );</span><br></pre></td></tr></table></figure>
-<h3 id="同时读写">同时读写</h3>
-<p>使用NIO可以利用两个Channel和一个buffer同时进行读写，如下copy文件的例子：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建读写文件的流</span></span><br><span class="line">FileInputStream fin = <span class="keyword">new</span> FileInputStream(infile);</span><br><span class="line">FileOutputStream fout = <span class="keyword">new</span> FileOutputStream(outfile);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过流获取文件的channel</span></span><br><span class="line">FileChannel fcin = fin.getChannel();</span><br><span class="line">FileChannel fcout = fout.getChannel();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 分配一个读写的buffer</span></span><br><span class="line">ByteBuffer buffer = ByteBuffer.allocateDirect(<span class="number">1024</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在读之前需要调用buffer的clear操作</span></span><br><span class="line">    buffer.clear();</span><br><span class="line">    <span class="keyword">int</span> r = fcin.read(buffer);</span><br><span class="line">    <span class="keyword">if</span> (r &lt;= <span class="number">0</span>) &#123;<span class="comment">//r == -1 全部读完</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在写之前需要调用buffer的flip操作</span></span><br><span class="line">    buffer.flip();</span><br><span class="line">    fcout.write(buffer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="buffer">Buffer</h2>
-<h3 id="buffer的内部实现">Buffer的内部实现</h3>
-<p>一个buffer的状态可以用以下三个变量表示：</p>
-<ul>
-<li>position</li>
-<li>limit</li>
-<li>capacity</li>
-</ul>
-<p>buffer内部可以看作一个连续的数组，<strong>position</strong>变量记录了从channel向buffer中写数据时写的字符数量；同时也记录了在向channel写入时从buffer中读的字符数量。</p>
-<p><strong>limit</strong>变量记录了还可以从buffer中获取或写入多少字符。</p>
-<p><strong>capacity</strong>变量记录了这个buffer全部的大小</p>
-<p>初始化一个buffer时，position为0，limit和capacity为初始时内部数组的长度。读入数据时，position不断增大，直到数据全部写入buffer或等于limit。</p>
-<p>在第一次从buffer中读取数据向channel中写入数据时，必须先调用flip函数，flip函数主要完成两个任务：</p>
-<ol type="1">
-<li>将limit的值设置为当前的position</li>
-<li>将position置为0</li>
-</ol>
-<p>通过flip来保证写入channel的字符数量是已经读入到buffer中的。</p>
-<p>读完之后再次向buffer中写入，需要调用clear函数，clear也完成两个任务：</p>
-<ol type="1">
-<li>将position置为0</li>
-<li>将limit置为capacity</li>
-</ol>
-<p>保证下次写入时是从头开始写入的。</p>
-<h3 id="buffer的一些操作">Buffer的一些操作</h3>
-<p><strong>buffer</strong>的初始化和wrap操作</p>
-<p>初始化一个buffer通常用静态函数allocate()分配：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ByteBuffer buffer = ByteBuffer.allocate( <span class="number">1024</span> );</span><br></pre></td></tr></table></figure>
-<p>也可以直接将一个Byte字符数组包装成一个ByteBuffer，但是这种操作使Bytebuff可以通过一个byte数组同时访问。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span> array[] = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">ByteBuffer buffer = ByteBuffer.wrap( array );</span><br></pre></td></tr></table></figure>
-<p><strong>buffer</strong>的切片</p>
-<p><code>buffer.slice()</code>从一个已有的buffer中创建一个子buffer，二者共享同一个array。进行切片的方法是设置position和limit变量，slice将利用二者中间的数组创建一个新的slice</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">buffer.position( <span class="number">3</span> );</span><br><span class="line">buffer.limit( <span class="number">7</span> );</span><br><span class="line">ByteBuffer slice = buffer.slice();</span><br></pre></td></tr></table></figure>
-<p><strong>MapedByteBuffer</strong></p>
-<p>使用<code>FileChannel.map()</code>可以将文件的一部分内容直接映射到内存，加快文件的IO速度。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MappedByteBuffer mbb = fc.map( FileChannel.MapMode.READ_WRITE, <span class="number">0</span>, <span class="number">1024</span> );</span><br></pre></td></tr></table></figure>
-<p><code>MappedByteBuffer</code>是<code>ByteBuffer</code>的一个子类，操作与<code>ByteBuffer</code>类似。</p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/22/java-nio-introduction/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
