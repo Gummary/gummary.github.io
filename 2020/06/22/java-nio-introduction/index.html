@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="JAVA中的NIO NIO是为了加快程序处理IO的速度重新编写的一套JAVA IO包。与原来的java.io.*的最大的不同在于NIO是以块来处理数据而之前是以流的形式处理数据。 channel与buffer channel与buffer是NIO中的核心，channel可以看作java.io中的流，而buffer是存放数据的容器。任何送入channel的数据必须放在buffer中，而从c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java-nio简介">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;06&#x2F;22&#x2F;java-nio-introduction&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="JAVA中的NIO NIO是为了加快程序处理IO的速度重新编写的一套JAVA IO包。与原来的java.io.*的最大的不同在于NIO是以块来处理数据而之前是以流的形式处理数据。 channel与buffer channel与buffer是NIO中的核心，channel可以看作java.io中的流，而buffer是存放数据的容器。任何送入channel的数据必须放在buffer中，而从c">
+<meta property="article:published_time" content="2020-06-22T09:37:42.000Z">
+<meta property="article:modified_time" content="2020-06-22T09:38:37.022Z">
+<meta property="article:author" content="Gummary">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/06/22/java-nio-introduction/"/>
+
+
+
+
+
+  <title>java-nio简介 | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/22/java-nio-introduction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java-nio简介</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-22T17:37:42+08:00">
+                2020-06-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/22/java-nio-introduction/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/06/22/java-nio-introduction/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <a id="more"></a>
+<h1 id="java中的nio">JAVA中的NIO</h1>
+<p>NIO是为了加快程序处理IO的速度重新编写的一套JAVA IO包。与原来的<code>java.io.*</code>的最大的不同在于NIO是以块来处理数据而之前是以流的形式处理数据。</p>
+<h2 id="channel与buffer">channel与buffer</h2>
+<p>channel与buffer是NIO中的核心，channel可以看作<code>java.io</code>中的流，而buffer是存放数据的容器。任何送入channel的数据必须放在buffer中，而从channel中读出的数据都被读入一个buffer中。</p>
+<p>buffer可以看作是一个数组。<strong>buffer</strong>的种类有很多，其中<code>ByteBuffer</code>是最常用的，提供了对byte类型的读写。</p>
+<p><strong>channels</strong>与流的最大不同之处在于，<strong>channels</strong>是双向的，也即既可以向其中发数据也可以从其中读数据。</p>
+<h2 id="使用nio进行读写">使用NIO进行读写</h2>
+<h3 id="读操作">读操作</h3>
+<p>使用NIO进行读操作是利用channel向一个buffer中写入，主要分三步：</p>
+<ol type="1">
+<li>获取Channel对象</li>
+<li>创建Buffer对象</li>
+<li>从Channel中读取数据存入到Buffer中</li>
+</ol>
+<p>例如，从文件中读数据：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// step 1</span></span><br><span class="line">FileInputStream fin = <span class="keyword">new</span> FileInputStream( <span class="string">"readandshow.txt"</span> );</span><br><span class="line">FileChannel fc = fin.getChannel();</span><br><span class="line"><span class="comment">// step 2</span></span><br><span class="line">ByteBuffer buffer = ByteBuffer.allocate( <span class="number">1024</span> );</span><br><span class="line"><span class="comment">// step 3</span></span><br><span class="line">fc.read( buffer );</span><br></pre></td></tr></table></figure>
+<h3 id="写操作">写操作</h3>
+<p>与从文件中读数据类似</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// step 1</span></span><br><span class="line">FileInputStream fin = <span class="keyword">new</span> FileInputStream( <span class="string">"readandshow.txt"</span> );</span><br><span class="line">FileChannel fc = fin.getChannel();</span><br><span class="line"><span class="comment">// step 2</span></span><br><span class="line">ByteBuffer buffer = ByteBuffer.allocate( <span class="number">1024</span> );</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;message.length; ++i) &#123;</span><br><span class="line">    buffer.put( message[i] );</span><br><span class="line">&#125;</span><br><span class="line">buffer.flip();</span><br><span class="line"><span class="comment">// step 3</span></span><br><span class="line">fc.write( buffer );</span><br></pre></td></tr></table></figure>
+<h3 id="同时读写">同时读写</h3>
+<p>使用NIO可以利用两个Channel和一个buffer同时进行读写，如下copy文件的例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建读写文件的流</span></span><br><span class="line">FileInputStream fin = <span class="keyword">new</span> FileInputStream(infile);</span><br><span class="line">FileOutputStream fout = <span class="keyword">new</span> FileOutputStream(outfile);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过流获取文件的channel</span></span><br><span class="line">FileChannel fcin = fin.getChannel();</span><br><span class="line">FileChannel fcout = fout.getChannel();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 分配一个读写的buffer</span></span><br><span class="line">ByteBuffer buffer = ByteBuffer.allocateDirect(<span class="number">1024</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在读之前需要调用buffer的clear操作</span></span><br><span class="line">    buffer.clear();</span><br><span class="line">    <span class="keyword">int</span> r = fcin.read(buffer);</span><br><span class="line">    <span class="keyword">if</span> (r &lt;= <span class="number">0</span>) &#123;<span class="comment">//r == -1 全部读完</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在写之前需要调用buffer的flip操作</span></span><br><span class="line">    buffer.flip();</span><br><span class="line">    fcout.write(buffer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="buffer">Buffer</h2>
+<h3 id="buffer的内部实现">Buffer的内部实现</h3>
+<p>一个buffer的状态可以用以下三个变量表示：</p>
+<ul>
+<li>position</li>
+<li>limit</li>
+<li>capacity</li>
+</ul>
+<p>buffer内部可以看作一个连续的数组，<strong>position</strong>变量记录了从channel向buffer中写数据时写的字符数量；同时也记录了在向channel写入时从buffer中读的字符数量。</p>
+<p><strong>limit</strong>变量记录了还可以从buffer中获取或写入多少字符。</p>
+<p><strong>capacity</strong>变量记录了这个buffer全部的大小</p>
+<p>初始化一个buffer时，position为0，limit和capacity为初始时内部数组的长度。读入数据时，position不断增大，直到数据全部写入buffer或等于limit。</p>
+<p>在第一次从buffer中读取数据向channel中写入数据时，必须先调用flip函数，flip函数主要完成两个任务：</p>
+<ol type="1">
+<li>将limit的值设置为当前的position</li>
+<li>将position置为0</li>
+</ol>
+<p>通过flip来保证写入channel的字符数量是已经读入到buffer中的。</p>
+<p>读完之后再次向buffer中写入，需要调用clear函数，clear也完成两个任务：</p>
+<ol type="1">
+<li>将position置为0</li>
+<li>将limit置为capacity</li>
+</ol>
+<p>保证下次写入时是从头开始写入的。</p>
+<h3 id="buffer的一些操作">Buffer的一些操作</h3>
+<p><strong>buffer</strong>的初始化和wrap操作</p>
+<p>初始化一个buffer通常用静态函数allocate()分配：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ByteBuffer buffer = ByteBuffer.allocate( <span class="number">1024</span> );</span><br></pre></td></tr></table></figure>
+<p>也可以直接将一个Byte字符数组包装成一个ByteBuffer，但是这种操作使Bytebuff可以通过一个byte数组同时访问。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span> array[] = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">ByteBuffer buffer = ByteBuffer.wrap( array );</span><br></pre></td></tr></table></figure>
+<p><strong>buffer</strong>的切片</p>
+<p><code>buffer.slice()</code>从一个已有的buffer中创建一个子buffer，二者共享同一个array。进行切片的方法是设置position和limit变量，slice将利用二者中间的数组创建一个新的slice</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">buffer.position( <span class="number">3</span> );</span><br><span class="line">buffer.limit( <span class="number">7</span> );</span><br><span class="line">ByteBuffer slice = buffer.slice();</span><br></pre></td></tr></table></figure>
+<p><strong>MapedByteBuffer</strong></p>
+<p>使用<code>FileChannel.map()</code>可以将文件的一部分内容直接映射到内存，加快文件的IO速度。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MappedByteBuffer mbb = fc.map( FileChannel.MapMode.READ_WRITE, <span class="number">0</span>, <span class="number">1024</span> );</span><br></pre></td></tr></table></figure>
+<p><code>MappedByteBuffer</code>是<code>ByteBuffer</code>的一个子类，操作与<code>ByteBuffer</code>类似。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/09/java-hashmap/" rel="next" title="JAVA中Hashmap实现">
+                <i class="fa fa-chevron-left"></i> JAVA中Hashmap实现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#java中的nio"><span class="nav-number">1.</span> <span class="nav-text">JAVA中的NIO</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#channel与buffer"><span class="nav-number">1.1.</span> <span class="nav-text">channel与buffer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用nio进行读写"><span class="nav-number">1.2.</span> <span class="nav-text">使用NIO进行读写</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读操作"><span class="nav-number">1.2.1.</span> <span class="nav-text">读操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写操作"><span class="nav-number">1.2.2.</span> <span class="nav-text">写操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#同时读写"><span class="nav-number">1.2.3.</span> <span class="nav-text">同时读写</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#buffer"><span class="nav-number">1.3.</span> <span class="nav-text">Buffer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#buffer的内部实现"><span class="nav-number">1.3.1.</span> <span class="nav-text">Buffer的内部实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#buffer的一些操作"><span class="nav-number">1.3.2.</span> <span class="nav-text">Buffer的一些操作</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
