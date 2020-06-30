@@ -242,6 +242,147 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/30/jcip-chapter4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/30/jcip-chapter4/" itemprop="url">JAVA并发编程实战笔记（二）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-30T21:49:56+08:00">
+                2020-06-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/30/jcip-chapter4/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/06/30/jcip-chapter4/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="对象的组合">对象的组合</h1>
+<h2 id="线程安全的类">线程安全的类</h2>
+<p>设计线程安全类的主要三个要素：</p>
+<ol type="1">
+<li>找出构成对象状态的所有变量</li>
+<li>找出约束状态变量的不变性条件</li>
+<li>建立对象状态的并发访问管理策略</li>
+</ol>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/30/jcip-chapter4/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/22/jcip-chapter2_3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -322,173 +463,17 @@
 
       
         
-          
-            <h1 id="线程安全性">线程安全性</h1>
+          <h1 id="线程安全性">线程安全性</h1>
 <h2 id="定义">定义</h2>
 <p>对线程安全性定义：当多个线程访问某个类时，不管运行时环境采用何种调度方式、线程以何种方式交替执行，主调函数在不采用任何同步措施时，这个类都能表现出正确的结果和行为。</p>
 <p>对于不包含任何成员变量，不含对其他类中成员变量引用的类称为无状态类，无状态类一定是线程安全的。</p>
-<h2 id="原子性">原子性</h2>
-<p>java中只对基本类型变量的读和写保证原子性，写只能是写常量。</p>
-<p>由于不恰当的执行顺序导致不正确的结果，称作Race condition.</p>
-<p>Check-Then-Act和Read-Change-Write是两种常见的Race condition。前者是指根据之前某个可能出错的观察结果进行下一步操作，后者是指根据之前的状态定义之后的状态转换。</p>
-<p>延迟初始化是一种常见的Check-Then-Act情况：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@NotThreadSafe</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LazyInitRace</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> ExpensiveObject instance = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ExpensiveObject <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>)</span><br><span class="line">            instance = <span class="keyword">new</span> ExpensiveObject();</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExpensiveObject</span> </span>&#123; &#125;</span><br></pre></td></tr></table></figure>
-<p>如果两个线程同时调用<code>getInstance</code>，instance均为null，则两个线程得到的可能就不是同一个ExpensiveObject</p>
-<p>自增是一种常见的Read-Change-Write，如<code>condition++</code>其实时三个操作<code>tmp = condition;tmp = tmp+1;condition=tmp;</code>,当两个进程同时读<code>condition</code>时，就会使condition少加一次。</p>
-<p>为了确保线程安全性，上述两种情况必须是原子操作，也即在某个线程修改某个变量时，必须通过某种方式防止其他线程使用这个变量。</p>
-<p>对于自增操作，可以利用java.util.concurrent.atomic提供的原子变量类替代非线程安全的变量，如用AtomicLong替代Long.</p>
-<h2 id="加锁机制">加锁机制</h2>
-<p>使用多个原子类存储状态时，要保证这些原子类之间不相互依赖，如果存在依赖关系那么要在同一个原子操作内完成对这些参数的更新。</p>
-<p>java提供一种内置锁机制支持原子性——同步代码块。同步代码块包含两部分：一个是作为锁的对象的引用，一个是被保护的代码块。由synchronized修饰的方法的锁为方法调用的对象，由synchronized修饰的静态方法的锁是该方法的Class</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (lock) &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>JAVA中每个对象都可以当作锁，称作内置锁或监控锁(Monitor lock)，获得这个锁的唯一方式就是进入由synchronized修饰的方法,退出时自动释放锁.</p>
-<p>JAVA中的内置锁是可重入的,重入是指锁的粒度是线程级的,只针对其他线程,线程本身可重复进入同步代码块,例如递归执行某个synchronized修饰的方法,如果是不可重入的,那么递归将发生死锁.</p>
-<h2 id="用锁来保护状态">用锁来保护状态</h2>
-<p>对象的内置锁与其内部的成员变量没有内在的联系，一个线程获得了该类的锁，并不能阻止其他线程访问这个类的成员变量。因此要用同一个锁来保护该对象内的所有可变的状态。</p>
-<h2 id="活跃性与性能">活跃性与性能</h2>
-<p>如果不加区别的滥用<code>synchronized</code>，那么就会导致活跃性问题或性能问题，必须合理的设计同步代码块，使同步代码块中只包含需要同步的部分，并且确定在执行该代码时是否需要很长的时间，如果持有锁的时间过长，就会导致活跃性与性能。</p>
-<h1 id="共享数据">共享数据</h1>
-<p>共享数据是指如何安全的共享和发布对象，使其能被多个进程安全的访问。</p>
-<h2 id="有序性可见性">有序性、可见性</h2>
-<p><strong>有序性</strong></p>
-<p>在多线程环境下，当读操作和写操作在不同的的线程中执行时，无法保证读线程看到的是正确的值。</p>
-<p>在没有同步的情况下，编译器、处理器及运行时都有可能对操作的执行顺序做一些调整，加快代码的执行速度，如下面的代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="number">1</span></span><br><span class="line">b = <span class="number">1</span></span><br><span class="line">c = a + b</span><br></pre></td></tr></table></figure>
-<p>可分解为下面五个步骤：</p>
-<ol type="1">
-<li>对a赋值</li>
-<li>对b赋值</li>
-<li>读a</li>
-<li>读b</li>
-<li>对c赋值</li>
-</ol>
-<p>其中1,2和3，4的顺序可以不是顺序的.</p>
-<p>因此要防止重排序引发的顺序，要对代码使用同步机制。</p>
-<p><strong>可见性</strong></p>
-<p>线程在读取某个由多个线程共享的变量时，如果另一个线程同时在写，那么就有可能读到失效值。对于这个失效值，可能是之前的某个正确的值，而不是随机的，这种安全性保证称作最低安全性。但是当变量为非volatile类型得64位数值时，可能不存在这种最低安全性。因为JVM允许对于64位的数值变量修改时，分解为对两个32位的数值修改。</p>
-<p>为了保证所有线程都能看到共享变量的最新值，所有读操作和写操作的线程都必须在同一个锁上同步。</p>
-<p><strong>volatile参数</strong></p>
-<p>用volatile参数修饰的变量可以保证：</p>
-<ol type="1">
-<li>保证了不同线程对这个变量进行操作时的可见性，即一个线程修改了某个变量的值，这新值对其他线程来说是立即可见的。</li>
-<li>禁止进行指令重排序。</li>
-</ol>
-<p>详细参考<a href="https://www.cnblogs.com/dolphin0520/p/3920373.html" target="_blank" rel="noopener">Java并发编程：volatile关键字解析</a></p>
-<p>需要注意的是，volatile并不能保证自增操作的原子性：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">volatile</span> <span class="keyword">int</span> inc = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">    <span class="keyword">new</span> Thread()&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;<span class="number">1000</span>;j++)</span><br><span class="line">                test.increase();</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上述代码执行后inc的值并不是10000，因为<code>inc++</code>并不是一个原子操作，是一个读-改-写的操作，当一个线程执行读后被阻塞了，没有对其修改，所以其他线程中的cache仍是有效的，此时另一个线程执行读改写操作，而此时线程1已经读（原子操作）完了，可见性已经失效，就会造成线程1读取的是失效的值。</p>
-<p>volatile可以在一定程度上保证原子性，用volatile修饰的变量，在修改该变量之前的代码一定比这行代码先执行，之后的代码一定后执行。</p>
-<p><strong>volatile的原理和实现机制</strong></p>
-<p>实现有序性的原理是：</p>
-<p>观察加入volatile关键字和没有加入volatile关键字时所生成的汇编代码发现，加入volatile关键字时，会多出一个lock前缀指令</p>
-<p>lock前缀指令实际上相当于一个内存屏障（也成内存栅栏），内存屏障会提供3个功能：</p>
-<ol type="1">
-<li>它确保指令重排序时不会把其后面的指令排到内存屏障之前的位置，也不会把前面的指令排到内存屏障的后面；即在执行到内存屏障这句指令时，在它前面的操作已经全部完成；</li>
-<li>它会强制将对缓存的修改操作立即写入主存；</li>
-<li>如果是写操作，它会导致其他CPU中对应的缓存行无效。</li>
-</ol>
-<h2 id="发布与逸出">发布与逸出</h2>
-<p><strong>发布</strong></p>
-<p>发布是指创建一个新对象，通过静态变量等方式使这个变量能够被其他线程所使用。</p>
-<p><strong>逸出</strong></p>
-<p>某个不应当被发布的对象被发布时，称作逸出。例如，当某个对象还没有被创建完成时，就可以被其他对象访问。</p>
-<p>发布对象的方法：</p>
-<ol type="1">
-<li>将对象的引用保存到公有的静态变量中</li>
-<li>被其他对象简介发布，如发布一个集合类，集合中的元素就是被简介发布的</li>
-<li>利用类的非私有的方法返回一个对象的引用，则会发布该对象</li>
-<li>发布一个对象时，其非私有域中引用的所有对象都会被发布</li>
-<li>将类传递给某个外部方法，外部方法是指行为不完全由该类指定的方法，包括其他类中定义的方法、类C中可以被改写的方法（非final或private方法）</li>
-<li>发布内部类的实例</li>
-</ol>
-<p>会出现逸出的情况：</p>
-<ol type="1">
-<li>内部可变状态的逸出</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Class UnsafeStates&#123;</span><br><span class="line">     <span class="keyword">private</span> String[] states = <span class="keyword">new</span> String[]&#123;</span><br><span class="line">         <span class="string">"AK"</span>,<span class="string">"AL"</span>……</span><br><span class="line">     &#125;;</span><br><span class="line">     <span class="keyword">public</span> String[] getStates()&#123; <span class="keyword">return</span> states&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>任何调用者都可以通过<code>getStates</code>方法得到<code>states</code>对象，并对其进行修改。</p>
-<ol start="2" type="1">
-<li>this引用逸出</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThisEscape</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ThisEscape</span><span class="params">(EventSource source)</span> </span>&#123;</span><br><span class="line">        source.registerListener(<span class="keyword">new</span> EventListener() &#123;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onEvent</span><span class="params">(Event e)</span> </span>&#123;</span><br><span class="line">                doSomething(e);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">doSomething</span><span class="params">(Event e)</span> </span>&#123;&#125;</span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">EventSource</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">registerListener</span><span class="params">(EventListener e)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">EventListener</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">onEvent</span><span class="params">(Event e)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">Event</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在<code>ThisEscape</code>的构造函数中，new了一个非静态内部类，这个内部类包含一个外围类的this引用，编译器会隐式的将this作为参数传递给内部类，其中<code>onEvent</code>中的<code>doSomething</code>就是通过这个调用外部类的方法。而由于是在构造函数中发布的这个类，因此就会发生在还没有构造完ThisEscap的情况下，发布this。</p>
-<p>解决的方式是通过构造一个静态的工厂函数：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> class <span class="title">SafeListener</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> EventListener listener;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SafeListener</span><span class="params">()</span></span>&#123;</span><br><span class="line">        listener = <span class="keyword">new</span> EventListener()&#123;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onEvent</span><span class="params">(Event e)</span></span>&#123;</span><br><span class="line">                doSonmething(e);            </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SafeListener <span class="title">newInstance</span><span class="params">(EventSource source)</span></span>&#123;</span><br><span class="line">        SafeListener safe = <span class="keyword">new</span> SafeListener();</span><br><span class="line">        source.registerListener(safe.listener);</span><br><span class="line">        <span class="keyword">return</span> safe;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="线程封闭性">线程封闭性</h2>
-<p>访问共享的可变对象通常需要使用同步，一种避免使用同步的方式就是不共享变量。将对象封闭在线程中的做法称为线程封闭，是实现线程安全的最简单的方式。</p>
-<p><strong>Ad-hoc线程封闭</strong></p>
-<p>Ad-hoc线程封闭是指线程封闭性完全由程序实现来承担，但由于没有任何语言特性能够将某个对象封闭到某个线程上，因此该方法非常脆弱。</p>
-<p>volatile上存在一种特殊的封闭性，保证只有某一个线程可以对该变量进行写操作，通过将写操作封闭到某一个线程中，可以防止发生静态条件，而其可见性保证了其他线程的值是正确的。</p>
-<p><strong>栈封闭</strong></p>
-<p>栈封闭是指只能通过局部变量才能访问对象，因为局部变量保存在每个线程自己的栈中，而一个线程是无法访问另一个线程的栈的。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">loadTheArk</span><span class="params">(Collection candidates)</span> </span>&#123;</span><br><span class="line">    SortedSet animals;</span><br><span class="line">    <span class="keyword">int</span> numPairs = <span class="number">0</span>;</span><br><span class="line">    Animal candidate = <span class="keyword">null</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// animals被封闭在方法中，不要使它们逸出！</span></span><br><span class="line">    animals = <span class="keyword">new</span> TreeSet(<span class="keyword">new</span> SpeciesGenderComparator());</span><br><span class="line">    animals.addAll(candidates);</span><br><span class="line">    <span class="keyword">for</span> (Animal a : animals) &#123;</span><br><span class="line">        <span class="keyword">if</span> (candidate == <span class="keyword">null</span> || !candidate.isPotentialMate(a))</span><br><span class="line">            candidate = a;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            ark.load(<span class="keyword">new</span> AnimalPair(candidate, a));</span><br><span class="line">            ++numPairs;</span><br><span class="line">            candidate = <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> numPairs;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>要注意必须确保局部变量不会逸出，但是只有编码人员才知道哪些是要被封闭到线程中的，因此要留下一些注释说明这些变量，防止后续的开发使该变量逸出。</p>
-<p><strong>ThreadLocal类</strong></p>
-<p>ThreadLocal通常用于给可变单实例变量或全局变量（static）进行共享。ThreadLocal类提供get和set方法使每个线程都保存该变量的唯一一个副本。ThreadLocal类通常用于当多个线程同时使用同一个共享类时，而该共享类中的变量值与每个线程相关时，使用ThreadLocal类来保证每个线程中的该类状态都是独一无二的。</p>
-<p>例如，存储数据库连接，因为数据连接不是线程安全的，而每个线程都需要连接数据库，因此需要在每个线程中独一无二的创建一个连接。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConnectionDispenser</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> String DB_URL = <span class="string">"jdbc:mysql://localhost/mydatabase"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ThreadLocal&lt;Connection&gt; connectionHolder</span><br><span class="line">            = <span class="keyword">new</span> ThreadLocal&lt;Connection&gt;() &#123;</span><br><span class="line">                <span class="function"><span class="keyword">public</span> Connection <span class="title">initialValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        <span class="keyword">return</span> DriverManager.getConnection(DB_URL);</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">                        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"Unable to acquire Connection, e"</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;;</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Connection <span class="title">getConnection</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> connectionHolder.get();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>多个线程只需要创建一个<code>ConnectionDispenser</code>类即可实现拥有一个独一无二的连接。</p>
-<p>使用ThreadLocal会降低代码的可重用性，并在类之间引入隐含的耦合性，如：</p>
-<p>通过多线程分段计算区间的和</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> ThreadLocal&lt;Long&gt; localSum = <span class="keyword">new</span> ThreadLocal&lt;Long&gt;() &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> Long <span class="title">initialValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Long(<span class="number">0</span>);         </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Task</span> <span class="keyword">implements</span> <span class="title">Callable</span>&lt;<span class="title">Long</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> start = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> end = <span class="number">0</span>;    </span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Task</span><span class="params">(<span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.start = start;</span><br><span class="line">        <span class="keyword">this</span>.end = end;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Long <span class="title">call</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = start; i &lt; end; i++) &#123;</span><br><span class="line">            Foo.localSum.set(Foo.localSum.get() + i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> Foo.localSum.get();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>其中Task类就会与Foo类产生耦合。</p>
-<h2 id="不变性">不变性</h2>
-<p>如果一个对象的状态不可变，那么他就是线程安全的。</p>
-<p>线程安全是不变对象的固有属性。</p>
-<p>不可变对象简单而且安全，因为他的状态在构造函数时就已经确定了，很容易确定其状态；不可变对象的状态不可更改保证了其安全性。</p>
-<p>不可变对象并不是将该对象的所有域都设置为<code>final</code>，因为由<code>final</code>修饰的域可能是可变对象的引用。一个不可变对象必须满足：</p>
-<ol type="1">
-<li>创建之后状态不可更改</li>
-<li>所有域都是<code>final</code>的</li>
-<li>对象是正确创建的（在构造期间this没有逸出）</li>
-</ol>
-<p>利用可变对象也可以构造出不可变对象，如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Immutable</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreeStooges</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Set&lt;String&gt; stooges = <span class="keyword">new</span> HashSet&lt;String&gt;();</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ThreeStooges</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        stooges.add(<span class="string">"Moe"</span>);</span><br><span class="line">        stooges.add(<span class="string">"Larry"</span>);</span><br><span class="line">        stooges.add(<span class="string">"Curly"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isStooge</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> stooges.contains(name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>虽然<code>Set&lt;String&gt;</code>是可变的，但<code>ThreeStooges</code>满足上述三个条件：</p>
-<ol type="1">
-<li>创建之后<code>Set&lt;String&gt;</code>的内容就不变了</li>
-<li><code>Set&lt;String&gt;</code>是final修饰的</li>
-<li>没有出现this逸出</li>
-</ol>
-<p><strong>final域</strong></p>
-<p>final域是一个比C++中的<code>const</code>的一个受限版本，final类型的域是不可更改的，但是其引用的内容如果是可变对象那么其状态是可以更改的。</p>
-<p>除非需要某个域是可变的，否则应将其声明为<code>final</code></p>
-<p>使用<code>volatile</code>发布不可变对象</p>
-<p>将可能发生竞争条件的变量封装到一个不可变对象中，然后利用volatile声明一个容器，当该对象内部的状态发生改变时，通过创建一个新的对象，赋值给容器。</p>
-<p>通过这种方式，不可变对象保证了其状态是不可被其他线程更改的，volatile的有效性则保证了每个线程看到的状态都是有效的。如：</p>
-<p>使用不可变对象<code>OneValueCache</code>存储上一次的计算结果，在<code>VolatileCachedFactorizer</code>中创建一个volatile容器存储。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OneValueCache</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> BigInteger lastNumber;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> BigInteger[] lastFactors;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OneValueCache</span><span class="params">(BigInteger i,</span></span></span><br><span class="line"><span class="function"><span class="params">                         BigInteger[] factors)</span> </span>&#123;</span><br><span class="line">        lastNumber = i;</span><br><span class="line">        lastFactors = Arrays.copyOf(factors, factors.length);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> BigInteger[] getFactors(BigInteger i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (lastNumber == <span class="keyword">null</span> || !lastNumber.equals(i))</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> Arrays.copyOf(lastFactors, lastFactors.length);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@ThreadSafe</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VolatileCachedFactorizer</span> <span class="keyword">extends</span> <span class="title">GenericServlet</span> <span class="keyword">implements</span> <span class="title">Servlet</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> OneValueCache cache = <span class="keyword">new</span> OneValueCache(<span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">service</span><span class="params">(ServletRequest req, ServletResponse resp)</span> </span>&#123;</span><br><span class="line">        BigInteger i = extractFromRequest(req);</span><br><span class="line">        BigInteger[] factors = cache.getFactors(i);</span><br><span class="line">        <span class="keyword">if</span> (factors == <span class="keyword">null</span>) &#123;</span><br><span class="line">            factors = factor(i);</span><br><span class="line">            cache = <span class="keyword">new</span> OneValueCache(i, factors);</span><br><span class="line">        &#125;</span><br><span class="line">        encodeIntoResponse(resp, factors);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="安全发布">安全发布</h2>
-<p>如果一个对象没有被正确发布，那么使用该对象的线程就可能观察到该对象的状态发生突变，如：</p>
-<p>假设有一个对象为：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Holder</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> n;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Holder</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.n = n;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">assertSanity</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (n != n)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> AssertionError(<span class="string">"This statement is false."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>当一个线程初始化改变量，另一个线程执行<code>assertSanity</code>时就可能发生Error，因为<code>n!=n</code>首先要读取两次n，如果在两次读取之间初始化并发布该对象的线程执行了构造函数中的<code>this.n=n</code>，那么就会导致错误。</p>
-<p>如果不加合适的同步机制，就可能会使未被正确发布的对象出现两个问题：</p>
-<ol type="1">
-<li>除了构造线程外，其他的线程可能看到的是失效值</li>
-<li>线程在第一次读为失效值，第二次都为更新值。</li>
-</ol>
-<p>可变对象的引用对其他线程可见并不意味着其状态也是正确可见的，但是对于不可变对象来说，java的内存机制保证了不可变对象的引用和状态是同时可见的。</p>
-<p>任意线程都可以在不需要额外同步的条件下，安全地访问不可变对象。但是，如果final类型的域中存储的是可变对象，那么仍需对其添加同步。</p>
-<p>要安全的发布一个对象，必须保证其引用和状态同时对其他线程可见，安全发布的方式为：</p>
-<ol type="1">
-<li>静态初始化构造函数中初始化一个对象的引用</li>
-<li>将对象的引用保存到volatile或AtomicReference对象中</li>
-<li>将对象的引用保存到final域中</li>
-<li>将对象的引用保存到锁中</li>
-</ol>
-<p>在线程安全的容器类中，保证了内部的同步，也即向其中加入元素时，可以保证这些元素是安全发布的。</p>
-<p>1是安全发布的是因为静态初始化器由JVM在类得初始化阶段执行，JVM内部存在同步机制，因此是同步的。</p>
-<p>如果对象可以修改，那么安全发布只能确保在发布时的状态的可见性，因此在之后访问可变对象时，需要使用正确的同步机制。</p>
-<p>在并发程序中，共享和使用对象时一些实用的策略包括：</p>
-<ol type="1">
-<li>线程封闭，对象保存在线程栈上，仅有线程读取和修改</li>
-<li>只读共享，共享的只读对象可以在没用同步的条件下安全的被线程访问</li>
-<li>线程安全共享，对象的同步性在内部实现，线程通过公共端口访问而不需要额外的同步性</li>
-<li>保护对象，只能通过持有特定锁才能访问的对象</li>
-</ol>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/22/jcip-chapter2_3/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1603,141 +1588,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/10/Maximal-Square/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Gummary">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="炼丹炉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/03/10/Maximal-Square/" itemprop="url">Maximal-Square</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-10T21:13:06+08:00">
-                2020-03-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/03/10/Maximal-Square/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/03/10/Maximal-Square/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="problem-description">Problem Description</h1>
-<p>Given a 2D binary matrix filled with 0's and 1's, find the largest square containing only 1's and return its area.</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/03/10/Maximal-Square/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1788,7 +1638,7 @@
               
                 <a href="/archives/%7C%7Carchive">
               
-                  <span class="site-state-item-count">61</span>
+                  <span class="site-state-item-count">62</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
