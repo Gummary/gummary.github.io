@@ -83,15 +83,15 @@
 
 
 
-<meta name="description" content="Single Number Ⅰ &amp; Single Numerber Ⅱ 问题描述 这里直接推广到给定一个数组，其中只有一个数出现p次，其余数均出现k次。 数全部是由1bit组成的 假设有一个数组，里面只由0和1组成的，下面需要用一个计数器利用位操作统计其中1出现的次数。当这个计数器计数到某一个值，如本题中的k时，就要将计数器清零。假设计数器的二进制表示为\(x_m,\dots,x_">
+<meta name="description" content="Single Number Ⅰ &amp; Single Numerber Ⅱ 问题描述 这里直接推广到给定一个数组，其中只有一个数出现p次，其余数均出现k次。求出这个出现p次的数。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="只出现一次的数">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;08&#x2F;26&#x2F;single-number&#x2F;index.html">
 <meta property="og:site_name" content="炼丹炉">
-<meta property="og:description" content="Single Number Ⅰ &amp; Single Numerber Ⅱ 问题描述 这里直接推广到给定一个数组，其中只有一个数出现p次，其余数均出现k次。 数全部是由1bit组成的 假设有一个数组，里面只由0和1组成的，下面需要用一个计数器利用位操作统计其中1出现的次数。当这个计数器计数到某一个值，如本题中的k时，就要将计数器清零。假设计数器的二进制表示为\(x_m,\dots,x_">
+<meta property="og:description" content="Single Number Ⅰ &amp; Single Numerber Ⅱ 问题描述 这里直接推广到给定一个数组，其中只有一个数出现p次，其余数均出现k次。求出这个出现p次的数。">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;IFhEjzM.png">
 <meta property="article:published_time" content="2020-08-26T01:37:08.000Z">
-<meta property="article:modified_time" content="2020-08-26T02:31:56.764Z">
+<meta property="article:modified_time" content="2020-08-26T09:54:55.526Z">
 <meta property="article:author" content="Gummary">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;IFhEjzM.png">
@@ -326,7 +326,8 @@
       
         <h2 id="single-number-single-numerber">Single Number Ⅰ &amp; Single Numerber Ⅱ</h2>
 <p><strong>问题描述</strong></p>
-<p>这里直接推广到给定一个数组，其中只有一个数出现p次，其余数均出现k次。</p>
+<p>这里直接推广到给定一个数组，其中只有一个数出现p次，其余数均出现k次。求出这个出现p次的数。</p>
+<a id="more"></a>
 <p><strong>数全部是由1bit组成的</strong></p>
 <p>假设有一个数组，里面只由0和1组成的，下面需要用一个计数器利用位操作统计其中1出现的次数。当这个计数器计数到某一个值，如本题中的k时，就要将计数器清零。假设计数器的二进制表示为<span class="math inline">\(x_m,\dots,x_1\)</span>.该计数器满足：</p>
 <ol type="1">
