@@ -90,7 +90,7 @@
 <meta property="og:site_name" content="炼丹炉">
 <meta property="og:description" content="01背包问题 问题描述 假设有N个物体，第i个物体的重量为w[i],价值为c[i],背包容量为C,那么将哪些物体放入到背包中，可以在不超过背包容量的情况下使背包所装的价值最大">
 <meta property="article:published_time" content="2020-08-01T15:28:11.000Z">
-<meta property="article:modified_time" content="2020-08-26T09:57:02.674Z">
+<meta property="article:modified_time" content="2020-08-26T10:06:53.896Z">
 <meta property="article:author" content="Gummary">
 <meta name="twitter:card" content="summary">
 
@@ -774,6 +774,26 @@ f[i][v] = \text{max}(f[i-1][v-k\times w_i),\quad 0 \leq k \leq n_i
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.staticfile.org/MathJax/MathJax-2.6-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
   
 
 

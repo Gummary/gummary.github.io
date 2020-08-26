@@ -91,7 +91,7 @@
 <meta property="og:description" content="Single Number Ⅰ &amp; Single Numerber Ⅱ 问题描述 这里直接推广到给定一个数组，其中只有一个数出现p次，其余数均出现k次。求出这个出现p次的数。">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;IFhEjzM.png">
 <meta property="article:published_time" content="2020-08-26T01:37:08.000Z">
-<meta property="article:modified_time" content="2020-08-26T09:54:55.526Z">
+<meta property="article:modified_time" content="2020-08-26T10:07:56.679Z">
 <meta property="article:author" content="Gummary">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;IFhEjzM.png">
@@ -355,6 +355,38 @@
 <p>k=3,p=1</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># k=3 m=2所以需要2个32位数计数</span></span><br><span class="line">x1, x2 = <span class="number">0</span>, <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> n <span class="keyword">in</span> nums:</span><br><span class="line">    x2 ^ = (x1 &amp; n)</span><br><span class="line">    x1 ^= n</span><br><span class="line">    mask = ~(x2&amp;x1) <span class="comment"># k = 0x11</span></span><br><span class="line">    x1 &amp;= mask</span><br><span class="line">    x2 &amp;= mask</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> x1 <span class="comment"># p = 0x1 因此需要返回x1</span></span><br></pre></td></tr></table></figure>
 <p>k=5, p=3 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># k=5 m=3,需要三个32位数进行计数</span></span><br><span class="line">x1, x2, x3 = <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> n <span class="keyword">in</span> nums:</span><br><span class="line">    x3 ^= (x2&amp;x1&amp;n)</span><br><span class="line">    x2 ^= (x1 &amp; n)</span><br><span class="line">    x1 ^= n</span><br><span class="line">    mask = ~(x3&amp;~x2&amp;x1) <span class="comment"># k=0x101,因此x3,x1不变，x2取反</span></span><br><span class="line">    x1 &amp;= mask</span><br><span class="line">    x2 &amp;= mask</span><br><span class="line">    x3 &amp;= mask</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> x1 | x3 <span class="comment"># p = 0x101，因此返回x1或x3均可</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="single-number">Single Number Ⅲ</h2>
+<p><strong>问题描述</strong></p>
+<p>给定一个数组，里面有两个数只出现了一次，其他数均出现了两次。找出这两个数。</p>
+<p><strong>解法</strong></p>
+<p>利用异或的两个性质：</p>
+<ol type="1">
+<li>异或同一个数两次，结果为0</li>
+<li>两个不同的数异或得到这两个数二进制表示中不同的位数。</li>
+</ol>
+<p>由Single Number Ⅰ得，如果我们可以将数组分成两部分，在每一部分分别应用Single Number Ⅰ的做法就可以得到只出现过一次的两个数。</p>
+<p>可以利用两个数中不同不同位的二进制位将数组分成两部分，再在两个数组内分别异或。</p>
+<p>求两个数的不同位的位置也可以利用异或完成，将数组内的数异或后得到的就是两个数异或的结果。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">class</span> Solution:</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">    <span class="kw">def</span> singleNumber(<span class="va">self</span>, nums: List[<span class="bu">int</span>]) <span class="op">-&gt;</span> List[<span class="bu">int</span>]:</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">        xor <span class="op">=</span> nums[<span class="dv">0</span>]</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">        <span class="cf">for</span> n <span class="kw">in</span> nums[<span class="dv">1</span>:]:</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">            xor <span class="op">^=</span> n</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">            </a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">        i <span class="op">=</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">        <span class="cf">while</span> i <span class="op">&lt;</span> <span class="dv">32</span>:</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">            <span class="cf">if</span> xor <span class="op">&amp;</span> (<span class="dv">1</span> <span class="op">&lt;&lt;</span> i):</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">                <span class="cf">break</span></a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">            i <span class="op">+=</span> <span class="dv">1</span></a>
+<a class="sourceLine" id="cb1-12" data-line-number="12">        </a>
+<a class="sourceLine" id="cb1-13" data-line-number="13">        a, b <span class="op">=</span> <span class="dv">0</span>, <span class="dv">0</span></a>
+<a class="sourceLine" id="cb1-14" data-line-number="14">        <span class="cf">for</span> n <span class="kw">in</span> nums:</a>
+<a class="sourceLine" id="cb1-15" data-line-number="15">            <span class="cf">if</span> n <span class="op">&amp;</span> (<span class="dv">1</span> <span class="op">&lt;&lt;</span> i):</a>
+<a class="sourceLine" id="cb1-16" data-line-number="16">                a <span class="op">^=</span> n</a>
+<a class="sourceLine" id="cb1-17" data-line-number="17">            <span class="cf">else</span>:</a>
+<a class="sourceLine" id="cb1-18" data-line-number="18">                b <span class="op">^=</span> n</a>
+<a class="sourceLine" id="cb1-19" data-line-number="19">                </a>
+<a class="sourceLine" id="cb1-20" data-line-number="20">        <span class="cf">return</span> [a, b]</a></code></pre></div>
 
       
     </div>
@@ -522,7 +554,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#single-number-single-numerber"><span class="nav-number">1.</span> <span class="nav-text">Single Number Ⅰ &amp; Single Numerber Ⅱ</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#single-number-single-numerber"><span class="nav-number">1.</span> <span class="nav-text">Single Number Ⅰ &amp; Single Numerber Ⅱ</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#single-number"><span class="nav-number">2.</span> <span class="nav-text">Single Number Ⅲ</span></a></li></ol></div>
             
 
           </div>
@@ -744,6 +776,26 @@
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.staticfile.org/MathJax/MathJax-2.6-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
   
 
 
