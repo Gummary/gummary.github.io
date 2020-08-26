@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Single Number Ⅰ &amp; Single Numerber Ⅱ 问题描述 这里直接推广到给定一个数组，其中只有一个数出现p次，其余数均出现k次。 数全部是由1bit组成的 假设有一个数组，里面只由0和1组成的，下面需要用一个计数器利用位操作统计其中1出现的次数。当这个计数器计数到某一个值，如本题中的k时，就要将计数器清零。假设计数器的二进制表示为\(x_m,\dots,x_">
+<meta property="og:type" content="article">
+<meta property="og:title" content="只出现一次的数">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;08&#x2F;26&#x2F;single-number&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="Single Number Ⅰ &amp; Single Numerber Ⅱ 问题描述 这里直接推广到给定一个数组，其中只有一个数出现p次，其余数均出现k次。 数全部是由1bit组成的 假设有一个数组，里面只由0和1组成的，下面需要用一个计数器利用位操作统计其中1出现的次数。当这个计数器计数到某一个值，如本题中的k时，就要将计数器清零。假设计数器的二进制表示为\(x_m,\dots,x_">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;IFhEjzM.png">
+<meta property="article:published_time" content="2020-08-26T01:37:08.000Z">
+<meta property="article:modified_time" content="2020-08-26T02:31:56.764Z">
+<meta property="article:author" content="Gummary">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;IFhEjzM.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/08/26/single-number/"/>
+
+
+
+
+
+  <title>只出现一次的数 | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/26/single-number/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">只出现一次的数</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-26T09:37:08+08:00">
+                2020-08-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/26/single-number/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/08/26/single-number/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="single-number-single-numerber">Single Number Ⅰ &amp; Single Numerber Ⅱ</h2>
+<p><strong>问题描述</strong></p>
+<p>这里直接推广到给定一个数组，其中只有一个数出现p次，其余数均出现k次。</p>
+<p><strong>数全部是由1bit组成的</strong></p>
+<p>假设有一个数组，里面只由0和1组成的，下面需要用一个计数器利用位操作统计其中1出现的次数。当这个计数器计数到某一个值，如本题中的k时，就要将计数器清零。假设计数器的二进制表示为<span class="math inline">\(x_m,\dots,x_1\)</span>.该计数器满足：</p>
+<ol type="1">
+<li>初始值为0</li>
+<li>当遇到0时值不变</li>
+<li>遇到1时加1</li>
+<li>计数器的最大值要大于等于k，则<span class="math inline">\(2^m\geq k\)</span>得<span class="math inline">\(m \geq \text{log}_2^k\)</span></li>
+</ol>
+<p>而满足第二条性质的位运算符有<code>x|=0,x^=0</code>.暂时还无法判断具体使用哪一个运算符。那么直接看累加的过程。</p>
+<p>对于计数器的最低位<span class="math inline">\(x_1\)</span>来说，遇到0不变；遇到1时，若原来为0，则变为1，若原来为1，则变为0。由此我们可以判断只有异或操作满足这个性质，因此我们用异或更新计数器。对于第二位<span class="math inline">\(x_2\)</span>的变化，只有当第一位为1并遇到1，其值才发生改变，因此<code>x2=x2^(x1&amp;i)</code>,依次类推，<code>xm=xm^(xm-1 &amp; ... &amp; x1 &amp; i)</code>。</p>
+<p>有了计数器的更新规则后，下面限制计数器值的范围。因为现在计数器的范围是在<span class="math inline">\(0-(2^m-1)\)</span>,为了将计数器限制在k内，我们需要设计一个<code>mask</code>，使得当计数器的值为k时，<code>mask</code>的值为0，其余为1.我们可以判断k的二进制位和计数器的二进制位是否完全相同求得<code>mask</code>。</p>
+<p>令<span class="math inline">\(\text{mask}=\sim (y_m \&amp; \dots \&amp; y_1)\)</span>.其中，若<span class="math inline">\(k_i=1\)</span>,则<span class="math inline">\(y_i=x_i\)</span>；若<span class="math inline">\(k_i=0\)</span>,则<span class="math inline">\(y_i=~x_i\)</span>.这样就可以保证，只要有一位<span class="math inline">\(k_i\)</span>与<span class="math inline">\(x_i\)</span>不相同，对应位的<span class="math inline">\(y_i=0\)</span>，则<span class="math inline">\(\text{mask}=1\)</span>,当完全相同时，<code>mask=1</code>.</p>
+<p>则更新规则伪代码为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> nums:</span><br><span class="line">    x_m ^= (x_m1 &amp; x_m2 ... &amp; x_1 &amp; i)</span><br><span class="line">    x_m1 ^= (x_m2 ... &amp; x_1 &amp; i)</span><br><span class="line">    ...</span><br><span class="line">    x1 ^= i</span><br><span class="line"></span><br><span class="line">    mask = ~(x=y_m &amp; y_m1 ... &amp; y1) yi=xi <span class="keyword">if</span> ki = <span class="number">1</span> <span class="keyword">else</span> ~xi</span><br><span class="line">~</span><br></pre></td></tr></table></figure>
+<p><strong>推广到32位整数的情况</strong></p>
+<p>对于32位的整数，我们可以将每一位数都看作是之前全是01数组的情况，因为每一位数之间技术都是相互独立的，因此可以将32位数都整合到一起，同时更新。如果计数器需要m位，那么就需要m个32位数充当计数器。</p>
+<p>借用leetcode上的一张图：</p>
+<p><img src="https://i.imgur.com/IFhEjzM.png" /></p>
+<p>其中每个x的更新规则与之前一致。</p>
+<p>那么当统计完之后，该返回哪一个x呢？</p>
+<p>由于我们的计数器是增长到k就变为0的，所以每个计数器最终的值一定是p，若<span class="math inline">\(p&gt;k\)</span>则为<code>p%k</code>.因此我们我们只需返回p的二进制表示中为1的位置的x即可。</p>
+<p>下面看几个例子:</p>
+<p>当k=2,p=1时：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 因为k=2,所以m=1，只需用一个x即可计数</span></span><br><span class="line">x = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> n <span class="keyword">in</span> nums:</span><br><span class="line">    x ^= n</span><br><span class="line"><span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<p>k=3,p=1</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># k=3 m=2所以需要2个32位数计数</span></span><br><span class="line">x1, x2 = <span class="number">0</span>, <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> n <span class="keyword">in</span> nums:</span><br><span class="line">    x2 ^ = (x1 &amp; n)</span><br><span class="line">    x1 ^= n</span><br><span class="line">    mask = ~(x2&amp;x1) <span class="comment"># k = 0x11</span></span><br><span class="line">    x1 &amp;= mask</span><br><span class="line">    x2 &amp;= mask</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> x1 <span class="comment"># p = 0x1 因此需要返回x1</span></span><br></pre></td></tr></table></figure>
+<p>k=5, p=3 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># k=5 m=3,需要三个32位数进行计数</span></span><br><span class="line">x1, x2, x3 = <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> n <span class="keyword">in</span> nums:</span><br><span class="line">    x3 ^= (x2&amp;x1&amp;n)</span><br><span class="line">    x2 ^= (x1 &amp; n)</span><br><span class="line">    x1 ^= n</span><br><span class="line">    mask = ~(x3&amp;~x2&amp;x1) <span class="comment"># k=0x101,因此x3,x1不变，x2取反</span></span><br><span class="line">    x1 &amp;= mask</span><br><span class="line">    x2 &amp;= mask</span><br><span class="line">    x3 &amp;= mask</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> x1 | x3 <span class="comment"># p = 0x101，因此返回x1或x3均可</span></span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/24/tencent-exam/" rel="next" title="8.24 腾讯笔试题">
+                <i class="fa fa-chevron-left"></i> 8.24 腾讯笔试题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#single-number-single-numerber"><span class="nav-number">1.</span> <span class="nav-text">Single Number Ⅰ &amp; Single Numerber Ⅱ</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

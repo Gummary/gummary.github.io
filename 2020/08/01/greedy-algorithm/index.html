@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="贪心算法介绍  贪心算法（英語：greedy algorithm），又称贪婪算法，是一种在每一步选择中都采取在当前状态下最好或最优（即最有利）的选择，从而希望导致结果是最好或最优的算法。比如在旅行推销员问题中，如果旅行员每次都选择最近的城市，那这就是一种贪心算法。贪心算法在有最优子结构的问题中尤为有效。最优子结构的意思是局部最优解能决定全局最优解。简单地说，问题能够分解成子问题来解决，子问题的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="贪心算法题汇编">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;08&#x2F;01&#x2F;greedy-algorithm&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="贪心算法介绍  贪心算法（英語：greedy algorithm），又称贪婪算法，是一种在每一步选择中都采取在当前状态下最好或最优（即最有利）的选择，从而希望导致结果是最好或最优的算法。比如在旅行推销员问题中，如果旅行员每次都选择最近的城市，那这就是一种贪心算法。贪心算法在有最优子结构的问题中尤为有效。最优子结构的意思是局部最优解能决定全局最优解。简单地说，问题能够分解成子问题来解决，子问题的">
+<meta property="article:published_time" content="2020-08-01T14:18:22.000Z">
+<meta property="article:modified_time" content="2020-08-24T10:32:59.229Z">
+<meta property="article:author" content="Gummary">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/08/01/greedy-algorithm/"/>
+
+
+
+
+
+  <title>贪心算法题汇编 | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/01/greedy-algorithm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">贪心算法题汇编</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-01T22:18:22+08:00">
+                2020-08-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/01/greedy-algorithm/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/08/01/greedy-algorithm/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="贪心算法介绍">贪心算法介绍</h1>
+<blockquote>
+<p>贪心算法（英語：greedy algorithm），又称贪婪算法，是一种在每一步选择中都采取在当前状态下最好或最优（即最有利）的选择，从而希望导致结果是最好或最优的算法。比如在旅行推销员问题中，如果旅行员每次都选择最近的城市，那这就是一种贪心算法。贪心算法在有最优子结构的问题中尤为有效。最优子结构的意思是局部最优解能决定全局最优解。简单地说，问题能够分解成子问题来解决，子问题的最优解能递推到最终问题的最优解。贪心算法与动态规划的不同在于它对每个子问题的解决方案都做出选择，不能回退。动态规划则会保存以前的运算结果，并根据以前的结果对当前进行选择，有回退功能。贪心法可以解决一些最优化问题，如：求图中的最小生成树、求哈夫曼编码……对于其他问题，贪心法一般不能得到我们所要求的答案。一旦一个问题可以通过贪心法来解决，那么贪心法一般是解决这个问题的最好办法。由于贪心法的高效性以及其所求得的答案比较接近最优结果，贪心法也可以用作辅助算法或者直接解决一些要求结果不特别精确的问题。</p>
+</blockquote>
+<p>以上摘自维基百科，但是这些概念性的知识并不能帮助我们选择解决实际的问题，而实践是认识的基础、认识的来源、认识发展的动力，因此本文选一些代表性的问题及解法，尽可能的说明白贪心算法在每个问题中的应用。</p>
+<h1 id="背包相关问题">背包相关问题</h1>
+<h2 id="最优装载">最优装载</h2>
+<p><strong>题目出处</strong></p>
+<p>算法竞赛入门经典，p231</p>
+<p><strong>题目描述</strong></p>
+<p>给定n个物体，第i个物体的重量为<span class="math inline">\(w_i\)</span>，选择尽量多的物体，使总重量不超过C。</p>
+<p><strong>题目分析</strong></p>
+<p>由于要尽可能多的拿物体，因此优先选择重量轻的物体。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solution</span><span class="params">(weights, v)</span>:</span></span><br><span class="line">    weights = sorted(weights)</span><br><span class="line">    count = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> w <span class="keyword">in</span> weights:</span><br><span class="line">        <span class="keyword">if</span> v &gt; w:</span><br><span class="line">            v -= w</span><br><span class="line">            count += <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> count</span><br></pre></td></tr></table></figure>
+<h2 id="部分背包问题">部分背包问题</h2>
+<p><strong>题目出处</strong></p>
+<p>算法竞赛入门经典，p231</p>
+<p><strong>题目描述</strong></p>
+<p>给定C个物体，其重量为<span class="math inline">\(w_i\)</span>,价值为<span class="math inline">\(c_i\)</span>,背包容量为<span class="math inline">\(v\)</span>,每个物体都能拿全部或者部分，那么如何拿物品，使背包的总价值最大。</p>
+<p><strong>题目分析</strong></p>
+<p>引入价值之后就不能每次只拿最轻的，因为可能最轻的价值也是最低的，这种情况下需要根据价值与重量的比值进行排序，每次选择价值最高重量最低的物品。由于可以拿部分物品，拿最后一个物体一般是拿部分。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> List</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solution</span><span class="params">(w:List, c:List, v:int)</span>-&gt;List:</span></span><br><span class="line">    result = [<span class="number">0</span>] * len(v)</span><br><span class="line">    wc = ((i, ww, cc) <span class="keyword">for</span> i, ww, cc <span class="keyword">in</span> enumerate(zip(w, c)))</span><br><span class="line">    wc = sorted(wc, key=<span class="keyword">lambda</span> x:x[<span class="number">2</span>]/x[<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">for</span> i, ww, cc <span class="keyword">in</span> wc:</span><br><span class="line">        <span class="keyword">if</span> v &gt; cc:</span><br><span class="line">            result[i] = cc</span><br><span class="line">            v -= cc</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            result[i] = v</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+<h2 id="乘船问题">乘船问题</h2>
+<p><strong>题目出处</strong></p>
+<p>算法竞赛入门经典，p231</p>
+<p><strong>题目描述</strong></p>
+<p>共有n个人，每个人的重量为<span class="math inline">\(w_i\)</span>，每艘船最多装两个人且重量为C。</p>
+<p><strong>题目分析</strong></p>
+<p>考虑最轻的人，如果最轻的人不能和其他人同乘坐一条船，那么所有人都只能乘一条船，因为任意两个人都不能乘同一条船。</p>
+<p>如果最轻的人可以和其他人乘同一条船，那么选择与他一起乘船的人中，最终的那一个，这里用到了贪心的做法，使得每艘船浪费的空间最小。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solution</span><span class="params">(w: List, C:int)</span>-&gt;int:</span></span><br><span class="line">    w = sorted(w)</span><br><span class="line">    i, j, end = <span class="number">0</span>, len(w)<span class="number">-1</span>, len(w)</span><br><span class="line">    result = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i &lt; j:</span><br><span class="line">        <span class="keyword">while</span> i &lt; j <span class="keyword">and</span> w[i] + w[j] &gt; C:</span><br><span class="line">            j-=<span class="number">1</span></span><br><span class="line">        result += end - j</span><br><span class="line">        end = j</span><br><span class="line">        i+=<span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+<h1 id="区间相关问题">区间相关问题</h1>
+<h2 id="求重叠区间的最大数量">求重叠区间的最大数量</h2>
+<p><strong>题目出处</strong></p>
+<p>猿辅导笔试</p>
+<p><strong>题目描述</strong></p>
+<p>给定一些区间<code>[start, end]</code>，求重叠区间的最大数量</p>
+<p><strong>题目分析</strong></p>
+<p>首先对区间进行排序，先根据起始点排序，若起始点相同则根据终点排序。遍历排序号的区间，用一个最小堆保存当前区间的最小终点。</p>
+<p>每次遍历比较最小end与当前区间的起点，</p>
+<ul>
+<li>如果起点比最小end小，说明与堆中所有的区间都有交集，入堆</li>
+<li>如果起点比最小end大，说明与最小end所在的区间没有交集，可以把当前区间与最小end的区间合并，也即从堆中取出最小end，将当前end加入。可以合并的原因是：
+<ul>
+<li>区间已经排好序了，所以之后不可能有区间位于二者之间</li>
+<li>这两个区间与堆中的其他区间都重叠，没有增加最大重叠的数量</li>
+</ul></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solution</span><span class="params">(intervals: List[Tuple])</span> -&gt; int:</span></span><br><span class="line">    intervals = sorted(intervals)</span><br><span class="line">    heap = []</span><br><span class="line">    heap.append(intervals[<span class="number">0</span>][<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">for</span> i, seg <span class="keyword">in</span> enumerate(intervals[<span class="number">1</span>:]):</span><br><span class="line">        <span class="keyword">if</span> heap[<span class="number">0</span>] &lt;= seg[<span class="number">0</span>]:</span><br><span class="line">            heappop(heap)</span><br><span class="line">        heappush(heap, seg[<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">return</span> len(intervals)</span><br></pre></td></tr></table></figure>
+<h2 id="求非重叠区间的最大数量">求非重叠区间的最大数量</h2>
+<p><strong>题目出处</strong></p>
+<p><a href="https://leetcode.com/problems/non-overlapping-intervals/" target="_blank" rel="noopener">Leetcode453</a></p>
+<p><strong>题目描述</strong></p>
+<p>给定一些区间，求需要移除区间的最小数量，使区间之间不重叠。</p>
+<p><strong>题目分析</strong></p>
+<p>对区间按照终点进行排序，从最小的重点开始，移除与最小终点重叠的区间，若不冲突则更新最小终点。</p>
+<p>这里应用贪心思想的位置在于，尽可能选择终点较小的区间，贪心有效的点在于：</p>
+<ol type="1">
+<li>选择end较小的点，如果发生冲突了，那么因为end较小，所以会有更多的时间选择其他区间。</li>
+</ol>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">class</span> Solution:</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">    <span class="kw">def</span> eraseOverlapIntervals(<span class="va">self</span>, intervals: List[List[<span class="bu">int</span>]]) <span class="op">-&gt;</span> <span class="bu">int</span>:</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">        <span class="cf">if</span> intervals <span class="op">==</span> []:</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">            <span class="cf">return</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">        intervals <span class="op">=</span> <span class="bu">sorted</span>(intervals, key<span class="op">=</span><span class="kw">lambda</span> x:x[<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">        current_min <span class="op">=</span> intervals[<span class="dv">0</span>][<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">        result <span class="op">=</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">        <span class="cf">for</span> interval <span class="kw">in</span> intervals[<span class="dv">1</span>:]:</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">            <span class="cf">if</span> interval[<span class="dv">0</span>] <span class="op">&lt;</span> current_min:</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">                result <span class="op">+=</span> <span class="dv">1</span></a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">            <span class="cf">else</span>:</a>
+<a class="sourceLine" id="cb1-12" data-line-number="12">                current_min <span class="op">=</span> interval[<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb1-13" data-line-number="13">        <span class="cf">return</span> result</a></code></pre></div>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/07/29/super-egg-drop/" rel="next" title="扔鸡蛋问题">
+                <i class="fa fa-chevron-left"></i> 扔鸡蛋问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/01/knapsack-problem/" rel="prev" title="背包问题">
+                背包问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#贪心算法介绍"><span class="nav-number">1.</span> <span class="nav-text">贪心算法介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#背包相关问题"><span class="nav-number">2.</span> <span class="nav-text">背包相关问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#最优装载"><span class="nav-number">2.1.</span> <span class="nav-text">最优装载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部分背包问题"><span class="nav-number">2.2.</span> <span class="nav-text">部分背包问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#乘船问题"><span class="nav-number">2.3.</span> <span class="nav-text">乘船问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#区间相关问题"><span class="nav-number">3.</span> <span class="nav-text">区间相关问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#求重叠区间的最大数量"><span class="nav-number">3.1.</span> <span class="nav-text">求重叠区间的最大数量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#求非重叠区间的最大数量"><span class="nav-number">3.2.</span> <span class="nav-text">求非重叠区间的最大数量</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

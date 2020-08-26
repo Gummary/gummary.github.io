@@ -242,6 +242,906 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/26/single-number/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/26/single-number/" itemprop="url">只出现一次的数</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-26T09:37:08+08:00">
+                2020-08-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/26/single-number/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/08/26/single-number/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="single-number-single-numerber">Single Number Ⅰ &amp; Single Numerber Ⅱ</h2>
+<p><strong>问题描述</strong></p>
+<p>这里直接推广到给定一个数组，其中只有一个数出现p次，其余数均出现k次。</p>
+<p><strong>数全部是由1bit组成的</strong></p>
+<p>假设有一个数组，里面只由0和1组成的，下面需要用一个计数器利用位操作统计其中1出现的次数。当这个计数器计数到某一个值，如本题中的k时，就要将计数器清零。假设计数器的二进制表示为<span class="math inline">\(x_m,\dots,x_1\)</span>.该计数器满足：</p>
+<ol type="1">
+<li>初始值为0</li>
+<li>当遇到0时值不变</li>
+<li>遇到1时加1</li>
+<li>计数器的最大值要大于等于k，则<span class="math inline">\(2^m\geq k\)</span>得<span class="math inline">\(m \geq \text{log}_2^k\)</span></li>
+</ol>
+<p>而满足第二条性质的位运算符有<code>x|=0,x^=0</code>.暂时还无法判断具体使用哪一个运算符。那么直接看累加的过程。</p>
+<p>对于计数器的最低位<span class="math inline">\(x_1\)</span>来说，遇到0不变；遇到1时，若原来为0，则变为1，若原来为1，则变为0。由此我们可以判断只有异或操作满足这个性质，因此我们用异或更新计数器。对于第二位<span class="math inline">\(x_2\)</span>的变化，只有当第一位为1并遇到1，其值才发生改变，因此<code>x2=x2^(x1&amp;i)</code>,依次类推，<code>xm=xm^(xm-1 &amp; ... &amp; x1 &amp; i)</code>。</p>
+<p>有了计数器的更新规则后，下面限制计数器值的范围。因为现在计数器的范围是在<span class="math inline">\(0-(2^m-1)\)</span>,为了将计数器限制在k内，我们需要设计一个<code>mask</code>，使得当计数器的值为k时，<code>mask</code>的值为0，其余为1.我们可以判断k的二进制位和计数器的二进制位是否完全相同求得<code>mask</code>。</p>
+<p>令<span class="math inline">\(\text{mask}=\sim (y_m \&amp; \dots \&amp; y_1)\)</span>.其中，若<span class="math inline">\(k_i=1\)</span>,则<span class="math inline">\(y_i=x_i\)</span>；若<span class="math inline">\(k_i=0\)</span>,则<span class="math inline">\(y_i=~x_i\)</span>.这样就可以保证，只要有一位<span class="math inline">\(k_i\)</span>与<span class="math inline">\(x_i\)</span>不相同，对应位的<span class="math inline">\(y_i=0\)</span>，则<span class="math inline">\(\text{mask}=1\)</span>,当完全相同时，<code>mask=1</code>.</p>
+<p>则更新规则伪代码为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> nums:</span><br><span class="line">    x_m ^= (x_m1 &amp; x_m2 ... &amp; x_1 &amp; i)</span><br><span class="line">    x_m1 ^= (x_m2 ... &amp; x_1 &amp; i)</span><br><span class="line">    ...</span><br><span class="line">    x1 ^= i</span><br><span class="line"></span><br><span class="line">    mask = ~(x=y_m &amp; y_m1 ... &amp; y1) yi=xi <span class="keyword">if</span> ki = <span class="number">1</span> <span class="keyword">else</span> ~xi</span><br><span class="line">~</span><br></pre></td></tr></table></figure>
+<p><strong>推广到32位整数的情况</strong></p>
+<p>对于32位的整数，我们可以将每一位数都看作是之前全是01数组的情况，因为每一位数之间技术都是相互独立的，因此可以将32位数都整合到一起，同时更新。如果计数器需要m位，那么就需要m个32位数充当计数器。</p>
+<p>借用leetcode上的一张图：</p>
+<p><img src="https://i.imgur.com/IFhEjzM.png" /></p>
+<p>其中每个x的更新规则与之前一致。</p>
+<p>那么当统计完之后，该返回哪一个x呢？</p>
+<p>由于我们的计数器是增长到k就变为0的，所以每个计数器最终的值一定是p，若<span class="math inline">\(p&gt;k\)</span>则为<code>p%k</code>.因此我们我们只需返回p的二进制表示中为1的位置的x即可。</p>
+<p>下面看几个例子:</p>
+<p>当k=2,p=1时：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 因为k=2,所以m=1，只需用一个x即可计数</span></span><br><span class="line">x = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> n <span class="keyword">in</span> nums:</span><br><span class="line">    x ^= n</span><br><span class="line"><span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<p>k=3,p=1</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># k=3 m=2所以需要2个32位数计数</span></span><br><span class="line">x1, x2 = <span class="number">0</span>, <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> n <span class="keyword">in</span> nums:</span><br><span class="line">    x2 ^ = (x1 &amp; n)</span><br><span class="line">    x1 ^= n</span><br><span class="line">    mask = ~(x2&amp;x1) <span class="comment"># k = 0x11</span></span><br><span class="line">    x1 &amp;= mask</span><br><span class="line">    x2 &amp;= mask</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> x1 <span class="comment"># p = 0x1 因此需要返回x1</span></span><br></pre></td></tr></table></figure>
+<p>k=5, p=3 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># k=5 m=3,需要三个32位数进行计数</span></span><br><span class="line">x1, x2, x3 = <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> n <span class="keyword">in</span> nums:</span><br><span class="line">    x3 ^= (x2&amp;x1&amp;n)</span><br><span class="line">    x2 ^= (x1 &amp; n)</span><br><span class="line">    x1 ^= n</span><br><span class="line">    mask = ~(x3&amp;~x2&amp;x1) <span class="comment"># k=0x101,因此x3,x1不变，x2取反</span></span><br><span class="line">    x1 &amp;= mask</span><br><span class="line">    x2 &amp;= mask</span><br><span class="line">    x3 &amp;= mask</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> x1 | x3 <span class="comment"># p = 0x101，因此返回x1或x3均可</span></span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/24/tencent-exam/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/24/tencent-exam/" itemprop="url">8.24 腾讯笔试题</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-24T19:28:14+08:00">
+                2020-08-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/24/tencent-exam/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/08/24/tencent-exam/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="括号字符串匹配">括号字符串匹配</h2>
+<p>给定一些只包含'<a href=""></a>'的字符串，加多少字符使该字符串合法，字符串合法指：</p>
+<ol type="1">
+<li>空字符串为合法的</li>
+<li>若A合法则(A), [A]合法</li>
+<li>若A,B合法则AB合法</li>
+</ol>
+<p><strong>解法</strong></p>
+<p>区间DP问题，区间DP问题是指，在某一段区间上进行DP，然后将小区间的结果合并到大区间上，得到大区间上的最优解。</p>
+<p>区间DP的模板为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 枚举区间的长度</span></span><br><span class="line"><span class="keyword">for</span> length <span class="keyword">in</span> range(<span class="number">1</span>, n+<span class="number">1</span>):</span><br><span class="line">    <span class="comment"># 枚举区间的左端点</span></span><br><span class="line">    <span class="keyword">for</span> l <span class="keyword">in</span> range(<span class="number">0</span>, n):</span><br><span class="line">        r = l + length <span class="comment"># 得到当前计算区间的右端点</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> range(l, r):</span><br><span class="line">            <span class="comment"># 进行区间DP，如dp[i][j] = min(dp[i][j], dp[i][k]+dp[k+1][j])</span></span><br><span class="line">            <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<p>本题中区间的即为一个字符串的左右两侧，当前区间添加的最小字符的数量即为找到一个划分使左右子区间需要添加的字符数量最小。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">s = input().strip()</span><br><span class="line"><span class="keyword">for</span> length <span class="keyword">in</span> range(<span class="number">1</span>, len(s)+<span class="number">1</span>):</span><br><span class="line">    <span class="keyword">for</span> l <span class="keyword">in</span> range(<span class="number">0</span>, len(s)-length):</span><br><span class="line">        r = l + length</span><br><span class="line">        dp[l][r] = length</span><br><span class="line">        <span class="keyword">if</span> s[i] == <span class="string">'('</span> <span class="keyword">and</span> s[j] == <span class="string">')'</span>:</span><br><span class="line">            dp[l][r] = min(dp[l][r], dp[l+<span class="number">1</span>][r<span class="number">-1</span>])</span><br><span class="line">        <span class="keyword">if</span> s[i] == <span class="string">'['</span> <span class="keyword">and</span> s[j] == <span class="string">']'</span>:</span><br><span class="line">            dp[l][r] = min(dp[l][r], dp[l+<span class="number">1</span>][r<span class="number">-1</span>])</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 在当前区间内找最小划分</span></span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> range(l, r): <span class="comment"># 这里注意是在[l, r)内寻找划分点</span></span><br><span class="line">            dp[l][r] = min(dp[l][r], dp[l][k]+dp[k+<span class="number">1</span>][r])</span><br></pre></td></tr></table></figure>
+<h2 id="队伍方案数量">队伍方案数量</h2>
+<p>某部门有n个人，从n个人中选出任意数量的人组成队伍，从这些人中选出一个当作队长，求方案数对<span class="math inline">\(10^9+7\)</span>取余的结果。</p>
+<p>数学公式推导为：</p>
+<p><span class="math display">\[
+\text{ans} = C_n^0\times 0 + C_n^1\times1+C_n^2\times2+\dots+C_n^n\times n
+\]</span></p>
+<p>将其反写有：</p>
+<p><span class="math display">\[
+\text{ans} = C_n^n\times n+C_n^{n-1}\times{n-1}+\dots+C_n^0\times 0
+\]</span></p>
+<p>根据性质<span class="math inline">\(C_n^r = C_n^{n-r}\)</span>, 将两个ans相加后得到：</p>
+<p><span class="math display">\[
+2\text{ans} = n\sum_{i=0}^nC_n^i = n2^n
+\]</span></p>
+<p>其中<span class="math inline">\(\sum_{i=0}^nC_n^i=2^n\)</span>为二项式定理</p>
+<p>则：</p>
+<p><span class="math display">\[
+\text{ans} = n2^{n-1}
+\]</span></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mod = <span class="number">1e9</span>+<span class="number">7</span></span><br><span class="line">n = int(input().strip())</span><br><span class="line">print(n*<span class="number">2</span>**(n<span class="number">-1</span>)%mod)</span><br></pre></td></tr></table></figure>
+<p>pyhton中快速幂取模模板：</p>
+<p><span class="math inline">\((a*b)\% m = (a\%m * b\%m)\%m\)</span></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">quick_exp_mod</span><span class="params">(x, n, m)</span>:</span></span><br><span class="line">    res = <span class="number">1</span></span><br><span class="line">    x %= m</span><br><span class="line">    <span class="keyword">while</span> n != <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">if</span> n &amp; <span class="number">1</span>:                      <span class="comment">#取n的2进制的最低位</span></span><br><span class="line">            res = (res * x) % m</span><br><span class="line">        n &gt;&gt;= <span class="number">1</span>                        <span class="comment">#相当于n//2 </span></span><br><span class="line">        x = (x * x) % m</span><br><span class="line">    <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+<h2 id="具有相同邻接点的节点对">具有相同邻接点的节点对</h2>
+<p>定义函数<span class="math inline">\(g(x)\)</span>为图中所有与x节点相邻的节点，若存在<span class="math inline">\(g(x)=g(y)\)</span>，则(x, y)为一对，求一幅图中这种点对的数量。</p>
+<p>(1,2)和(2,1)为一对。</p>
+<p>求出每个节点的邻接点结合，将邻接点作为key，数量作为value，计算对数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line">n, m = list(int(x) <span class="keyword">for</span> x <span class="keyword">in</span> input().strip())</span><br><span class="line">adjoin_dict = defaultdict(set)</span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> range(m):</span><br><span class="line">    x, y = list(int(x) <span class="keyword">for</span> x <span class="keyword">in</span> input().strip())</span><br><span class="line">    adjoin_dict[x].add(y)</span><br><span class="line">    adjoin_dict[y].add(x)</span><br><span class="line"></span><br><span class="line">num_map = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> k, v <span class="keyword">in</span> adjoin_dict.values():</span><br><span class="line">    num_map[tuple(v)] = num_map.get(tuple(v), <span class="number">0</span>) + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">ans = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> v <span class="keyword">in</span> num_map.values():</span><br><span class="line">    <span class="keyword">if</span> v &gt; <span class="number">1</span>:</span><br><span class="line">        <span class="comment"># 因为(1, 2) 和(2, 1) 只算一对，所以(1,2,3,4)中不同对的数量为3+2+1</span></span><br><span class="line">        ans += v*(v<span class="number">-1</span>) // <span class="number">2</span></span><br><span class="line">print(ans)</span><br></pre></td></tr></table></figure>
+<h2 id="最短路径问题">最短路径问题</h2>
+<p>现在有n个点，有m条双向路径，有k个传送门，传送门表示两个路径之间的距离为0，传送门为单向的，求从0到n之间的最短路径。</p>
+<p>利用Dijkstra算法求最短路即可。</p>
+<p>Dijkstra算法是，假设求P点到其他所有点之间的最短路径，则维护一个数组dist，值为p点到每个点的最短距离；然后维护一个set，内容为已经求出最短距离的点集。则具体步骤为：</p>
+<ol type="1">
+<li>初始化dist数组，dist[p] = 0，将所有与p相邻的点加入到一个队列中</li>
+<li>从队列中选出与p距离最小的点q加入最短点集中，将与q相邻的点加入到队列里，更新所有不在最短点集中的点的距离</li>
+<li>重复2，直到队列为0</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">n, m, k = list(int(x) <span class="keyword">for</span> x <span class="keyword">in</span> input().strip().split())</span><br><span class="line">graph = [[float(<span class="string">'inf'</span>)]*n <span class="keyword">for</span> _ <span class="keyword">in</span> range(n)]</span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> range(m):</span><br><span class="line">    x, y, w= list(int(x) <span class="keyword">for</span> x <span class="keyword">in</span> input().strip().split())</span><br><span class="line">    <span class="comment"># 防止出现重边</span></span><br><span class="line">    graph[x<span class="number">-1</span>][y<span class="number">-1</span>] = min(graph[x<span class="number">-1</span>][y<span class="number">-1</span>], w)</span><br><span class="line">    graph[y<span class="number">-1</span>][x<span class="number">-1</span>] = min(graph[y<span class="number">-1</span>][x<span class="number">-1</span>], w)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> range(k):</span><br><span class="line">    x, y = list(int(x) <span class="keyword">for</span> x <span class="keyword">in</span> input().strip().split())</span><br><span class="line">    graph[x][y] = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">dist = [float(<span class="string">'inf'</span>)]*n</span><br><span class="line"><span class="comment"># 用visited数组判断是否访问过</span></span><br><span class="line">visited = [<span class="number">0</span>] * n</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">    minn, minv = <span class="number">-1</span>, float(<span class="string">'inf'</span>)</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(n):</span><br><span class="line">        <span class="keyword">if</span> visited[j] == <span class="number">0</span> <span class="keyword">and</span> dist[j] &lt; minv:</span><br><span class="line">            minn, minv = j, dist[j]</span><br><span class="line">    <span class="keyword">if</span> minn == <span class="number">-1</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">    visited[minn] = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(n):</span><br><span class="line">        <span class="keyword">if</span> visited[j] == <span class="number">0</span>:</span><br><span class="line">            dist[j] = min(dist[j], graph[minn][j])</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> dist[n] == float(<span class="string">'inf'</span>):</span><br><span class="line">    print(<span class="number">-1</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    print(dist[n])</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/13/monotone-stack/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/13/monotone-stack/" itemprop="url">单调递增栈与单调递减栈</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-13T17:08:37+08:00">
+                2020-08-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/13/monotone-stack/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/08/13/monotone-stack/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>单调递增栈和单调递减栈是栈的一种应用，单调递增和递减栈中元素按单调递增和递减排列。以单调递增栈为例，说明单调递增栈的数据更新方式为：</p>
+<ol type="1">
+<li>若当前元素比栈顶元素大，则入栈</li>
+<li>若当前元素比栈顶元素小，则将栈顶元素出栈，直到栈顶元素小于当前元素。</li>
+</ol>
+<p>通过这种方式可以得到每个元素左起第一个比当前元素小的元素位置。对于单调递减栈，可以得到每个元素左起第一个比当前元素大的元素位置。</p>
+<p>单调递减栈的模板为：</p>
+<p><span class="math display">\[
+for i, x in enumerate(nums):
+    while x &lt; stack[-1]:
+        stack.pop()
+    stack.push(x)
+\]</span></p>
+<h2 id="递增栈例题">递增栈例题</h2>
+<p><strong>84. Largest Rectangle in Histogram</strong></p>
+<p>题目是给定一个直方图，求直方图中最大的矩形面积。</p>
+<p><img src="https://i.imgur.com/Y4uI7Sy.jpg" /></p>
+<p>首先看暴力的解法，对于每个直方图中的元素来说，要求他能组成的最大的矩形面积，就是以该矩形为中心，向左向右遍历找到第一个比他小矩形作为左右边界，则面积为长度乘当前矩形的高度。</p>
+<p>如上图所示，第一个2的左右边界为-1， 1，则组成的最大矩形面积为2<em>(1-(-1)-1)，而1的边界为0和2，则面积为1，对于第二个2，其左右边界为1和6，面积为2</em>(6-1-1)=8</p>
+<p>代码为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">largestRectangleArea</span><span class="params">(height)</span>:</span></span><br><span class="line">    height = [<span class="number">0</span>] + height + [<span class="number">0</span>]</span><br><span class="line">    ans = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(height)<span class="number">-2</span>):</span><br><span class="line">        l, r = i<span class="number">-1</span>, i+<span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> height[l] &gt; height[i]:</span><br><span class="line">            l-=<span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> height[r] &gt; height[i]:</span><br><span class="line">            r += <span class="number">1</span></span><br><span class="line">        ans = max(ans, (r-l<span class="number">-1</span>)*height[i])</span><br><span class="line">    <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+<p>这种方法的时间复杂度为<span class="math inline">\(O(N^2)\)</span>,空间复杂度为<span class="math inline">\(O(1)\)</span></p>
+<p>观察暴力求解的流程可以发现，对于每个点要向左向右找比他小的值，而递增单调栈恰好可以保存每个元素左起第一个比他小的元素，因此可以利用递增单调栈获得比他小的元素位置，至于右边界可以通过一次遍历得到。</p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">largestRectangleArea</span><span class="params">(self, heights: List[int])</span> -&gt; int:</span></span><br><span class="line">        <span class="comment"># 在队列为添加最小值0</span></span><br><span class="line">        heights.append(<span class="number">0</span>)</span><br><span class="line">        <span class="comment"># 栈顶为最后一个矩形，高度为0</span></span><br><span class="line">        stack = [<span class="number">-1</span>]</span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(heights)):</span><br><span class="line">            <span class="comment"># 若当前元素比栈顶元素小，那么开始计算栈顶元素所构成的最大矩形</span></span><br><span class="line">            <span class="keyword">while</span> heights[i] &lt; heights[stack[<span class="number">-1</span>]]:</span><br><span class="line">                h = heights[stack.pop()]</span><br><span class="line">                w = i<span class="number">-1</span>-stack[<span class="number">-1</span>]</span><br><span class="line">                ans = max(ans, h*w)</span><br><span class="line">            stack.append(i)</span><br><span class="line">        heights.pop()</span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+<h2 id="递减栈例题">递减栈例题</h2>
+<p><img src="https://i.imgur.com/ppv3GeJ.png" /></p>
+<p>给定一些矩形，求矩形之间空隙的面积和。</p>
+<p>利用单调递减栈，每当遇到一个比栈顶元素大的直方图，就计算与之前最小的直方图构成的间隙面积。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">class</span> Solution:</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">    <span class="kw">def</span> trap(<span class="va">self</span>, height: List[<span class="bu">int</span>]) <span class="op">-&gt;</span> <span class="bu">int</span>:</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">        stack <span class="op">=</span> []</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">        ans <span class="op">=</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">        <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(height)):</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">            <span class="cf">while</span> <span class="bu">len</span>(stack) <span class="op">&gt;</span><span class="dv">0</span> <span class="kw">and</span> height[i] <span class="op">&gt;</span> height[stack[<span class="op">-</span><span class="dv">1</span>]]:</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">                current <span class="op">=</span> stack.pop()</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">                <span class="cf">if</span> <span class="bu">len</span>(stack) <span class="op">==</span> <span class="dv">0</span>:</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">                    <span class="cf">break</span></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">                h <span class="op">=</span> <span class="bu">min</span>(height[i], height[stack[<span class="op">-</span><span class="dv">1</span>]]) <span class="op">-</span> height[current]</a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">                w <span class="op">=</span> i <span class="op">-</span> stack[<span class="op">-</span><span class="dv">1</span>] <span class="dv">-1</span></a>
+<a class="sourceLine" id="cb1-12" data-line-number="12">                ans <span class="op">+=</span> h <span class="op">*</span> w</a>
+<a class="sourceLine" id="cb1-13" data-line-number="13">            stack.append(i)</a>
+<a class="sourceLine" id="cb1-14" data-line-number="14">        <span class="cf">return</span> ans</a></code></pre></div>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/01/knapsack-problem/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/01/knapsack-problem/" itemprop="url">背包问题</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-01T23:28:11+08:00">
+                2020-08-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/01/knapsack-problem/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/08/01/knapsack-problem/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="背包问题">01背包问题</h1>
+<p><strong>问题描述</strong></p>
+<p>假设有N个物体，第i个物体的重量为<code>w[i]</code>,价值为<code>c[i]</code>,背包容量为<code>C</code>,那么将哪些物体放入到背包中，可以在不超过背包容量的情况下使背包所装的价值最大</p>
+<p>首先定义状态<code>f[i][v]</code>，其中<span class="math inline">\(i\in \{1,\dots N\}, v\in \{1, \dots C\}\)</span>,则<code>f[i][v]</code>的含义是取前i件物品，容量<strong>恰好</strong>为v的情况下的最大价值。</p>
+<p>则状态转移方程为：</p>
+<p><span class="math display">\[
+f[i][v] = \text{max}(f[i-1][v], f[i-1][v-w[i]]+c[i])
+\]</span></p>
+<p>也即每个物体都有两个状态(01背包的由来)，拿或者不拿。那么：</p>
+<ul>
+<li>如果不拿，那么最大收益为取前i-1个物体，容量恰好为v的价值</li>
+<li>如果拿，那么最大收益为前i-1个物体，容量恰好为v-w[i]的价值加上当前物体的价值。</li>
+</ul>
+<p>注意<code>f[i][v]</code>是有意义的前提是，前i个物体，恰好能组成一个重量为v的背包，因此最终的答案不是<code>f[N][C]</code>,因为可能没法恰好组成重量为C的背包，而是<span class="math inline">\(f[N][0\dots C]\)</span>的最大值。如果移除恰好，那么状态转移方程为：</p>
+<p><span class="math display">\[
+f[i][v] = \text{max}(f[i-1][v], f[i-1][v-w[i]]+c[i], f[i-1][v-1])
+\]</span></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solution</span><span class="params">(W: List, V: List, C:int)</span> -&gt; int:</span></span><br><span class="line">    dp = [[<span class="number">0</span>]*(C+<span class="number">1</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> range(len(W))]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> range(C+<span class="number">1</span>):</span><br><span class="line">        dp[<span class="number">0</span>][c] = V[<span class="number">0</span>] <span class="keyword">if</span> c &gt;= W[<span class="number">0</span>] <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(W)):</span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> range(C, <span class="number">0</span>, <span class="number">-1</span>):</span><br><span class="line">            <span class="keyword">if</span> c &lt; W[i]:</span><br><span class="line">                dp[i][c] = dp[i<span class="number">-1</span>][c]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                dp[i][c] = max(dp[i<span class="number">-1</span>][c], dp[i<span class="number">-1</span>][c-W[i]]+V[i])</span><br><span class="line">    <span class="keyword">return</span> max(dp[<span class="number">-1</span>])</span><br></pre></td></tr></table></figure>
+<p>这个算法的时间复杂度为<span class="math inline">\(O(N*C)\)</span>,N为物体数量，C为背包容量，时间复杂度为<span class="math inline">\(O(N*C)\)</span>，观察这个可以发现， 每次判断时仅使用了dp数组每一行的上一行，因此可以将空间复杂度降低到<span class="math inline">\(O(C)\)</span></p>
+<p>注意内层循环必须是从最大的背包容量开始迭代，这样可以保证推导dp[v]中使用的dp[v-w[i]]是dp[i-1][v-w[i]]的状态。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solution</span><span class="params">(W: List, V: List, C:int)</span> -&gt; int:</span></span><br><span class="line">    dp = [<span class="number">0</span>]*(C+<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> range(C+<span class="number">1</span>):</span><br><span class="line">        dp[c] = V[<span class="number">0</span>] <span class="keyword">if</span> c &gt;= W[<span class="number">0</span>] <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(W)):</span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> range(C, W[i]<span class="number">-1</span>, <span class="number">-1</span>):</span><br><span class="line">            dp[c] = max(dp[c], dp[c-W[i]]+V[i])</span><br><span class="line">    <span class="keyword">return</span> max(dp)</span><br></pre></td></tr></table></figure>
+<h2 id="例题">例题</h2>
+<p><a href="https://leetcode.com/problems/partition-equal-subset-sum/" target="_blank" rel="noopener">leetcode 416. Partition Equal Subset Sum</a></p>
+<p><strong>题目及分析</strong></p>
+<p>给定n个数，问能否找到其中一个子集，使子集的和为n个数和的一半。</p>
+<p>每个数有两个状态，加入子集或不加入子集，最终使加入子集的元素的和恰好为全部和的一半，因此可转换为01背包问题，数为物体的重量，最终使背包内物体的重量恰好为target</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">canPartition</span><span class="params">(self, nums: List[int])</span> -&gt; bool:</span></span><br><span class="line">        total = sum(nums)</span><br><span class="line">        <span class="keyword">if</span> total % <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        target = total // <span class="number">2</span></span><br><span class="line">        dp = [<span class="number">0</span>] * (total + <span class="number">1</span>)</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> n <span class="keyword">in</span> nums:</span><br><span class="line">            <span class="keyword">for</span> v <span class="keyword">in</span> range(total, <span class="number">-1</span>, <span class="number">-1</span>):</span><br><span class="line">                <span class="keyword">if</span> dp[v]:</span><br><span class="line">                    dp[v+n] = <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> dp[target]</span><br><span class="line">~~~        </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 完全背包问题</span></span><br><span class="line"></span><br><span class="line">**问题描述**</span><br><span class="line"></span><br><span class="line">给定N个物品，第i个物品的价值为c[i],重量为w[i]，每个物品都有无数件，在重量不超过V的情况下，使背包的价值最大。</span><br><span class="line"></span><br><span class="line">**题目分析**</span><br><span class="line"></span><br><span class="line">本题相当于<span class="number">01</span>背包问题的一个推广，每个物品都可以拿任意次，假设在选取第i个物品时，拿取的数量为k，则状态转移方程为：</span><br><span class="line"></span><br><span class="line">$$</span><br><span class="line">f[i][v] = \text&#123;max&#125;(f[i<span class="number">-1</span>][v-k\times w[i]]),\quad <span class="number">0</span> \leq k \leq \lfloor v/w[i]\rfloor</span><br><span class="line">$$</span><br><span class="line"></span><br><span class="line">对于<span class="number">01</span>背包来说，$k\<span class="keyword">in</span>\&#123;<span class="number">0</span>,<span class="number">1</span>\&#125;$</span><br><span class="line"></span><br><span class="line">此时，与<span class="number">01</span>背包相同，共有O(N*V)个状态需要解，但此时每个状态解的时间不为常数了，与每个物体的状态有关，求解状态f[i][v]的时间复杂度为$O(v/w[i])$</span><br><span class="line"></span><br><span class="line">一个简单的优化，对于任意两件物体i，j，若满足$c[i] &lt; c[j],\quad w[i] &gt; w[j]$那么我们可以直接选择j物品，因为如果选择i物品，那么我们总可以选择一定的j物品来获得比i物品更大的价值。但对于精心设计过的数据，也即不包含上述情况的数据，该方法与之前的时间复杂度相同。</span><br><span class="line"></span><br><span class="line">完全背包也可以转换为<span class="number">01</span>背包问题，将每个物品都变为$V/w[i]$个等价值等重量的物品，每个物品只能选一次，此时就变为<span class="number">01</span>背包问题了，此时时间复杂度没变。</span><br><span class="line"></span><br><span class="line">另一种更好的拆分方式是，将每个物体分成k堆，每一堆中包含$<span class="number">2</span>^k$个物体，$k\<span class="keyword">in</span>\&#123;<span class="number">0</span>,\dots,log(V/w[i])\&#125;$，也即用二进制进行切分，因为用二进制的和可以表示出任意的一个数。此时将计算每个状态所需的时间$O(v/w[i])$，降到了$O(log(v/w[i])$.</span><br><span class="line"></span><br><span class="line">完全背包问题还有一种更优的解法，时间复杂度为$O(NV)$,其状态转移方程为:</span><br><span class="line"></span><br><span class="line">$$</span><br><span class="line">f[i][v] = \text&#123;max&#125;(f[i<span class="number">-1</span>][v], f[i][v-w[i]] + c[i])</span><br><span class="line">$$</span><br><span class="line"></span><br><span class="line">观察一下可以发现，与<span class="number">01</span>背包之间的区别在于，第二个使用的是$f[i]$而不是$f[i<span class="number">-1</span>]$，下面说明这么做为什么有效。</span><br><span class="line"></span><br><span class="line">对于<span class="number">01</span>背包问题，使用$f[i<span class="number">-1</span>][v-w[i]]$是因为，拿了第i个物品之后，不能再拿第i个物品了，因此问题转换为用前i<span class="number">-1</span>个物体装满容量为$v-w[i]$的背包获得最大的价值。而对于完全背包来说，拿了第i物体，仍可以再拿第i个物体，此时问题转换为，用前i个物体装满容量为$v-w[i]$的背包获得的最大价值，因此这个状态为$f[i][v-w[i]]$。</span><br><span class="line"></span><br><span class="line">应用这个思路，完全背包问题也可以用一维数组实现,这里注意，第二层循环迭代必须从<span class="number">0</span>开始。</span><br><span class="line"></span><br><span class="line">~~~python</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solution</span><span class="params">(W: List, V: List, C:int)</span> -&gt; int:</span></span><br><span class="line">    dp = [[<span class="number">0</span>]*(C+<span class="number">1</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> range(len(W))]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> range(C+<span class="number">1</span>):</span><br><span class="line">        dp[<span class="number">0</span>][c] = V[<span class="number">0</span>] <span class="keyword">if</span> c &gt;= W[<span class="number">0</span>] <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(W)):</span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> range(<span class="number">0</span>, C+<span class="number">1</span>):</span><br><span class="line">            <span class="keyword">if</span> c &lt; W[i]:</span><br><span class="line">                dp[i][c] = dp[i<span class="number">-1</span>][c]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                dp[i][c] = max(dp[i<span class="number">-1</span>][c], dp[i<span class="number">-1</span>][c-W[i]]+V[i])</span><br><span class="line">    <span class="keyword">return</span> max(dp[<span class="number">-1</span>])</span><br></pre></td></tr></table></figure>
+<h2 id="多重背包问题">多重背包问题</h2>
+<p><strong>问题描述</strong></p>
+<p>给定N个物品，第i件物品的重量为<span class="math inline">\(w[i]\)</span>,价值为<span class="math inline">\(v[i]\)</span>,数量为<span class="math inline">\(n[i]\)</span>,背包容量为C，在不超过背包容量的情况下取得最大的价值。</p>
+<p><strong>题目分析</strong></p>
+<p>本题与完全背包类似，但是每个物品的数量有限制，与完全背包一样，可以将每个物品拆分成n[i]个，将该问题转为01背包问题，此时时间复杂度为<span class="math inline">\(O(NV\sum n_i)\)</span>，状态转移方程为：</p>
+<p><span class="math display">\[
+f[i][v] = \text{max}(f[i-1][v-k\times w_i),\quad 0 \leq k \leq n_i
+\]</span></p>
+<p>另一种做法是将每个物品的数量用二进制表示，也即每个<span class="math inline">\(n_i\)</span>可表示成<span class="math inline">\(1,2, 4, \dots, 2^x, n_i-(2^{x+1}-1)\)</span>.其中，<span class="math inline">\(1,\dots,2^x\)</span>可表示<span class="math inline">\([1,2^{x+1}-1]\)</span>内的所有数，而<span class="math inline">\(n_i-(2^{x+1}-1)\)</span> 与<span class="math inline">\(1,\dots,2^x\)</span>可表示<span class="math inline">\(2^{x+1},n_i\)</span>之间的所有数。此时，算法时间复杂度为<span class="math inline">\(O(NV\sum log(n_i))\)</span></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">binary_partition</span><span class="params">(W: List, V:List, N:List)</span>:</span></span><br><span class="line">    W_, V_ = [], []</span><br><span class="line">    nums = len(W)</span><br><span class="line">    <span class="keyword">for</span> w, v, n <span class="keyword">in</span> zip(W, V, N):</span><br><span class="line">        <span class="keyword">for</span> p <span class="keyword">in</span> range(<span class="number">32</span>):</span><br><span class="line">            group = <span class="number">1</span> &lt;&lt; p</span><br><span class="line">            <span class="keyword">if</span> n &gt; group:</span><br><span class="line">                W_.append(group * w)</span><br><span class="line">                V_.append(group * v)</span><br><span class="line">                n -= group</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                W_.append(n * w)</span><br><span class="line">                V_.append(n * v)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">return</span> W_, V_</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solution</span><span class="params">(W:List, V:List, N:List, C:int)</span> -&gt; int:</span></span><br><span class="line">    W, V = binary_partition(W, V, N)</span><br><span class="line">    dp = [<span class="number">0</span>]*(C+<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> range(C+<span class="number">1</span>):</span><br><span class="line">        dp[c] = V[<span class="number">0</span>] <span class="keyword">if</span> c &gt;= W[<span class="number">0</span>] <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(W)):</span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> range(C, W[i]<span class="number">-1</span>, <span class="number">-1</span>):</span><br><span class="line">            dp[c] = max(dp[c], dp[c-W[i]]+V[i])</span><br><span class="line">    <span class="keyword">return</span> max(dp)</span><br></pre></td></tr></table></figure>
+<h2 id="混合背包问题">混合背包问题</h2>
+<p>如果将01背包，完全背包和多重背包混合起来，那么需要根据物体的数量进行判断。</p>
+<p>对于可以取有限件的物品，可以将该物品进行二进制划分变成01背包问题，而对于完全背包和01背包的混合，可以结合二者更新f的方式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">binary_partition</span><span class="params">(W: List, V:List, N:List)</span>:</span></span><br><span class="line">    W_, V_, N_ = [], [], []</span><br><span class="line">    nums = len(W)</span><br><span class="line">    <span class="keyword">for</span> w, v, n <span class="keyword">in</span> zip(W, V, N):</span><br><span class="line">        <span class="keyword">if</span> v == float(<span class="string">'inf'</span>): <span class="comment"># 完全背包</span></span><br><span class="line">            W_.append(w)</span><br><span class="line">            V_.append(v)</span><br><span class="line">            N_.append(<span class="number">1</span>) <span class="comment"># 无限个</span></span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        N_.append(<span class="number">0</span>) <span class="comment"># 只能取一次</span></span><br><span class="line">        <span class="keyword">for</span> p <span class="keyword">in</span> range(<span class="number">32</span>):</span><br><span class="line">            group = <span class="number">1</span> &lt;&lt; p</span><br><span class="line">            <span class="keyword">if</span> n &gt; group:</span><br><span class="line">                W_.append(group * w)</span><br><span class="line">                V_.append(group * v)</span><br><span class="line">                n -= group</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                W_.append(n * w)</span><br><span class="line">                V_.append(n * v)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">return</span> W_, V_, N_</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solution</span><span class="params">(W:List, V:List, N:List, C:int)</span> -&gt; int:</span></span><br><span class="line">    W, V, N = binary_partition(W, V, N)</span><br><span class="line">    dp = [<span class="number">0</span>]*(C+<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> range(C+<span class="number">1</span>):</span><br><span class="line">        dp[c] = V[<span class="number">0</span>] <span class="keyword">if</span> c &gt;= W[<span class="number">0</span>] <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(W)):</span><br><span class="line">        <span class="keyword">if</span> N[i] == <span class="number">0</span>: <span class="comment"># 01背包</span></span><br><span class="line">            <span class="keyword">for</span> c <span class="keyword">in</span> range(C, W[i]<span class="number">-1</span>, <span class="number">-1</span>):</span><br><span class="line">                dp[c] = max(dp[c], dp[c-W[i]]+V[i])</span><br><span class="line">        <span class="keyword">else</span>: <span class="comment"># 完全背包</span></span><br><span class="line">            <span class="keyword">for</span> c <span class="keyword">in</span> range(<span class="number">0</span>, C+<span class="number">1</span>):</span><br><span class="line">                <span class="keyword">if</span> c &lt; W[i]:</span><br><span class="line">                    dp[i][c] = dp[i<span class="number">-1</span>][c]</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    dp[i][c] = max(dp[i<span class="number">-1</span>][c], dp[i<span class="number">-1</span>][c-W[i]]+V[i])</span><br><span class="line">    <span class="keyword">return</span> max(dp)</span><br></pre></td></tr></table></figure>
+<h2 id="二维费用背包问题">二维费用背包问题</h2>
+<p><strong>问题描述</strong></p>
+<p>对于每个物品，具有两个不同的代价，拿取某个物品必须同时支付这两个代价，这里的代价可以理解为每个物品的重量，每个物品的代价为<span class="math inline">\(a[i],b[i]\)</span>可支配的两种重量总价为<span class="math inline">\(V,U\)</span>.</p>
+<p><strong>问题分析</strong></p>
+<p>代价多了一维，那么状态也增加一维即可。此时，状态转移方程为<span class="math inline">\(f[i][v][u] = \text{max}(f[i][v][u],f[i][v-a[i]][u-b[i]])\)</span>,与01背包类似，也可以仅使用二维数组表示状态，当为完全背包时，逆序遍历；当为多重背包时，将物品分组。</p>
+<p>二维费用的背包问题还可以另一种形式出现，背包的容量为V，但是只能取M个物品，此时，也是二维费用的背包问题，每个物品的第二维代价均为1，容量为M。</p>
+<h2 id="分组背包问题">分组背包问题</h2>
+<p><strong>问题描述</strong></p>
+<p>有N件物品和容量为C的背包，所有物品被分为若干组，每组之间的物品相互冲突，只能取一件。求将哪些物品放入到背包中使在不超过容量的情况下价格最大。</p>
+<p><strong>问题分析</strong></p>
+<p>对于每组物品来说，可以选一件也可以一件不选，此时状态<span class="math inline">\(f[k][v]\)</span>表示前k组中选出容量为v的物品的最大价值。则状态转移方程为$f[k][v]=(f[k-1][v], f[k][v-w[i]]+v[i])</p>
+<p>假设有K组，则伪代码为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">for k in range(K):</span><br><span class="line">    for i in range(ki):</span><br><span class="line">        for c in range(C,-1,-1):</span><br><span class="line">            f[c] &#x3D; max(f[c], f[c-w[i]]+v[i])</span><br></pre></td></tr></table></figure>
+<h2 id="依赖背包问题">依赖背包问题</h2>
+<p><strong>问题描述</strong></p>
+<p>如果要拿物品i那么必须拿物品j，称这种问题为有依赖的背包问题。为了简化问题，假设存在不依赖其他物品但被其他物品依赖的物品，并且每个有依赖的物品仅会依赖一个物品。</p>
+<p>我们将不依赖其他物品的物品称作主件，依赖其他物品的称作附件，那么可以根据主件和附件的关系将所有物品划分为多个组。那么情况变为要么不拿某个主件，要么只拿某个主件，要么拿某个主件并拿一个附件，要么拿一个主件并拿两个附件，依次类推。所以可以将所有物品划分成不同的组，但是每组内的物品可以随意选择，每个组内共有<span class="math inline">\(2^k+1\)</span>中组合方式。而对于每个组内的每个附件的状态是要么拿要么不拿，很像01背包问题，因此我们可以先在组内做一次01背包，得到<span class="math inline">\(C-W_k+1\)</span>个代价，其中<span class="math inline">\(W_k\)</span>为主件k的代价，费用为c的物品的价值为<span class="math inline">\(f[c-W_k]+V_k\)</span>.这些代价之间是由该组内的物品通过不同组合方式组成的，因此彼此之间是互斥的，此时可以直接应用分组背包问题的解决思路解决。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/01/greedy-algorithm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/01/greedy-algorithm/" itemprop="url">贪心算法题汇编</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-01T22:18:22+08:00">
+                2020-08-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/01/greedy-algorithm/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/08/01/greedy-algorithm/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="贪心算法介绍">贪心算法介绍</h1>
+<blockquote>
+<p>贪心算法（英語：greedy algorithm），又称贪婪算法，是一种在每一步选择中都采取在当前状态下最好或最优（即最有利）的选择，从而希望导致结果是最好或最优的算法。比如在旅行推销员问题中，如果旅行员每次都选择最近的城市，那这就是一种贪心算法。贪心算法在有最优子结构的问题中尤为有效。最优子结构的意思是局部最优解能决定全局最优解。简单地说，问题能够分解成子问题来解决，子问题的最优解能递推到最终问题的最优解。贪心算法与动态规划的不同在于它对每个子问题的解决方案都做出选择，不能回退。动态规划则会保存以前的运算结果，并根据以前的结果对当前进行选择，有回退功能。贪心法可以解决一些最优化问题，如：求图中的最小生成树、求哈夫曼编码……对于其他问题，贪心法一般不能得到我们所要求的答案。一旦一个问题可以通过贪心法来解决，那么贪心法一般是解决这个问题的最好办法。由于贪心法的高效性以及其所求得的答案比较接近最优结果，贪心法也可以用作辅助算法或者直接解决一些要求结果不特别精确的问题。</p>
+</blockquote>
+<p>以上摘自维基百科，但是这些概念性的知识并不能帮助我们选择解决实际的问题，而实践是认识的基础、认识的来源、认识发展的动力，因此本文选一些代表性的问题及解法，尽可能的说明白贪心算法在每个问题中的应用。</p>
+<h1 id="背包相关问题">背包相关问题</h1>
+<h2 id="最优装载">最优装载</h2>
+<p><strong>题目出处</strong></p>
+<p>算法竞赛入门经典，p231</p>
+<p><strong>题目描述</strong></p>
+<p>给定n个物体，第i个物体的重量为<span class="math inline">\(w_i\)</span>，选择尽量多的物体，使总重量不超过C。</p>
+<p><strong>题目分析</strong></p>
+<p>由于要尽可能多的拿物体，因此优先选择重量轻的物体。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solution</span><span class="params">(weights, v)</span>:</span></span><br><span class="line">    weights = sorted(weights)</span><br><span class="line">    count = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> w <span class="keyword">in</span> weights:</span><br><span class="line">        <span class="keyword">if</span> v &gt; w:</span><br><span class="line">            v -= w</span><br><span class="line">            count += <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> count</span><br></pre></td></tr></table></figure>
+<h2 id="部分背包问题">部分背包问题</h2>
+<p><strong>题目出处</strong></p>
+<p>算法竞赛入门经典，p231</p>
+<p><strong>题目描述</strong></p>
+<p>给定C个物体，其重量为<span class="math inline">\(w_i\)</span>,价值为<span class="math inline">\(c_i\)</span>,背包容量为<span class="math inline">\(v\)</span>,每个物体都能拿全部或者部分，那么如何拿物品，使背包的总价值最大。</p>
+<p><strong>题目分析</strong></p>
+<p>引入价值之后就不能每次只拿最轻的，因为可能最轻的价值也是最低的，这种情况下需要根据价值与重量的比值进行排序，每次选择价值最高重量最低的物品。由于可以拿部分物品，拿最后一个物体一般是拿部分。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> List</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solution</span><span class="params">(w:List, c:List, v:int)</span>-&gt;List:</span></span><br><span class="line">    result = [<span class="number">0</span>] * len(v)</span><br><span class="line">    wc = ((i, ww, cc) <span class="keyword">for</span> i, ww, cc <span class="keyword">in</span> enumerate(zip(w, c)))</span><br><span class="line">    wc = sorted(wc, key=<span class="keyword">lambda</span> x:x[<span class="number">2</span>]/x[<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">for</span> i, ww, cc <span class="keyword">in</span> wc:</span><br><span class="line">        <span class="keyword">if</span> v &gt; cc:</span><br><span class="line">            result[i] = cc</span><br><span class="line">            v -= cc</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            result[i] = v</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+<h2 id="乘船问题">乘船问题</h2>
+<p><strong>题目出处</strong></p>
+<p>算法竞赛入门经典，p231</p>
+<p><strong>题目描述</strong></p>
+<p>共有n个人，每个人的重量为<span class="math inline">\(w_i\)</span>，每艘船最多装两个人且重量为C。</p>
+<p><strong>题目分析</strong></p>
+<p>考虑最轻的人，如果最轻的人不能和其他人同乘坐一条船，那么所有人都只能乘一条船，因为任意两个人都不能乘同一条船。</p>
+<p>如果最轻的人可以和其他人乘同一条船，那么选择与他一起乘船的人中，最终的那一个，这里用到了贪心的做法，使得每艘船浪费的空间最小。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solution</span><span class="params">(w: List, C:int)</span>-&gt;int:</span></span><br><span class="line">    w = sorted(w)</span><br><span class="line">    i, j, end = <span class="number">0</span>, len(w)<span class="number">-1</span>, len(w)</span><br><span class="line">    result = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i &lt; j:</span><br><span class="line">        <span class="keyword">while</span> i &lt; j <span class="keyword">and</span> w[i] + w[j] &gt; C:</span><br><span class="line">            j-=<span class="number">1</span></span><br><span class="line">        result += end - j</span><br><span class="line">        end = j</span><br><span class="line">        i+=<span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+<h1 id="区间相关问题">区间相关问题</h1>
+<h2 id="求重叠区间的最大数量">求重叠区间的最大数量</h2>
+<p><strong>题目出处</strong></p>
+<p>猿辅导笔试</p>
+<p><strong>题目描述</strong></p>
+<p>给定一些区间<code>[start, end]</code>，求重叠区间的最大数量</p>
+<p><strong>题目分析</strong></p>
+<p>首先对区间进行排序，先根据起始点排序，若起始点相同则根据终点排序。遍历排序号的区间，用一个最小堆保存当前区间的最小终点。</p>
+<p>每次遍历比较最小end与当前区间的起点，</p>
+<ul>
+<li>如果起点比最小end小，说明与堆中所有的区间都有交集，入堆</li>
+<li>如果起点比最小end大，说明与最小end所在的区间没有交集，可以把当前区间与最小end的区间合并，也即从堆中取出最小end，将当前end加入。可以合并的原因是：
+<ul>
+<li>区间已经排好序了，所以之后不可能有区间位于二者之间</li>
+<li>这两个区间与堆中的其他区间都重叠，没有增加最大重叠的数量</li>
+</ul></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solution</span><span class="params">(intervals: List[Tuple])</span> -&gt; int:</span></span><br><span class="line">    intervals = sorted(intervals)</span><br><span class="line">    heap = []</span><br><span class="line">    heap.append(intervals[<span class="number">0</span>][<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">for</span> i, seg <span class="keyword">in</span> enumerate(intervals[<span class="number">1</span>:]):</span><br><span class="line">        <span class="keyword">if</span> heap[<span class="number">0</span>] &lt;= seg[<span class="number">0</span>]:</span><br><span class="line">            heappop(heap)</span><br><span class="line">        heappush(heap, seg[<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">return</span> len(intervals)</span><br></pre></td></tr></table></figure>
+<h2 id="求非重叠区间的最大数量">求非重叠区间的最大数量</h2>
+<p><strong>题目出处</strong></p>
+<p><a href="https://leetcode.com/problems/non-overlapping-intervals/" target="_blank" rel="noopener">Leetcode453</a></p>
+<p><strong>题目描述</strong></p>
+<p>给定一些区间，求需要移除区间的最小数量，使区间之间不重叠。</p>
+<p><strong>题目分析</strong></p>
+<p>对区间按照终点进行排序，从最小的重点开始，移除与最小终点重叠的区间，若不冲突则更新最小终点。</p>
+<p>这里应用贪心思想的位置在于，尽可能选择终点较小的区间，贪心有效的点在于：</p>
+<ol type="1">
+<li>选择end较小的点，如果发生冲突了，那么因为end较小，所以会有更多的时间选择其他区间。</li>
+</ol>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">class</span> Solution:</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">    <span class="kw">def</span> eraseOverlapIntervals(<span class="va">self</span>, intervals: List[List[<span class="bu">int</span>]]) <span class="op">-&gt;</span> <span class="bu">int</span>:</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">        <span class="cf">if</span> intervals <span class="op">==</span> []:</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">            <span class="cf">return</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">        intervals <span class="op">=</span> <span class="bu">sorted</span>(intervals, key<span class="op">=</span><span class="kw">lambda</span> x:x[<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">        current_min <span class="op">=</span> intervals[<span class="dv">0</span>][<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">        result <span class="op">=</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">        <span class="cf">for</span> interval <span class="kw">in</span> intervals[<span class="dv">1</span>:]:</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">            <span class="cf">if</span> interval[<span class="dv">0</span>] <span class="op">&lt;</span> current_min:</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">                result <span class="op">+=</span> <span class="dv">1</span></a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">            <span class="cf">else</span>:</a>
+<a class="sourceLine" id="cb1-12" data-line-number="12">                current_min <span class="op">=</span> interval[<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb1-13" data-line-number="13">        <span class="cf">return</span> result</a></code></pre></div>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/29/super-egg-drop/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -916,683 +1816,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/22/java-nio-introduction/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Gummary">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="炼丹炉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/22/java-nio-introduction/" itemprop="url">java-nio简介</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-22T17:37:42+08:00">
-                2020-06-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/22/java-nio-introduction/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/06/22/java-nio-introduction/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="java中的nio">JAVA中的NIO</h1>
-<p>NIO是为了加快程序处理IO的速度重新编写的一套JAVA IO包。与原来的<code>java.io.*</code>的最大的不同在于NIO是以块来处理数据而之前是以流的形式处理数据。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/22/java-nio-introduction/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/09/java-hashmap/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Gummary">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="炼丹炉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/09/java-hashmap/" itemprop="url">JAVA中Hashmap实现</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-09T19:59:55+08:00">
-                2020-06-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/06/09/java-hashmap/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/06/09/java-hashmap/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>HashMap实现实现了所有Map的函数，允许Null作为key和value。但是HashMap中不保证值的插入顺序。</p>
-<p>Hashmap中<code>get</code>和<code>put</code>操作的在hash函数能分散key到所有桶上时是常数时间的。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/09/java-hashmap/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/05/chapter3-dl-probability-and-information-theory/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Gummary">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="炼丹炉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/05/05/chapter3-dl-probability-and-information-theory/" itemprop="url">深度学习笔记之概率论信息论基础</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-05T20:40:35+08:00">
-                2020-05-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/05/05/chapter3-dl-probability-and-information-theory/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/05/05/chapter3-dl-probability-and-information-theory/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="几个概念">几个概念</h2>
-<p>概率用来描述某个事物发生的可能性。 逻辑学指的是，给定一些前提，判断一件事是否发生。而概率论指的是给定一些前提发生的概率，判断一件事发生的概率。</p>
-<p>随机变量是指一个变量可以随机的取不同的值。随机变量可以是连续或者离散的。</p>
-<p>概率分布用来描述一个或多个随机变量取某几个值的可能性。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/05/05/chapter3-dl-probability-and-information-theory/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/18/meituan-interview/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Gummary">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="炼丹炉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/03/18/meituan-interview/" itemprop="url">美团笔试题目</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-18T00:40:58+08:00">
-                2020-03-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/03/18/meituan-interview/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/03/18/meituan-interview/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="problem-description">Problem Description</h2>
-<p>小美曾经有一个特殊的数组，这个数组的长度为n。但是她在打恐怖游戏的时候被吓得忘记了这个数组长什么样了。不过她还记得这个数组满足一些条件。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/03/18/meituan-interview/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/15/intersection-of-two-linked-lists/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Gummary">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="炼丹炉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/03/15/intersection-of-two-linked-lists/" itemprop="url">Leetcode 160 intersection-of-two-linked-lists</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-15T22:08:06+08:00">
-                2020-03-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/03/15/intersection-of-two-linked-lists/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/03/15/intersection-of-two-linked-lists/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="problem-description">Problem Description</h1>
-<p>Write a program to find the node at which the intersection of two singly linked lists begins.</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/03/15/intersection-of-two-linked-lists/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1643,7 +1866,7 @@
               
                 <a href="/archives/%7C%7Carchive">
               
-                  <span class="site-state-item-count">65</span>
+                  <span class="site-state-item-count">70</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="括号字符串匹配 给定一些只包含&#39;&#39;的字符串，加多少字符使该字符串合法，字符串合法指：  空字符串为合法的 若A合法则(A), [A]合法 若A,B合法则AB合法  解法 区间DP问题，区间DP问题是指，在某一段区间上进行DP，然后将小区间的结果合并到大区间上，得到大区间上的最优解。 区间DP的模板为： 12345678910# 枚举区间的长度for length in rang">
+<meta property="og:type" content="article">
+<meta property="og:title" content="8.24 腾讯笔试题">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;08&#x2F;24&#x2F;tencent-exam&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="括号字符串匹配 给定一些只包含&#39;&#39;的字符串，加多少字符使该字符串合法，字符串合法指：  空字符串为合法的 若A合法则(A), [A]合法 若A,B合法则AB合法  解法 区间DP问题，区间DP问题是指，在某一段区间上进行DP，然后将小区间的结果合并到大区间上，得到大区间上的最优解。 区间DP的模板为： 12345678910# 枚举区间的长度for length in rang">
+<meta property="article:published_time" content="2020-08-24T11:28:14.000Z">
+<meta property="article:modified_time" content="2020-08-24T13:28:42.002Z">
+<meta property="article:author" content="Gummary">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/08/24/tencent-exam/"/>
+
+
+
+
+
+  <title>8.24 腾讯笔试题 | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/24/tencent-exam/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">8.24 腾讯笔试题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-24T19:28:14+08:00">
+                2020-08-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/24/tencent-exam/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/08/24/tencent-exam/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="括号字符串匹配">括号字符串匹配</h2>
+<p>给定一些只包含'<a href=""></a>'的字符串，加多少字符使该字符串合法，字符串合法指：</p>
+<ol type="1">
+<li>空字符串为合法的</li>
+<li>若A合法则(A), [A]合法</li>
+<li>若A,B合法则AB合法</li>
+</ol>
+<p><strong>解法</strong></p>
+<p>区间DP问题，区间DP问题是指，在某一段区间上进行DP，然后将小区间的结果合并到大区间上，得到大区间上的最优解。</p>
+<p>区间DP的模板为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 枚举区间的长度</span></span><br><span class="line"><span class="keyword">for</span> length <span class="keyword">in</span> range(<span class="number">1</span>, n+<span class="number">1</span>):</span><br><span class="line">    <span class="comment"># 枚举区间的左端点</span></span><br><span class="line">    <span class="keyword">for</span> l <span class="keyword">in</span> range(<span class="number">0</span>, n):</span><br><span class="line">        r = l + length <span class="comment"># 得到当前计算区间的右端点</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> range(l, r):</span><br><span class="line">            <span class="comment"># 进行区间DP，如dp[i][j] = min(dp[i][j], dp[i][k]+dp[k+1][j])</span></span><br><span class="line">            <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<p>本题中区间的即为一个字符串的左右两侧，当前区间添加的最小字符的数量即为找到一个划分使左右子区间需要添加的字符数量最小。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">s = input().strip()</span><br><span class="line"><span class="keyword">for</span> length <span class="keyword">in</span> range(<span class="number">1</span>, len(s)+<span class="number">1</span>):</span><br><span class="line">    <span class="keyword">for</span> l <span class="keyword">in</span> range(<span class="number">0</span>, len(s)-length):</span><br><span class="line">        r = l + length</span><br><span class="line">        dp[l][r] = length</span><br><span class="line">        <span class="keyword">if</span> s[i] == <span class="string">'('</span> <span class="keyword">and</span> s[j] == <span class="string">')'</span>:</span><br><span class="line">            dp[l][r] = min(dp[l][r], dp[l+<span class="number">1</span>][r<span class="number">-1</span>])</span><br><span class="line">        <span class="keyword">if</span> s[i] == <span class="string">'['</span> <span class="keyword">and</span> s[j] == <span class="string">']'</span>:</span><br><span class="line">            dp[l][r] = min(dp[l][r], dp[l+<span class="number">1</span>][r<span class="number">-1</span>])</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 在当前区间内找最小划分</span></span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> range(l, r): <span class="comment"># 这里注意是在[l, r)内寻找划分点</span></span><br><span class="line">            dp[l][r] = min(dp[l][r], dp[l][k]+dp[k+<span class="number">1</span>][r])</span><br></pre></td></tr></table></figure>
+<h2 id="队伍方案数量">队伍方案数量</h2>
+<p>某部门有n个人，从n个人中选出任意数量的人组成队伍，从这些人中选出一个当作队长，求方案数对<span class="math inline">\(10^9+7\)</span>取余的结果。</p>
+<p>数学公式推导为：</p>
+<p><span class="math display">\[
+\text{ans} = C_n^0\times 0 + C_n^1\times1+C_n^2\times2+\dots+C_n^n\times n
+\]</span></p>
+<p>将其反写有：</p>
+<p><span class="math display">\[
+\text{ans} = C_n^n\times n+C_n^{n-1}\times{n-1}+\dots+C_n^0\times 0
+\]</span></p>
+<p>根据性质<span class="math inline">\(C_n^r = C_n^{n-r}\)</span>, 将两个ans相加后得到：</p>
+<p><span class="math display">\[
+2\text{ans} = n\sum_{i=0}^nC_n^i = n2^n
+\]</span></p>
+<p>其中<span class="math inline">\(\sum_{i=0}^nC_n^i=2^n\)</span>为二项式定理</p>
+<p>则：</p>
+<p><span class="math display">\[
+\text{ans} = n2^{n-1}
+\]</span></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mod = <span class="number">1e9</span>+<span class="number">7</span></span><br><span class="line">n = int(input().strip())</span><br><span class="line">print(n*<span class="number">2</span>**(n<span class="number">-1</span>)%mod)</span><br></pre></td></tr></table></figure>
+<p>pyhton中快速幂取模模板：</p>
+<p><span class="math inline">\((a*b)\% m = (a\%m * b\%m)\%m\)</span></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">quick_exp_mod</span><span class="params">(x, n, m)</span>:</span></span><br><span class="line">    res = <span class="number">1</span></span><br><span class="line">    x %= m</span><br><span class="line">    <span class="keyword">while</span> n != <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">if</span> n &amp; <span class="number">1</span>:                      <span class="comment">#取n的2进制的最低位</span></span><br><span class="line">            res = (res * x) % m</span><br><span class="line">        n &gt;&gt;= <span class="number">1</span>                        <span class="comment">#相当于n//2 </span></span><br><span class="line">        x = (x * x) % m</span><br><span class="line">    <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+<h2 id="具有相同邻接点的节点对">具有相同邻接点的节点对</h2>
+<p>定义函数<span class="math inline">\(g(x)\)</span>为图中所有与x节点相邻的节点，若存在<span class="math inline">\(g(x)=g(y)\)</span>，则(x, y)为一对，求一幅图中这种点对的数量。</p>
+<p>(1,2)和(2,1)为一对。</p>
+<p>求出每个节点的邻接点结合，将邻接点作为key，数量作为value，计算对数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line">n, m = list(int(x) <span class="keyword">for</span> x <span class="keyword">in</span> input().strip())</span><br><span class="line">adjoin_dict = defaultdict(set)</span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> range(m):</span><br><span class="line">    x, y = list(int(x) <span class="keyword">for</span> x <span class="keyword">in</span> input().strip())</span><br><span class="line">    adjoin_dict[x].add(y)</span><br><span class="line">    adjoin_dict[y].add(x)</span><br><span class="line"></span><br><span class="line">num_map = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> k, v <span class="keyword">in</span> adjoin_dict.values():</span><br><span class="line">    num_map[tuple(v)] = num_map.get(tuple(v), <span class="number">0</span>) + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">ans = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> v <span class="keyword">in</span> num_map.values():</span><br><span class="line">    <span class="keyword">if</span> v &gt; <span class="number">1</span>:</span><br><span class="line">        <span class="comment"># 因为(1, 2) 和(2, 1) 只算一对，所以(1,2,3,4)中不同对的数量为3+2+1</span></span><br><span class="line">        ans += v*(v<span class="number">-1</span>) // <span class="number">2</span></span><br><span class="line">print(ans)</span><br></pre></td></tr></table></figure>
+<h2 id="最短路径问题">最短路径问题</h2>
+<p>现在有n个点，有m条双向路径，有k个传送门，传送门表示两个路径之间的距离为0，传送门为单向的，求从0到n之间的最短路径。</p>
+<p>利用Dijkstra算法求最短路即可。</p>
+<p>Dijkstra算法是，假设求P点到其他所有点之间的最短路径，则维护一个数组dist，值为p点到每个点的最短距离；然后维护一个set，内容为已经求出最短距离的点集。则具体步骤为：</p>
+<ol type="1">
+<li>初始化dist数组，dist[p] = 0，将所有与p相邻的点加入到一个队列中</li>
+<li>从队列中选出与p距离最小的点q加入最短点集中，将与q相邻的点加入到队列里，更新所有不在最短点集中的点的距离</li>
+<li>重复2，直到队列为0</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">n, m, k = list(int(x) <span class="keyword">for</span> x <span class="keyword">in</span> input().strip().split())</span><br><span class="line">graph = [[float(<span class="string">'inf'</span>)]*n <span class="keyword">for</span> _ <span class="keyword">in</span> range(n)]</span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> range(m):</span><br><span class="line">    x, y, w= list(int(x) <span class="keyword">for</span> x <span class="keyword">in</span> input().strip().split())</span><br><span class="line">    <span class="comment"># 防止出现重边</span></span><br><span class="line">    graph[x<span class="number">-1</span>][y<span class="number">-1</span>] = min(graph[x<span class="number">-1</span>][y<span class="number">-1</span>], w)</span><br><span class="line">    graph[y<span class="number">-1</span>][x<span class="number">-1</span>] = min(graph[y<span class="number">-1</span>][x<span class="number">-1</span>], w)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> range(k):</span><br><span class="line">    x, y = list(int(x) <span class="keyword">for</span> x <span class="keyword">in</span> input().strip().split())</span><br><span class="line">    graph[x][y] = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">dist = [float(<span class="string">'inf'</span>)]*n</span><br><span class="line"><span class="comment"># 用visited数组判断是否访问过</span></span><br><span class="line">visited = [<span class="number">0</span>] * n</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">    minn, minv = <span class="number">-1</span>, float(<span class="string">'inf'</span>)</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(n):</span><br><span class="line">        <span class="keyword">if</span> visited[j] == <span class="number">0</span> <span class="keyword">and</span> dist[j] &lt; minv:</span><br><span class="line">            minn, minv = j, dist[j]</span><br><span class="line">    <span class="keyword">if</span> minn == <span class="number">-1</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">    visited[minn] = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(n):</span><br><span class="line">        <span class="keyword">if</span> visited[j] == <span class="number">0</span>:</span><br><span class="line">            dist[j] = min(dist[j], graph[minn][j])</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> dist[n] == float(<span class="string">'inf'</span>):</span><br><span class="line">    print(<span class="number">-1</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    print(dist[n])</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/13/monotone-stack/" rel="next" title="单调递增栈与单调递减栈">
+                <i class="fa fa-chevron-left"></i> 单调递增栈与单调递减栈
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/26/single-number/" rel="prev" title="只出现一次的数">
+                只出现一次的数 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#括号字符串匹配"><span class="nav-number">1.</span> <span class="nav-text">括号字符串匹配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#队伍方案数量"><span class="nav-number">2.</span> <span class="nav-text">队伍方案数量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具有相同邻接点的节点对"><span class="nav-number">3.</span> <span class="nav-text">具有相同邻接点的节点对</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最短路径问题"><span class="nav-number">4.</span> <span class="nav-text">最短路径问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="01背包问题 问题描述 假设有N个物体，第i个物体的重量为w[i],价值为c[i],背包容量为C,那么将哪些物体放入到背包中，可以在不超过背包容量的情况下使背包所装的价值最大 首先定义状态f[i][v]，其中\(i\in \{1,\dots N\}, v\in \{1, \dots C\}\),则f[i][v]的含义是取前i件物品，容量恰好为v的情况下的最大价值。 则状态转移方程为： \">
+<meta property="og:type" content="article">
+<meta property="og:title" content="背包问题">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;08&#x2F;01&#x2F;knapsack-problem&#x2F;index.html">
+<meta property="og:site_name" content="炼丹炉">
+<meta property="og:description" content="01背包问题 问题描述 假设有N个物体，第i个物体的重量为w[i],价值为c[i],背包容量为C,那么将哪些物体放入到背包中，可以在不超过背包容量的情况下使背包所装的价值最大 首先定义状态f[i][v]，其中\(i\in \{1,\dots N\}, v\in \{1, \dots C\}\),则f[i][v]的含义是取前i件物品，容量恰好为v的情况下的最大价值。 则状态转移方程为： \">
+<meta property="article:published_time" content="2020-08-01T15:28:11.000Z">
+<meta property="article:modified_time" content="2020-08-10T08:57:50.932Z">
+<meta property="article:author" content="Gummary">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/08/01/knapsack-problem/"/>
+
+
+
+
+
+  <title>背包问题 | 炼丹炉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炼丹炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/01/knapsack-problem/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gummary">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炼丹炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">背包问题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-01T23:28:11+08:00">
+                2020-08-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/01/knapsack-problem/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/08/01/knapsack-problem/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="背包问题">01背包问题</h1>
+<p><strong>问题描述</strong></p>
+<p>假设有N个物体，第i个物体的重量为<code>w[i]</code>,价值为<code>c[i]</code>,背包容量为<code>C</code>,那么将哪些物体放入到背包中，可以在不超过背包容量的情况下使背包所装的价值最大</p>
+<p>首先定义状态<code>f[i][v]</code>，其中<span class="math inline">\(i\in \{1,\dots N\}, v\in \{1, \dots C\}\)</span>,则<code>f[i][v]</code>的含义是取前i件物品，容量<strong>恰好</strong>为v的情况下的最大价值。</p>
+<p>则状态转移方程为：</p>
+<p><span class="math display">\[
+f[i][v] = \text{max}(f[i-1][v], f[i-1][v-w[i]]+c[i])
+\]</span></p>
+<p>也即每个物体都有两个状态(01背包的由来)，拿或者不拿。那么：</p>
+<ul>
+<li>如果不拿，那么最大收益为取前i-1个物体，容量恰好为v的价值</li>
+<li>如果拿，那么最大收益为前i-1个物体，容量恰好为v-w[i]的价值加上当前物体的价值。</li>
+</ul>
+<p>注意<code>f[i][v]</code>是有意义的前提是，前i个物体，恰好能组成一个重量为v的背包，因此最终的答案不是<code>f[N][C]</code>,因为可能没法恰好组成重量为C的背包，而是<span class="math inline">\(f[N][0\dots C]\)</span>的最大值。如果移除恰好，那么状态转移方程为：</p>
+<p><span class="math display">\[
+f[i][v] = \text{max}(f[i-1][v], f[i-1][v-w[i]]+c[i], f[i-1][v-1])
+\]</span></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solution</span><span class="params">(W: List, V: List, C:int)</span> -&gt; int:</span></span><br><span class="line">    dp = [[<span class="number">0</span>]*(C+<span class="number">1</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> range(len(W))]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> range(C+<span class="number">1</span>):</span><br><span class="line">        dp[<span class="number">0</span>][c] = V[<span class="number">0</span>] <span class="keyword">if</span> c &gt;= W[<span class="number">0</span>] <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(W)):</span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> range(C, <span class="number">0</span>, <span class="number">-1</span>):</span><br><span class="line">            <span class="keyword">if</span> c &lt; W[i]:</span><br><span class="line">                dp[i][c] = dp[i<span class="number">-1</span>][c]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                dp[i][c] = max(dp[i<span class="number">-1</span>][c], dp[i<span class="number">-1</span>][c-W[i]]+V[i])</span><br><span class="line">    <span class="keyword">return</span> max(dp[<span class="number">-1</span>])</span><br></pre></td></tr></table></figure>
+<p>这个算法的时间复杂度为<span class="math inline">\(O(N*C)\)</span>,N为物体数量，C为背包容量，时间复杂度为<span class="math inline">\(O(N*C)\)</span>，观察这个可以发现， 每次判断时仅使用了dp数组每一行的上一行，因此可以将空间复杂度降低到<span class="math inline">\(O(C)\)</span></p>
+<p>注意内层循环必须是从最大的背包容量开始迭代，这样可以保证推导dp[v]中使用的dp[v-w[i]]是dp[i-1][v-w[i]]的状态。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solution</span><span class="params">(W: List, V: List, C:int)</span> -&gt; int:</span></span><br><span class="line">    dp = [<span class="number">0</span>]*(C+<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> range(C+<span class="number">1</span>):</span><br><span class="line">        dp[c] = V[<span class="number">0</span>] <span class="keyword">if</span> c &gt;= W[<span class="number">0</span>] <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(W)):</span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> range(C, W[i]<span class="number">-1</span>, <span class="number">-1</span>):</span><br><span class="line">            dp[c] = max(dp[c], dp[c-W[i]]+V[i])</span><br><span class="line">    <span class="keyword">return</span> max(dp)</span><br></pre></td></tr></table></figure>
+<h2 id="例题">例题</h2>
+<p><a href="https://leetcode.com/problems/partition-equal-subset-sum/" target="_blank" rel="noopener">leetcode 416. Partition Equal Subset Sum</a></p>
+<p><strong>题目及分析</strong></p>
+<p>给定n个数，问能否找到其中一个子集，使子集的和为n个数和的一半。</p>
+<p>每个数有两个状态，加入子集或不加入子集，最终使加入子集的元素的和恰好为全部和的一半，因此可转换为01背包问题，数为物体的重量，最终使背包内物体的重量恰好为target</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">canPartition</span><span class="params">(self, nums: List[int])</span> -&gt; bool:</span></span><br><span class="line">        total = sum(nums)</span><br><span class="line">        <span class="keyword">if</span> total % <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        target = total // <span class="number">2</span></span><br><span class="line">        dp = [<span class="number">0</span>] * (total + <span class="number">1</span>)</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> n <span class="keyword">in</span> nums:</span><br><span class="line">            <span class="keyword">for</span> v <span class="keyword">in</span> range(total, <span class="number">-1</span>, <span class="number">-1</span>):</span><br><span class="line">                <span class="keyword">if</span> dp[v]:</span><br><span class="line">                    dp[v+n] = <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> dp[target]</span><br><span class="line">~~~        </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 完全背包问题</span></span><br><span class="line"></span><br><span class="line">**问题描述**</span><br><span class="line"></span><br><span class="line">给定N个物品，第i个物品的价值为c[i],重量为w[i]，每个物品都有无数件，在重量不超过V的情况下，使背包的价值最大。</span><br><span class="line"></span><br><span class="line">**题目分析**</span><br><span class="line"></span><br><span class="line">本题相当于<span class="number">01</span>背包问题的一个推广，每个物品都可以拿任意次，假设在选取第i个物品时，拿取的数量为k，则状态转移方程为：</span><br><span class="line"></span><br><span class="line">$$</span><br><span class="line">f[i][v] = \text&#123;max&#125;(f[i<span class="number">-1</span>][v-k\times w[i]]),\quad <span class="number">0</span> \leq k \leq \lfloor v/w[i]\rfloor</span><br><span class="line">$$</span><br><span class="line"></span><br><span class="line">对于<span class="number">01</span>背包来说，$k\<span class="keyword">in</span>\&#123;<span class="number">0</span>,<span class="number">1</span>\&#125;$</span><br><span class="line"></span><br><span class="line">此时，与<span class="number">01</span>背包相同，共有O(N*V)个状态需要解，但此时每个状态解的时间不为常数了，与每个物体的状态有关，求解状态f[i][v]的时间复杂度为$O(v/w[i])$</span><br><span class="line"></span><br><span class="line">一个简单的优化，对于任意两件物体i，j，若满足$c[i] &lt; c[j],\quad w[i] &gt; w[j]$那么我们可以直接选择j物品，因为如果选择i物品，那么我们总可以选择一定的j物品来获得比i物品更大的价值。但对于精心设计过的数据，也即不包含上述情况的数据，该方法与之前的时间复杂度相同。</span><br><span class="line"></span><br><span class="line">完全背包也可以转换为<span class="number">01</span>背包问题，将每个物品都变为$V/w[i]$个等价值等重量的物品，每个物品只能选一次，此时就变为<span class="number">01</span>背包问题了，此时时间复杂度没变。</span><br><span class="line"></span><br><span class="line">另一种更好的拆分方式是，将每个物体分成k堆，每一堆中包含$<span class="number">2</span>^k$个物体，$k\<span class="keyword">in</span>\&#123;<span class="number">0</span>,\dots,log(V/w[i])\&#125;$，也即用二进制进行切分，因为用二进制的和可以表示出任意的一个数。此时将计算每个状态所需的时间$O(v/w[i])$，降到了$O(log(v/w[i])$.</span><br><span class="line"></span><br><span class="line">完全背包问题还有一种更优的解法，时间复杂度为$O(NV)$,其状态转移方程为:</span><br><span class="line"></span><br><span class="line">$$</span><br><span class="line">f[i][v] = \text&#123;max&#125;(f[i<span class="number">-1</span>][v], f[i][v-w[i]] + c[i])</span><br><span class="line">$$</span><br><span class="line"></span><br><span class="line">观察一下可以发现，与<span class="number">01</span>背包之间的区别在于，第二个使用的是$f[i]$而不是$f[i<span class="number">-1</span>]$，下面说明这么做为什么有效。</span><br><span class="line"></span><br><span class="line">对于<span class="number">01</span>背包问题，使用$f[i<span class="number">-1</span>][v-w[i]]$是因为，拿了第i个物品之后，不能再拿第i个物品了，因此问题转换为用前i<span class="number">-1</span>个物体装满容量为$v-w[i]$的背包获得最大的价值。而对于完全背包来说，拿了第i物体，仍可以再拿第i个物体，此时问题转换为，用前i个物体装满容量为$v-w[i]$的背包获得的最大价值，因此这个状态为$f[i][v-w[i]]$。</span><br><span class="line"></span><br><span class="line">应用这个思路，完全背包问题也可以用一维数组实现,这里注意，第二层循环迭代必须从<span class="number">0</span>开始。</span><br><span class="line"></span><br><span class="line">~~~python</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solution</span><span class="params">(W: List, V: List, C:int)</span> -&gt; int:</span></span><br><span class="line">    dp = [[<span class="number">0</span>]*(C+<span class="number">1</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> range(len(W))]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> range(C+<span class="number">1</span>):</span><br><span class="line">        dp[<span class="number">0</span>][c] = V[<span class="number">0</span>] <span class="keyword">if</span> c &gt;= W[<span class="number">0</span>] <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(W)):</span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> range(<span class="number">0</span>, C+<span class="number">1</span>):</span><br><span class="line">            <span class="keyword">if</span> c &lt; W[i]:</span><br><span class="line">                dp[i][c] = dp[i<span class="number">-1</span>][c]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                dp[i][c] = max(dp[i<span class="number">-1</span>][c], dp[i<span class="number">-1</span>][c-W[i]]+V[i])</span><br><span class="line">    <span class="keyword">return</span> max(dp[<span class="number">-1</span>])</span><br></pre></td></tr></table></figure>
+<h2 id="多重背包问题">多重背包问题</h2>
+<p><strong>问题描述</strong></p>
+<p>给定N个物品，第i件物品的重量为<span class="math inline">\(w[i]\)</span>,价值为<span class="math inline">\(v[i]\)</span>,数量为<span class="math inline">\(n[i]\)</span>,背包容量为C，在不超过背包容量的情况下取得最大的价值。</p>
+<p><strong>题目分析</strong></p>
+<p>本题与完全背包类似，但是每个物品的数量有限制，与完全背包一样，可以将每个物品拆分成n[i]个，将该问题转为01背包问题，此时时间复杂度为<span class="math inline">\(O(NV\sum n_i)\)</span>，状态转移方程为：</p>
+<p><span class="math display">\[
+f[i][v] = \text{max}(f[i-1][v-k\times w_i),\quad 0 \leq k \leq n_i
+\]</span></p>
+<p>另一种做法是将每个物品的数量用二进制表示，也即每个<span class="math inline">\(n_i\)</span>可表示成<span class="math inline">\(1,2, 4, \dots, 2^x, n_i-(2^{x+1}-1)\)</span>.其中，<span class="math inline">\(1,\dots,2^x\)</span>可表示<span class="math inline">\([1,2^{x+1}-1]\)</span>内的所有数，而<span class="math inline">\(n_i-(2^{x+1}-1)\)</span> 与<span class="math inline">\(1,\dots,2^x\)</span>可表示<span class="math inline">\(2^{x+1},n_i\)</span>之间的所有数。此时，算法时间复杂度为<span class="math inline">\(O(NV\sum log(n_i))\)</span></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">binary_partition</span><span class="params">(W: List, V:List, N:List)</span>:</span></span><br><span class="line">    W_, V_ = [], []</span><br><span class="line">    nums = len(W)</span><br><span class="line">    <span class="keyword">for</span> w, v, n <span class="keyword">in</span> zip(W, V, N):</span><br><span class="line">        <span class="keyword">for</span> p <span class="keyword">in</span> range(<span class="number">32</span>):</span><br><span class="line">            group = <span class="number">1</span> &lt;&lt; p</span><br><span class="line">            <span class="keyword">if</span> n &gt; group:</span><br><span class="line">                W_.append(group * w)</span><br><span class="line">                V_.append(group * v)</span><br><span class="line">                n -= group</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                W_.append(n * w)</span><br><span class="line">                V_.append(n * v)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">return</span> W_, V_</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solution</span><span class="params">(W:List, V:List, N:List, C:int)</span> -&gt; int:</span></span><br><span class="line">    W, V = binary_partition(W, V, N)</span><br><span class="line">    dp = [<span class="number">0</span>]*(C+<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> range(C+<span class="number">1</span>):</span><br><span class="line">        dp[c] = V[<span class="number">0</span>] <span class="keyword">if</span> c &gt;= W[<span class="number">0</span>] <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(W)):</span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> range(C, W[i]<span class="number">-1</span>, <span class="number">-1</span>):</span><br><span class="line">            dp[c] = max(dp[c], dp[c-W[i]]+V[i])</span><br><span class="line">    <span class="keyword">return</span> max(dp)</span><br></pre></td></tr></table></figure>
+<h2 id="混合背包问题">混合背包问题</h2>
+<p>如果将01背包，完全背包和多重背包混合起来，那么需要根据物体的数量进行判断。</p>
+<p>对于可以取有限件的物品，可以将该物品进行二进制划分变成01背包问题，而对于完全背包和01背包的混合，可以结合二者更新f的方式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">binary_partition</span><span class="params">(W: List, V:List, N:List)</span>:</span></span><br><span class="line">    W_, V_, N_ = [], [], []</span><br><span class="line">    nums = len(W)</span><br><span class="line">    <span class="keyword">for</span> w, v, n <span class="keyword">in</span> zip(W, V, N):</span><br><span class="line">        <span class="keyword">if</span> v == float(<span class="string">'inf'</span>): <span class="comment"># 完全背包</span></span><br><span class="line">            W_.append(w)</span><br><span class="line">            V_.append(v)</span><br><span class="line">            N_.append(<span class="number">1</span>) <span class="comment"># 无限个</span></span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        N_.append(<span class="number">0</span>) <span class="comment"># 只能取一次</span></span><br><span class="line">        <span class="keyword">for</span> p <span class="keyword">in</span> range(<span class="number">32</span>):</span><br><span class="line">            group = <span class="number">1</span> &lt;&lt; p</span><br><span class="line">            <span class="keyword">if</span> n &gt; group:</span><br><span class="line">                W_.append(group * w)</span><br><span class="line">                V_.append(group * v)</span><br><span class="line">                n -= group</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                W_.append(n * w)</span><br><span class="line">                V_.append(n * v)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">return</span> W_, V_, N_</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solution</span><span class="params">(W:List, V:List, N:List, C:int)</span> -&gt; int:</span></span><br><span class="line">    W, V, N = binary_partition(W, V, N)</span><br><span class="line">    dp = [<span class="number">0</span>]*(C+<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> range(C+<span class="number">1</span>):</span><br><span class="line">        dp[c] = V[<span class="number">0</span>] <span class="keyword">if</span> c &gt;= W[<span class="number">0</span>] <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(W)):</span><br><span class="line">        <span class="keyword">if</span> N[i] == <span class="number">0</span>: <span class="comment"># 01背包</span></span><br><span class="line">            <span class="keyword">for</span> c <span class="keyword">in</span> range(C, W[i]<span class="number">-1</span>, <span class="number">-1</span>):</span><br><span class="line">                dp[c] = max(dp[c], dp[c-W[i]]+V[i])</span><br><span class="line">        <span class="keyword">else</span>: <span class="comment"># 完全背包</span></span><br><span class="line">            <span class="keyword">for</span> c <span class="keyword">in</span> range(<span class="number">0</span>, C+<span class="number">1</span>):</span><br><span class="line">                <span class="keyword">if</span> c &lt; W[i]:</span><br><span class="line">                    dp[i][c] = dp[i<span class="number">-1</span>][c]</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    dp[i][c] = max(dp[i<span class="number">-1</span>][c], dp[i<span class="number">-1</span>][c-W[i]]+V[i])</span><br><span class="line">    <span class="keyword">return</span> max(dp)</span><br></pre></td></tr></table></figure>
+<h2 id="二维费用背包问题">二维费用背包问题</h2>
+<p><strong>问题描述</strong></p>
+<p>对于每个物品，具有两个不同的代价，拿取某个物品必须同时支付这两个代价，这里的代价可以理解为每个物品的重量，每个物品的代价为<span class="math inline">\(a[i],b[i]\)</span>可支配的两种重量总价为<span class="math inline">\(V,U\)</span>.</p>
+<p><strong>问题分析</strong></p>
+<p>代价多了一维，那么状态也增加一维即可。此时，状态转移方程为<span class="math inline">\(f[i][v][u] = \text{max}(f[i][v][u],f[i][v-a[i]][u-b[i]])\)</span>,与01背包类似，也可以仅使用二维数组表示状态，当为完全背包时，逆序遍历；当为多重背包时，将物品分组。</p>
+<p>二维费用的背包问题还可以另一种形式出现，背包的容量为V，但是只能取M个物品，此时，也是二维费用的背包问题，每个物品的第二维代价均为1，容量为M。</p>
+<h2 id="分组背包问题">分组背包问题</h2>
+<p><strong>问题描述</strong></p>
+<p>有N件物品和容量为C的背包，所有物品被分为若干组，每组之间的物品相互冲突，只能取一件。求将哪些物品放入到背包中使在不超过容量的情况下价格最大。</p>
+<p><strong>问题分析</strong></p>
+<p>对于每组物品来说，可以选一件也可以一件不选，此时状态<span class="math inline">\(f[k][v]\)</span>表示前k组中选出容量为v的物品的最大价值。则状态转移方程为$f[k][v]=(f[k-1][v], f[k][v-w[i]]+v[i])</p>
+<p>假设有K组，则伪代码为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">for k in range(K):</span><br><span class="line">    for i in range(ki):</span><br><span class="line">        for c in range(C,-1,-1):</span><br><span class="line">            f[c] &#x3D; max(f[c], f[c-w[i]]+v[i])</span><br></pre></td></tr></table></figure>
+<h2 id="依赖背包问题">依赖背包问题</h2>
+<p><strong>问题描述</strong></p>
+<p>如果要拿物品i那么必须拿物品j，称这种问题为有依赖的背包问题。为了简化问题，假设存在不依赖其他物品但被其他物品依赖的物品，并且每个有依赖的物品仅会依赖一个物品。</p>
+<p>我们将不依赖其他物品的物品称作主件，依赖其他物品的称作附件，那么可以根据主件和附件的关系将所有物品划分为多个组。那么情况变为要么不拿某个主件，要么只拿某个主件，要么拿某个主件并拿一个附件，要么拿一个主件并拿两个附件，依次类推。所以可以将所有物品划分成不同的组，但是每组内的物品可以随意选择，每个组内共有<span class="math inline">\(2^k+1\)</span>中组合方式。而对于每个组内的每个附件的状态是要么拿要么不拿，很像01背包问题，因此我们可以先在组内做一次01背包，得到<span class="math inline">\(C-W_k+1\)</span>个代价，其中<span class="math inline">\(W_k\)</span>为主件k的代价，费用为c的物品的价值为<span class="math inline">\(f[c-W_k]+V_k\)</span>.这些代价之间是由该组内的物品通过不同组合方式组成的，因此彼此之间是互斥的，此时可以直接应用分组背包问题的解决思路解决。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/01/greedy-algorithm/" rel="next" title="贪心算法题汇编">
+                <i class="fa fa-chevron-left"></i> 贪心算法题汇编
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/13/monotone-stack/" rel="prev" title="单调递增栈与单调递减栈">
+                单调递增栈与单调递减栈 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Gummary</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背包问题"><span class="nav-number">1.</span> <span class="nav-text">01背包问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#例题"><span class="nav-number">1.1.</span> <span class="nav-text">例题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多重背包问题"><span class="nav-number">1.2.</span> <span class="nav-text">多重背包问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#混合背包问题"><span class="nav-number">1.3.</span> <span class="nav-text">混合背包问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二维费用背包问题"><span class="nav-number">1.4.</span> <span class="nav-text">二维费用背包问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分组背包问题"><span class="nav-number">1.5.</span> <span class="nav-text">分组背包问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#依赖背包问题"><span class="nav-number">1.6.</span> <span class="nav-text">依赖背包问题</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gummary</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Qx7TOT8IDMF1YfsbVPTqkdMf-gzGzoHsz',
+        appKey: 'Xr2ktVUzrfyxhUacLxtUoutW',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
