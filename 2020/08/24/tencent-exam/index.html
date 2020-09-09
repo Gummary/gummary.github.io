@@ -90,7 +90,7 @@
 <meta property="og:site_name" content="炼丹炉">
 <meta property="og:description" content="括号字符串匹配 给定一些只包含&#39;&#39;的字符串，加多少字符使该字符串合法，字符串合法指：  空字符串为合法的 若A合法则(A), [A]合法 若A,B合法则AB合法">
 <meta property="article:published_time" content="2020-08-24T11:28:14.000Z">
-<meta property="article:modified_time" content="2020-08-26T10:07:38.364Z">
+<meta property="article:modified_time" content="2020-09-09T04:46:49.301Z">
 <meta property="article:author" content="Gummary">
 <meta name="twitter:card" content="summary">
 
@@ -374,6 +374,35 @@
 <li>重复2，直到队列为0</li>
 </ol>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">n, m, k = list(int(x) <span class="keyword">for</span> x <span class="keyword">in</span> input().strip().split())</span><br><span class="line">graph = [[float(<span class="string">'inf'</span>)]*n <span class="keyword">for</span> _ <span class="keyword">in</span> range(n)]</span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> range(m):</span><br><span class="line">    x, y, w= list(int(x) <span class="keyword">for</span> x <span class="keyword">in</span> input().strip().split())</span><br><span class="line">    <span class="comment"># 防止出现重边</span></span><br><span class="line">    graph[x<span class="number">-1</span>][y<span class="number">-1</span>] = min(graph[x<span class="number">-1</span>][y<span class="number">-1</span>], w)</span><br><span class="line">    graph[y<span class="number">-1</span>][x<span class="number">-1</span>] = min(graph[y<span class="number">-1</span>][x<span class="number">-1</span>], w)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> range(k):</span><br><span class="line">    x, y = list(int(x) <span class="keyword">for</span> x <span class="keyword">in</span> input().strip().split())</span><br><span class="line">    graph[x][y] = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">dist = [float(<span class="string">'inf'</span>)]*n</span><br><span class="line"><span class="comment"># 用visited数组判断是否访问过</span></span><br><span class="line">visited = [<span class="number">0</span>] * n</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">    minn, minv = <span class="number">-1</span>, float(<span class="string">'inf'</span>)</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(n):</span><br><span class="line">        <span class="keyword">if</span> visited[j] == <span class="number">0</span> <span class="keyword">and</span> dist[j] &lt; minv:</span><br><span class="line">            minn, minv = j, dist[j]</span><br><span class="line">    <span class="keyword">if</span> minn == <span class="number">-1</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">    visited[minn] = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(n):</span><br><span class="line">        <span class="keyword">if</span> visited[j] == <span class="number">0</span>:</span><br><span class="line">            dist[j] = min(dist[j], graph[minn][j])</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> dist[n] == float(<span class="string">'inf'</span>):</span><br><span class="line">    print(<span class="number">-1</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    print(dist[n])</span><br></pre></td></tr></table></figure>
+<h2 id="割绳子问题">割绳子问题</h2>
+<p>给定一段长度为<code>L</code>的绳子，每次等概率的取一个点将其分成两半，左边部分丢弃，直到右遍部分的长度小于<code>d</code>，求切分次数的期望。</p>
+<p>设<code>f(x)</code>为长度为<code>x</code>绳子要切分次数的期望值。设<code>t</code>在这段绳子上取一个点进行切分的概率，则<span class="math inline">\(\int_0^xt dt=1\)</span>,<span class="math inline">\(t=\frac{1}{x}\)</span></p>
+<p><span class="math display">\[
+f(x) = \begin{cases}
+    0\quad x &lt; d \\
+    1 + f(0\sim d) + f(d\sim x) \\
+\end{cases}
+\]</span></p>
+<p>其中<span class="math inline">\(f(0\sim d)=0\)</span>，对应剩余部分小于<code>d</code>的情况，对于剩余部分大于<code>d</code>的情况，有：</p>
+<p><span class="math display">\[
+\begin{aligned}
+f(x) &amp;= 1 + \frac{1}{x}\int_d^xf(t)dt \\
+&amp;= 1 + \frac{F(x)-F(d)}{x} \\
+f&#39;(x) &amp;= \frac{1}{x}F&#39;(x) - \frac{F(x)-F(d)}{x^2} \\
+&amp;= \frac{xf(x)-F(x)+F(d)}{x} \\
+&amp;= \frac{xf(x)-x(f(x)-1)}{x} \\
+&amp;= \frac{1}{x}
+\end{aligned} \\
+\]</span></p>
+<p>解得</p>
+<p><span class="math display">\[
+f(x) = ln(x) + C
+\]</span></p>
+<p>而<span class="math inline">\(\text{lim}_{x\rightarrow d_+}f(x)=1\)</span>,解得：</p>
+<p><span class="math display">\[
+f(x) = ln(x)+1-ln(d) = ln\frac{x}{d} + 1
+\]</span></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a,b = [int(x) <span class="keyword">for</span> x <span class="keyword">in</span> input().strip().split()】</span><br><span class="line">result = <span class="number">0</span> <span class="keyword">if</span> a &lt;= b <span class="keyword">else</span> math.log(a/b)</span><br><span class="line">print(result)</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -545,7 +574,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#括号字符串匹配"><span class="nav-number">1.</span> <span class="nav-text">括号字符串匹配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#队伍方案数量"><span class="nav-number">2.</span> <span class="nav-text">队伍方案数量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具有相同邻接点的节点对"><span class="nav-number">3.</span> <span class="nav-text">具有相同邻接点的节点对</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最短路径问题"><span class="nav-number">4.</span> <span class="nav-text">最短路径问题</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#括号字符串匹配"><span class="nav-number">1.</span> <span class="nav-text">括号字符串匹配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#队伍方案数量"><span class="nav-number">2.</span> <span class="nav-text">队伍方案数量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具有相同邻接点的节点对"><span class="nav-number">3.</span> <span class="nav-text">具有相同邻接点的节点对</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最短路径问题"><span class="nav-number">4.</span> <span class="nav-text">最短路径问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#割绳子问题"><span class="nav-number">5.</span> <span class="nav-text">割绳子问题</span></a></li></ol></div>
             
 
           </div>
