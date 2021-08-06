@@ -1,0 +1,384 @@
+<!doctype html><html lang=en>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>贪心算法题汇编 - Gum</title>
+<meta name=renderer content="webkit">
+<meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta http-equiv=cache-control content="no-transform">
+<meta http-equiv=cache-control content="no-siteapp">
+<meta name=theme-color content="#f8f5ec">
+<meta name=msapplication-navbutton-color content="#f8f5ec">
+<meta name=apple-mobile-web-app-capable content="yes">
+<meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
+<meta name=author content="Gum"><meta name=description content="贪心算法介绍 贪心算法（英語：greedy algorithm），又称贪婪算法，是一种在每一步选择中都采取在当前状态下最好或最优（即最有利）的选"><meta name=keywords content="Photo,Reading,Java,Distribute System">
+<meta name=generator content="Hugo 0.87.0 with theme even">
+<link rel=canonical href=http://localhost:1313/post/greedy-algorithm/>
+<link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png>
+<link rel=manifest href=/manifest.json>
+<link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5>
+<link href=/sass/main.min.40f3224b12ad17cb3dd58c8d5dfc3d1d6ad48ed6335de8962e4710a613bf3702.css rel=stylesheet>
+<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous>
+<meta property="og:title" content="贪心算法题汇编">
+<meta property="og:description" content="贪心算法介绍 贪心算法（英語：greedy algorithm），又称贪婪算法，是一种在每一步选择中都采取在当前状态下最好或最优（即最有利）的选">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://localhost:1313/post/greedy-algorithm/"><meta property="article:section" content="post">
+<meta property="article:published_time" content="2020-08-01T22:18:22+00:00">
+<meta property="article:modified_time" content="2020-08-01T22:18:22+00:00">
+<meta itemprop=name content="贪心算法题汇编">
+<meta itemprop=description content="贪心算法介绍 贪心算法（英語：greedy algorithm），又称贪婪算法，是一种在每一步选择中都采取在当前状态下最好或最优（即最有利）的选"><meta itemprop=datePublished content="2020-08-01T22:18:22+00:00">
+<meta itemprop=dateModified content="2020-08-01T22:18:22+00:00">
+<meta itemprop=wordCount content="1742">
+<meta itemprop=keywords content><meta name=twitter:card content="summary">
+<meta name=twitter:title content="贪心算法题汇编">
+<meta name=twitter:description content="贪心算法介绍 贪心算法（英語：greedy algorithm），又称贪婪算法，是一种在每一步选择中都采取在当前状态下最好或最优（即最有利）的选"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]-->
+</head>
+<body>
+<div id=mobile-navbar class=mobile-navbar>
+<div class=mobile-header-logo>
+<a href=/ class=logo>Gum</a>
+</div>
+<div class=mobile-navbar-icon>
+<span></span>
+<span></span>
+<span></span>
+</div>
+</div>
+<nav id=mobile-menu class="mobile-menu slideout-menu">
+<ul class=mobile-menu-list>
+<a href=/>
+<li class=mobile-menu-item>Home</li>
+</a><a href=/post/>
+<li class=mobile-menu-item>Archives</li>
+</a><a href=/tags/>
+<li class=mobile-menu-item>Tags</li>
+</a><a href=/categories/>
+<li class=mobile-menu-item>Categories</li>
+</a><a href=/about/>
+<li class=mobile-menu-item>About</li>
+</a>
+</ul>
+</nav>
+<div class=container id=mobile-panel>
+<header id=header class=header>
+<div class=logo-wrapper>
+<a href=/ class=logo>Gum</a>
+</div>
+<nav class=site-navbar>
+<ul id=menu class=menu>
+<li class=menu-item>
+<a class=menu-item-link href=/>Home</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/post/>Archives</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/tags/>Tags</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/categories/>Categories</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/about/>About</a>
+</li>
+</ul>
+</nav>
+</header>
+<main id=main class=main>
+<div class=content-wrapper>
+<div id=content class=content>
+<article class=post>
+<header class=post-header>
+<h1 class=post-title>贪心算法题汇编</h1>
+<div class=post-meta>
+<span class=post-time> 2020-08-01 </span>
+</div>
+</header>
+<div class=post-toc id=post-toc>
+<h2 class=post-toc-title>Contents</h2>
+<div class="post-toc-content always-active">
+<nav id=TableOfContents>
+<ul>
+<li><a href=#贪心算法介绍>贪心算法介绍</a></li>
+<li><a href=#背包相关问题>背包相关问题</a>
+<ul>
+<li><a href=#最优装载>最优装载</a></li>
+<li><a href=#部分背包问题>部分背包问题</a></li>
+<li><a href=#乘船问题>乘船问题</a></li>
+</ul>
+</li>
+<li><a href=#区间相关问题>区间相关问题</a>
+<ul>
+<li><a href=#求重叠区间的最大数量>求重叠区间的最大数量</a></li>
+<li><a href=#求非重叠区间的最大数量>求非重叠区间的最大数量</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+<div class=post-content>
+<h1 id=贪心算法介绍>贪心算法介绍</h1>
+<blockquote>
+<p>贪心算法（英語：greedy algorithm），又称贪婪算法，是一种在每一步选择中都采取在当前状态下最好或最优（即最有利）的选择，从而希望导致结果是最好或最优的算法。比如在旅行推销员问题中，如果旅行员每次都选择最近的城市，那这就是一种贪心算法。贪心算法在有最优子结构的问题中尤为有效。最优子结构的意思是局部最优解能决定全局最优解。简单地说，问题能够分解成子问题来解决，子问题的最优解能递推到最终问题的最优解。贪心算法与动态规划的不同在于它对每个子问题的解决方案都做出选择，不能回退。动态规划则会保存以前的运算结果，并根据以前的结果对当前进行选择，有回退功能。贪心法可以解决一些最优化问题，如：求图中的最小生成树、求哈夫曼编码……对于其他问题，贪心法一般不能得到我们所要求的答案。一旦一个问题可以通过贪心法来解决，那么贪心法一般是解决这个问题的最好办法。由于贪心法的高效性以及其所求得的答案比较接近最优结果，贪心法也可以用作辅助算法或者直接解决一些要求结果不特别精确的问题。</p>
+</blockquote>
+<p>以上摘自维基百科，但是这些概念性的知识并不能帮助我们选择解决实际的问题，而实践是认识的基础、认识的来源、认识发展的动力，因此本文选一些代表性的问题及解法，尽可能的说明白贪心算法在每个问题中的应用。</p>
+<h1 id=背包相关问题>背包相关问题</h1>
+<h2 id=最优装载>最优装载</h2>
+<p><strong>题目出处</strong></p>
+<p>算法竞赛入门经典，p231</p>
+<p><strong>题目描述</strong></p>
+<p>给定n个物体，第i个物体的重量为$w_i$，选择尽量多的物体，使总重量不超过C。</p>
+<p><strong>题目分析</strong></p>
+<p>由于要尽可能多的拿物体，因此优先选择重量轻的物体。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>solution</span><span class=p>(</span><span class=n>weights</span><span class=p>,</span> <span class=n>v</span><span class=p>):</span>
+    <span class=n>weights</span> <span class=o>=</span> <span class=nb>sorted</span><span class=p>(</span><span class=n>weights</span><span class=p>)</span>
+    <span class=n>count</span> <span class=o>=</span> <span class=mi>0</span>
+    <span class=k>for</span> <span class=n>w</span> <span class=ow>in</span> <span class=n>weights</span><span class=p>:</span>
+        <span class=k>if</span> <span class=n>v</span> <span class=o>&gt;</span> <span class=n>w</span><span class=p>:</span>
+            <span class=n>v</span> <span class=o>-=</span> <span class=n>w</span>
+            <span class=n>count</span> <span class=o>+=</span> <span class=mi>1</span>
+    <span class=k>return</span> <span class=n>count</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id=部分背包问题>部分背包问题</h2>
+<p><strong>题目出处</strong></p>
+<p>算法竞赛入门经典，p231</p>
+<p><strong>题目描述</strong></p>
+<p>给定C个物体，其重量为$w_i$,价值为$c_i$,背包容量为$v$,每个物体都能拿全部或者部分，那么如何拿物品，使背包的总价值最大。</p>
+<p><strong>题目分析</strong></p>
+<p>引入价值之后就不能每次只拿最轻的，因为可能最轻的价值也是最低的，这种情况下需要根据价值与重量的比值进行排序，每次选择价值最高重量最低的物品。由于可以拿部分物品，拿最后一个物体一般是拿部分。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=kn>from</span> <span class=nn>typing</span> <span class=kn>import</span> <span class=n>List</span>
+
+<span class=k>def</span> <span class=nf>solution</span><span class=p>(</span><span class=n>w</span><span class=p>:</span><span class=n>List</span><span class=p>,</span> <span class=n>c</span><span class=p>:</span><span class=n>List</span><span class=p>,</span> <span class=n>v</span><span class=p>:</span><span class=nb>int</span><span class=p>)</span><span class=o>-&gt;</span><span class=n>List</span><span class=p>:</span>
+    <span class=n>result</span> <span class=o>=</span> <span class=p>[</span><span class=mi>0</span><span class=p>]</span> <span class=o>*</span> <span class=nb>len</span><span class=p>(</span><span class=n>v</span><span class=p>)</span>
+    <span class=n>wc</span> <span class=o>=</span> <span class=p>((</span><span class=n>i</span><span class=p>,</span> <span class=n>ww</span><span class=p>,</span> <span class=n>cc</span><span class=p>)</span> <span class=k>for</span> <span class=n>i</span><span class=p>,</span> <span class=n>ww</span><span class=p>,</span> <span class=n>cc</span> <span class=ow>in</span> <span class=nb>enumerate</span><span class=p>(</span><span class=nb>zip</span><span class=p>(</span><span class=n>w</span><span class=p>,</span> <span class=n>c</span><span class=p>)))</span>
+    <span class=n>wc</span> <span class=o>=</span> <span class=nb>sorted</span><span class=p>(</span><span class=n>wc</span><span class=p>,</span> <span class=n>key</span><span class=o>=</span><span class=k>lambda</span> <span class=n>x</span><span class=p>:</span><span class=n>x</span><span class=p>[</span><span class=mi>2</span><span class=p>]</span><span class=o>/</span><span class=n>x</span><span class=p>[</span><span class=mi>1</span><span class=p>])</span>
+    <span class=k>for</span> <span class=n>i</span><span class=p>,</span> <span class=n>ww</span><span class=p>,</span> <span class=n>cc</span> <span class=ow>in</span> <span class=n>wc</span><span class=p>:</span>
+        <span class=k>if</span> <span class=n>v</span> <span class=o>&gt;</span> <span class=n>cc</span><span class=p>:</span>
+            <span class=n>result</span><span class=p>[</span><span class=n>i</span><span class=p>]</span> <span class=o>=</span> <span class=n>cc</span>
+            <span class=n>v</span> <span class=o>-=</span> <span class=n>cc</span>
+        <span class=k>else</span><span class=p>:</span>
+            <span class=n>result</span><span class=p>[</span><span class=n>i</span><span class=p>]</span> <span class=o>=</span> <span class=n>v</span>
+            <span class=k>break</span>
+
+    <span class=k>return</span> <span class=n>result</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id=乘船问题>乘船问题</h2>
+<p><strong>题目出处</strong></p>
+<p>算法竞赛入门经典，p231</p>
+<p><strong>题目描述</strong></p>
+<p>共有n个人，每个人的重量为$w_i$，每艘船最多装两个人且重量为C。</p>
+<p><strong>题目分析</strong></p>
+<p>考虑最轻的人，如果最轻的人不能和其他人同乘坐一条船，那么所有人都只能乘一条船，因为任意两个人都不能乘同一条船。</p>
+<p>如果最轻的人可以和其他人乘同一条船，那么选择与他一起乘船的人中，最终的那一个，这里用到了贪心的做法，使得每艘船浪费的空间最小。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>solution</span><span class=p>(</span><span class=n>w</span><span class=p>:</span> <span class=n>List</span><span class=p>,</span> <span class=n>C</span><span class=p>:</span><span class=nb>int</span><span class=p>)</span><span class=o>-&gt;</span><span class=nb>int</span><span class=p>:</span>
+    <span class=n>w</span> <span class=o>=</span> <span class=nb>sorted</span><span class=p>(</span><span class=n>w</span><span class=p>)</span>
+    <span class=n>i</span><span class=p>,</span> <span class=n>j</span><span class=p>,</span> <span class=n>end</span> <span class=o>=</span> <span class=mi>0</span><span class=p>,</span> <span class=nb>len</span><span class=p>(</span><span class=n>w</span><span class=p>)</span><span class=o>-</span><span class=mi>1</span><span class=p>,</span> <span class=nb>len</span><span class=p>(</span><span class=n>w</span><span class=p>)</span>
+    <span class=n>result</span> <span class=o>=</span> <span class=mi>0</span>
+    <span class=k>while</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>j</span><span class=p>:</span>
+        <span class=k>while</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>j</span> <span class=ow>and</span> <span class=n>w</span><span class=p>[</span><span class=n>i</span><span class=p>]</span> <span class=o>+</span> <span class=n>w</span><span class=p>[</span><span class=n>j</span><span class=p>]</span> <span class=o>&gt;</span> <span class=n>C</span><span class=p>:</span>
+            <span class=n>j</span><span class=o>-=</span><span class=mi>1</span>
+        <span class=n>result</span> <span class=o>+=</span> <span class=n>end</span> <span class=o>-</span> <span class=n>j</span>
+        <span class=n>end</span> <span class=o>=</span> <span class=n>j</span>
+        <span class=n>i</span><span class=o>+=</span><span class=mi>1</span>
+
+    <span class=k>return</span> <span class=n>result</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id=区间相关问题>区间相关问题</h1>
+<h2 id=求重叠区间的最大数量>求重叠区间的最大数量</h2>
+<p><strong>题目出处</strong></p>
+<p>猿辅导笔试</p>
+<p><strong>题目描述</strong></p>
+<p>给定一些区间<code>[start, end]</code>，求重叠区间的最大数量</p>
+<p><strong>题目分析</strong></p>
+<p>首先对区间进行排序，先根据起始点排序，若起始点相同则根据终点排序。遍历排序号的区间，用一个最小堆保存当前区间的最小终点。</p>
+<p>每次遍历比较最小end与当前区间的起点，</p>
+<ul>
+<li>如果起点比最小end小，说明与堆中所有的区间都有交集，入堆</li>
+<li>如果起点比最小end大，说明与最小end所在的区间没有交集，可以把当前区间与最小end的区间合并，也即从堆中取出最小end，将当前end加入。可以合并的原因是：
+<ul>
+<li>区间已经排好序了，所以之后不可能有区间位于二者之间</li>
+<li>这两个区间与堆中的其他区间都重叠，没有增加最大重叠的数量</li>
+</ul>
+</li>
+</ul>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>solution</span><span class=p>(</span><span class=n>intervals</span><span class=p>:</span> <span class=n>List</span><span class=p>[</span><span class=n>Tuple</span><span class=p>])</span> <span class=o>-&gt;</span> <span class=nb>int</span><span class=p>:</span>
+    <span class=n>intervals</span> <span class=o>=</span> <span class=nb>sorted</span><span class=p>(</span><span class=n>intervals</span><span class=p>)</span>
+    <span class=n>heap</span> <span class=o>=</span> <span class=p>[]</span>
+    <span class=n>heap</span><span class=o>.</span><span class=n>append</span><span class=p>(</span><span class=n>intervals</span><span class=p>[</span><span class=mi>0</span><span class=p>][</span><span class=mi>1</span><span class=p>])</span>
+    <span class=k>for</span> <span class=n>i</span><span class=p>,</span> <span class=n>seg</span> <span class=ow>in</span> <span class=nb>enumerate</span><span class=p>(</span><span class=n>intervals</span><span class=p>[</span><span class=mi>1</span><span class=p>:]):</span>
+        <span class=k>if</span> <span class=n>heap</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span> <span class=o>&lt;=</span> <span class=n>seg</span><span class=p>[</span><span class=mi>0</span><span class=p>]:</span>
+            <span class=n>heappop</span><span class=p>(</span><span class=n>heap</span><span class=p>)</span>
+        <span class=n>heappush</span><span class=p>(</span><span class=n>heap</span><span class=p>,</span> <span class=n>seg</span><span class=p>[</span><span class=mi>1</span><span class=p>])</span>
+    <span class=k>return</span> <span class=nb>len</span><span class=p>(</span><span class=n>intervals</span><span class=p>)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id=求非重叠区间的最大数量>求非重叠区间的最大数量</h2>
+<p><strong>题目出处</strong></p>
+<p><a href=https://leetcode.com/problems/non-overlapping-intervals/>Leetcode453</a></p>
+<p><strong>题目描述</strong></p>
+<p>给定一些区间，求需要移除区间的最小数量，使区间之间不重叠。</p>
+<p><strong>题目分析</strong></p>
+<p>对区间按照终点进行排序，从最小的重点开始，移除与最小终点重叠的区间，若不冲突则更新最小终点。</p>
+<p>这里应用贪心思想的位置在于，尽可能选择终点较小的区间，贪心有效的点在于：</p>
+<ol>
+<li>选择end较小的点，如果发生冲突了，那么因为end较小，所以会有更多的时间选择其他区间。</li>
+</ol>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>class</span> <span class=nc>Solution</span><span class=p>:</span>
+    <span class=k>def</span> <span class=nf>eraseOverlapIntervals</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>intervals</span><span class=p>:</span> <span class=n>List</span><span class=p>[</span><span class=n>List</span><span class=p>[</span><span class=nb>int</span><span class=p>]])</span> <span class=o>-&gt;</span> <span class=nb>int</span><span class=p>:</span>
+        <span class=k>if</span> <span class=n>intervals</span> <span class=o>==</span> <span class=p>[]:</span>
+            <span class=k>return</span> <span class=mi>0</span>
+        <span class=n>intervals</span> <span class=o>=</span> <span class=nb>sorted</span><span class=p>(</span><span class=n>intervals</span><span class=p>,</span> <span class=n>key</span><span class=o>=</span><span class=k>lambda</span> <span class=n>x</span><span class=p>:</span><span class=n>x</span><span class=p>[</span><span class=mi>1</span><span class=p>])</span>
+        <span class=n>current_min</span> <span class=o>=</span> <span class=n>intervals</span><span class=p>[</span><span class=mi>0</span><span class=p>][</span><span class=mi>1</span><span class=p>]</span>
+        <span class=n>result</span> <span class=o>=</span> <span class=mi>0</span>
+        <span class=k>for</span> <span class=n>interval</span> <span class=ow>in</span> <span class=n>intervals</span><span class=p>[</span><span class=mi>1</span><span class=p>:]:</span>
+            <span class=k>if</span> <span class=n>interval</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span> <span class=o>&lt;</span> <span class=n>current_min</span><span class=p>:</span>
+                <span class=n>result</span> <span class=o>+=</span> <span class=mi>1</span>
+            <span class=k>else</span><span class=p>:</span>
+                <span class=n>current_min</span> <span class=o>=</span> <span class=n>interval</span><span class=p>[</span><span class=mi>1</span><span class=p>]</span>
+        <span class=k>return</span> <span class=n>result</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<div class=post-copyright>
+<p class=copyright-item>
+<span class=item-title>Author</span>
+<span class=item-content>Gum</span>
+</p>
+<p class=copyright-item>
+<span class=item-title>LastMod</span>
+<span class=item-content>
+2020-08-01
+</span>
+</p>
+<p class=copyright-item>
+<span class=item-title>License</span>
+<span class=item-content><a rel="license noopener" href=https://creativecommons.org/licenses/by-nc-nd/4.0/ target=_blank>CC BY-NC-ND 4.0</a></span>
+</p>
+</div>
+<footer class=post-footer>
+<nav class=post-nav>
+<a class=prev href=/post/20210807002133-%E6%96%B0%E7%9A%84%E8%B5%B7%E7%82%B9/>
+<i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">博客新的起点：从Hexo到Hugo</span>
+<span class="prev-text nav-mobile">Prev</span>
+</a>
+<a class=next href=/post/faster-rcnn-review/>
+<span class="next-text nav-default">Faster-RCNN,看这一篇就够了！</span>
+<span class="next-text nav-mobile">Next</span>
+<i class="iconfont icon-right"></i>
+</a>
+</nav>
+</footer>
+</article>
+</div>
+<script src=https://utteranc.es/client.js repo=Gummary/blog-comment issue-term=pathname theme=github-light crossorigin=anonymous async></script>
+<noscript>Please enable JavaScript to view the <a href=https://github.com/utterance>comments powered by utterances.</a></noscript>
+</div>
+</main>
+<footer id=footer class=footer>
+<div class=social-links>
+<a href=mailto:sdythp@gmail.com class="iconfont icon-email" title=email target=_blank></a>
+<a href=https://github.com/Gummary/ class="iconfont icon-github" title=github target=_blank></a>
+<a href=http://localhost:1313/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a>
+</div>
+<div class=poem>长风破浪会有时，直挂云帆济沧海</div>
+<div class=copyright>
+<span class=copyright-year>
+<span>Gum</span>
+&copy;
+2017 -
+2021</span>
+</div>
+</footer>
+<div class=back-to-top id=back-to-top>
+<i class="iconfont icon-up"></i>
+</div>
+</div>
+<script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script>
+<script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script>
+<script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script>
+</body>
+</html>
