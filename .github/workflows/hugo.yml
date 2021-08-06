@@ -36,11 +36,17 @@ jobs:
       - name: Build
         run: hugo --minify
 
-      - name: Upload to cos
-        run: coscmd upload -rs --delete -f --ignore "*.html,*.xml" -H "{'Cache-Control':'public, max-age=7776000'}" ./ /
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
+
+      - name: checkouk gh-pages
+        uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+
+      - name: Upload to cos
+        run: coscmd upload -rs --delete -f --ignore "*.html,*.xml" -H "{'Cache-Control':'public, max-age=7776000'}" ./ /

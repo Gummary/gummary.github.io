@@ -115,6 +115,10 @@ copyright = ""            # default: author.name ↓        # 默认为下面配
   # Show language selector for multilingual site.
   showLanguageSelector = false
 
+  [params.COSUrl]
+    enable = true
+    Host = "https://blog-1302636809.cos.ap-beijing.myqcloud.com"
+
   [params.publicCDN]        # load these files from public cdn                          # 启用公共CDN，需自行定义
     enable = true
     jquery = '<script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>'
@@ -199,6 +203,8 @@ copyright = ""            # default: author.name ↓        # 默认为下面配
     startLevel = 1
   [markup.goldmark.renderer]
     unsafe = true
+
+
 
 # 将下面这段配置取消注释可以使 hugo 生成 .md 文件
 # Uncomment these options to make hugo output .md files.
