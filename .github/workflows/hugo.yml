@@ -10,6 +10,18 @@ jobs:
   deploy:
     runs-on: ubuntu-20.04
     steps:
+
+      - name: Install coscmd
+        run: sudo pip install coscmd
+      - name: Configure coscmd
+        env:
+          SECRET_ID: ${{ secrets.COSSecretId }}
+          SECRET_KEY: ${{ secrets.COSSecretKey }}
+          BUCKET: blog-1302636809
+          REGION: ap-beijing
+        run: coscmd config -a $SECRET_ID -s $SECRET_KEY -b $BUCKET -r $REGION
+
+
       - uses: actions/checkout@v2
         with:
           submodules: true  # Fetch Hugo themes (true OR recursive)

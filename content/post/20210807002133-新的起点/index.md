@@ -54,6 +54,15 @@ Leaf Bundle是在content目录下新建一个文件夹，文件夹中index.md用
 
 TODO
 
+## 设置Github Actions
+
+我现在管理博客内容的方式是：
+
+- master分支保存博客源码
+- gh-pages分支保存生成的静态网站
+
+通过Github Actions的功能很容易的就可以将源码推送到master分支后，自动生成网站内容到gh-pages分支。具体见[hugo.yml](https://github.com/Gummary/gummary.github.io/blob/master/.github/workflows/hugo.yml)
+
 ## 设置Page模板
 
 我这里设置Page的模板主要利用Hugo提供的[Archetypes](https://gohugo.io/content-management/archetypes/)功能。Archetypes就是生成content时使用的模板，主要包含了生成新的博客时使用的front matter.
