@@ -81,8 +81,7 @@ Leaf Bundle是在content目录下新建一个文件夹，文件夹中index.md用
 
 为了提高国内不同地区的访问速度，还可以给存储桶设置CDN。设置CDN后还可以减少桶的流量消耗。使用方法是在腾讯云Bucket管理中的域名设置里添加国内静态加速即可得到一个CDN加速域名，替换上述配置中的COSUrl即可。
 
-![](2021-08-07-14-30-23.png)
-
+{{< figure src="images/2021-08-07-14-30-23.png" title="CDN加速域名配置" width="30%">}}
 
 ## 设置Github Actions
 
