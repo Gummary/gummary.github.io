@@ -50,18 +50,48 @@ Leaf Bundle是在content目录下新建一个文件夹，文件夹中index.md用
 
 也即当前文件的同级images目录。
 
-### 图片CDN加速
+### 使用腾讯云存储托管图片
 
-TODO
+如果将图片托管到Github上，国内访问可能不是特别稳定，所以我这用了腾讯云存储，免费额度应该就够用了。
+
+默认情况下，Hugo是用相对路径访问bundle下的图片，如果我们要换腾讯云，首先要将图像的链接替换为腾讯云网页。在Hugo 0.62之后，提供了[Markdown Render Hook](https://gohugo.io/getting-started/configuration-markup/#markdown-render-hooks)的功能，可以覆盖markdown的某些渲染功能，我们这里用来将图像的链接替换为腾讯云的地址。
+
+首先，在config.yml下创建参数：
+
+```
+  [params.COSUrl]
+    enable = true
+    Host = "https://blog-1302636809.cos.ap-beijing.myqcloud.com"
+```
+
+然后创建`layouts/_default/_markup/render-image.html`，内容如下：
+
+```
+{{- $img_destination := .Destination -}}
+{{- if (and .Page.Site.Params.COSUrl.enable (not .Page.Site.IsServer)) -}}
+    {{ if not (hasPrefix .Destination "http") }}
+    {{ $img_destination = (print .Page.Site.Params.COSUrl.Host (path.Join .Page.RelPermalink .Destination)) }}
+    {{ end }}
+{{- end -}}
+
+<img alt="{{ $.Text }}" src="{{ $img_destination | safeURL }}" />
+```
+
+其中`.Page.RelPermalink`是Hugo生成当前页面后，当前博客的地址，`.Destination`是图片相对当前页的地址。将二者与腾讯云存储的地址组合即可。
+
+为了提高国内不同地区的访问速度，还可以给存储桶设置CDN。设置CDN后还可以减少桶的流量消耗。使用方法是在腾讯云Bucket管理中的域名设置里添加国内静态加速即可得到一个CDN加速域名，替换上述配置中的COSUrl即可。
+
+![](2021-08-07-14-30-23.png)
+
 
 ## 设置Github Actions
 
-我现在管理博客内容的方式是：
+我现在使用Github管理博客内容的方式是：
 
 - master分支保存博客源码
 - gh-pages分支保存生成的静态网站
 
-通过Github Actions的功能很容易的就可以将源码推送到master分支后，自动生成网站内容到gh-pages分支。具体见[hugo.yml](https://github.com/Gummary/gummary.github.io/blob/master/.github/workflows/hugo.yml)
+通过Github Actions可以在将源码推送到master分支后，自动生成网站内容到gh-pages分支。具体配置见[hugo.yml](https://github.com/Gummary/gummary.github.io/blob/master/.github/workflows/hugo.yml)
 
 ## 设置Page模板
 
@@ -142,17 +172,13 @@ sed -i '' "s/slug: index/slug: $POST_SLUG/g" content/posts/${POST_FILENAME}/inde
 
 所以只需创建存放评论的仓库，然后在配置文件中修改对应的参数即可。
 
-# 参考文献
+# 参考博客
 
 1. [公式问题](https://geoffruddock.com/math-typesetting-in-hugo/)
 2. [环境搭建](https://sspai.com/post/59904)
 3. [图标生成](https://favicomatic.com/)
 4. [行内公式显示](https://stackoverflow.com/questions/27375252/how-can-i-render-all-inline-formulas-in-with-katex)
 5. [图标制作](https://favicon.io/favicon-generator/)
-
-
-# 测试
-
-行内公式 $ x_1 + x_2 $ 测试
-
-行内代码测试`test`
+6. [使用 Github Actions 來自動化部署 Hugo 到 Github Pages](https://blog.puckwang.com/post/2020/use-github-actions-deploy-hugo/)
+7. [本站引用图片的“顺滑”流程](https://wrong.wang/blog/20190301-%E6%9C%AC%E7%AB%99%E5%BC%95%E7%94%A8%E5%9B%BE%E7%89%87%E7%9A%84%E9%A1%BA%E6%BB%91%E6%B5%81%E7%A8%8B/)
+8. [腾讯云对象存储博客图床开启 CDN 加速(不需要购买额外域名)](https://jdhao.github.io/2020/03/16/tencent_cos_cdn_setup/)

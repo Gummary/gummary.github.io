@@ -117,7 +117,7 @@ copyright = ""            # default: author.name ↓        # 默认为下面配
 
   [params.COSUrl]
     enable = true
-    Host = "https://blog-1302636809.cos.ap-beijing.myqcloud.com"
+    Host = "https://blog-1302636809.file.myqcloud.com"
 
   [params.publicCDN]        # load these files from public cdn                          # 启用公共CDN，需自行定义
     enable = true
