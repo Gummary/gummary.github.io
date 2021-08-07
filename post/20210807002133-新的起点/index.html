@@ -30,7 +30,7 @@
 <meta itemprop=name content="博客新的起点：从Hexo到Hugo">
 <meta itemprop=description content><meta itemprop=datePublished content="2021-07-26T23:07:58+08:00">
 <meta itemprop=dateModified content="2021-07-26T23:07:58+08:00">
-<meta itemprop=wordCount content="2554">
+<meta itemprop=wordCount content="2563">
 <meta itemprop=keywords content><meta name=twitter:card content="summary">
 <meta name=twitter:title content="博客新的起点：从Hexo到Hugo">
 <meta name=twitter:description content><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
@@ -193,8 +193,10 @@
 </div>
 </div><p>其中<code>.Page.RelPermalink</code>是Hugo生成当前页面后，当前博客的地址，<code>.Destination</code>是图片相对当前页的地址。将二者与腾讯云存储的地址组合即可。</p>
 <p>为了提高国内不同地区的访问速度，还可以给存储桶设置CDN。设置CDN后还可以减少桶的流量消耗。使用方法是在腾讯云Bucket管理中的域名设置里添加国内静态加速即可得到一个CDN加速域名，替换上述配置中的COSUrl即可。</p>
-<p>
-<img alt src=https://blog-1302636809.file.myqcloud.com/post/20210807002133-%E6%96%B0%E7%9A%84%E8%B5%B7%E7%82%B9/2021-08-07-14-30-23.png></p>
+<figure><img src=images/2021-08-07-14-30-23.png width=30%><figcaption>
+<h4>CDN加速域名配置</h4>
+</figcaption>
+</figure>
 <h2 id=设置github-actions>设置Github Actions</h2>
 <p>我现在使用Github管理博客内容的方式是：</p>
 <ul>
