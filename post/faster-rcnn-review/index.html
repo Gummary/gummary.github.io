@@ -126,7 +126,7 @@
 </div>
 <div class=post-content>
 <p>本文将详细介绍著名的目标检测网络FasterRCNN，其网络结构如下图所示：</p>
-<p><img class=mx-auto alt src=https://i.imgur.com/ZgZvGOb.png></p>
+<p><img alt src=https://i.imgur.com/ZgZvGOb.png></p>
 <p>可以看到，FasterRCNN网络由<code>RPN网络</code>及<code>RCNN</code>网络组成，下面分别介绍二者的作用及网络结构。</p>
 <h1 id=rpn网络>RPN网络</h1>
 <p>RPN网络包括提取特征的骨干网络及进行分类和回归的两个分支。分类分支的作用是预测出可能包含目标的区域而回归分支的作用是回归出包含目标区域的准确坐标。</p>
@@ -136,9 +136,9 @@
 <li>R-CNN使用Selective Search的方法选出目标区域。</li>
 </ol>
 <p>FasterRCNN则是创造性的提出了Anchor的概念，也即在图像中生成大量的Anchor，然后利用神经网络对Anchor进行分类和回归。</p>
-<p><img class=mx-auto alt src=https://i.imgur.com/YR2kXUN.jpg></p>
+<p><img alt src=https://i.imgur.com/YR2kXUN.jpg></p>
 <h2 id=anchor的生成与使用>Anchor的生成与使用</h2>
-<p><img class=mx-auto alt src=https://i.imgur.com/qeNWvAc.jpg></p>
+<p><img alt src=https://i.imgur.com/qeNWvAc.jpg></p>
 <p>Faster RCNN在生成的特征图上的每个点都应用9个anchor作为初始的检测框，九个anchor为三种不同比例的检测框，分别为1:1,1:2,2:1。原图800x600，VGG下采样16倍，feature map每个点设置9个Anchor，所以共有</p>
 <p>$$
 \lceil (800/16) \rceil \times \lceil (600/16) \rceil \times 9 = 50 \times 38 \times 9 = 17100

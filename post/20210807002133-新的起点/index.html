@@ -30,7 +30,7 @@
 <meta itemprop=name content="博客新的起点：从Hexo到Hugo">
 <meta itemprop=description content><meta itemprop=datePublished content="2021-07-26T23:07:58+08:00">
 <meta itemprop=dateModified content="2021-07-26T23:07:58+08:00">
-<meta itemprop=wordCount content="2008">
+<meta itemprop=wordCount content="2554">
 <meta itemprop=keywords content><meta name=twitter:card content="summary">
 <meta name=twitter:title content="博客新的起点：从Hexo到Hugo">
 <meta name=twitter:description content><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
@@ -106,7 +106,7 @@
 <ul>
 <li><a href=#插入图片>插入图片</a></li>
 <li><a href=#vscode快速插入图片>VSCode快速插入图片</a></li>
-<li><a href=#图片cdn加速>图片CDN加速</a></li>
+<li><a href=#使用腾讯云存储托管图片>使用腾讯云存储托管图片</a></li>
 </ul>
 </li>
 <li><a href=#设置github-actions>设置Github Actions</a></li>
@@ -115,8 +115,7 @@
 <li><a href=#评论系统>评论系统</a></li>
 </ul>
 </li>
-<li><a href=#参考文献>参考文献</a></li>
-<li><a href=#测试>测试</a></li>
+<li><a href=#参考博客>参考博客</a></li>
 </ul>
 </nav>
 </div>
@@ -137,7 +136,7 @@
 <p><a href=https://gohugo.io/content-management/page-bundles/>Page Bundles</a>是一种管理资源的方式，分为Leaf Bundle与Branch Bundle两种。我们这里主要使用Leaf Bundle。</p>
 <p>Leaf Bundle是在content目录下新建一个文件夹，文件夹中index.md用于编写网页的内容，然后新建一个image子目录用于存放图像。在index.md中可以直接使用相对路径访问<code>![](image/xxx.image)</code>.如下图所示：</p>
 <p>
-<img class=mx-auto alt src=https://blog-1302636809.cos.ap-beijing.myqcloud.com/post/20210807002133-%E6%96%B0%E7%9A%84%E8%B5%B7%E7%82%B9/images/2021-08-07-00-21-58.png></p>
+<img alt src=https://blog-1302636809.file.myqcloud.com/post/20210807002133-%E6%96%B0%E7%9A%84%E8%B5%B7%E7%82%B9/images/2021-08-07-00-21-58.png></p>
 <h3 id=vscode快速插入图片>VSCode快速插入图片</h3>
 <p>另外我们在插入图片时，肯定不想先把图片保存到images文件夹下，再在md中引用。所以我用了<a href="https://marketplace.visualstudio.com/items?itemName=telesoho.vscode-markdown-paste-image">Markdown Paste</a>插件。当你将图片复制到剪贴板后，可以直接使用<code>Cmd+Alt+V</code>粘贴到markdown中，图片会保存到你指定的目录，我这里配置的是：</p>
 <div class=highlight><div class=chroma>
@@ -153,15 +152,56 @@
 </code></pre></td></tr></table>
 </div>
 </div><p>也即当前文件的同级images目录。</p>
-<h3 id=图片cdn加速>图片CDN加速</h3>
-<p>TODO</p>
+<h3 id=使用腾讯云存储托管图片>使用腾讯云存储托管图片</h3>
+<p>如果将图片托管到Github上，国内访问可能不是特别稳定，所以我这用了腾讯云存储，免费额度应该就够用了。</p>
+<p>默认情况下，Hugo是用相对路径访问bundle下的图片，如果我们要换腾讯云，首先要将图像的链接替换为腾讯云网页。在Hugo 0.62之后，提供了<a href=https://gohugo.io/getting-started/configuration-markup/#markdown-render-hooks>Markdown Render Hook</a>的功能，可以覆盖markdown的某些渲染功能，我们这里用来将图像的链接替换为腾讯云的地址。</p>
+<p>首先，在config.yml下创建参数：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>  [params.COSUrl]
+    enable = true
+    Host = &#34;https://blog-1302636809.cos.ap-beijing.myqcloud.com&#34;
+</code></pre></td></tr></table>
+</div>
+</div><p>然后创建<code>layouts/_default/_markup/render-image.html</code>，内容如下：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>{{- $img_destination := .Destination -}}
+{{- if (and .Page.Site.Params.COSUrl.enable (not .Page.Site.IsServer)) -}}
+    {{ if not (hasPrefix .Destination &#34;http&#34;) }}
+    {{ $img_destination = (print .Page.Site.Params.COSUrl.Host (path.Join .Page.RelPermalink .Destination)) }}
+    {{ end }}
+{{- end -}}
+
+&lt;img alt=&#34;{{ $.Text }}&#34; src=&#34;{{ $img_destination | safeURL }}&#34; /&gt;
+</code></pre></td></tr></table>
+</div>
+</div><p>其中<code>.Page.RelPermalink</code>是Hugo生成当前页面后，当前博客的地址，<code>.Destination</code>是图片相对当前页的地址。将二者与腾讯云存储的地址组合即可。</p>
+<p>为了提高国内不同地区的访问速度，还可以给存储桶设置CDN。设置CDN后还可以减少桶的流量消耗。使用方法是在腾讯云Bucket管理中的域名设置里添加国内静态加速即可得到一个CDN加速域名，替换上述配置中的COSUrl即可。</p>
+<p>
+<img alt src=https://blog-1302636809.file.myqcloud.com/post/20210807002133-%E6%96%B0%E7%9A%84%E8%B5%B7%E7%82%B9/2021-08-07-14-30-23.png></p>
 <h2 id=设置github-actions>设置Github Actions</h2>
-<p>我现在管理博客内容的方式是：</p>
+<p>我现在使用Github管理博客内容的方式是：</p>
 <ul>
 <li>master分支保存博客源码</li>
 <li>gh-pages分支保存生成的静态网站</li>
 </ul>
-<p>通过Github Actions的功能很容易的就可以将源码推送到master分支后，自动生成网站内容到gh-pages分支。具体见<a href=https://github.com/Gummary/gummary.github.io/blob/master/.github/workflows/hugo.yml>hugo.yml</a></p>
+<p>通过Github Actions可以在将源码推送到master分支后，自动生成网站内容到gh-pages分支。具体配置见<a href=https://github.com/Gummary/gummary.github.io/blob/master/.github/workflows/hugo.yml>hugo.yml</a></p>
 <h2 id=设置page模板>设置Page模板</h2>
 <p>我这里设置Page的模板主要利用Hugo提供的<a href=https://gohugo.io/content-management/archetypes/>Archetypes</a>功能。Archetypes就是生成content时使用的模板，主要包含了生成新的博客时使用的front matter.</p>
 <p>我们在创建新的博客时使用的命令是：</p>
@@ -197,7 +237,7 @@
 </div>
 </div><p>另外Archtype可以是文件夹，创建博客时Hugo也会根据Archtype的文件夹结构自动创建一个文件夹。我这里创建的是：</p>
 <p>
-<img class=mx-auto alt src=https://blog-1302636809.cos.ap-beijing.myqcloud.com/post/20210807002133-%E6%96%B0%E7%9A%84%E8%B5%B7%E7%82%B9/images/2021-08-07-00-39-38.png></p>
+<img alt src=https://blog-1302636809.file.myqcloud.com/post/20210807002133-%E6%96%B0%E7%9A%84%E8%B5%B7%E7%82%B9/images/2021-08-07-00-39-38.png></p>
 <p>但是我这里images没有文件，所以生成新博客时Hugo没给我创建，我还是要手动创建- -!</p>
 <h2 id=添加时间戳>添加时间戳</h2>
 <p>在使用<code>hugo new</code>创建一个博客时，hugo会以博客名称作为文件夹名称，当博客多了之后，博客命名不规则就会导致很不美观。一种最简单的方式就是加一个前缀，但是我没找到Hugo内置的方式这么做。所以找了一个脚本实现：</p>
@@ -260,17 +300,17 @@ sed -i &#39;&#39; &#34;s/slug: index/slug: $POST_SLUG/g&#34; content/posts/${POS
 <h2 id=评论系统>评论系统</h2>
 <p>我这里使用大家都推荐的utterances作为评论系统，我当前使用的Even版本(4.1.0）已经内置支持了。</p>
 <p>所以只需创建存放评论的仓库，然后在配置文件中修改对应的参数即可。</p>
-<h1 id=参考文献>参考文献</h1>
+<h1 id=参考博客>参考博客</h1>
 <ol>
 <li><a href=https://geoffruddock.com/math-typesetting-in-hugo/>公式问题</a></li>
 <li><a href=https://sspai.com/post/59904>环境搭建</a></li>
 <li><a href=https://favicomatic.com/>图标生成</a></li>
 <li><a href=https://stackoverflow.com/questions/27375252/how-can-i-render-all-inline-formulas-in-with-katex>行内公式显示</a></li>
 <li><a href=https://favicon.io/favicon-generator/>图标制作</a></li>
+<li><a href=https://blog.puckwang.com/post/2020/use-github-actions-deploy-hugo/>使用 Github Actions 來自動化部署 Hugo 到 Github Pages</a></li>
+<li><a href=https://wrong.wang/blog/20190301-%E6%9C%AC%E7%AB%99%E5%BC%95%E7%94%A8%E5%9B%BE%E7%89%87%E7%9A%84%E9%A1%BA%E6%BB%91%E6%B5%81%E7%A8%8B/>本站引用图片的“顺滑”流程</a></li>
+<li><a href=https://jdhao.github.io/2020/03/16/tencent_cos_cdn_setup/>腾讯云对象存储博客图床开启 CDN 加速(不需要购买额外域名)</a></li>
 </ol>
-<h1 id=测试>测试</h1>
-<p>行内公式 $ x_1 + x_2 $ 测试</p>
-<p>行内代码测试<code>test</code></p>
 <div class=post-copyright>
 <p class=copyright-item>
 <span class=item-title>Author</span>
