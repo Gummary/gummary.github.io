@@ -49,4 +49,4 @@ jobs:
           ref: gh-pages
 
       - name: Upload to cos
-        run: coscmd upload -rs --delete -f --ignore "*.html,*.xml" -H "{'Cache-Control':'public, max-age=7776000'}" ./ /
+        run: coscmd upload -rs --delete -f --ignore "*.html,*.xml,.git/*" -H "{'Cache-Control':'public, max-age=7776000'}" ./ /
