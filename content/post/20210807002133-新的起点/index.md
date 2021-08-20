@@ -36,7 +36,7 @@ Hugo有两种方式管理静态资源，一种是全部放到static文件夹下�
 
 Leaf Bundle是在content目录下新建一个文件夹，文件夹中index.md用于编写网页的内容，然后新建一个image子目录用于存放图像。在index.md中可以直接使用相对路径访问`![](image/xxx.image)`.如下图所示：
 
-![](images/2021-08-07-00-21-58.png)
+{{< figure src="images/2021-08-07-00-21-58.png" title="图像相对位置" width="50%" >}}
 
 ### VSCode快速插入图片
 
@@ -49,6 +49,27 @@ Leaf Bundle是在content目录下新建一个文件夹，文件夹中index.md用
 ```
 
 也即当前文件的同级images目录。
+
+### 控制图像大小
+
+Markdown本身并没有提供控制图像大小的方法，只能插入Html语句控制，这个过程有比较麻烦。我查了一下，hugo提供了插入图像的Shotcode，在转换为html的过程中Hugo会自动将这些shotcode展开，展开成一段html。其中图像的shotcode如下：
+
+```
+{{</* figure src="/media/spf13.jpg" title="Steve Francia" width="30%" */>}}
+```
+
+生成的Html为：
+
+```html
+<figure>
+  <img src="/media/spf13.jpg"  width=30%/>
+  <figcaption>
+      <h4>Steve Francia</h4>
+  </figcaption>
+</figure>
+```
+
+其中，figure提供了width和height标签控制大小。更为详细介绍见[Shortcodes](https://gohugo.io/content-management/shortcodes/).
 
 ### 使用腾讯云存储托管图片
 
