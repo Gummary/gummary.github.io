@@ -30,7 +30,7 @@
 <meta itemprop=name content="博客新的起点：从Hexo到Hugo">
 <meta itemprop=description content><meta itemprop=datePublished content="2021-07-26T23:07:58+08:00">
 <meta itemprop=dateModified content="2021-07-26T23:07:58+08:00">
-<meta itemprop=wordCount content="2563">
+<meta itemprop=wordCount content="2790">
 <meta itemprop=keywords content><meta name=twitter:card content="summary">
 <meta name=twitter:title content="博客新的起点：从Hexo到Hugo">
 <meta name=twitter:description content><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
@@ -106,6 +106,7 @@
 <ul>
 <li><a href=#插入图片>插入图片</a></li>
 <li><a href=#vscode快速插入图片>VSCode快速插入图片</a></li>
+<li><a href=#控制图像大小>控制图像大小</a></li>
 <li><a href=#使用腾讯云存储托管图片>使用腾讯云存储托管图片</a></li>
 </ul>
 </li>
@@ -135,8 +136,10 @@
 <p>第一种方式有个问题就是，所有文章的所有静态资源（图片）都会放在这个文件夹里，就很不好管理。所以我更倾向于第二种方式。在Hugo 0.32版本之后，可以将一个页面的所有静态文件全部放在一起，称作<code>Page Bundle</code>.</p>
 <p><a href=https://gohugo.io/content-management/page-bundles/>Page Bundles</a>是一种管理资源的方式，分为Leaf Bundle与Branch Bundle两种。我们这里主要使用Leaf Bundle。</p>
 <p>Leaf Bundle是在content目录下新建一个文件夹，文件夹中index.md用于编写网页的内容，然后新建一个image子目录用于存放图像。在index.md中可以直接使用相对路径访问<code>![](image/xxx.image)</code>.如下图所示：</p>
-<p>
-<img alt src=https://blog-1302636809.file.myqcloud.com/post/20210807002133-%E6%96%B0%E7%9A%84%E8%B5%B7%E7%82%B9/images/2021-08-07-00-21-58.png></p>
+<figure><img src=images/2021-08-07-00-21-58.png width=50%><figcaption>
+<h4>图像相对位置</h4>
+</figcaption>
+</figure>
 <h3 id=vscode快速插入图片>VSCode快速插入图片</h3>
 <p>另外我们在插入图片时，肯定不想先把图片保存到images文件夹下，再在md中引用。所以我用了<a href="https://marketplace.visualstudio.com/items?itemName=telesoho.vscode-markdown-paste-image">Markdown Paste</a>插件。当你将图片复制到剪贴板后，可以直接使用<code>Cmd+Alt+V</code>粘贴到markdown中，图片会保存到你指定的目录，我这里配置的是：</p>
 <div class=highlight><div class=chroma>
@@ -152,6 +155,36 @@
 </code></pre></td></tr></table>
 </div>
 </div><p>也即当前文件的同级images目录。</p>
+<h3 id=控制图像大小>控制图像大小</h3>
+<p>Markdown本身并没有提供控制图像大小的方法，只能插入Html语句控制，这个过程有比较麻烦。我查了一下，hugo提供了插入图像的Shotcode，在转换为html的过程中Hugo会自动将这些shotcode展开，展开成一段html。其中图像的shotcode如下：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>{{&lt; figure src=&#34;/media/spf13.jpg&#34; title=&#34;Steve Francia&#34; width=&#34;30%&#34; &gt;}}
+</code></pre></td></tr></table>
+</div>
+</div><p>生成的Html为：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-html data-lang=html><span class=p>&lt;</span><span class=nt>figure</span><span class=p>&gt;</span>
+  <span class=p>&lt;</span><span class=nt>img</span> <span class=na>src</span><span class=o>=</span><span class=s>&#34;/media/spf13.jpg&#34;</span>  <span class=na>width</span><span class=o>=</span><span class=s>30%/</span><span class=p>&gt;</span>
+  <span class=p>&lt;</span><span class=nt>figcaption</span><span class=p>&gt;</span>
+      <span class=p>&lt;</span><span class=nt>h4</span><span class=p>&gt;</span>Steve Francia<span class=p>&lt;/</span><span class=nt>h4</span><span class=p>&gt;</span>
+  <span class=p>&lt;/</span><span class=nt>figcaption</span><span class=p>&gt;</span>
+<span class=p>&lt;/</span><span class=nt>figure</span><span class=p>&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>其中，figure提供了width和height标签控制大小。更为详细介绍见<a href=https://gohugo.io/content-management/shortcodes/>Shortcodes</a>.</p>
 <h3 id=使用腾讯云存储托管图片>使用腾讯云存储托管图片</h3>
 <p>如果将图片托管到Github上，国内访问可能不是特别稳定，所以我这用了腾讯云存储，免费额度应该就够用了。</p>
 <p>默认情况下，Hugo是用相对路径访问bundle下的图片，如果我们要换腾讯云，首先要将图像的链接替换为腾讯云网页。在Hugo 0.62之后，提供了<a href=https://gohugo.io/getting-started/configuration-markup/#markdown-render-hooks>Markdown Render Hook</a>的功能，可以覆盖markdown的某些渲染功能，我们这里用来将图像的链接替换为腾讯云的地址。</p>
@@ -331,10 +364,10 @@ sed -i &#39;&#39; &#34;s/slug: index/slug: $POST_SLUG/g&#34; content/posts/${POS
 </div>
 <footer class=post-footer>
 <nav class=post-nav>
-<a class=next href=/post/greedy-algorithm/>
-<span class="next-text nav-default">贪心算法题汇编</span>
-<span class="next-text nav-mobile">Next</span>
-<i class="iconfont icon-right"></i>
+<a class=prev href=/post/%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E7%B3%BB%E7%BB%9F%E5%88%86%E7%B1%BB/>
+<i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">论文阅读分享-事件处理系统分类</span>
+<span class="prev-text nav-mobile">Prev</span>
 </a>
 </nav>
 </footer>
