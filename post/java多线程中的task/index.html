@@ -1,0 +1,618 @@
+<!doctype html><html lang=en>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>Java多线程中的task - Gum</title>
+<meta name=renderer content="webkit">
+<meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta http-equiv=cache-control content="no-transform">
+<meta http-equiv=cache-control content="no-siteapp">
+<meta name=theme-color content="#f8f5ec">
+<meta name=msapplication-navbutton-color content="#f8f5ec">
+<meta name=apple-mobile-web-app-capable content="yes">
+<meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
+<meta name=author content="Gum"><meta name=description content="从接口说起 在Java中，要在一个线程中运行一段代码，需要一个对象实现Runnable或Callable接口，然后将该类作为参数传给一个线程运"><meta name=keywords content="Photo,Reading,Java,Distribute System">
+<meta name=generator content="Hugo 0.87.0 with theme even">
+<link rel=canonical href=http://localhost:1313/post/java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%AD%E7%9A%84task/>
+<link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png>
+<link rel=manifest href=/manifest.json>
+<link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5>
+<link href=/sass/main.min.40f3224b12ad17cb3dd58c8d5dfc3d1d6ad48ed6335de8962e4710a613bf3702.css rel=stylesheet>
+<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous>
+<meta property="og:title" content="Java多线程中的task">
+<meta property="og:description" content="从接口说起 在Java中，要在一个线程中运行一段代码，需要一个对象实现Runnable或Callable接口，然后将该类作为参数传给一个线程运">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://localhost:1313/post/java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%AD%E7%9A%84task/"><meta property="article:section" content="post">
+<meta property="article:published_time" content="2021-08-27T10:26:44+08:00">
+<meta property="article:modified_time" content="2021-08-27T10:26:44+08:00">
+<meta itemprop=name content="Java多线程中的task">
+<meta itemprop=description content="从接口说起 在Java中，要在一个线程中运行一段代码，需要一个对象实现Runnable或Callable接口，然后将该类作为参数传给一个线程运"><meta itemprop=datePublished content="2021-08-27T10:26:44+08:00">
+<meta itemprop=dateModified content="2021-08-27T10:26:44+08:00">
+<meta itemprop=wordCount content="3340">
+<meta itemprop=keywords content><meta name=twitter:card content="summary">
+<meta name=twitter:title content="Java多线程中的task">
+<meta name=twitter:description content="从接口说起 在Java中，要在一个线程中运行一段代码，需要一个对象实现Runnable或Callable接口，然后将该类作为参数传给一个线程运"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]-->
+</head>
+<body>
+<div id=mobile-navbar class=mobile-navbar>
+<div class=mobile-header-logo>
+<a href=/ class=logo>Gum</a>
+</div>
+<div class=mobile-navbar-icon>
+<span></span>
+<span></span>
+<span></span>
+</div>
+</div>
+<nav id=mobile-menu class="mobile-menu slideout-menu">
+<ul class=mobile-menu-list>
+<a href=/>
+<li class=mobile-menu-item>Home</li>
+</a><a href=/post/>
+<li class=mobile-menu-item>Archives</li>
+</a><a href=/tags/>
+<li class=mobile-menu-item>Tags</li>
+</a><a href=/categories/>
+<li class=mobile-menu-item>Categories</li>
+</a><a href=/about/>
+<li class=mobile-menu-item>About</li>
+</a>
+</ul>
+</nav>
+<div class=container id=mobile-panel>
+<header id=header class=header>
+<div class=logo-wrapper>
+<a href=/ class=logo>Gum</a>
+</div>
+<nav class=site-navbar>
+<ul id=menu class=menu>
+<li class=menu-item>
+<a class=menu-item-link href=/>Home</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/post/>Archives</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/tags/>Tags</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/categories/>Categories</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/about/>About</a>
+</li>
+</ul>
+</nav>
+</header>
+<main id=main class=main>
+<div class=content-wrapper>
+<div id=content class=content>
+<article class=post>
+<header class=post-header>
+<h1 class=post-title>Java多线程中的task</h1>
+<div class=post-meta>
+<span class=post-time> 2021-08-27 </span>
+</div>
+</header>
+<div class=post-toc id=post-toc>
+<h2 class=post-toc-title>Contents</h2>
+<div class="post-toc-content always-active">
+<nav id=TableOfContents>
+<ul>
+<li><a href=#从接口说起>从接口说起</a>
+<ul>
+<li><a href=#runnable接口>Runnable接口</a></li>
+<li><a href=#callable接口>Callable接口</a></li>
+<li><a href=#future接口>Future接口</a></li>
+</ul>
+</li>
+<li><a href=#future的具体实现futuretask>Future的具体实现——FutureTask</a></li>
+<li><a href=#更强大的completablefuture类>更强大的CompletableFuture类</a></li>
+<li><a href=#总结>总结</a></li>
+<li><a href=#参考>参考</a></li>
+</ul>
+</nav>
+</div>
+</div>
+<div class=post-content>
+<h1 id=从接口说起>从接口说起</h1>
+<p>在Java中，要在一个线程中运行一段代码，需要一个对象实现Runnable或Callable接口，然后将该类作为参数传给一个线程运行；或者继承Thread类，直接start运行。其实本质上，Thread类也是实现了Runnable接口，在运行时运行重载的run方法。所以我们就先从Runnable和Callable接口说起。</p>
+<h2 id=runnable接口>Runnable接口</h2>
+<p>先看Runnable接口，Runnable接口其实是非常简单的：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>interface</span> <span class=nc>Runnable</span> <span class=o>{</span>
+    <span class=kd>public</span> <span class=kd>abstract</span> <span class=kt>void</span> <span class=nf>run</span><span class=o>();</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这个接口的作用也非常简单，用来创建一个新的线程，然后在新的线程中执行run中的方法。下面举一个简单的例子，创建一个线程，实现1-100的累加。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=c1>// 实现Runnable接口
+</span><span class=c1></span><span class=kd>public</span> <span class=kd>class</span> <span class=nc>SumRunnable</span> <span class=kd>implements</span> <span class=n>Runnable</span><span class=o>{</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * 线程执行入口
+</span><span class=cm>     */</span>
+    <span class=nd>@SneakyThrows</span>
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>run</span><span class=o>()</span> <span class=o>{</span>
+        <span class=kt>int</span> <span class=n>result</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span>
+        <span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>100</span><span class=o>;</span> <span class=n>i</span><span class=o>++)</span> <span class=o>{</span>
+            <span class=n>result</span> <span class=o>+=</span> <span class=n>i</span><span class=o>;</span>
+        <span class=o>}</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>result</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>SumRunnable</span> <span class=n>sum</span> <span class=o>=</span> <span class=k>new</span> <span class=n>SumRunnable</span><span class=o>();</span>
+        <span class=k>new</span> <span class=n>Thread</span><span class=o>(</span><span class=n>sum</span><span class=o>).</span><span class=na>run</span><span class=o>();</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id=callable接口>Callable接口</h2>
+<p>Runnable接口虽然简单，但是其提供的功能相对就很少的。如果我们不希望在另一个线程内打印结果，我们要把打印的部分收敛到主线程。这就要求计算线程能将结果传给主线程。如果使用Runnable来实现，那就要我们自己实现一套线程同步机制，传递计算结果。所以Runnable接口最大的缺点在于不能直接获得执行结果；另外，Runnable接口也无法获取任务执行中发生的异常。</p>
+<p>于是，在Java1.5中新加入了Callable接口，我们来看下Callable的源码：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>interface</span> <span class=nc>Callable</span><span class=o>&lt;</span><span class=n>V</span><span class=o>&gt;</span> <span class=o>{</span>
+    <span class=n>V</span> <span class=nf>call</span><span class=o>()</span> <span class=kd>throws</span> <span class=n>Exception</span><span class=o>;</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到，Callable接口可以返回返回值并抛出异常。下面仍然以求和举例：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>SumCallable</span> <span class=kd>implements</span> <span class=n>Callable</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=o>{</span>
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=n>Integer</span> <span class=nf>call</span><span class=o>()</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+        <span class=kt>int</span> <span class=n>result</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span>
+        <span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>100</span><span class=o>;</span> <span class=n>i</span><span class=o>++)</span> <span class=o>{</span>
+            <span class=n>result</span> <span class=o>+=</span> <span class=n>i</span><span class=o>;</span>
+        <span class=o>}</span>
+        <span class=k>return</span> <span class=n>result</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>ExecutionException</span><span class=o>,</span> <span class=n>InterruptedException</span> <span class=o>{</span>
+        <span class=n>SumCallable</span> <span class=n>sum</span> <span class=o>=</span> <span class=k>new</span> <span class=n>SumCallable</span><span class=o>();</span>
+        <span class=c1>// 创建线程池
+</span><span class=c1></span>        <span class=n>ExecutorService</span> <span class=n>executor</span> <span class=o>=</span> <span class=n>Executors</span><span class=o>.</span><span class=na>newFixedThreadPool</span><span class=o>(</span><span class=n>1</span><span class=o>);</span>
+        <span class=c1>// 提交任务
+</span><span class=c1></span>        <span class=n>Future</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=n>future</span> <span class=o>=</span> <span class=n>executor</span><span class=o>.</span><span class=na>submit</span><span class=o>(</span><span class=n>sum</span><span class=o>);</span>
+        <span class=c1>// 获取任务返回结果
+</span><span class=c1></span>        <span class=n>Integer</span> <span class=n>integer</span> <span class=o>=</span> <span class=n>future</span><span class=o>.</span><span class=na>get</span><span class=o>();</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>integer</span><span class=o>);</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>我们首先创建了一个线程池，然后将求和的类提交给线程池，线程池返回给我们一个<code>Future</code>对象，我们从这个Future对象中得到了我们计算的结果。那么这个新引入的Future对象的作用是什么？在参数传递的过程中扮演了怎样的角色呢？</p>
+<h2 id=future接口>Future接口</h2>
+<p>我们在将任务提交给线程池后，线程池返回给我们一个<code>Future</code>对象，我们通过<code>get</code>得到任务执行结束后返回的结果。所以其实<code>Future</code>的主要作用就是给我们提供了一种方式让我们可以获得另一个线程的执行结果。但<code>Future</code>的作用远不止如此，我们先来看下<code>Future</code>接口都提供了哪些方法。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>interface</span> <span class=nc>Future</span><span class=o>&lt;</span><span class=n>V</span><span class=o>&gt;</span> <span class=o>{</span>
+    <span class=kt>boolean</span> <span class=nf>cancel</span><span class=o>(</span><span class=kt>boolean</span> <span class=n>mayInterruptIfRunning</span><span class=o>);</span>
+    <span class=kt>boolean</span> <span class=nf>isCancelled</span><span class=o>();</span>
+    <span class=kt>boolean</span> <span class=nf>isDone</span><span class=o>();</span>
+    <span class=n>V</span> <span class=nf>get</span><span class=o>()</span> <span class=kd>throws</span> <span class=n>InterruptedException</span><span class=o>,</span> <span class=n>ExecutionException</span><span class=o>;</span>
+    <span class=n>V</span> <span class=nf>get</span><span class=o>(</span><span class=kt>long</span> <span class=n>timeout</span><span class=o>,</span> <span class=n>TimeUnit</span> <span class=n>unit</span><span class=o>)</span>
+        <span class=kd>throws</span> <span class=n>InterruptedException</span><span class=o>,</span> <span class=n>ExecutionException</span><span class=o>,</span> <span class=n>TimeoutException</span><span class=o>;</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到，除了获取结果外，<code>Future</code>还给我们提供了判断任务是否结束、是否取消、和取消任务的能力。我们下面来看下各个方法的作用。</p>
+<p><code>cancel()</code>方法可以用来取消一个任务。对于未执行的task，task直接进入结束状态，并且永远不会执行。对于已经开始运行的任务，cancel通过<code>mayInterruptIfRunning()</code>参数控制是否立刻中断task还是等待任务自然结束。如果task已经结束，无论是自然结束还是被中断，<code>cancel</code>会返回<code>false</code>表示取消执行失败。</p>
+<p><code>isCancelled()</code>方法用于判断一个任务是否在正常结束之前被取消了。</p>
+<p><code>isDone()</code>方法用一个判断一个任务是否完成。这里的完成包括了正常结束，或在运行期间抛出异常，或被取消。</p>
+<p><code>get()</code>方法是<code>Future</code>的核心方法，用于获取一个异步线程的结果。调用该方法后，调用线程会阻塞，直到任务结束。如果任务正常结束，则<code>get()</code>会返回结果；如果任务被取消，<code>get()</code>会抛出<code>CancellationException</code>异常；如果任务执行时抛出了异常，那<code>get()</code>方法会抛出<code>ExecutionException</code>异常，通过<code>getCause()</code>方法可以得到抛出的异常；如果<strong>当前线程</strong>在等待执行结果时被中断了，会抛出<code>InterruptedException</code>异常。</p>
+<p><code>get(long timeout, TimeUnit unit)</code>是<code>get()</code>方法的重载方法，允许当前线程等待指定的时间后，如果任务还没有结束并返回，那么会抛出<code>TimeoutException</code>异常。</p>
+<p>所以其实<code>Future</code>方法不仅仅提供了一个获取结果的方式，其实还代表了一个任务的生命周期，让我们可以知道任务当前是什么状态。但是<code>Future</code>毕竟只是一个接口，最终的行为还是取决于具体的实现，所以我们接下来就看一下Java提供的<code>Future</code>实现类——<code>FutureTask</code>。</p>
+<h1 id=future的具体实现futuretask>Future的具体实现——FutureTask</h1>
+<p>我们先来看下<code>FutureTask</code>的类图，他同时实现了Runnable和Future两个接口。</p>
+<figure class=align-center><img src=images/FutureTask.png width=40%><figcaption>
+<h4>FutureTask类图</h4>
+</figcaption>
+</figure>
+<p>那么就是说，当<code>FutureTask</code>提交给另一个线程执行时，其实运行的是<code>Runnable</code>的<code>run()</code>方法。我们下面来看下他的构造函数和<code>run()</code>方法：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=nf>FutureTask</span><span class=o>(</span><span class=n>Runnable</span> <span class=n>runnable</span><span class=o>,</span> <span class=n>V</span> <span class=n>result</span><span class=o>)</span> <span class=o>{</span>
+    <span class=k>this</span><span class=o>.</span><span class=na>callable</span> <span class=o>=</span> <span class=n>Executors</span><span class=o>.</span><span class=na>callable</span><span class=o>(</span><span class=n>runnable</span><span class=o>,</span> <span class=n>result</span><span class=o>);</span>
+    <span class=k>this</span><span class=o>.</span><span class=na>state</span> <span class=o>=</span> <span class=n>NEW</span><span class=o>;</span>       <span class=c1>// ensure visibility of callable
+</span><span class=c1></span><span class=o>}</span>
+
+<span class=kd>public</span> <span class=nf>FutureTask</span><span class=o>(</span><span class=n>Callable</span><span class=o>&lt;</span><span class=n>V</span><span class=o>&gt;</span> <span class=n>callable</span><span class=o>)</span> <span class=o>{</span>
+    <span class=k>if</span> <span class=o>(</span><span class=n>callable</span> <span class=o>==</span> <span class=kc>null</span><span class=o>)</span>
+        <span class=k>throw</span> <span class=k>new</span> <span class=n>NullPointerException</span><span class=o>();</span>
+    <span class=k>this</span><span class=o>.</span><span class=na>callable</span> <span class=o>=</span> <span class=n>callable</span><span class=o>;</span>
+    <span class=k>this</span><span class=o>.</span><span class=na>state</span> <span class=o>=</span> <span class=n>NEW</span><span class=o>;</span>       <span class=c1>// ensure visibility of callable
+</span><span class=c1></span><span class=o>}</span>
+
+<span class=kd>public</span> <span class=kt>void</span> <span class=nf>run</span><span class=o>()</span> <span class=o>{</span>
+        <span class=c1>// ...
+</span><span class=c1></span>        <span class=k>try</span> <span class=o>{</span>
+            <span class=n>Callable</span><span class=o>&lt;</span><span class=n>V</span><span class=o>&gt;</span> <span class=n>c</span> <span class=o>=</span> <span class=n>callable</span><span class=o>;</span>
+            <span class=k>if</span> <span class=o>(</span><span class=n>c</span> <span class=o>!=</span> <span class=kc>null</span> <span class=o>&amp;&amp;</span> <span class=n>state</span> <span class=o>==</span> <span class=n>NEW</span><span class=o>)</span> <span class=o>{</span>
+                <span class=n>V</span> <span class=n>result</span><span class=o>;</span>
+                <span class=kt>boolean</span> <span class=n>ran</span><span class=o>;</span>
+                <span class=k>try</span> <span class=o>{</span>
+                    <span class=n>result</span> <span class=o>=</span> <span class=n>c</span><span class=o>.</span><span class=na>call</span><span class=o>();</span>
+                    <span class=n>ran</span> <span class=o>=</span> <span class=kc>true</span><span class=o>;</span>
+                <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>Throwable</span> <span class=n>ex</span><span class=o>)</span> <span class=o>{</span>
+                    <span class=n>result</span> <span class=o>=</span> <span class=kc>null</span><span class=o>;</span>
+                    <span class=n>ran</span> <span class=o>=</span> <span class=kc>false</span><span class=o>;</span>
+                    <span class=n>setException</span><span class=o>(</span><span class=n>ex</span><span class=o>);</span>
+                <span class=o>}</span>
+                <span class=k>if</span> <span class=o>(</span><span class=n>ran</span><span class=o>)</span>
+                    <span class=n>set</span><span class=o>(</span><span class=n>result</span><span class=o>);</span>
+            <span class=o>}</span>
+        <span class=o>}</span> <span class=k>finally</span> <span class=o>{</span>
+            <span class=c1>// ...
+</span><span class=c1></span>        <span class=o>}</span>
+    <span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>所以他是以<code>Callable</code>为参数，在<code>run()</code>中执行<code>Callable</code>，然后返回执行结果。</p>
+<p>上面是实现<code>Runnable</code>接口的部分，下面来看下实现<code>Future</code>接口的部分，先来看下核心的<code>get()</code>方法：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=n>V</span> <span class=nf>get</span><span class=o>()</span> <span class=kd>throws</span> <span class=n>InterruptedException</span><span class=o>,</span> <span class=n>ExecutionException</span> <span class=o>{</span>
+    <span class=kt>int</span> <span class=n>s</span> <span class=o>=</span> <span class=n>state</span><span class=o>;</span>
+    <span class=k>if</span> <span class=o>(</span><span class=n>s</span> <span class=o>&lt;=</span> <span class=n>COMPLETING</span><span class=o>)</span>
+        <span class=n>s</span> <span class=o>=</span> <span class=n>awaitDone</span><span class=o>(</span><span class=kc>false</span><span class=o>,</span> <span class=n>0L</span><span class=o>);</span>
+    <span class=k>return</span> <span class=n>report</span><span class=o>(</span><span class=n>s</span><span class=o>);</span>
+<span class=o>}</span>
+
+<span class=kd>public</span> <span class=n>V</span> <span class=nf>get</span><span class=o>(</span><span class=kt>long</span> <span class=n>timeout</span><span class=o>,</span> <span class=n>TimeUnit</span> <span class=n>unit</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>InterruptedException</span><span class=o>,</span> <span class=n>ExecutionException</span><span class=o>,</span> <span class=n>TimeoutException</span> <span class=o>{</span>
+    <span class=k>if</span> <span class=o>(</span><span class=n>unit</span> <span class=o>==</span> <span class=kc>null</span><span class=o>)</span>
+        <span class=k>throw</span> <span class=k>new</span> <span class=n>NullPointerException</span><span class=o>();</span>
+    <span class=kt>int</span> <span class=n>s</span> <span class=o>=</span> <span class=n>state</span><span class=o>;</span>
+    <span class=k>if</span> <span class=o>(</span><span class=n>s</span> <span class=o>&lt;=</span> <span class=n>COMPLETING</span> <span class=o>&amp;&amp;</span>
+        <span class=o>(</span><span class=n>s</span> <span class=o>=</span> <span class=n>awaitDone</span><span class=o>(</span><span class=kc>true</span><span class=o>,</span> <span class=n>unit</span><span class=o>.</span><span class=na>toNanos</span><span class=o>(</span><span class=n>timeout</span><span class=o>)))</span> <span class=o>&lt;=</span> <span class=n>COMPLETING</span><span class=o>)</span>
+        <span class=k>throw</span> <span class=k>new</span> <span class=n>TimeoutException</span><span class=o>();</span>
+    <span class=k>return</span> <span class=n>report</span><span class=o>(</span><span class=n>s</span><span class=o>);</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>不论是阻塞的<code>get()</code>还是有超时的<code>get()</code>，最后都会调用<code>awaitDone()</code>方法。下面是<code>awaitDone()</code>方法的结构体，看下面代码之前我们需要记住，调用<code>get()</code>方法的线程和执行<code>run()</code>方法的线程不是一个线程。下面的<code>WaitNode</code>是一个单链表,用于存放等待当前任务执行结果的线程，每当有一个线程调用<code>FutureTask</code>的<code>get()</code>方法时，就会初始化一个<code>WaitNode</code>并将自己加入到该链表中。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>private</span> <span class=kt>int</span> <span class=nf>awaitDone</span><span class=o>(</span><span class=kt>boolean</span> <span class=n>timed</span><span class=o>,</span> <span class=kt>long</span> <span class=n>nanos</span><span class=o>)</span>
+    <span class=kd>throws</span> <span class=n>InterruptedException</span> <span class=o>{</span>
+    <span class=kd>final</span> <span class=kt>long</span> <span class=n>deadline</span> <span class=o>=</span> <span class=n>timed</span> <span class=o>?</span> <span class=n>System</span><span class=o>.</span><span class=na>nanoTime</span><span class=o>()</span> <span class=o>+</span> <span class=n>nanos</span> <span class=o>:</span> <span class=n>0L</span><span class=o>;</span>
+    <span class=n>WaitNode</span> <span class=n>q</span> <span class=o>=</span> <span class=kc>null</span><span class=o>;</span>
+    <span class=kt>boolean</span> <span class=n>queued</span> <span class=o>=</span> <span class=kc>false</span><span class=o>;</span>
+    <span class=k>for</span> <span class=o>(;;)</span> <span class=o>{</span>
+        <span class=c1>// 先判断执行get的线程是否被中断，如果中断则从链表中移除
+</span><span class=c1></span>        <span class=k>if</span> <span class=o>(</span><span class=n>Thread</span><span class=o>.</span><span class=na>interrupted</span><span class=o>())</span> <span class=o>{</span>
+            <span class=n>removeWaiter</span><span class=o>(</span><span class=n>q</span><span class=o>);</span>
+            <span class=k>throw</span> <span class=k>new</span> <span class=n>InterruptedException</span><span class=o>();</span>
+        <span class=o>}</span>
+
+        <span class=kt>int</span> <span class=n>s</span> <span class=o>=</span> <span class=n>state</span><span class=o>;</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>s</span> <span class=o>&gt;</span> <span class=n>COMPLETING</span><span class=o>)</span> <span class=o>{</span> 
+            <span class=c1>// 线程已经结束，返回
+</span><span class=c1></span>            <span class=k>if</span> <span class=o>(</span><span class=n>q</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span>
+                <span class=n>q</span><span class=o>.</span><span class=na>thread</span> <span class=o>=</span> <span class=kc>null</span><span class=o>;</span>
+            <span class=k>return</span> <span class=n>s</span><span class=o>;</span>
+        <span class=o>}</span>
+        <span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=n>s</span> <span class=o>==</span> <span class=n>COMPLETING</span><span class=o>)</span> <span class=c1>// 线程正在结束，需要设置结果或设置异常，当前线程让出CPU，等待下次循环
+</span><span class=c1></span>            <span class=n>Thread</span><span class=o>.</span><span class=na>yield</span><span class=o>();</span>
+        <span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=n>q</span> <span class=o>==</span> <span class=kc>null</span><span class=o>)</span> <span class=c1>// 当前线程第一次调用get方法，初始化一个WaitNode变量
+</span><span class=c1></span>            <span class=n>q</span> <span class=o>=</span> <span class=k>new</span> <span class=n>WaitNode</span><span class=o>();</span>
+        <span class=k>else</span> <span class=k>if</span> <span class=o>(!</span><span class=n>queued</span><span class=o>)</span> <span class=c1>// WaitNode已初始化，加入到等待队列中；这里采用的是头插法。
+</span><span class=c1></span>            <span class=n>queued</span> <span class=o>=</span> <span class=n>UNSAFE</span><span class=o>.</span><span class=na>compareAndSwapObject</span><span class=o>(</span><span class=k>this</span><span class=o>,</span> <span class=n>waitersOffset</span><span class=o>,</span>
+                                                    <span class=n>q</span><span class=o>.</span><span class=na>next</span> <span class=o>=</span> <span class=n>waiters</span><span class=o>,</span> <span class=n>q</span><span class=o>);</span>
+        <span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=n>timed</span><span class=o>)</span> <span class=o>{</span>
+            <span class=c1>// 如果是有时间中断的，那么等待指定时间
+</span><span class=c1></span>            <span class=n>nanos</span> <span class=o>=</span> <span class=n>deadline</span> <span class=o>-</span> <span class=n>System</span><span class=o>.</span><span class=na>nanoTime</span><span class=o>();</span>
+            <span class=k>if</span> <span class=o>(</span><span class=n>nanos</span> <span class=o>&lt;=</span> <span class=n>0L</span><span class=o>)</span> <span class=o>{</span>
+                <span class=c1>// 等待时间够了，移出等待队列
+</span><span class=c1></span>                <span class=n>removeWaiter</span><span class=o>(</span><span class=n>q</span><span class=o>);</span>
+                <span class=k>return</span> <span class=n>state</span><span class=o>;</span>
+            <span class=o>}</span>
+            <span class=c1>// 阻塞剩余的时间
+</span><span class=c1></span>            <span class=n>LockSupport</span><span class=o>.</span><span class=na>parkNanos</span><span class=o>(</span><span class=k>this</span><span class=o>,</span> <span class=n>nanos</span><span class=o>);</span>
+        <span class=o>}</span>
+        <span class=k>else</span>
+            <span class=n>LockSupport</span><span class=o>.</span><span class=na>park</span><span class=o>(</span><span class=k>this</span><span class=o>);</span> <span class=c1>// 当前线程阻塞，直到任务运行结束。
+</span><span class=c1></span>    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>我们再来看一下<code>cancel()</code>方法：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kt>boolean</span> <span class=nf>cancel</span><span class=o>(</span><span class=kt>boolean</span> <span class=n>mayInterruptIfRunning</span><span class=o>)</span> <span class=o>{</span>
+    <span class=c1>// 判断是否可以执行中断，这里是对状态为NEW的任务进行处理
+</span><span class=c1></span>    <span class=c1>// 如果一个任务的状态为NEW，并且可以将状态设置为INTERRUPTING或CANCELLED，那么返回True
+</span><span class=c1></span>    <span class=c1>// 如果这个过程失败了，返回false
+</span><span class=c1></span>    <span class=k>if</span> <span class=o>(!(</span><span class=n>state</span> <span class=o>==</span> <span class=n>NEW</span> <span class=o>&amp;&amp;</span>
+            <span class=n>UNSAFE</span><span class=o>.</span><span class=na>compareAndSwapInt</span><span class=o>(</span><span class=k>this</span><span class=o>,</span> <span class=n>stateOffset</span><span class=o>,</span> <span class=n>NEW</span><span class=o>,</span>
+                <span class=n>mayInterruptIfRunning</span> <span class=o>?</span> <span class=n>INTERRUPTING</span> <span class=o>:</span> <span class=n>CANCELLED</span><span class=o>)))</span>
+        <span class=k>return</span> <span class=kc>false</span><span class=o>;</span>
+    <span class=k>try</span> <span class=o>{</span>    <span class=c1>// in case call to interrupt throws exception
+</span><span class=c1></span>        <span class=c1>// 尝试中断正在执行的任务
+</span><span class=c1></span>        <span class=k>if</span> <span class=o>(</span><span class=n>mayInterruptIfRunning</span><span class=o>)</span> <span class=o>{</span>
+            <span class=k>try</span> <span class=o>{</span>
+                <span class=n>Thread</span> <span class=n>t</span> <span class=o>=</span> <span class=n>runner</span><span class=o>;</span>
+                <span class=k>if</span> <span class=o>(</span><span class=n>t</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span>
+                    <span class=n>t</span><span class=o>.</span><span class=na>interrupt</span><span class=o>();</span>
+            <span class=o>}</span> <span class=k>finally</span> <span class=o>{</span> <span class=c1>// final state
+</span><span class=c1></span>                <span class=n>UNSAFE</span><span class=o>.</span><span class=na>putOrderedInt</span><span class=o>(</span><span class=k>this</span><span class=o>,</span> <span class=n>stateOffset</span><span class=o>,</span> <span class=n>INTERRUPTED</span><span class=o>);</span>
+            <span class=o>}</span>
+        <span class=o>}</span>
+    <span class=o>}</span> <span class=k>finally</span> <span class=o>{</span>
+        <span class=c1>// 任务完成
+</span><span class=c1></span>        <span class=n>finishCompletion</span><span class=o>();</span>
+    <span class=o>}</span>
+    <span class=k>return</span> <span class=kc>true</span><span class=o>;</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在出现异常、任务完成、任务取消的时候，都会调用<code>finishCompletion()</code>方法，该方法的作用是遍历等待队列并唤醒在等待队列中的线程们。</p>
+<h1 id=更强大的completablefuture类>更强大的CompletableFuture类</h1>
+<p>未完待续&mldr;</p>
+<h1 id=总结>总结</h1>
+<p>ok，以上就是本文的全部内容，本文首先从线程执行相关的接口讲起，介绍了无返回值的Runnable接口和有返回值的Callable接口，然后介绍了用于获取返回值的Future接口并重点分析了Future的实现类FutureTask的源码。最后介绍了Java8中新提供的CompelableFutureTask的使用。</p>
+<h1 id=参考>参考</h1>
+<ol>
+<li><a href=https://www.liaoxuefeng.com/wiki/1252599548343744/1306581182447650>https://www.liaoxuefeng.com/wiki/1252599548343744/1306581182447650</a></li>
+<li><a href=https://zhuanlan.zhihu.com/p/54459770>https://zhuanlan.zhihu.com/p/54459770</a></li>
+<li><a href=https://www.cnblogs.com/nullzx/p/5147004.html>https://www.cnblogs.com/nullzx/p/5147004.html</a></li>
+<li><a href=https://www.cnblogs.com/dolphin0520/p/3949310.html>https://www.cnblogs.com/dolphin0520/p/3949310.html</a></li>
+<li>JCIP 6.3.2</li>
+<li><a href=https://www.cnblogs.com/daxin/p/3366606.html>https://www.cnblogs.com/daxin/p/3366606.html</a></li>
+<li><a href=https://github.com/JetBrains/jdk8u_jdk/blob/master/src/share/classes/java/util/concurrent/RunnableFuture.java>https://github.com/JetBrains/jdk8u_jdk/blob/master/src/share/classes/java/util/concurrent/RunnableFuture.java</a></li>
+<li><a href=https://github.com/frohoff/jdk8u-jdk/blob/master/src/share/classes/java/util/concurrent/FutureTask.java>https://github.com/frohoff/jdk8u-jdk/blob/master/src/share/classes/java/util/concurrent/FutureTask.java</a></li>
+</ol>
+<div class=post-copyright>
+<p class=copyright-item>
+<span class=item-title>Author</span>
+<span class=item-content>Gum</span>
+</p>
+<p class=copyright-item>
+<span class=item-title>LastMod</span>
+<span class=item-content>
+2021-08-27
+</span>
+</p>
+<p class=copyright-item>
+<span class=item-title>License</span>
+<span class=item-content><a rel="license noopener" href=https://creativecommons.org/licenses/by-nc-nd/4.0/ target=_blank>CC BY-NC-ND 4.0</a></span>
+</p>
+</div>
+<footer class=post-footer>
+<nav class=post-nav>
+<a class=next href=/post/%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E7%B3%BB%E7%BB%9F%E5%88%86%E7%B1%BB/>
+<span class="next-text nav-default">论文阅读分享-事件处理系统分类</span>
+<span class="next-text nav-mobile">Next</span>
+<i class="iconfont icon-right"></i>
+</a>
+</nav>
+</footer>
+</article>
+</div>
+<script src=https://utteranc.es/client.js repo=Gummary/blog-comment issue-term=pathname theme=github-light crossorigin=anonymous async></script>
+<noscript>Please enable JavaScript to view the <a href=https://github.com/utterance>comments powered by utterances.</a></noscript>
+</div>
+</main>
+<footer id=footer class=footer>
+<div class=social-links>
+<a href=mailto:sdythp@gmail.com class="iconfont icon-email" title=email target=_blank></a>
+<a href=https://github.com/Gummary/ class="iconfont icon-github" title=github target=_blank></a>
+<a href=http://localhost:1313/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a>
+</div>
+<div class=poem>长风破浪会有时，直挂云帆济沧海</div>
+<div class=copyright>
+<span class=copyright-year>
+<span>Gum</span>
+&copy;
+2017 -
+2021</span>
+</div>
+</footer>
+<div class=back-to-top id=back-to-top>
+<i class="iconfont icon-up"></i>
+</div>
+</div>
+<script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script>
+<script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script>
+<script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script>
+</body>
+</html>
