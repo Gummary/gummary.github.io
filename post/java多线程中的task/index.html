@@ -30,7 +30,7 @@
 <meta itemprop=name content="Java多线程中的task">
 <meta itemprop=description content="从接口说起 在Java中，要在一个线程中运行一段代码，需要一个对象实现Runnable或Callable接口，然后将该类作为参数传给一个线程运"><meta itemprop=datePublished content="2021-08-27T10:26:44+08:00">
 <meta itemprop=dateModified content="2021-08-27T10:26:44+08:00">
-<meta itemprop=wordCount content="3340">
+<meta itemprop=wordCount content="4922">
 <meta itemprop=keywords content><meta name=twitter:card content="summary">
 <meta name=twitter:title content="Java多线程中的task">
 <meta name=twitter:description content="从接口说起 在Java中，要在一个线程中运行一段代码，需要一个对象实现Runnable或Callable接口，然后将该类作为参数传给一个线程运"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
@@ -106,7 +106,13 @@
 </ul>
 </li>
 <li><a href=#future的具体实现futuretask>Future的具体实现——FutureTask</a></li>
-<li><a href=#更强大的completablefuture类>更强大的CompletableFuture类</a></li>
+<li><a href=#更强大的completablefuture类>更强大的CompletableFuture类</a>
+<ul>
+<li><a href=#手动结束任务>手动结束任务</a></li>
+<li><a href=#允许回调函数>允许回调函数</a></li>
+<li><a href=#组合多个任务>组合多个任务</a></li>
+</ul>
+</li>
 <li><a href=#总结>总结</a></li>
 <li><a href=#参考>参考</a></li>
 </ul>
@@ -544,7 +550,171 @@
 </div>
 </div><p>在出现异常、任务完成、任务取消的时候，都会调用<code>finishCompletion()</code>方法，该方法的作用是遍历等待队列并唤醒在等待队列中的线程们。</p>
 <h1 id=更强大的completablefuture类>更强大的CompletableFuture类</h1>
-<p>未完待续&mldr;</p>
+<p>虽然<code>FutureTask</code>实现的Future接口能够让我们获取进程运行的返回值，但是FutureTask有个最大的问题在于，我们无法获得FutureTask准确结束的时间。如果我们要获得FutureTask的返回值并对结果进行处理，要么不断调用<code>get()</code>方法阻塞当前线程，要么不断调用<code>isDone()</code>方法，等待任务完成。二者都会阻塞当前线程。</p>
+<p>另外<code>FutureTask</code>其实仅仅代表了一个任务，如果需要组合多个并行的任务，比如连续执行任务A，任务B，任务C，就需要创建三个FutureTask并阻塞当前线程三次；或者任务A和任务B并行执行，二者都结束后执行任务C，那么就需要在主线程中等待两个任务结束，再创建一个FutureTask执行任务。</p>
+<p>因此，Java 8添加了一个新的Future实现类——CompletableFuture，加入了更多的新功能：</p>
+<ol>
+<li>手动结束任务，允许用户不提供运行的代码，只提供结果即可结束一个任务。</li>
+<li>允许传递回调函数。</li>
+<li>自由组合多个任务。</li>
+</ol>
+<h2 id=手动结束任务>手动结束任务</h2>
+<p>如果我们要使用一个FutureTask，那么必须要给该类提供一个实现Callable或Runnable接口的类才行。而CompletableFuture允许开发者直接调用complete手动结束Future，我们仍然以求和为例：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>SumCompeletableFuture</span> <span class=o>{</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=n>Integer</span> <span class=nf>sum</span><span class=o>()</span> <span class=o>{</span>
+        <span class=c1>// ...
+</span><span class=c1></span>    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>ExecutionException</span><span class=o>,</span> <span class=n>InterruptedException</span> <span class=o>{</span>
+        <span class=n>CompletableFuture</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=n>future</span> <span class=o>=</span> <span class=k>new</span> <span class=n>CompletableFuture</span><span class=o>&lt;&gt;();</span>
+        <span class=k>new</span> <span class=n>Thread</span><span class=o>(()</span> <span class=o>-&gt;</span> <span class=o>{</span>
+            <span class=n>Integer</span> <span class=n>result</span> <span class=o>=</span> <span class=n>SumCompeletableFuture</span><span class=o>.</span><span class=na>sum</span><span class=o>();</span>
+            <span class=c1>// 在另一个线程内手动结束任务
+</span><span class=c1></span>            <span class=n>future</span><span class=o>.</span><span class=na>complete</span><span class=o>(</span><span class=n>result</span><span class=o>);</span>
+        <span class=o>}).</span><span class=na>run</span><span class=o>();</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>future</span><span class=o>.</span><span class=na>get</span><span class=o>());</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上述代码还可以结合Lambda表达式简化为：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>SumCompeletableFuture</span> <span class=o>{</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=n>Integer</span> <span class=nf>sum</span><span class=o>()</span> <span class=o>{</span>
+        <span class=c1>// ...
+</span><span class=c1></span>    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>ExecutionException</span><span class=o>,</span> <span class=n>InterruptedException</span> <span class=o>{</span>
+        <span class=n>CompletableFuture</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=n>future</span> <span class=o>=</span> <span class=n>CompletableFuture</span><span class=o>.</span><span class=na>supplyAsync</span><span class=o>(</span><span class=n>SumCompeletableFuture</span><span class=o>::</span><span class=n>sum</span><span class=o>);</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>future</span><span class=o>.</span><span class=na>get</span><span class=o>());</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>其中<code>CompletableFuture.supplyAsync</code>会使用<code>ForkJoinPool</code>默认的线程池执行。CompletableFuture的各种方法也允许开发者使用自定义的线程池。</p>
+<h2 id=允许回调函数>允许回调函数</h2>
+<p>CompletableFuture另一个增强是允许用户使用<code>thenAccept</code>传递回调方法，当任务结束时，自动调用该回调方法。</p>
+<p>比如我们可以将上述代码改为：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>SumCompeletableFuture</span> <span class=o>{</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=n>Integer</span> <span class=nf>sum</span><span class=o>()</span> <span class=o>{</span>
+        <span class=c1>// ...
+</span><span class=c1></span>    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>ExecutionException</span><span class=o>,</span> <span class=n>InterruptedException</span> <span class=o>{</span>
+        <span class=n>CompletableFuture</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=n>future</span> <span class=o>=</span> <span class=n>CompletableFuture</span><span class=o>.</span><span class=na>supplyAsync</span><span class=o>(</span><span class=n>SumCompeletableFuture</span><span class=o>::</span><span class=n>sum</span><span class=o>);</span>
+        <span class=c1>// 自动回调打印任务
+</span><span class=c1></span>        <span class=n>future</span><span class=o>.</span><span class=na>thenAccept</span><span class=o>(</span><span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>::</span><span class=n>println</span><span class=o>);</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id=组合多个任务>组合多个任务</h2>
+<p>这个应该是<code>CompletableFuture</code>带来的最为强大的功能了。</p>
+<p><code>CompletableFuture</code>允许组合两个串行执行的任务，然后利用二者的结果执行回调函数。该功能的函数为<code>thenCompose</code>，<code>thenCompose</code>默认执行的线程是上一个任务的线程，可以减少线程切换的损耗。但CompletableFuture仍提供了一个兄弟方法<code>thenCombineAsync</code>，将会使用一个新的线程执行该任务。</p>
+<p>thenCompose的第一个参数是要串行执行的<code>CompletableFuture</code>，第二参数是一个以二者返回值为参数的<code>BiFunction</code>,thenCombine的返回值是一个新的CompletableFuture。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>SumCompose</span> <span class=o>{</span>
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>ExecutionException</span><span class=o>,</span> <span class=n>InterruptedException</span> <span class=o>{</span>
+        <span class=n>CompletableFuture</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=n>task</span> <span class=o>=</span> <span class=n>CompletableFuture</span><span class=o>.</span><span class=na>supplyAsync</span><span class=o>(</span><span class=n>Sum</span><span class=o>::</span><span class=n>sum</span><span class=o>);</span>
+        <span class=n>CompletableFuture</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=n>future</span> <span class=o>=</span> <span class=n>task</span><span class=o>.</span><span class=na>thenCombine</span><span class=o>(</span>
+                <span class=n>CompletableFuture</span><span class=o>.</span><span class=na>supplyAsync</span><span class=o>(</span><span class=n>Sum</span><span class=o>::</span><span class=n>sum</span><span class=o>),</span>
+                <span class=n>Integer</span><span class=o>::</span><span class=n>sum</span>
+        <span class=o>);</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>future</span><span class=o>.</span><span class=na>get</span><span class=o>());</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>CompletableFuture还可以将多个CompletableFuture任务组合到一起并发执行。比如我们用一个Task执行1-50的求和，另一个任务执行51-100的。如果使用<code>FutureTask</code>我们需要手动管理二者的关系，使用<code>CompletableFuture</code>我们可以直接调用thenCombine。thenCombine的第一个参数是要并发执行的<code>CompletableFuture</code>，第二参数是一个以二者返回值为参数的<code>BiFunction</code>,thenCombine的返回值是一个新的CompletableFuture。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>SumCombine</span> <span class=o>{</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>ExecutionException</span><span class=o>,</span> <span class=n>InterruptedException</span> <span class=o>{</span>
+        <span class=n>CompletableFuture</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=n>task</span> <span class=o>=</span> <span class=n>CompletableFuture</span><span class=o>.</span><span class=na>supplyAsync</span><span class=o>(</span><span class=n>Sum</span><span class=o>::</span><span class=n>sum</span><span class=o>);</span>
+        <span class=n>CompletableFuture</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=n>future</span> <span class=o>=</span> <span class=n>task</span><span class=o>.</span><span class=na>thenCombine</span><span class=o>(</span><span class=n>CompletableFuture</span><span class=o>.</span><span class=na>supplyAsync</span><span class=o>(</span><span class=n>Sum</span><span class=o>::</span><span class=n>sum</span><span class=o>),</span> <span class=n>Integer</span><span class=o>::</span><span class=n>sum</span><span class=o>);</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>future</span><span class=o>.</span><span class=na>get</span><span class=o>());</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>CompletableFuture还提供了很多方法，具体这里不再展开，其他函数可参考<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html>Java doc</a></p>
 <h1 id=总结>总结</h1>
 <p>ok，以上就是本文的全部内容，本文首先从线程执行相关的接口讲起，介绍了无返回值的Runnable接口和有返回值的Callable接口，然后介绍了用于获取返回值的Future接口并重点分析了Future的实现类FutureTask的源码。最后介绍了Java8中新提供的CompelableFutureTask的使用。</p>
 <h1 id=参考>参考</h1>
