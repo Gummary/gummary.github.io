@@ -262,8 +262,114 @@ public boolean cancel(boolean mayInterruptIfRunning) {
 
 # 更强大的CompletableFuture类
 
-未完待续...
+虽然`FutureTask`实现的Future接口能够让我们获取进程运行的返回值，但是FutureTask有个最大的问题在于，我们无法获得FutureTask准确结束的时间。如果我们要获得FutureTask的返回值并对结果进行处理，要么不断调用`get()`方法阻塞当前线程，要么不断调用`isDone()`方法，等待任务完成。二者都会阻塞当前线程。
 
+另外`FutureTask`其实仅仅代表了一个任务，如果需要组合多个并行的任务，比如连续执行任务A，任务B，任务C，就需要创建三个FutureTask并阻塞当前线程三次；或者任务A和任务B并行执行，二者都结束后执行任务C，那么就需要在主线程中等待两个任务结束，再创建一个FutureTask执行任务。
+
+因此，Java 8添加了一个新的Future实现类——CompletableFuture，加入了更多的新功能：
+
+1. 手动结束任务，允许用户不提供运行的代码，只提供结果即可结束一个任务。
+2. 允许传递回调函数。
+3. 自由组合多个任务。
+
+## 手动结束任务
+
+如果我们要使用一个FutureTask，那么必须要给该类提供一个实现Callable或Runnable接口的类才行。而CompletableFuture允许开发者直接调用complete手动结束Future，我们仍然以求和为例：
+
+```java
+public class SumCompeletableFuture {
+
+    public static Integer sum() {
+        // ...
+    }
+
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        CompletableFuture<Integer> future = new CompletableFuture<>();
+        new Thread(() -> {
+            Integer result = SumCompeletableFuture.sum();
+            // 在另一个线程内手动结束任务
+            future.complete(result);
+        }).run();
+        System.out.println(future.get());
+    }
+}
+```
+
+上述代码还可以结合Lambda表达式简化为：
+
+```java
+public class SumCompeletableFuture {
+
+    public static Integer sum() {
+        // ...
+    }
+
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        CompletableFuture<Integer> future = CompletableFuture.supplyAsync(SumCompeletableFuture::sum);
+        System.out.println(future.get());
+    }
+}
+```
+
+其中`CompletableFuture.supplyAsync`会使用`ForkJoinPool`默认的线程池执行。CompletableFuture的各种方法也允许开发者使用自定义的线程池。
+
+## 允许回调函数
+
+CompletableFuture另一个增强是允许用户使用`thenAccept`传递回调方法，当任务结束时，自动调用该回调方法。
+
+比如我们可以将上述代码改为：
+
+```java
+public class SumCompeletableFuture {
+
+    public static Integer sum() {
+        // ...
+    }
+
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        CompletableFuture<Integer> future = CompletableFuture.supplyAsync(SumCompeletableFuture::sum);
+        // 自动回调打印任务
+        future.thenAccept(System.out::println);
+    }
+}
+```
+
+## 组合多个任务
+
+这个应该是`CompletableFuture`带来的最为强大的功能了。
+
+`CompletableFuture`允许组合两个串行执行的任务，然后利用二者的结果执行回调函数。该功能的函数为`thenCompose`，`thenCompose`默认执行的线程是上一个任务的线程，可以减少线程切换的损耗。但CompletableFuture仍提供了一个兄弟方法`thenCombineAsync`，将会使用一个新的线程执行该任务。
+
+thenCompose的第一个参数是要串行执行的`CompletableFuture`，第二参数是一个以二者返回值为参数的`BiFunction`,thenCombine的返回值是一个新的CompletableFuture。
+
+```java
+public class SumCompose {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        CompletableFuture<Integer> task = CompletableFuture.supplyAsync(Sum::sum);
+        CompletableFuture<Integer> future = task.thenCombine(
+                CompletableFuture.supplyAsync(Sum::sum),
+                Integer::sum
+        );
+        System.out.println(future.get());
+    }
+}
+```
+
+
+CompletableFuture还可以将多个CompletableFuture任务组合到一起并发执行。比如我们用一个Task执行1-50的求和，另一个任务执行51-100的。如果使用`FutureTask`我们需要手动管理二者的关系，使用`CompletableFuture`我们可以直接调用thenCombine。thenCombine的第一个参数是要并发执行的`CompletableFuture`，第二参数是一个以二者返回值为参数的`BiFunction`,thenCombine的返回值是一个新的CompletableFuture。
+
+```java
+public class SumCombine {
+
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        CompletableFuture<Integer> task = CompletableFuture.supplyAsync(Sum::sum);
+        CompletableFuture<Integer> future = task.thenCombine(CompletableFuture.supplyAsync(Sum::sum), Integer::sum);
+        System.out.println(future.get());
+    }
+}
+```
+
+CompletableFuture还提供了很多方法，具体这里不再展开，其他函数可参考[Java doc](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html)
 
 # 总结
 
