@@ -30,7 +30,7 @@
 <meta itemprop=name content="博客新的起点：从Hexo到Hugo">
 <meta itemprop=description content><meta itemprop=datePublished content="2021-07-26T23:07:58+08:00">
 <meta itemprop=dateModified content="2021-07-26T23:07:58+08:00">
-<meta itemprop=wordCount content="2790">
+<meta itemprop=wordCount content="2917">
 <meta itemprop=keywords content><meta name=twitter:card content="summary">
 <meta name=twitter:title content="博客新的起点：从Hexo到Hugo">
 <meta name=twitter:description content><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
@@ -113,6 +113,7 @@
 <li><a href=#设置github-actions>设置Github Actions</a></li>
 <li><a href=#设置page模板>设置Page模板</a></li>
 <li><a href=#添加时间戳>添加时间戳</a></li>
+<li><a href=#windows下写博客>Windows下写博客</a></li>
 <li><a href=#评论系统>评论系统</a></li>
 </ul>
 </li>
@@ -332,7 +333,43 @@ sed -i &#39;&#39; &#34;s/slug: index/slug: $POST_SLUG/g&#34; content/posts/${POS
 </code></pre></td></tr></table>
 </div>
 </div><p><em>Warning:我这里用的是mac的bash，sed命令与linux有所不同，linux下不需要''</em></p>
-<h2 id=评论系统>评论系统</h2>
+<h2 id=windows下写博客>Windows下写博客</h2>
+<p>由于我工作使用的是Mac，私人笔记本使用的是Windows，为了自己在家也能写博客，我又加了一个powershell脚本用于初始化博客。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-powershell data-lang=powershell><span class=k>if</span> <span class=p>(</span><span class=nv>$args</span><span class=p>.</span><span class=n>Count</span> <span class=o>-eq</span> <span class=n>0</span><span class=p>)</span> <span class=p>{</span>
+    <span class=nb>Write-Host</span> <span class=s2>&#34;Please input blog name.&#34;</span>
+    <span class=n>exit</span>
+<span class=p>}</span>
+
+<span class=nv>$POST_SLUG</span><span class=p>=</span><span class=nv>$args</span><span class=p>[</span><span class=n>0</span><span class=p>]</span>
+<span class=nv>$TIMESTAMP</span><span class=p>=</span><span class=nb>Get-Date</span> <span class=n>-Format</span> <span class=s2>&#34;yyyyMMddHHmmss&#34;</span>
+<span class=nv>$POST_NAME</span><span class=p>=</span><span class=s2>&#34;${TIMESTAMP}-${POST_SLUG}&#34;</span>
+
+
+<span class=n>hugo</span> <span class=n>new</span> <span class=s2>&#34;post/$POST_NAME&#34;</span>
+
+<span class=p>(</span><span class=nb>Get-Content</span> <span class=n>content</span><span class=p>/</span><span class=n>post</span><span class=p>/</span><span class=nv>$POST_NAME</span><span class=p>/</span><span class=n>index</span><span class=p>.</span><span class=n>md</span><span class=p>).</span><span class=n>replace</span><span class=p>(</span><span class=s1>&#39;&#34;Index&#34;&#39;</span><span class=p>,</span> <span class=s2>&#34;&#34;&#34;$POST_SLUG&#34;&#34;&#34;</span><span class=p>)</span> <span class=p>|</span> <span class=nb>Set-Content</span> <span class=n>content</span><span class=p>/</span><span class=n>post</span><span class=p>/</span><span class=nv>$POST_NAME</span><span class=p>/</span><span class=n>index</span><span class=p>.</span><span class=nb>md
+</span><span class=nb></span><span class=p>(</span><span class=nb>Get-Content</span> <span class=n>content</span><span class=p>/</span><span class=n>post</span><span class=p>/</span><span class=nv>$POST_NAME</span><span class=p>/</span><span class=n>index</span><span class=p>.</span><span class=n>md</span><span class=p>).</span><span class=n>replace</span><span class=p>(</span><span class=s1>&#39;slug: index&#39;</span><span class=p>,</span> <span class=s2>&#34;slug: &#34;&#34;$POST_SLUG&#34;&#34;&#34;</span><span class=p>)</span> <span class=p>|</span> <span class=nb>Set-Content</span> <span class=n>content</span><span class=p>/</span><span class=n>post</span><span class=p>/</span><span class=nv>$POST_NAME</span><span class=p>/</span><span class=n>index</span><span class=p>.</span><span class=nb>md
+</span></code></pre></td></tr></table>
+</div>
+</div><h2 id=评论系统>评论系统</h2>
 <p>我这里使用大家都推荐的utterances作为评论系统，我当前使用的Even版本(4.1.0）已经内置支持了。</p>
 <p>所以只需创建存放评论的仓库，然后在配置文件中修改对应的参数即可。</p>
 <h1 id=参考博客>参考博客</h1>
