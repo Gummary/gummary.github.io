@@ -186,6 +186,27 @@ sed -i '' "s/slug: index/slug: $POST_SLUG/g" content/posts/${POST_FILENAME}/inde
 
 *Warning:我这里用的是mac的bash，sed命令与linux有所不同，linux下不需要''*
 
+## Windows下写博客
+
+由于我工作使用的是Mac，私人笔记本使用的是Windows，为了自己在家也能写博客，我又加了一个powershell脚本用于初始化博客。
+
+```powershell
+if ($args.Count -eq 0) {
+    Write-Host "Please input blog name."
+    exit
+}
+
+$POST_SLUG=$args[0]
+$TIMESTAMP=Get-Date -Format "yyyyMMddHHmmss"
+$POST_NAME="${TIMESTAMP}-${POST_SLUG}"
+
+
+hugo new "post/$POST_NAME"
+
+(Get-Content content/post/$POST_NAME/index.md).replace('"Index"', """$POST_SLUG""") | Set-Content content/post/$POST_NAME/index.md
+(Get-Content content/post/$POST_NAME/index.md).replace('slug: index', "slug: ""$POST_SLUG""") | Set-Content content/post/$POST_NAME/index.md
+```
+
 ## 评论系统
 
 我这里使用大家都推荐的utterances作为评论系统，我当前使用的Even版本(4.1.0）已经内置支持了。
