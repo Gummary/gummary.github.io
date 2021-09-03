@@ -3,6 +3,7 @@ title: "分布式系统中的时序"
 slug: time-clocks-in-distributed-system
 date: 2021-08-02T13:19:12+08:00
 draft: true
+tags: ["分布式系统"]
 ---
 
 <!--more-->
