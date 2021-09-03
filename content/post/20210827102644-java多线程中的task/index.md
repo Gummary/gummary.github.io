@@ -5,6 +5,8 @@ date: 2021-08-27T10:26:44+08:00
 draft: false
 ---
 
+<!--more-->
+
 # 从接口说起
 
 在Java中，要在一个线程中运行一段代码，需要一个对象实现Runnable或Callable接口，然后将该类作为参数传给一个线程运行；或者继承Thread类，直接start运行。其实本质上，Thread类也是实现了Runnable接口，在运行时运行重载的run方法。所以我们就先从Runnable和Callable接口说起。

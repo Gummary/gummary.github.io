@@ -1,10 +1,12 @@
 ---
 title: "除了开发能力，我们还需要哪些软技能？——生产力篇"
-slug: soft-skills-production
+slug: 软技能-生产力篇
 date: 2021-07-29T23:30:47+08:00
 draft: false
 categories: ["软技能"]
 ---
+
+<!--more-->
 
 # 引言
 
