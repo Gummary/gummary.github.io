@@ -4,3 +4,5 @@ slug: {{ .File.ContentBaseName | replaceRE "^[0-9]{14}-" ""  }}
 date: {{ .Date }}
 draft: false
 ---
+
+<!--more-->
