@@ -232,7 +232,7 @@
 </span><span class=c1></span><span class=o>}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>processCancelledTasks中会不断轮训cancelledTimeouts队列，将所有取消的任务都从对应槽的双向链表中移，直至cancelledTimeouts为空。</p>
+</div><p>processCancelledTasks中会不断轮询cancelledTimeouts队列，将所有取消的任务都从对应槽的双向链表中移，直至cancelledTimeouts为空。</p>
 <p>transferTimeoutsToBuckets方法将待处理的timeout加入到时间槽的双向队列中：</p>
 <div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
@@ -444,7 +444,7 @@
 <a href=https://github.com/Gummary/ class="iconfont icon-github" title=github target=_blank></a>
 <a href=http://localhost:1313/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a>
 </div>
-<div class=poem>长风破浪会有时，直挂云帆济沧海</div>
+<div class=poem>What I cannot create, I do not understand.</div>
 <div class=copyright>
 <span class=copyright-year>
 <span>Gum</span>
