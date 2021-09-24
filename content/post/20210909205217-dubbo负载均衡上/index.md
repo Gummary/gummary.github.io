@@ -1,8 +1,8 @@
 ---
-title: "Dubbo中的负载均衡策略"
-slug: Dubbo3负载均衡
+title: "Dubbo中的负载均衡策略（上）"
+slug: Dubbo3负载均衡-上
 date: 2021-09-09T20:52:17+08:00
-draft: true
+draft: false
 categories: ["Dubbo"]
 ---
 
@@ -20,7 +20,7 @@ Dubbo负载均衡是在Dubbo框架的第5层（自上而下）Cluster层，客�
 - ShortestResponseLoadBalance
 - ConsistentHashLoadBalance
 
-本文将首先介绍各随机算法的原理，然后结合Dubbo中代码分析具体实现。
+由于篇幅原因，本文只介绍随机负载均衡和轮询负载均衡的原理，然后结合Dubbo中代码分析具体实现。
 
 # 随机负载均衡
 
@@ -217,6 +217,72 @@ $$
 因为我们在选择i节点之前已经选择过j节点，说明$x_j>x_i$，所以带入到公式$(1)$中就有$w_j(t) > w_i(t)$
 
 ## Dubbo中的平滑加权轮询负载均衡实现
+
+先看下Dubbo中的数据结构：
+
+```java
+protected static class WeightedRoundRobin {
+	// 节点的权重
+	private int weight;
+	// 节点的当前权重
+	private AtomicLong current = new AtomicLong(0);
+	// 节点权重的上次更新时间
+	private long lastUpdate;
+}
+```
+
+基于这个数据结构实现的负载均衡算法如下：
+
+```java
+@Override
+protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation invocation) {
+    // 负载均衡实现的粒度是方法
+    String key = invokers.get(0).getUrl().getServiceKey() + "." + invocation.getMethodName();
+    // 根据方法key获取invoker的负载均衡map
+    ConcurrentMap<String, WeightedRoundRobin> map = methodWeightMap.computeIfAbsent(key, k -> new ConcurrentHashMap<>());
+	int totalWeight = 0;
+	long maxCurrent = Long.MIN_VALUE;
+	long now = System.currentTimeMillis();
+	Invoker<T> selectedInvoker = null;
+	WeightedRoundRobin selectedWRR = null;
+	for (Invoker<T> invoker : invokers) {
+		// 获取每个invoker的唯一标识
+		String identifyString = invoker.getUrl().toIdentityString();
+		int weight = getWeight(invoker, invocation);
+		// 根据唯一标志获取该inoker的当前权重，如果没有就新建
+		WeightedRoundRobin weightedRoundRobin = map.computeIfAbsent(identifyString, k -> {
+			WeightedRoundRobin wrr = new WeightedRoundRobin();
+			wrr.setWeight(weight);
+			return wrr;
+		});
+		// 如果权重发生变化，那么就重新设置权重。这里会将当前权重置0，同时设置节点权重
+		if (weight != weightedRoundRobin.getWeight()) {
+			//weight changed
+			weightedRoundRobin.setWeight(weight);
+		}
+		// 更新节点的当前权重，current = current + weight
+		long cur = weightedRoundRobin.increaseCurrent();
+		weightedRoundRobin.setLastUpdate(now);
+		if (cur > maxCurrent) {
+			maxCurrent = cur;
+			selectedInvoker = invoker;
+			selectedWRR = weightedRoundRobin;
+		}
+		totalWeight += weight;
+	}
+	// 移除已经不活跃的invker的权重，将在外下一次负载均衡生效
+	if (invokers.size() != map.size()) {
+		map.entrySet().removeIf(item -> now - item.getValue().getLastUpdate() > RECYCLE_PERIOD);
+	}
+	// 选出invoker后，将该invoker的当前权重减去权重和
+	if (selectedInvoker != null) {
+		selectedWRR.sel(totalWeight);
+		return selectedInvoker;
+	}
+	// should not happen here
+	return invokers.get(0);
+}
+```
 
 # 附录
 
