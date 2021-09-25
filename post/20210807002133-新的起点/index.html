@@ -30,7 +30,7 @@
 <meta itemprop=name content="博客新的起点：从Hexo到Hugo">
 <meta itemprop=description content><meta itemprop=datePublished content="2021-07-26T23:07:58+08:00">
 <meta itemprop=dateModified content="2021-07-26T23:07:58+08:00">
-<meta itemprop=wordCount content="2917">
+<meta itemprop=wordCount content="3427">
 <meta itemprop=keywords content><meta name=twitter:card content="summary">
 <meta name=twitter:title content="博客新的起点：从Hexo到Hugo">
 <meta name=twitter:description content><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
@@ -91,8 +91,8 @@
 <h1 class=post-title>博客新的起点：从Hexo到Hugo</h1>
 <div class=post-meta>
 <span class=post-time> 2021-07-26 </span>
-<span class=more-meta> 2917 words </span>
-<span class=more-meta> 6 mins read </span>
+<span class=more-meta> 3427 words </span>
+<span class=more-meta> 7 mins read </span>
 </div>
 </header>
 <div class=post-toc id=post-toc>
@@ -136,7 +136,7 @@
 <h2 id=图片相关>图片相关</h2>
 <h3 id=插入图片>插入图片</h3>
 <p>Hugo有两种方式管理静态资源，一种是全部放到static文件夹下，在站内直接按文件名访问即可。在配置文件中还可以对修改加载静态资源位置。具体可查看<a href=https://gohugo.io/content-management/static-files/>Static Files</a>.</p>
-<p>第一种方式有个问题就是，所有文章的所有静态资源（图片）都会放在这个文件夹里，就很不好管理。所以我更倾向于第二种方式。在Hugo 0.32版本之后，可以将一个页面的所有静态文件全部放在一起，称作<code>Page Bundle</code>.</p>
+<p>对于第一种方式，所有文章的所有静态资源（图片）都会放在一个文件夹里，非常不好管理，优点是一个图片只需要保存一份。但是由于我每篇博客中的图片很少相同，所以我更倾向于第二种方式。在Hugo 0.32版本之后，可以将一个页面的所有静态文件全部放在一起，称作<code>Page Bundle</code>.</p>
 <p><a href=https://gohugo.io/content-management/page-bundles/>Page Bundles</a>是一种管理资源的方式，分为Leaf Bundle与Branch Bundle两种。我们这里主要使用Leaf Bundle。</p>
 <p>Leaf Bundle是在content目录下新建一个文件夹，文件夹中index.md用于编写网页的内容，然后新建一个image子目录用于存放图像。在index.md中可以直接使用相对路径访问<code>![](image/xxx.image)</code>.如下图所示：</p>
 <figure>
@@ -144,7 +144,13 @@
 <h4>图像相对位置</h4></figcaption>
 </figure>
 <h3 id=vscode快速插入图片>VSCode快速插入图片</h3>
-<p>另外我们在插入图片时，肯定不想先把图片保存到images文件夹下，再在md中引用。所以我用了<a href="https://marketplace.visualstudio.com/items?itemName=telesoho.vscode-markdown-paste-image">Markdown Paste</a>插件。当你将图片复制到剪贴板后，可以直接使用<code>Cmd+Alt+V</code>粘贴到markdown中，图片会保存到你指定的目录，我这里配置的是：</p>
+<p>现在我们插入一幅图片的步骤是：</p>
+<ol>
+<li>下载图片到images文件夹中</li>
+<li>复制图片的相对地址</li>
+<li>插入到markdown中</li>
+</ol>
+<p>整个过程相当繁琐，尤其是2，3步，为了方便插入图像，我用了VSCode的<a href="https://marketplace.visualstudio.com/items?itemName=telesoho.vscode-markdown-paste-image">Markdown Paste</a>插件。当你将图片复制到剪贴板后，可以直接使用<code>Cmd+Alt+V</code>粘贴到markdown中，图片会保存到你指定的目录，我这里配置的是：</p>
 <div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
@@ -187,10 +193,12 @@
 <span class=p>&lt;/</span><span class=nt>figure</span><span class=p>&gt;</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>其中，figure提供了width和height标签控制大小。更为详细介绍见<a href=https://gohugo.io/content-management/shortcodes/>Shortcodes</a>.</p>
+</div><p>其中，figure提供的width和height标签可用于控制图像大小。更为详细介绍见<a href=https://gohugo.io/content-management/shortcodes/>Shortcodes</a>.</p>
 <h3 id=使用腾讯云存储托管图片>使用腾讯云存储托管图片</h3>
 <p>如果将图片托管到Github上，国内访问可能不是特别稳定，所以我这用了腾讯云存储，免费额度应该就够用了。</p>
-<p>默认情况下，Hugo是用相对路径访问bundle下的图片，如果我们要换腾讯云，首先要将图像的链接替换为腾讯云网页。在Hugo 0.62之后，提供了<a href=https://gohugo.io/getting-started/configuration-markup/#markdown-render-hooks>Markdown Render Hook</a>的功能，可以覆盖markdown的某些渲染功能，我们这里用来将图像的链接替换为腾讯云的地址。</p>
+<p>在默认情况下，Hugo是用相对路径访问bundle下的图片，如果我们要换腾讯云，首先要将图像的链接替换为腾讯云网页。如之前所述，hugo中有两种添加图片的语法，一种是使用markdown语法插入，一种是通过Hugo提供的shortcode插入。下面分别介绍在这两种情况下的替换方法。</p>
+<p><strong>替换markdown的图像语法</strong></p>
+<p>在Hugo 0.62之后，Hugo提供了<a href=https://gohugo.io/getting-started/configuration-markup/#markdown-render-hooks>Markdown Render Hook</a>的功能，可以覆盖markdown的某些渲染功能，我们可以用这种方式将图像的链接替换为腾讯云的地址。</p>
 <p>首先，在config.yml下创建参数：</p>
 <div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
@@ -228,6 +236,62 @@
 </code></pre></td></tr></table>
 </div>
 </div><p>其中<code>.Page.RelPermalink</code>是Hugo生成当前页面后，当前博客的地址，<code>.Destination</code>是图片相对当前页的地址。将二者与腾讯云存储的地址组合即可。</p>
+<p><strong>替换shortcode的图像链接</strong></p>
+<p>我们需要自定义个新的shortcode，这个shortcode的功能与figure类似，但是其中的图像链接替换成我们腾讯云的链接。在<code>layouts\shortcodes\</code>下新建<code>tfigure.html</code>，内容如下：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>&lt;figure{{ with .Get &#34;class&#34; }} class=&#34;{{ . }}&#34;{{ end }}&gt;
+    {{ $img_src := .Get &#34;src&#34; }}
+    {{- if (and .Page.Site.Params.COSUrl.enable (not .Page.Site.IsServer)) -}}
+        {{ if not (hasPrefix $img_src &#34;http&#34;) }}
+            {{ $img_src = (print .Page.Site.Params.COSUrl.Host (path.Join .Page.RelPermalink $img_src)) }}
+        {{ end }}
+    {{- end -}}
+    &lt;img src=&#34;{{ $img_src }}&#34;
+         {{- with .Get &#34;width&#34; }} width=&#34;{{ . }}&#34;{{ end -}}
+         {{- with .Get &#34;height&#34; }} height=&#34;{{ . }}&#34;{{ end -}}
+    /&gt;&lt;!-- Closing img tag --&gt;
+    {{- if .Get &#34;title&#34; -}}
+        &lt;figcaption&gt;
+            {{ with (.Get &#34;title&#34;) -}}
+                &lt;h4&gt;{{ . }}&lt;/h4&gt;
+            {{- end -}}
+        &lt;/figcaption&gt;
+    {{- end }}
+&lt;/figure&gt;
+</code></pre></td></tr></table>
+</div>
+</div><p>其中用到的参数与markdown中的类似，这里不再赘述。这个tfigure的使用方式与figure相同，只需要替换下标签即可:</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>{{&lt; tfigure src=&#34;/media/spf13.jpg&#34; title=&#34;Steve Francia&#34; width=&#34;30%&#34; &gt;}}
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>使用CDN加速</strong></p>
 <p>为了提高国内不同地区的访问速度，还可以给存储桶设置CDN。设置CDN后还可以减少桶的流量消耗。使用方法是在腾讯云Bucket管理中的域名设置里添加国内静态加速即可得到一个CDN加速域名，替换上述配置中的COSUrl即可。</p>
 <figure>
 <img src=https://blog-1302636809.file.myqcloud.com/post/20210807002133-%E6%96%B0%E7%9A%84%E8%B5%B7%E7%82%B9/images/2021-08-07-14-30-23.png width=30%><figcaption>
@@ -239,7 +303,7 @@
 <li>master分支保存博客源码</li>
 <li>gh-pages分支保存生成的静态网站</li>
 </ul>
-<p>通过Github Actions可以在将源码推送到master分支后，自动生成网站内容到gh-pages分支。具体配置见<a href=https://github.com/Gummary/gummary.github.io/blob/master/.github/workflows/hugo.yml>hugo.yml</a></p>
+<p>通过Github Actions可以在将源码推送到master分支后，自动生成网站内容到gh-pages分支。我的Github Action具体配置见<a href=https://github.com/Gummary/gummary.github.io/blob/master/.github/workflows/hugo.yml>hugo.yml</a></p>
 <h2 id=设置page模板>设置Page模板</h2>
 <p>我这里设置Page的模板主要利用Hugo提供的<a href=https://gohugo.io/content-management/archetypes/>Archetypes</a>功能。Archetypes就是生成content时使用的模板，主要包含了生成新的博客时使用的front matter.</p>
 <p>我们在创建新的博客时使用的命令是：</p>
