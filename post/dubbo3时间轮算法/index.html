@@ -120,9 +120,9 @@
 <div class=post-content>
 <h1 id=时间轮算法简介>时间轮算法简介</h1>
 <p>时间轮算法是一种非常巧妙、高效的延迟任务调度系统，其算法原理与时钟非常类似。时间轮主要由一个环形队列，一个环形队列指针，多个双向链表组成。</p>
-<figure class=align-center><img src=images/2021-09-13-16-00-21.png><figcaption>
-<h4>时间轮模型</h4>
-</figcaption>
+<figure class=align-center>
+<img src=https://blog-1302636809.file.myqcloud.com/post/dubbo3%E6%97%B6%E9%97%B4%E8%BD%AE%E7%AE%97%E6%B3%95/images/2021-09-13-16-00-21.png><figcaption>
+<h4>时间轮模型</h4></figcaption>
 </figure>
 <p>环形队列是时间轮的核心结构，队列上的每个节点是一个槽(bucket)，每个槽代表了一个时刻，相邻槽之间的时间间隔(duration)是相等的。在每个槽中都存储一个双向链表的头节点，双向链表中的每个节点代表了需要在该时刻执行的任务。环形队列指针指向的是当前时刻的槽对象。</p>
 <p>那么时间轮算法是如何运行的呢。时间轮启动时，从0号槽开始运行，假设时间槽之间的时间间隔为1s，那么每经过1s，队列指针就会向下一个槽移动。然后开始遍历当前槽的任务队列，执行任务队列中的任务。</p>
@@ -132,9 +132,9 @@
 <p>还有一种方法是在每个任务中新增一个轮次的字段，表示第几次转到当前槽时执行当前任务。Netty和Dubbo中使用这种方式。下面我们就以Dubbo时间轮的实现为例，看下时间轮算法的具体实现。</p>
 <h1 id=dubbo中的时间轮算法>Dubbo中的时间轮算法</h1>
 <p>我们先来看一下Dubbo中与时间轮算法相关类的类图：</p>
-<figure class=align-center><img src=images/2021-09-18-20-56-58.png><figcaption>
-<h4>时间轮类图</h4>
-</figcaption>
+<figure class=align-center>
+<img src=https://blog-1302636809.file.myqcloud.com/post/dubbo3%E6%97%B6%E9%97%B4%E8%BD%AE%E7%AE%97%E6%B3%95/images/2021-09-18-20-56-58.png><figcaption>
+<h4>时间轮类图</h4></figcaption>
 </figure>
 <h2 id=接口介绍>接口介绍</h2>
 <p><strong>Timer接口</strong>是Dubbo中的定时器接口，提供了三个方法：</p>

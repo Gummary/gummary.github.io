@@ -285,9 +285,9 @@
 <p>所以其实<code>Future</code>方法不仅仅提供了一个获取结果的方式，其实还代表了一个任务的生命周期，让我们可以知道任务当前是什么状态。但是<code>Future</code>毕竟只是一个接口，最终的行为还是取决于具体的实现，所以我们接下来就看一下Java提供的<code>Future</code>实现类——<code>FutureTask</code>。</p>
 <h1 id=future的具体实现futuretask>Future的具体实现——FutureTask</h1>
 <p>我们先来看下<code>FutureTask</code>的类图，他同时实现了Runnable和Future两个接口。</p>
-<figure class=align-center><img src=images/FutureTask.png width=40%><figcaption>
-<h4>FutureTask类图</h4>
-</figcaption>
+<figure class=align-center>
+<img src=https://blog-1302636809.file.myqcloud.com/post/java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%AD%E7%9A%84task/images/FutureTask.png width=40%><figcaption>
+<h4>FutureTask类图</h4></figcaption>
 </figure>
 <p>那么就是说，当<code>FutureTask</code>提交给另一个线程执行时，其实运行的是<code>Runnable</code>的<code>run()</code>方法。我们下面来看下他的构造函数和<code>run()</code>方法：</p>
 <div class=highlight><div class=chroma>
