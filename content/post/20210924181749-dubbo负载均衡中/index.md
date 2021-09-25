@@ -19,4 +19,7 @@ Dubbo负载均衡是在Dubbo框架的第5层（自上而下）Cluster层，客�
 - ShortestResponseLoadBalance，最短响应时间
 - ConsistentHashLoadBalance，一致性 Hash
 
-由于篇幅原因，本文只介绍随机负载均衡和轮询负载均衡的原理，然后结合Dubbo中代码分析具体实现。
+在上篇中介绍了加权随机负载均衡与加权轮询负载均衡算法，在本篇中将介绍最短响应时间和最少活跃调用数这两种负载均衡算法。
+
+# 最短相应时间负载均衡算法
+

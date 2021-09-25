@@ -1,0 +1,19 @@
+<figure{{ with .Get "class" }} class="{{ . }}"{{ end }}>
+    {{ $img_src := .Get "src" }}
+    {{- if (and .Page.Site.Params.COSUrl.enable (not .Page.Site.IsServer)) -}}
+        {{ if not (hasPrefix $img_src "http") }}
+            {{ $img_src = (print .Page.Site.Params.COSUrl.Host (path.Join .Page.RelPermalink $img_src)) }}
+        {{ end }}
+    {{- end -}}
+    <img src="{{ $img_src }}"
+         {{- with .Get "width" }} width="{{ . }}"{{ end -}}
+         {{- with .Get "height" }} height="{{ . }}"{{ end -}}
+    /><!-- Closing img tag -->
+    {{- if .Get "title" -}}
+        <figcaption>
+            {{ with (.Get "title") -}}
+                <h4>{{ . }}</h4>
+            {{- end -}}
+        </figcaption>
+    {{- end }}
+</figure>
