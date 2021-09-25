@@ -106,7 +106,7 @@ public void run() {
 }
 ```
 
-processCancelledTasks中会不断轮训cancelledTimeouts队列，将所有取消的任务都从对应槽的双向链表中移，直至cancelledTimeouts为空。
+processCancelledTasks中会不断轮询cancelledTimeouts队列，将所有取消的任务都从对应槽的双向链表中移，直至cancelledTimeouts为空。
 
 transferTimeoutsToBuckets方法将待处理的timeout加入到时间槽的双向队列中：
 
