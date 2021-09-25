@@ -30,7 +30,7 @@ hugo生成一个网站还是很方便的。按照[官网步骤](https://gohugo.i
 
 Hugo有两种方式管理静态资源，一种是全部放到static文件夹下，在站内直接按文件名访问即可。在配置文件中还可以对修改加载静态资源位置。具体可查看[Static Files](https://gohugo.io/content-management/static-files/).
 
-第一种方式有个问题就是，所有文章的所有静态资源（图片）都会放在这个文件夹里，就很不好管理。所以我更倾向于第二种方式。在Hugo 0.32版本之后，可以将一个页面的所有静态文件全部放在一起，称作`Page Bundle`.
+对于第一种方式，所有文章的所有静态资源（图片）都会放在一个文件夹里，非常不好管理，优点是一个图片只需要保存一份。但是由于我每篇博客中的图片很少相同，所以我更倾向于第二种方式。在Hugo 0.32版本之后，可以将一个页面的所有静态文件全部放在一起，称作`Page Bundle`.
 
 [Page Bundles](https://gohugo.io/content-management/page-bundles/)是一种管理资源的方式，分为Leaf Bundle与Branch Bundle两种。我们这里主要使用Leaf Bundle。
 
@@ -40,7 +40,13 @@ Leaf Bundle是在content目录下新建一个文件夹，文件夹中index.md用
 
 ### VSCode快速插入图片
 
-另外我们在插入图片时，肯定不想先把图片保存到images文件夹下，再在md中引用。所以我用了[Markdown Paste](https://marketplace.visualstudio.com/items?itemName=telesoho.vscode-markdown-paste-image)插件。当你将图片复制到剪贴板后，可以直接使用`Cmd+Alt+V`粘贴到markdown中，图片会保存到你指定的目录，我这里配置的是：
+现在我们插入一幅图片的步骤是：
+
+1. 下载图片到images文件夹中
+2. 复制图片的相对地址
+3. 插入到markdown中
+
+整个过程相当繁琐，尤其是2，3步，为了方便插入图像，我用了VSCode的[Markdown Paste](https://marketplace.visualstudio.com/items?itemName=telesoho.vscode-markdown-paste-image)插件。当你将图片复制到剪贴板后，可以直接使用`Cmd+Alt+V`粘贴到markdown中，图片会保存到你指定的目录，我这里配置的是：
 
 ```
 {
@@ -69,13 +75,17 @@ Markdown本身并没有提供控制图像大小的方法，只能插入Html语�
 </figure>
 ```
 
-其中，figure提供了width和height标签控制大小。更为详细介绍见[Shortcodes](https://gohugo.io/content-management/shortcodes/).
+其中，figure提供的width和height标签可用于控制图像大小。更为详细介绍见[Shortcodes](https://gohugo.io/content-management/shortcodes/).
 
 ### 使用腾讯云存储托管图片
 
 如果将图片托管到Github上，国内访问可能不是特别稳定，所以我这用了腾讯云存储，免费额度应该就够用了。
 
-默认情况下，Hugo是用相对路径访问bundle下的图片，如果我们要换腾讯云，首先要将图像的链接替换为腾讯云网页。在Hugo 0.62之后，提供了[Markdown Render Hook](https://gohugo.io/getting-started/configuration-markup/#markdown-render-hooks)的功能，可以覆盖markdown的某些渲染功能，我们这里用来将图像的链接替换为腾讯云的地址。
+在默认情况下，Hugo是用相对路径访问bundle下的图片，如果我们要换腾讯云，首先要将图像的链接替换为腾讯云网页。如之前所述，hugo中有两种添加图片的语法，一种是使用markdown语法插入，一种是通过Hugo提供的shortcode插入。下面分别介绍在这两种情况下的替换方法。
+
+**替换markdown的图像语法**
+
+在Hugo 0.62之后，Hugo提供了[Markdown Render Hook](https://gohugo.io/getting-started/configuration-markup/#markdown-render-hooks)的功能，可以覆盖markdown的某些渲染功能，我们可以用这种方式将图像的链接替换为腾讯云的地址。
 
 首先，在config.yml下创建参数：
 
@@ -100,6 +110,40 @@ Markdown本身并没有提供控制图像大小的方法，只能插入Html语�
 
 其中`.Page.RelPermalink`是Hugo生成当前页面后，当前博客的地址，`.Destination`是图片相对当前页的地址。将二者与腾讯云存储的地址组合即可。
 
+**替换shortcode的图像链接**
+
+我们需要自定义个新的shortcode，这个shortcode的功能与figure类似，但是其中的图像链接替换成我们腾讯云的链接。在`layouts\shortcodes\`下新建`tfigure.html`，内容如下：
+
+```
+<figure{{ with .Get "class" }} class="{{ . }}"{{ end }}>
+    {{ $img_src := .Get "src" }}
+    {{- if (and .Page.Site.Params.COSUrl.enable (not .Page.Site.IsServer)) -}}
+        {{ if not (hasPrefix $img_src "http") }}
+            {{ $img_src = (print .Page.Site.Params.COSUrl.Host (path.Join .Page.RelPermalink $img_src)) }}
+        {{ end }}
+    {{- end -}}
+    <img src="{{ $img_src }}"
+         {{- with .Get "width" }} width="{{ . }}"{{ end -}}
+         {{- with .Get "height" }} height="{{ . }}"{{ end -}}
+    /><!-- Closing img tag -->
+    {{- if .Get "title" -}}
+        <figcaption>
+            {{ with (.Get "title") -}}
+                <h4>{{ . }}</h4>
+            {{- end -}}
+        </figcaption>
+    {{- end }}
+</figure>
+```
+
+其中用到的参数与markdown中的类似，这里不再赘述。这个tfigure的使用方式与figure相同，只需要替换下标签即可:
+
+```
+{{</* tfigure src="/media/spf13.jpg" title="Steve Francia" width="30%" */>}}
+```
+
+**使用CDN加速**
+
 为了提高国内不同地区的访问速度，还可以给存储桶设置CDN。设置CDN后还可以减少桶的流量消耗。使用方法是在腾讯云Bucket管理中的域名设置里添加国内静态加速即可得到一个CDN加速域名，替换上述配置中的COSUrl即可。
 
 {{< tfigure src="images/2021-08-07-14-30-23.png" title="CDN加速域名配置" width="30%">}}
@@ -111,7 +155,7 @@ Markdown本身并没有提供控制图像大小的方法，只能插入Html语�
 - master分支保存博客源码
 - gh-pages分支保存生成的静态网站
 
-通过Github Actions可以在将源码推送到master分支后，自动生成网站内容到gh-pages分支。具体配置见[hugo.yml](https://github.com/Gummary/gummary.github.io/blob/master/.github/workflows/hugo.yml)
+通过Github Actions可以在将源码推送到master分支后，自动生成网站内容到gh-pages分支。我的Github Action具体配置见[hugo.yml](https://github.com/Gummary/gummary.github.io/blob/master/.github/workflows/hugo.yml)
 
 ## 设置Page模板
 
