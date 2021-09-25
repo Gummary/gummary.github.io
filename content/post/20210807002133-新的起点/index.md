@@ -36,7 +36,7 @@ Hugo有两种方式管理静态资源，一种是全部放到static文件夹下�
 
 Leaf Bundle是在content目录下新建一个文件夹，文件夹中index.md用于编写网页的内容，然后新建一个image子目录用于存放图像。在index.md中可以直接使用相对路径访问`![](image/xxx.image)`.如下图所示：
 
-{{< figure src="images/2021-08-07-00-21-58.png" title="图像相对位置" width="50%" >}}
+{{< tfigure src="images/2021-08-07-00-21-58.png" title="图像相对位置" width="50%" >}}
 
 ### VSCode快速插入图片
 
@@ -102,7 +102,7 @@ Markdown本身并没有提供控制图像大小的方法，只能插入Html语�
 
 为了提高国内不同地区的访问速度，还可以给存储桶设置CDN。设置CDN后还可以减少桶的流量消耗。使用方法是在腾讯云Bucket管理中的域名设置里添加国内静态加速即可得到一个CDN加速域名，替换上述配置中的COSUrl即可。
 
-{{< figure src="images/2021-08-07-14-30-23.png" title="CDN加速域名配置" width="30%">}}
+{{< tfigure src="images/2021-08-07-14-30-23.png" title="CDN加速域名配置" width="30%">}}
 
 ## 设置Github Actions
 

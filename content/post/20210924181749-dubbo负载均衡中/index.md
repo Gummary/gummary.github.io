@@ -9,7 +9,7 @@ draft: true
 
 # 引言
 
-{{< figure src="images/2021-09-09-20-53-52.png" title="Dubbo架构图" width="" class="align-center">}}
+{{< tfigure src="images/2021-09-09-20-53-52.png" title="Dubbo架构图" width="" class="align-center">}}
 
 Dubbo负载均衡是在Dubbo框架的第5层（自上而下）Cluster层，客户端根据注册中心提供的服务端列表，根据配置的负载均衡算法选择一个最佳的调用者。Dubbo提供的负载均衡算法列表如下：
 

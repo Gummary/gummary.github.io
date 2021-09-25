@@ -32,7 +32,7 @@ Dubbo负载均衡是在Dubbo框架的第5层（自上而下）Cluster层，客�
 
 假设我们现在有A,B,C三个Provider，权重分别为2,8,1，权重和为11，将invoker根据权重放在坐标轴上有：
 
-{{< figure src="images/2021-09-09-22-03-33.png" title="" width="" class="align-center">}}
+{{< tfigure src="images/2021-09-09-22-03-33.png" title="" width="" class="align-center">}}
 
 然后生成一个大于0小于权重和的随机数，假设生成的随机数为s，若：
 

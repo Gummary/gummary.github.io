@@ -27,7 +27,7 @@ draft: false
 
 与通知类事件相反，持久类事件通常不会进行通知，而仅仅是将发生的事情记录下来。例如，时间序列类型的数据库通常会记录每个时间点发生的事件，比如定时从一个温度传感器上读取数值并存储，或者监控CPU的状态，或者记录股票基金的价格等等。另外，数仓中的星状模型或雪花模型，通常用一个事实表来记录发生了什么事件，用一些维表来解释事实表。这些事件通常都会被写入到磁盘中用于日后的分析，但是事件发生时并不会调用处理代码对收到的消息进行处理。
 
-{{< figure src="images/2021-08-20-21-36-43.png" title="上证指数" width="70%">}}
+{{< tfigure src="images/2021-08-20-21-36-43.png" title="上证指数" width="70%">}}
 
 ## 持久化通知
 
@@ -62,7 +62,7 @@ draft: false
 
 对于备份日志的内容也有很多不同的实现。例如，许多数据库通常使用Write Ahead Log的方式，在日志文件中记录，数据库中哪些表发生了改变。
 
-{{< figure src="images/2021-08-20-22-32-43.png" title="数据库备份过程" width="80%" class="align-center">}}
+{{< tfigure src="images/2021-08-20-22-32-43.png" title="数据库备份过程" width="80%" class="align-center">}}
 
 上图是MySql数据库的备份过程，其中从库在发出备份请求时，会创建一个I/O线程与主库建立连接，然后主库会创建一个Log Dump线程读取BinLog中的值发送给从库，从库收到的日志写入到本地的Relay Log中。由从库这边的SQL线程执行。
 
@@ -76,7 +76,7 @@ draft: false
 
 下图是一个Event Sourcing的例子，其中用户做的动作都可以转换为事件，将事件永久存储之后，就可以将其发布出去。订阅这些事件的系统可以将事件转换为当前系统的状态，或发给外部系统分析，或对事件进行溯源。
 
-{{< figure src="images/2021-08-20-22-44-58.png" title="Event Souring举例" width="90%" class="align-center">}}
+{{< tfigure src="images/2021-08-20-22-44-58.png" title="Event Souring举例" width="90%" class="align-center">}}
 
 那么这种事件处理系统有什么好处呢，或者说与数据库备份那种系统有什么不同呢？
 
@@ -136,7 +136,7 @@ draft: false
 
 如下图所示，假设有两个Site A和B，初始状态相同，二者同时向最后追加内容。当二者进行数据交换时就会出现冲突，此时就可以先按照时间戳排序，再按照UUID排序，让二者收敛到相同的结果。
 
-{{< figure src="images/2021-08-20-22-53-13.png" title="是用逻辑时间戳进行排序" width="100%" class="align-center">}}
+{{< tfigure src="images/2021-08-20-22-53-13.png" title="是用逻辑时间戳进行排序" width="100%" class="align-center">}}
 
 虽然基于逻辑时间戳，我们得到了一个事件的全序关系，但是这个关系和SMR，数据库复制有一个明显的不同之处在于，这个全序关系并不满足仅追加的。例如，如果这时候A与B收到另外一个节点C发送的事件p，其事件戳为(3,C)，那么A与B就要将事件p插入到x与d之间。所以如果要基于这种全序关系构造一个SMR，那么这个SMR还需要提供一种，事件回放的能力。也即将p插入到x与d之间之后，重新处理d与y。一般来说，回放的事件数量比较少。但是如果某一个节点长时间离线，当再上线时，事件回放的时间复杂度会接近$O(n^2)$。
 
@@ -154,7 +154,7 @@ CRDT算法最典型的应用场景就是多人协作软件。下面我就以多�
 
 假设我们现在有如下场景：
 
-{{< figure src="images/2021-08-20-23-11-01.png" title="初始状态,数字为Lamport时间戳" width="50%" class="align-center">}}
+{{< tfigure src="images/2021-08-20-23-11-01.png" title="初始状态,数字为Lamport时间戳" width="50%" class="align-center">}}
 
 Site1首先插入了CMD，然后传播给Site2和Site3，然后Site1，2，3同时对当前文本进行编辑，最终可能生成的合并结果是CTRLALTDEL或CTRLDELALT。
 
@@ -162,7 +162,7 @@ Site1首先插入了CMD，然后传播给Site2和Site3，然后Site1，2，3同�
 
 那么在有了用户的操作序列后，剩下的问题就是如何对这些操作进行排序，我们这里仍然使用Lamport逻辑时间戳。我们用SX@TY来表示一个时间戳，其中X表示第几个站点，Y表示发生的时间。有了排序的依据之后，我们将所有站点的事件进行归并排序，就可以得到如下的事件序列：
 
-{{< figure src="images/2021-08-20-23-08-13.png" title="使用Lamport时间戳排序" width="100%" class="align-center">}}
+{{< tfigure src="images/2021-08-20-23-08-13.png" title="使用Lamport时间戳排序" width="100%" class="align-center">}}
 
 我们先观察这个序列，如果我们按照这个序列进行操作，那么最终得到的字符串是CTRLDATLEL，和我们需要的完全不一样。另外，每次更新时，我们都要将各个站点的变化按时间戳合并到一起，然后重新生成内容，此时的时间复杂度为O(n^2)
 
@@ -173,24 +173,24 @@ Site1首先插入了CMD，然后传播给Site2和Site3，然后Site1，2，3同�
 那么接下来，我们要解决，如何给每个字符添加一个唯一标识。这个标识其实我们已经定义好了，我们可以直接用Lamport时间戳来标识一个字符。那么按照这种事件的定义，我们就可以得到一个新的序列：
 
 
-{{< figure src="images/2021-08-20-23-12-28.png" title="使用Lamport标识一个字符" width="100%" class="align-center">}}
+{{< tfigure src="images/2021-08-20-23-12-28.png" title="使用Lamport标识一个字符" width="100%" class="align-center">}}
 
 其中箭头指向的就是要在哪一个字符后面插入。根据这个序列，我们就可以得到我们需要的CTRLALTDEL结果了！
 
 ok，那接下来我们再分析第二个问题。在使用新的事件定义之后，我们的时间复杂度仍然不变，因为我们仍然需要归并排序使用逻辑时间戳进行排序，然后根据事件顺序进行操作。这里面最耗时的操作利用时间戳进行归并排序的过程。那么我们既然有了每个字符的唯一id，我们其实可以将每个字符放在他最终会出现的位置。我们知道，当前字符的位置，只依赖于他前一个字符的位置，所以，我们只需要将当前操作放在他前一个字符后面即可。对于目标字符为同一个字符的操作，按照时间戳进行排序。那么我们新的序列就变为：
 
-{{< figure src="images/2021-08-20-23-14-47.png" title="更改排序方法后" width="100%" class="align-center">}}
+{{< tfigure src="images/2021-08-20-23-14-47.png" title="更改排序方法后" width="100%" class="align-center">}}
 
 如果我们把这个结构展开，我们其实就可以得到一个树，对这个树进行深度优先搜索就可以得到我们需要的结果。在这个过程中，我们不必对操作按照时间戳进行归并排序，只需定位字符位置并插入即可。
 
-{{< figure src="images/2021-08-20-23-16-06.png" title="因果树" width="70%" class="align-center">}}
+{{< tfigure src="images/2021-08-20-23-16-06.png" title="因果树" width="70%" class="align-center">}}
 
 # 总结
 
 本文首先根据事件是否具有通知属性和是否进行持久化存储进行分类，然后对持久化通知，继续根据是否给予窗口进行分类。然后根据消息到达的顺序是否有序，数据模型是数据本身还是事件本身，得到最终的4类处理系统。
 
-{{< figure src="images/2021-08-20-23-18-47.png" title="总结" width="80%" class="align-center">}}
-{{< figure src="images/2021-08-20-23-18-47.png" title="总结" width="80%" class="align-center">}}
+{{< tfigure src="images/2021-08-20-23-18-47.png" title="总结" width="80%" class="align-center">}}
+{{< tfigure src="images/2021-08-20-23-18-47.png" title="总结" width="80%" class="align-center">}}
 
 # 后记
 

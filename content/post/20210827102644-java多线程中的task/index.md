@@ -120,7 +120,7 @@ public interface Future<V> {
 
 我们先来看下`FutureTask`的类图，他同时实现了Runnable和Future两个接口。
 
-{{< figure src="images/FutureTask.png" title="FutureTask类图" width="40%" class="align-center">}}
+{{< tfigure src="images/FutureTask.png" title="FutureTask类图" width="40%" class="align-center">}}
 
 那么就是说，当`FutureTask`提交给另一个线程执行时，其实运行的是`Runnable`的`run()`方法。我们下面来看下他的构造函数和`run()`方法：
 

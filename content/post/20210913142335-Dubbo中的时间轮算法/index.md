@@ -12,7 +12,7 @@ categories: ["Dubbo"]
 
 时间轮算法是一种非常巧妙、高效的延迟任务调度系统，其算法原理与时钟非常类似。时间轮主要由一个环形队列，一个环形队列指针，多个双向链表组成。
 
-{{< figure src="images/2021-09-13-16-00-21.png" title="时间轮模型" width="" class="align-center">}}
+{{< tfigure src="images/2021-09-13-16-00-21.png" title="时间轮模型" width="" class="align-center">}}
 
 环形队列是时间轮的核心结构，队列上的每个节点是一个槽(bucket)，每个槽代表了一个时刻，相邻槽之间的时间间隔(duration)是相等的。在每个槽中都存储一个双向链表的头节点，双向链表中的每个节点代表了需要在该时刻执行的任务。环形队列指针指向的是当前时刻的槽对象。
 
@@ -30,7 +30,7 @@ categories: ["Dubbo"]
 
 我们先来看一下Dubbo中与时间轮算法相关类的类图：
 
-{{< figure src="images/2021-09-18-20-56-58.png" title="时间轮类图" width="" class="align-center">}}
+{{< tfigure src="images/2021-09-18-20-56-58.png" title="时间轮类图" width="" class="align-center">}}
 
 ## 接口介绍
 
