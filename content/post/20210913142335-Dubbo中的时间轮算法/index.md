@@ -1,6 +1,6 @@
 ---
 title: "Dubbo中的时间轮算法"
-slug: Dubbo中的时间轮算法
+slug: Dubbo3时间轮算法
 date: 2021-09-13T14:23:35+08:00
 draft: false
 categories: ["Dubbo"]
