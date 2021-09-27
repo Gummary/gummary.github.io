@@ -124,7 +124,68 @@ private static void endCount(RpcStatus status, long elapsed, boolean succeeded) 
 
 # 最小连接数负载均衡算法
 
-在有了RpcStatus这个统计工具类之后，我们来看下如何计算一个Service的最短响应时间。
+在有了RpcStatus这个统计工具类之后，我们来看下如何计算一个Service的最短响应时间。先从简单的最小连接数开始，最小连接数负载均衡算法主要利用了RpcStatus中的active变量，在负载均衡时选择该值最小的一个Provider。
+
+```java
+protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation invocation) {
+	// ... 省略变量定义
+
+	// 遍历invoker，找到连接数最小的Provider
+	for (int i = 0; i < length; i++) {
+		Invoker<T> invoker = invokers.get(i);
+		// 获取Invoker的活跃请求数量
+		int active = RpcStatus.getStatus(invoker.getUrl(), invocation.getMethodName()).getActive();
+		// 获取默认权重
+		int afterWarmup = getWeight(invoker, invocation);
+		// save for later use
+		weights[i] = afterWarmup;
+		// 比较得到最小连接数的Provider
+		if (leastActive == -1 || active < leastActive) {
+			// Reset the active number of the current invoker to the least active number
+			leastActive = active;
+			// Reset the number of least active invokers
+			leastCount = 1;
+			// Put the first least active invoker first in leastIndexes
+			leastIndexes[0] = i;
+			// Reset totalWeight
+			totalWeight = afterWarmup;
+			// Record the weight the first least active invoker
+			firstWeight = afterWarmup;
+			// Each invoke has the same weight (only one invoker here)
+			sameWeight = true;
+			// If current invoker's active value equals with leaseActive, then accumulating.
+		} else if (active == leastActive) {
+			// Record the index of the least active invoker in leastIndexes order
+			leastIndexes[leastCount++] = i;
+			// Accumulate the total weight of the least active invoker
+			totalWeight += afterWarmup;
+			// If every invoker has the same weight?
+			if (sameWeight && afterWarmup != firstWeight) {
+				sameWeight = false;
+			}
+		}
+	}
+	// 连接数相同根据权重随机选，权重相同直接随机选择
+	if (leastCount == 1) {
+		// If we got exactly one invoker having the least active value, return this invoker directly.
+		return invokers.get(leastIndexes[0]);
+	}
+	if (!sameWeight && totalWeight > 0) {
+		// 如果
+		int offsetWeight = ThreadLocalRandom.current().nextInt(totalWeight);
+		// Return a invoker based on the random value.
+		for (int i = 0; i < leastCount; i++) {
+			int leastIndex = leastIndexes[i];
+			offsetWeight -= weights[leastIndex];
+			if (offsetWeight < 0) {
+				return invokers.get(leastIndex);
+			}
+		}
+	}
+	// If all invokers have the same weight value or totalWeight=0, return evenly.
+	return invokers.get(leastIndexes[ThreadLocalRandom.current().nextInt(leastCount)]);
+}
+```
 
 这种处理方式有个问题是，如果不同的Service的处理能力不同，那么整个cluster的性能最终都被限制在处理能力最小的那个机器上了。
 
@@ -175,6 +236,8 @@ protected static class SlideWindowData {
 	}
 }
 ```
+
+基于该时间窗口实现的平均响应时间最短算法为：
 
 ```java
 @Override
@@ -238,6 +301,8 @@ protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation
 	return invokers.get(shortestIndexes[ThreadLocalRandom.current().nextInt(shortestCount)]);
 }
 ```
+
+该负载均衡算法解决了最小连接数负载均衡算法中无法根据服务器能力分配流量的问题，但是由于使用平均响应时间，所以该负载均衡算法对一些延迟比较大的响应并不敏感。
 
 
 # 扩展：PeakEwmaLoadBalance
