@@ -288,6 +288,10 @@ protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation
 
 ## Dubbo中计算权重的方式
 
+Dubbo的权重计算考虑了服务器的预热时间。防止在系统启动之初，在缓存等组件还未初始化完毕时就分配了大量请求，出现将服务器压垮的情况。
+
+Dubbo通过服务器权重进行服务器预热，服务器的权重会随着运行时间的延长逐渐增大，逐渐分配更多的流量。
+
 ```java
 int getWeight(Invoker<?> invoker, Invocation invocation) {
 	int weight;
@@ -296,22 +300,33 @@ int getWeight(Invoker<?> invoker, Invocation invocation) {
 	if (REGISTRY_SERVICE_REFERENCE_PATH.equals(url.getServiceInterface())) {
 		weight = url.getParameter(REGISTRY_KEY + "." + WEIGHT_KEY, DEFAULT_WEIGHT);
 	} else {
+		// 从Method中获取权重参数
 		weight = url.getMethodParameter(invocation.getMethodName(), WEIGHT_KEY, DEFAULT_WEIGHT);
 		if (weight > 0) {
+			// 获取服务器启动时间
 			long timestamp = invoker.getUrl().getParameter(TIMESTAMP_KEY, 0L);
 			if (timestamp > 0L) {
 				long uptime = System.currentTimeMillis() - timestamp;
 				if (uptime < 0) {
 					return 1;
 				}
+				// 获取warmup时间
 				int warmup = invoker.getUrl().getParameter(WARMUP_KEY, DEFAULT_WARMUP);
 				if (uptime > 0 && uptime < warmup) {
+					// 计算预热期权重
 					weight = calculateWarmupWeight((int)uptime, warmup, weight);
 				}
 			}
 		}
 	}
 	return Math.max(weight, 0);
+}
+
+static int calculateWarmupWeight(int uptime, int warmup, int weight) {
+	// 随着uptime增大，uptime/warmup逐渐变大
+	int ww = (int) ( uptime / ((float) warmup / weight));
+	// 当uptime/warmup > 1时为weight
+	return ww < 1 ? 1 : (Math.min(ww, weight));
 }
 ```
 
