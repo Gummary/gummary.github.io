@@ -2,7 +2,7 @@
 title: "Dubbo中的负载均衡策略（中）"
 slug: dubbo负载均衡中
 date: 2021-09-24T18:17:49+08:00
-draft: true
+draft: false
 ---
 
 <!--more-->
@@ -19,7 +19,7 @@ Dubbo负载均衡是在Dubbo框架的第5层（自上而下）Cluster层，客�
 - ShortestResponseLoadBalance，最短响应时间
 - ConsistentHashLoadBalance，一致性 Hash
 
-在上篇中介绍了加权随机负载均衡与加权轮询负载均衡算法，在本篇中将介绍最短响应时间和最少活跃调用数这两种负载均衡算法。
+在上篇中介绍了加权随机负载均衡与加权轮询负载均衡算法，在本篇中主要介绍最短响应时间和最少活跃调用数这两种负载均衡算法，另外简单介绍Dubbo扩展提供的PeakEwma算法。
 
 # 统计RPC调用性能
 
@@ -141,25 +141,15 @@ protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation
 		weights[i] = afterWarmup;
 		// 比较得到最小连接数的Provider
 		if (leastActive == -1 || active < leastActive) {
-			// Reset the active number of the current invoker to the least active number
 			leastActive = active;
-			// Reset the number of least active invokers
 			leastCount = 1;
-			// Put the first least active invoker first in leastIndexes
 			leastIndexes[0] = i;
-			// Reset totalWeight
 			totalWeight = afterWarmup;
-			// Record the weight the first least active invoker
 			firstWeight = afterWarmup;
-			// Each invoke has the same weight (only one invoker here)
 			sameWeight = true;
-			// If current invoker's active value equals with leaseActive, then accumulating.
 		} else if (active == leastActive) {
-			// Record the index of the least active invoker in leastIndexes order
 			leastIndexes[leastCount++] = i;
-			// Accumulate the total weight of the least active invoker
 			totalWeight += afterWarmup;
-			// If every invoker has the same weight?
 			if (sameWeight && afterWarmup != firstWeight) {
 				sameWeight = false;
 			}
@@ -167,13 +157,10 @@ protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation
 	}
 	// 连接数相同根据权重随机选，权重相同直接随机选择
 	if (leastCount == 1) {
-		// If we got exactly one invoker having the least active value, return this invoker directly.
 		return invokers.get(leastIndexes[0]);
 	}
 	if (!sameWeight && totalWeight > 0) {
-		// 如果
 		int offsetWeight = ThreadLocalRandom.current().nextInt(totalWeight);
-		// Return a invoker based on the random value.
 		for (int i = 0; i < leastCount; i++) {
 			int leastIndex = leastIndexes[i];
 			offsetWeight -= weights[leastIndex];
@@ -182,7 +169,6 @@ protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation
 			}
 		}
 	}
-	// If all invokers have the same weight value or totalWeight=0, return evenly.
 	return invokers.get(leastIndexes[ThreadLocalRandom.current().nextInt(leastCount)]);
 }
 ```
@@ -191,9 +177,7 @@ protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation
 
 # 最短响应时间负载均衡算法
 
-先说下基本原理，ShortestResponseLoadBalance是统计一段时间窗口内的最短响应时间，这个最短响应时间的计算方式是该Service的平均响应时间与当前连接数量的乘积。使用乘积的方式可以在负载均衡的时候同时考虑连接数+响应时间，让性能更优的服务器处理更多的响应。
-
-统计一段时间窗口内的信息是因为，当dubbo长时间运行时，平均的响应时间就不会有太大的变动，无法反应某段时间内的网络波动。
+最短响应时间负载均衡算法可以根据Provider的处理能力进行流量分配。先说下基本原理，ShortestResponseLoadBalance是先统计一段时间窗口内响应时间的平均值，然后计算该Provider的平均响应时间与当前连接数量的乘积作为最短响应时间。使用乘积的方式可以在负载均衡的时候同时考虑连接数+响应时间，让性能更优的服务器处理更多的响应。而只统计一段时间窗口内的平均响应时间是因为，当Provider长时间运行时，平均的响应时间不会受短时间内网络波动的影响。
 
 我们来看下时间窗口的结构体：
 
@@ -307,14 +291,30 @@ protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation
 
 # 扩展：PeakEwmaLoadBalance
 
+PeakEwma也是一种利用响应时间进行负载均衡的算法。与最短响应时间中使用平均响应时间作为权重不同的是，PeakEwma使用Peak Exponential Weighted Moving Averagea，数移动加权平均代替平均响应时间。与直接平均相比，PEwma对网络波动更为敏感。在计算负载均衡的权重时，最近几次响应时间比历史的响应时间拥有更高的权重。
 
-```java
-/**
- * Provides a Node that is hyper-sensitive to latent endpoints.
- *
- * Peak EWMA is designed to converge quickly when encountering slow endpoints. It
- * is quick to react to latency spikes, recovering only cautiously. Peak EWMA takes
- * history into account, so that slow behavior is penalized relative to the
- * supplied `decayTime`.
- */
-```
+PeakEwma的计算公式如下:
+
+$$
+\begin{aligned}
+	V_t &= w \times V_{t-1} + (1-w) \times R_t \\\\
+	w &= \frac{1}{e^{k*\Delta_t}}
+\end{aligned}
+$$
+
+其中，$V_t$为当前节点的PEwma值，用于负载均衡的权重，$V_{t-1}$为历史PEwma值，$R_t$为当前的响应时间，w用于平衡当前响应时间与历史响应时间的关系，$\Delta_t$为两次请求之间的间隔时间。从公式可以看出，两次间隔时间越长，w越小，最近的响应时间的权重越大。
+
+PeakEwmaLoadBalance在Dubbo中是以扩展的形式提供的，代码位于[PeakEwmaLoadBalance](https://github.com/apache/dubbo-spi-extensions/blob/master/dubbo-cluster-extensions/dubbo-cluster-loadbalance-peakewma/src/main/java/org/apache/dubbo/rpc/cluster/loadbalance/PeakEwmaLoadBalance.java)
+
+该负载均衡算法实现相对比较简单，限于篇幅这里不再展开。
+
+# 总结
+
+本文对Dubbo框架中提供的最少连接数和最小响应时间及PEwma算法做了分析，其中最少连接数算法适用于Provider性能相近的场景，最小响应时间算法可以根据Provider端实时响应情况进行流量分配，而PEwma算法对网络波动比最小响应时间算法更为敏感。
+
+# 参考
+
+1. https://blog.51cto.com/u_15175878/3513414
+2. https://blog.cloudflare.com/i-wanna-go-fast-load-balancing-dynamic-steering/
+3. https://github.com/apache/dubbo-spi-extensions
+4. https://dubbo.apache.org/zh/docs/v2.7/dev/source/loadbalance/
