@@ -15,7 +15,7 @@ Dubbo负载均衡是在Dubbo框架的第5层（自上而下）Cluster层，客�
 
 - RandomLoadBalance，加权随机负载均衡
 - RoundRobinLoadBalance，加权轮询负载均衡
-- LeastActiveLoadBalance，最少活跃调用数
+- LeastActiveLoadBalance，最少连接数
 - ShortestResponseLoadBalance，最短响应时间
 - ConsistentHashLoadBalance，一致性 Hash
 
