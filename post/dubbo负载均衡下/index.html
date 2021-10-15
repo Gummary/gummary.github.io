@@ -1,0 +1,402 @@
+<!doctype html><html lang=en>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>Dubbo中的负载均衡策略（下） - Gum</title>
+<meta name=renderer content="webkit">
+<meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta http-equiv=cache-control content="no-transform">
+<meta http-equiv=cache-control content="no-siteapp">
+<meta name=theme-color content="#f8f5ec">
+<meta name=msapplication-navbutton-color content="#f8f5ec">
+<meta name=apple-mobile-web-app-capable content="yes">
+<meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
+<meta name=author content="Gum"><meta name=description content><meta name=keywords content="Photo,Reading,Java,Distribute System">
+<meta name=generator content="Hugo 0.88.1 with theme even">
+<link rel=canonical href=http://localhost:1313/post/dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B8%8B/>
+<link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png>
+<link rel=manifest href=/manifest.json>
+<link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5>
+<link href=/sass/main.min.40f3224b12ad17cb3dd58c8d5dfc3d1d6ad48ed6335de8962e4710a613bf3702.css rel=stylesheet>
+<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous>
+<meta property="og:title" content="Dubbo中的负载均衡策略（下）">
+<meta property="og:description" content>
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://localhost:1313/post/dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B8%8B/"><meta property="article:section" content="post">
+<meta property="article:published_time" content="2021-10-08T16:06:24+08:00">
+<meta property="article:modified_time" content="2021-10-08T16:06:24+08:00">
+<meta itemprop=name content="Dubbo中的负载均衡策略（下）">
+<meta itemprop=description content><meta itemprop=datePublished content="2021-10-08T16:06:24+08:00">
+<meta itemprop=dateModified content="2021-10-08T16:06:24+08:00">
+<meta itemprop=wordCount content="2673">
+<meta itemprop=keywords content><meta name=twitter:card content="summary">
+<meta name=twitter:title content="Dubbo中的负载均衡策略（下）">
+<meta name=twitter:description content><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]-->
+</head>
+<body>
+<div id=mobile-navbar class=mobile-navbar>
+<div class=mobile-header-logo>
+<a href=/ class=logo>Gum</a>
+</div>
+<div class=mobile-navbar-icon>
+<span></span>
+<span></span>
+<span></span>
+</div>
+</div>
+<nav id=mobile-menu class="mobile-menu slideout-menu">
+<ul class=mobile-menu-list>
+<a href=/>
+<li class=mobile-menu-item>Home</li>
+</a><a href=/post/>
+<li class=mobile-menu-item>Archives</li>
+</a><a href=/tags/>
+<li class=mobile-menu-item>Tags</li>
+</a><a href=/categories/>
+<li class=mobile-menu-item>Categories</li>
+</a><a href=/about/>
+<li class=mobile-menu-item>About</li>
+</a>
+</ul>
+</nav>
+<div class=container id=mobile-panel>
+<header id=header class=header>
+<div class=logo-wrapper>
+<a href=/ class=logo>Gum</a>
+</div>
+<nav class=site-navbar>
+<ul id=menu class=menu>
+<li class=menu-item>
+<a class=menu-item-link href=/>Home</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/post/>Archives</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/tags/>Tags</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/categories/>Categories</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/about/>About</a>
+</li>
+</ul>
+</nav>
+</header>
+<main id=main class=main>
+<div class=content-wrapper>
+<div id=content class=content>
+<article class=post>
+<header class=post-header>
+<h1 class=post-title>Dubbo中的负载均衡策略（下）</h1>
+<div class=post-meta>
+<span class=post-time> 2021-10-08 </span>
+<span class=more-meta> 2673 words </span>
+<span class=more-meta> 6 mins read </span>
+</div>
+</header>
+<div class=post-toc id=post-toc>
+<h2 class=post-toc-title>Contents</h2>
+<div class="post-toc-content always-active">
+<nav id=TableOfContents>
+<ul>
+<li><a href=#引言>引言</a></li>
+<li><a href=#哈希算法>哈希算法</a></li>
+<li><a href=#一致性哈希算法>一致性哈希算法</a>
+<ul>
+<li><a href=#一致哈希算法原理>一致哈希算法原理</a></li>
+<li><a href=#一致性哈希算法-dubbo实现>一致性哈希算法-Dubbo实现</a></li>
+</ul>
+</li>
+<li><a href=#总结>总结</a></li>
+<li><a href=#参考>参考</a></li>
+</ul>
+</nav>
+</div>
+</div>
+<div class=post-content>
+<h1 id=引言>引言</h1>
+<figure class=align-center>
+<img src=https://blog-1302636809.file.myqcloud.com/post/dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B8%8B/images/2021-09-09-20-53-52.png><figcaption>
+<h4>Dubbo架构图</h4></figcaption>
+</figure>
+<p>Dubbo负载均衡是在Dubbo框架的第5层（自上而下）Cluster层，客户端根据注册中心提供的服务端列表，根据配置的负载均衡算法选择一个最佳的调用者。Dubbo提供的负载均衡算法列表如下：</p>
+<ul>
+<li>RandomLoadBalance，加权随机负载均衡</li>
+<li>RoundRobinLoadBalance，加权轮询负载均衡</li>
+<li>LeastActiveLoadBalance，最少连接数</li>
+<li>ShortestResponseLoadBalance，最短响应时间</li>
+<li>ConsistentHashLoadBalance，一致性 Hash</li>
+</ul>
+<p>在中篇中介绍了最少连接数和最短时间响应两种负载均衡算法，在本篇中介绍Dubbo中最后一种负载均衡算法——一致性Hash算法。我们首先介绍下最基础的Hash算法及其存在的问题，然后介绍一致性哈希算法是如何缓解这个问题的，最后介绍一致性哈希负载均衡在Dubbo中的实现。</p>
+<h1 id=哈希算法>哈希算法</h1>
+<p>假设我们现在有3台服务器，我们希望将来源ip地址相同的请求都分配到同一个Provider上。最简单的实现方式是，对来源ip进行hash，使用hash值对节点数量取余，然后用余数选择服务器。伪代码为：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=n>servers</span> <span class=o>=</span> <span class=p>[</span><span class=s1>&#39;A&#39;</span><span class=p>,</span> <span class=s1>&#39;B&#39;</span><span class=p>,</span> <span class=s1>&#39;C&#39;</span><span class=p>]</span>
+<span class=k>def</span> <span class=nf>hash_select</span><span class=p>(</span><span class=n>source_ip</span><span class=p>:</span> <span class=nb>str</span><span class=p>):</span>
+	<span class=n>idx</span> <span class=o>=</span> <span class=nb>hash</span><span class=p>(</span><span class=n>source_ip</span><span class=p>)</span> <span class=o>%</span> <span class=nb>len</span><span class=p>(</span><span class=n>servers</span><span class=p>)</span>
+	<span class=k>return</span> <span class=n>servers</span><span class=p>[</span><span class=n>idx</span><span class=p>]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果服务器的数量不发生变化，那么这种算法可以保证相同来源ip的流量被准确转发到同一个机器上。但是，如果一个服务器挂了或者新增一个服务器节点，就会使原来的哈希值失效。我们以增加一台服务器为例，此时hash的过程从<code>hash(ip) % 3</code>变为<code>hash(ip) % 4</code>，假设之前选择2号服务器，也即取余结果为2，则hash值为<code>n=3t+2</code>，那么新的hash值为<code>(3t+2) % 4 = [3(t%4)+2]%4</code>，其结果可能为0，1，2，3。所以有75%的概率不能分配到原来的服务器中。如果用户的缓存都存在原服务器上，为了防止出现缓存失效导致的缓存雪崩等问题，就需要对这些用户信息进行转移，极大的增加了扩容成本。</p>
+<h1 id=一致性哈希算法>一致性哈希算法</h1>
+<h2 id=一致哈希算法原理>一致哈希算法原理</h2>
+<p>一致性哈希算法可以很好的解决服务器变动带来的哈希值变化的问题。一致性哈希的核心数据结构是一个哈希环，哈希环由$2^{32}$个节点组成，结构如下图所示：</p>
+<figure class=align-center>
+<img src=https://blog-1302636809.file.myqcloud.com/post/dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B8%8B/images/hash-ring.jpg width=30%><figcaption>
+<h4>哈希环结构</h4></figcaption>
+</figure>
+<p>一致性哈希算法首先对服务器地址进行hash，将hash值映射到$[0, 2^{32}-1]$内，假设此时哈希环如下：</p>
+<figure class=align-center>
+<img src=https://blog-1302636809.file.myqcloud.com/post/dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B8%8B/images/hash-ring-server.jpg width=40%><figcaption>
+<h4>哈希环结构</h4></figcaption>
+</figure>
+<p>当有新的请求时，同样将请求地址进行hash，将hash值映射到$[0, 2^{32}-1]$内，然后顺时针寻找服务器节点，找到的第一个节点作为本次请求的服务节点，如下图所示，此次请求将选择服务器C。</p>
+<figure class=align-center>
+<img src=https://blog-1302636809.file.myqcloud.com/post/dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B8%8B/images/hash-ring-request.jpg width=40%><figcaption>
+<h4>哈希环结构</h4></figcaption>
+</figure>
+<p>下面看下当服务器进行缩容/扩容时的情况。当服务器数量减少时，假设服务器B挂了，那么只有服务器B的流量会重新进行分配，而A和C原来的流量都不需要重新分配；而当有新的节点增加时，假设新服务器D的哈希值在A和C之间，那么只有服务器C的一部分流量会重新分配到D上，A和B的流量都不受影响。</p>
+<figure class=align-center>
+<img src=https://blog-1302636809.file.myqcloud.com/post/dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B8%8B/images/hash-server-rm-add.jpg width=70%><figcaption>
+<h4>删除/新增节点</h4></figcaption>
+</figure>
+<p>通过哈希环，一致性哈希算法一定程度上解决了服务器缩容扩容带来的问题。但是如果每个服务器在哈希环上只有一个节点，那么当B服务挂掉后，B的流量全都打到A上了，如果A的承载能力远小于B，那么此时可能直接把A打挂；而如果因为流量太大想进行扩容，新增服务器D之后，D只分担了服务器C的流量，A、B的流量仍不变。所以我们需要一致性哈希算法能够在节点宕机时，将该节点的流量均匀分配到其他节点；在新增节点时，每个节点的一部分流量都能打到新节点上。</p>
+<p>为了实现上述的需求，我们可以为每个服务器在哈希环上分配多个虚拟节点，让不同服务器的节点均匀分布在哈希环上，如下图所示：</p>
+<figure class=align-center>
+<img src=https://blog-1302636809.file.myqcloud.com/post/dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B8%8B/images/hash-ring-virtual-node.jpg width=50%><figcaption>
+<h4>虚拟节点</h4></figcaption>
+</figure>
+<p>在使用虚拟节点之后，首先根据请求来源找到最近的虚拟节点，然后再根据虚拟节点找到对应的服务器节点。</p>
+<h2 id=一致性哈希算法-dubbo实现>一致性哈希算法-Dubbo实现</h2>
+<p>下面看下Duboo中如何使用一致性哈希算法实现负载均衡。首先看下负载均衡的过程，dubbo中一致性哈希的粒度是方法级的，当某个方法的invoker数量发生变化时会构造一个新的哈希环，然后在哈希环上选择最近的节点。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>protected</span> <span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=nf>doSelect</span><span class=o>(</span><span class=n>List</span><span class=o>&lt;</span><span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;&gt;</span> <span class=n>invokers</span><span class=o>,</span> <span class=n>URL</span> <span class=n>url</span><span class=o>,</span> <span class=n>Invocation</span> <span class=n>invocation</span><span class=o>)</span> <span class=o>{</span>
+	<span class=n>String</span> <span class=n>methodName</span> <span class=o>=</span> <span class=n>RpcUtils</span><span class=o>.</span><span class=na>getMethodName</span><span class=o>(</span><span class=n>invocation</span><span class=o>);</span>
+	<span class=c1>// 负载均衡的粒度是方法级的
+</span><span class=c1></span>	<span class=n>String</span> <span class=n>key</span> <span class=o>=</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>0</span><span class=o>).</span><span class=na>getUrl</span><span class=o>().</span><span class=na>getServiceKey</span><span class=o>()</span> <span class=o>+</span> <span class=s>&#34;.&#34;</span> <span class=o>+</span> <span class=n>methodName</span><span class=o>;</span>
+	<span class=c1>// 计算invoker列表的Hashcode，当list内的元素发生变化时，该值也会发生改变
+</span><span class=c1></span>	<span class=kt>int</span> <span class=n>invokersHashCode</span> <span class=o>=</span> <span class=n>invokers</span><span class=o>.</span><span class=na>hashCode</span><span class=o>();</span>
+	<span class=n>ConsistentHashSelector</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=n>selector</span> <span class=o>=</span> <span class=o>(</span><span class=n>ConsistentHashSelector</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;)</span> <span class=n>selectors</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>key</span><span class=o>);</span>
+	<span class=c1>// 当不存在或invoker的列表发生变化时，构造一个新的哈希环
+</span><span class=c1></span>	<span class=k>if</span> <span class=o>(</span><span class=n>selector</span> <span class=o>==</span> <span class=kc>null</span> <span class=o>||</span> <span class=n>selector</span><span class=o>.</span><span class=na>identityHashCode</span> <span class=o>!=</span> <span class=n>invokersHashCode</span><span class=o>)</span> <span class=o>{</span>
+		<span class=n>selectors</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>key</span><span class=o>,</span> <span class=k>new</span> <span class=n>ConsistentHashSelector</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;(</span><span class=n>invokers</span><span class=o>,</span> <span class=n>methodName</span><span class=o>,</span> <span class=n>invokersHashCode</span><span class=o>));</span>
+		<span class=n>selector</span> <span class=o>=</span> <span class=o>(</span><span class=n>ConsistentHashSelector</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;)</span> <span class=n>selectors</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>key</span><span class=o>);</span>
+	<span class=o>}</span>
+	<span class=c1>// 在哈希环上选择最近的节点
+</span><span class=c1></span>	<span class=k>return</span> <span class=n>selector</span><span class=o>.</span><span class=na>select</span><span class=o>(</span><span class=n>invocation</span><span class=o>);</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Dubbo中哈希环是基于Java中的TreeMap实现的，利用TreeMap的排序特性快速找到对应的invoker。哈希环的构造过程在构造函数中实现，使用每个invoker的url地址作为key计算在其在哈希环中的位置；默认情况下每个invoker包含160个虚拟节点。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=n>ConsistentHashSelector</span><span class=o>(</span><span class=n>List</span><span class=o>&lt;</span><span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;&gt;</span> <span class=n>invokers</span><span class=o>,</span> <span class=n>String</span> <span class=n>methodName</span><span class=o>,</span> <span class=kt>int</span> <span class=n>identityHashCode</span><span class=o>)</span> <span class=o>{</span>
+	<span class=c1>// Hash环
+</span><span class=c1></span>	<span class=k>this</span><span class=o>.</span><span class=na>virtualInvokers</span> <span class=o>=</span> <span class=k>new</span> <span class=n>TreeMap</span><span class=o>&lt;</span><span class=n>Long</span><span class=o>,</span> <span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;&gt;();</span>
+	<span class=k>this</span><span class=o>.</span><span class=na>identityHashCode</span> <span class=o>=</span> <span class=n>identityHashCode</span><span class=o>;</span>
+	<span class=n>URL</span> <span class=n>url</span> <span class=o>=</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>0</span><span class=o>).</span><span class=na>getUrl</span><span class=o>();</span>
+	<span class=c1>// 获取每个invoker的虚拟节点数量
+</span><span class=c1></span>	<span class=k>this</span><span class=o>.</span><span class=na>replicaNumber</span> <span class=o>=</span> <span class=n>url</span><span class=o>.</span><span class=na>getMethodParameter</span><span class=o>(</span><span class=n>methodName</span><span class=o>,</span> <span class=n>HASH_NODES</span><span class=o>,</span> <span class=n>160</span><span class=o>);</span>
+	<span class=c1>// 对于调用方，dubbo使用参数值决定将请求发往哪个节点，这里是判断使用哪些参数。默认情况下使用第一个参数
+</span><span class=c1></span>	<span class=n>String</span><span class=o>[]</span> <span class=n>index</span> <span class=o>=</span> <span class=n>COMMA_SPLIT_PATTERN</span><span class=o>.</span><span class=na>split</span><span class=o>(</span><span class=n>url</span><span class=o>.</span><span class=na>getMethodParameter</span><span class=o>(</span><span class=n>methodName</span><span class=o>,</span> <span class=n>HASH_ARGUMENTS</span><span class=o>,</span> <span class=s>&#34;0&#34;</span><span class=o>));</span>
+	<span class=n>argumentIndex</span> <span class=o>=</span> <span class=k>new</span> <span class=kt>int</span><span class=o>[</span><span class=n>index</span><span class=o>.</span><span class=na>length</span><span class=o>];</span>
+	<span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>index</span><span class=o>.</span><span class=na>length</span><span class=o>;</span> <span class=n>i</span><span class=o>++)</span> <span class=o>{</span>
+		<span class=n>argumentIndex</span><span class=o>[</span><span class=n>i</span><span class=o>]</span> <span class=o>=</span> <span class=n>Integer</span><span class=o>.</span><span class=na>parseInt</span><span class=o>(</span><span class=n>index</span><span class=o>[</span><span class=n>i</span><span class=o>]);</span>
+	<span class=o>}</span>
+	<span class=c1>// 遍历invoker，将invoker加入到哈希环中
+</span><span class=c1></span>	<span class=k>for</span> <span class=o>(</span><span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=n>invoker</span> <span class=o>:</span> <span class=n>invokers</span><span class=o>)</span> <span class=o>{</span>
+		<span class=n>String</span> <span class=n>address</span> <span class=o>=</span> <span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>().</span><span class=na>getAddress</span><span class=o>();</span>
+		<span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>replicaNumber</span> <span class=o>/</span> <span class=n>4</span><span class=o>;</span> <span class=n>i</span><span class=o>++)</span> <span class=o>{</span>
+			<span class=kt>byte</span><span class=o>[]</span> <span class=n>digest</span> <span class=o>=</span> <span class=n>Bytes</span><span class=o>.</span><span class=na>getMD5</span><span class=o>(</span><span class=n>address</span> <span class=o>+</span> <span class=n>i</span><span class=o>);</span>
+			<span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>h</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>h</span> <span class=o>&lt;</span> <span class=n>4</span><span class=o>;</span> <span class=n>h</span><span class=o>++)</span> <span class=o>{</span>
+				<span class=kt>long</span> <span class=n>m</span> <span class=o>=</span> <span class=n>hash</span><span class=o>(</span><span class=n>digest</span><span class=o>,</span> <span class=n>h</span><span class=o>);</span>
+				<span class=n>virtualInvokers</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>m</span><span class=o>,</span> <span class=n>invoker</span><span class=o>);</span>
+			<span class=o>}</span>
+		<span class=o>}</span>
+	<span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>当有新请求时，首先根据调用参数计算出一个哈希值，然后找到第一个比该值大的invoker，如果没有则使用第一个invoker。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=nf>select</span><span class=o>(</span><span class=n>Invocation</span> <span class=n>invocation</span><span class=o>)</span> <span class=o>{</span>
+	<span class=c1>// 根据参数值计算哈希值
+</span><span class=c1></span>	<span class=n>String</span> <span class=n>key</span> <span class=o>=</span> <span class=n>toKey</span><span class=o>(</span><span class=n>invocation</span><span class=o>.</span><span class=na>getArguments</span><span class=o>());</span>
+	<span class=kt>byte</span><span class=o>[]</span> <span class=n>digest</span> <span class=o>=</span> <span class=n>Bytes</span><span class=o>.</span><span class=na>getMD5</span><span class=o>(</span><span class=n>key</span><span class=o>);</span>
+	<span class=c1>// 根据哈希值得到合适的invoekr并返回
+</span><span class=c1></span>	<span class=k>return</span> <span class=n>selectForKey</span><span class=o>(</span><span class=n>hash</span><span class=o>(</span><span class=n>digest</span><span class=o>,</span> <span class=n>0</span><span class=o>));</span>
+<span class=o>}</span>
+
+<span class=kd>private</span> <span class=n>String</span> <span class=nf>toKey</span><span class=o>(</span><span class=n>Object</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=o>{</span>
+	<span class=c1>// 将选择计算哈希值的参数合并到一起，用于计算哈希值
+</span><span class=c1></span>	<span class=n>StringBuilder</span> <span class=n>buf</span> <span class=o>=</span> <span class=k>new</span> <span class=n>StringBuilder</span><span class=o>();</span>
+	<span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>:</span> <span class=n>argumentIndex</span><span class=o>)</span> <span class=o>{</span>
+		<span class=k>if</span> <span class=o>(</span><span class=n>i</span> <span class=o>&gt;=</span> <span class=n>0</span> <span class=o>&amp;&amp;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>args</span><span class=o>.</span><span class=na>length</span><span class=o>)</span> <span class=o>{</span>
+			<span class=n>buf</span><span class=o>.</span><span class=na>append</span><span class=o>(</span><span class=n>args</span><span class=o>[</span><span class=n>i</span><span class=o>]);</span>
+		<span class=o>}</span>
+	<span class=o>}</span>
+	<span class=k>return</span> <span class=n>buf</span><span class=o>.</span><span class=na>toString</span><span class=o>();</span>
+<span class=o>}</span>
+
+<span class=kd>private</span> <span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=nf>selectForKey</span><span class=o>(</span><span class=kt>long</span> <span class=n>hash</span><span class=o>)</span> <span class=o>{</span>
+	<span class=c1>// 找到第一个比该哈希值大的invoker
+</span><span class=c1></span>	<span class=n>Map</span><span class=o>.</span><span class=na>Entry</span><span class=o>&lt;</span><span class=n>Long</span><span class=o>,</span> <span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;&gt;</span> <span class=n>entry</span> <span class=o>=</span> <span class=n>virtualInvokers</span><span class=o>.</span><span class=na>ceilingEntry</span><span class=o>(</span><span class=n>hash</span><span class=o>);</span>
+	<span class=c1>// 如果没找到，则使用第一个
+</span><span class=c1></span>	<span class=k>if</span> <span class=o>(</span><span class=n>entry</span> <span class=o>==</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+		<span class=n>entry</span> <span class=o>=</span> <span class=n>virtualInvokers</span><span class=o>.</span><span class=na>firstEntry</span><span class=o>();</span>
+	<span class=o>}</span>
+	<span class=k>return</span> <span class=n>entry</span><span class=o>.</span><span class=na>getValue</span><span class=o>();</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id=总结>总结</h1>
+<p>本文首先介绍了使用哈希算法如何保证同一个来源的请求都打到同一个服务器上，但是简单的哈希算法在服务器数量变动时会出现哈希失效的问题。而一致性哈希算法利用哈希环在一定程度上缓解了这个问题，减少哈希值变动造成的影响。最后介绍了Dubbo中如何基于Treemap实现一致性哈希算法。</p>
+<h1 id=参考>参考</h1>
+<ol>
+<li><a href=https://dgryski.medium.com/consistent-hashing-algorithmic-tradeoffs-ef6b8e2fcae8>Consistent Hashing: Algorithmic Tradeoffs | by Damian Gryski | Medium</a></li>
+<li><a href=https://blog.csdn.net/suifeng629/article/details/81567777>一致性Hash(Consistent Hashing)原理剖析及Java实现</a></li>
+<li><a href=https://dubbo.apache.org/zh/blog/2019/05/01/dubbo-%E4%B8%80%E8%87%B4%E6%80%A7hash%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E5%AE%9E%E7%8E%B0%E5%89%96%E6%9E%90/>Dubbo 一致性Hash负载均衡实现剖析 | Apache Dubbo</a></li>
+<li><a href=https://segmentfault.com/a/1190000021234695>Dubbo一致性哈希负载均衡的源码和Bug，了解一下？</a></li>
+</ol>
+<div class=post-copyright>
+<p class=copyright-item>
+<span class=item-title>Author</span>
+<span class=item-content>Gum</span>
+</p>
+<p class=copyright-item>
+<span class=item-title>LastMod</span>
+<span class=item-content>
+2021-10-08
+</span>
+</p>
+<p class=copyright-item>
+<span class=item-title>License</span>
+<span class=item-content><a rel="license noopener" href=https://creativecommons.org/licenses/by-nc-nd/4.0/ target=_blank>CC BY-NC-ND 4.0</a></span>
+</p>
+</div>
+<footer class=post-footer>
+<nav class=post-nav>
+<a class=next href=/post/dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B8%AD/>
+<span class="next-text nav-default">Dubbo中的负载均衡策略（中）</span>
+<span class="next-text nav-mobile">Next</span>
+<i class="iconfont icon-right"></i>
+</a>
+</nav>
+</footer>
+</article>
+</div>
+<script src=https://utteranc.es/client.js repo=Gummary/blog-comment issue-term=pathname theme=github-light crossorigin=anonymous async></script>
+<noscript>Please enable JavaScript to view the <a href=https://github.com/utterance>comments powered by utterances.</a></noscript>
+</div>
+</main>
+<footer id=footer class=footer>
+<div class=social-links>
+<a href=mailto:sdythp@gmail.com class="iconfont icon-email" title=email target=_blank></a>
+<a href=https://github.com/Gummary/ class="iconfont icon-github" title=github target=_blank></a>
+<a href=http://localhost:1313/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a>
+</div>
+<div class=poem>What I cannot create, I do not understand.</div>
+<div class=copyright>
+<span class=copyright-year>
+<span>Gum</span>
+&copy;
+2017 -
+2021</span>
+</div>
+</footer>
+<div class=back-to-top id=back-to-top>
+<i class="iconfont icon-up"></i>
+</div>
+</div>
+<script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script>
+<script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script>
+<script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script>
+</body>
+</html>
