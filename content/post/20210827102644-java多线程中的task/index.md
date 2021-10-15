@@ -379,11 +379,11 @@ ok，以上就是本文的全部内容，本文首先从线程执行相关的接
 
 # 参考
 
-1. https://www.liaoxuefeng.com/wiki/1252599548343744/1306581182447650
-2. https://zhuanlan.zhihu.com/p/54459770
-3. https://www.cnblogs.com/nullzx/p/5147004.html
-4. https://www.cnblogs.com/dolphin0520/p/3949310.html
+1. [使用CompletableFuture - 廖雪峰的官方网站](https://www.liaoxuefeng.com/wiki/1252599548343744/1306581182447650)
+2. [Java的Future机制详解 - 知乎](https://zhuanlan.zhihu.com/p/54459770)
+3. [Callable、Future、RunnableFuture、FutureTask的原理及应用 - nullzx - 博客园](https://www.cnblogs.com/nullzx/p/5147004.html)
+4. [Java并发编程：Callable、Future和FutureTask - Matrix海子 - 博客园](https://www.cnblogs.com/dolphin0520/p/3949310.html)
 5. JCIP 6.3.2
-6. https://www.cnblogs.com/daxin/p/3366606.html
-7. https://github.com/JetBrains/jdk8u_jdk/blob/master/src/share/classes/java/util/concurrent/RunnableFuture.java
-8. https://github.com/frohoff/jdk8u-jdk/blob/master/src/share/classes/java/util/concurrent/FutureTask.java
+6. [Java sun.misc.Unsafe类的学习笔记 - 大新博客 - 博客园](https://www.cnblogs.com/daxin/p/3366606.html)
+7. [jdk8u_jdk/RunnableFuture.java at master · JetBrains/jdk8u_jdk · GitHub](https://github.com/JetBrains/jdk8u_jdk/blob/master/src/share/classes/java/util/concurrent/RunnableFuture.java)
+8. [jdk8u-jdk/FutureTask.java at master · frohoff/jdk8u-jdk · GitHub](https://github.com/frohoff/jdk8u-jdk/blob/master/src/share/classes/java/util/concurrent/FutureTask.java)
