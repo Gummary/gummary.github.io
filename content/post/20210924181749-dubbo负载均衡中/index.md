@@ -314,7 +314,7 @@ PeakEwmaLoadBalance在Dubbo中是以扩展的形式提供的，代码位于[Peak
 
 # 参考
 
-1. https://blog.51cto.com/u_15175878/3513414
-2. https://blog.cloudflare.com/i-wanna-go-fast-load-balancing-dynamic-steering/
-3. https://github.com/apache/dubbo-spi-extensions
-4. https://dubbo.apache.org/zh/docs/v2.7/dev/source/loadbalance/
+1. [自适应负载均衡算法原理与实现【附源码】_Kevin Wan_51CTO博客](https://blog.51cto.com/u_15175878/3513414)
+2. [I Wanna Go Fast - Load Balancing Dynamic Steering](https://blog.cloudflare.com/i-wanna-go-fast-load-balancing-dynamic-steering/)
+3. [GitHub - apache/dubbo-spi-extensions: Apache Dubbo SPI Extensions](https://github.com/apache/dubbo-spi-extensions)
+4. [负载均衡 | Apache Dubbo](https://dubbo.apache.org/zh/docs/v2.7/dev/source/loadbalance/)
