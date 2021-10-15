@@ -153,7 +153,7 @@ private Invoker<T> selectForKey(long hash) {
 
 # 参考
 
-1. https://dgryski.medium.com/consistent-hashing-algorithmic-tradeoffs-ef6b8e2fcae8
-2. https://blog.csdn.net/suifeng629/article/details/81567777
-3. https://dubbo.apache.org/zh/blog/2019/05/01/dubbo-%E4%B8%80%E8%87%B4%E6%80%A7hash%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E5%AE%9E%E7%8E%B0%E5%89%96%E6%9E%90/
-4. https://segmentfault.com/a/1190000021234695
+1. [Consistent Hashing: Algorithmic Tradeoffs | by Damian Gryski | Medium](https://dgryski.medium.com/consistent-hashing-algorithmic-tradeoffs-ef6b8e2fcae8)
+2. [一致性Hash(Consistent Hashing)原理剖析及Java实现](https://blog.csdn.net/suifeng629/article/details/81567777)
+3. [Dubbo 一致性Hash负载均衡实现剖析 | Apache Dubbo](https://dubbo.apache.org/zh/blog/2019/05/01/dubbo-%E4%B8%80%E8%87%B4%E6%80%A7hash%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E5%AE%9E%E7%8E%B0%E5%89%96%E6%9E%90/)
+4. [Dubbo一致性哈希负载均衡的源码和Bug，了解一下？](https://segmentfault.com/a/1190000021234695)
