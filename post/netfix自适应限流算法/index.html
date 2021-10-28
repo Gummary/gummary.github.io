@@ -116,13 +116,13 @@
 </div>
 <div class=post-content>
 <h1 id=littles-law>Little&rsquo;s Law</h1>
-<p>在介绍负载均衡算法之前，先介绍一个基本的定律——Little&rsquo;s Law。</p>
+<p>在介绍限流算法之前，先介绍一个基本的定律——Little&rsquo;s Law。</p>
 <blockquote>
 <p>在一个稳定的系统中，长期的平均顾客人数（$L$），等于长期的有效抵达率（$\lambda$），乘以顾客在这个系统中平均的等待时间（$W$）</p>
 <p align=center>$L = \lambda W$</p>
 <p align=right>维基百科</p>
 </blockquote>
-<p>那么对于我们的一个微服务系统来说，$L$是可以同时处理的请求数量，$\lambda$是当前系统的吞吐率，$W$是每个请求的平均处理时间。而我们系统的承载能力是有限的，所以$L$和$W$是恒定的，那么当请求到达的速度超过了$\lambda$，系统就无法立刻处理这些请求，要么拒绝，要么存放到一个等待队列中等待处理。</p>
+<p>那么对于我们的一个比如微服务系统来说，$L$是可以同时处理的请求数量，$\lambda$是当前系统的吞吐率，$W$是每个请求的平均处理时间。而我们系统的承载能力是有限的，所以$L$和$W$是恒定的，那么当请求到达的速度超过了$\lambda$，系统就无法立刻处理这些请求，要么拒绝，要么存放到一个等待队列中等待处理。</p>
 <figure class=align-center>
 <img src=https://blog-1302636809.file.myqcloud.com/post/netfix%E8%87%AA%E9%80%82%E5%BA%94%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95/images/little-law.jpg width=60%>
 </figure>
