@@ -10,7 +10,10 @@ def get_title(url:str):
 		'http':'http://127.0.0.1:7890',
 		'https':'https://127.0.0.1:7890'
 	}
-	res = requests.get(url, proxies=proxies)
+	try:
+		res = requests.get(url, proxies=proxies)
+	except requests.exceptions.SSLError:
+		return None
 	if res.status_code != 200:
 		return None
 	res.encoding = 'utf-8'
@@ -41,7 +44,7 @@ def replace_urls_in_reference(post):
 		article.append(new_refer)
 	return article
 
-post_path = "content/post/20210924181749-dubbo负载均衡中/index.md"
+post_path = "content/post/20211025120029-Netfix自适应限流算法/index.md"
 article = replace_urls_in_reference(post_path)
 with open(post_path, "w") as f:
 	f.write("".join(article))

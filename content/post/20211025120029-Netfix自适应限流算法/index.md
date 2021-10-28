@@ -2,7 +2,7 @@
 title: "Netfix自适应限流算法"
 slug: Netfix自适应限流算法
 date: 2021-10-25T12:00:30+08:00
-draft: true
+draft: false
 ---
 
 <!--more-->
@@ -69,3 +69,68 @@ $$
 
 ## Vegas负载均衡算法
 
+Vegas限流算法是启发自TCP的Vegas 拥塞避免算法，下面先介绍下Vegas拥塞避免算法。
+
+**Vegas拥塞避免算法**
+
+TCP Reno的网络拥塞检测是通过是否丢包来判断的，当出现丢包时认为网络出现了拥塞，开始进行拥塞避免。而TCP Vegas算法是根据RTT来判断网络是否出现拥塞。具体来说Vegas会记录网络中出现的最小RTT作为无拥塞情况的RTT，用该RTT计算期望吞吐率，与实际的吞吐率作差，当差值较小时增大窗口,差值较大减少窗口。
+
+$$
+\begin{aligned}
+	\text{Expected} &= \text{cwnd} / \text{RTTNoLoad} \\\\
+	\text{Actual} &= \text{cwnd} / \text{RTT} \\\\ 
+	\text{diff} &= \text{Expected} - \text{Actual}
+\end{aligned}
+$$
+
+$$
+\begin{cases}
+	\text{diff} &< \alpha, \quad 扩大窗口 \\\\
+	\text{diff} &> \beta, \quad 缩小窗口 \\\\
+\end{cases}
+$$
+
+其中cwnd为当前窗口的大小。
+
+**Vegas限流算法**
+
+与TCP Vegas使用差值判断是否拥塞不同的是，Vegas限流算法直接使用等待队列的大小queueSize进行判断是否限流。另外，在TCP Vegas中，$\alpha$和$\beta$的值是固定不变的，为了让限流算法在高limit时有更好的稳定性，Vegas限流算法会根据当前limit动态调整这两个值。
+
+计算调整阈值的函数为：
+
+$$
+\begin{aligned}
+	\alpha &= 3\text{log}_ {10}^{\text{limit}} \\\\
+	\beta &= 6 \text{log}_ {10}^{\text{limit}} \\\\
+	\text{threshold} &= \text{log}_ {10}^{\text{limit}} 
+\end{aligned}
+$$
+
+动态调整限流值的方法为：
+
+$$
+\ \text{newLimit} = 
+\begin{cases}
+	limit + \beta, &\quad \text{queueSize} < \text{threshold} \\\\
+	limit + \text{log}_ {10}^{\text{limit}}, &\quad \text{threshold} < \text{queueSize} <\alpha \\\\
+	limit - \text{log}_ {10}^{\text{limit}}, &\quad \text{queueSize} > \beta \\\\
+	limit, &\quad 其他
+\end{cases}
+$$
+
+其中计算队列大小的方式是：
+
+$$
+\text{queueSize} = \text{limit} \times (1 - \text{RttnoLoad}/ \text{RTTactual})
+$$
+
+对于Vegas这种限流算法来说，也会存在过度保护的情况。
+
+# 参考
+
+1. [Fairness Comparisons Between TCP Reno and TCP Vegas for Future
+Deployment of TCP Vegas](https://web.archive.org/web/20160103040648/http://www.isoc.org/inet2000/cdproceedings/2d/2d_2.htm#s2)
+2. [TCP拥塞控制 - 维基百科，自由的百科全书](https://zh.wikipedia.org/wiki/TCP%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6)
+3. [自适应限流神器 netflix-concurrency-limits](https://fredal.xin/netflix-concuurency-limits)
+4. [Performance Under Load. Adaptive Concurrency Limits @ Netflix | by Netflix Technology Blog | Medium](https://netflixtechblog.medium.com/performance-under-load-3e6fa9a60581)
+5. [GitHub - Netflix/concurrency-limits](https://github.com/Netflix/concurrency-limits)
