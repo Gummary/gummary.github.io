@@ -1,2 +1,2 @@
-[Hugo博客仓库](gummary.github.io)
+[Hugo博客仓库](https://gummary.github.io)
 
