@@ -12,7 +12,7 @@
 <meta name=apple-mobile-web-app-capable content="yes">
 <meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
 <meta name=author content="Gum"><meta name=description content><meta name=keywords content="Photo,Reading,Java,Distribute System">
-<meta name=generator content="Hugo 0.88.1 with theme even">
+<meta name=generator content="Hugo 0.89.0 with theme even">
 <link rel=canonical href=http://localhost:1313/post/dubbo3%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1-%E4%B8%8A/>
 <link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
@@ -326,7 +326,7 @@
 <p>$$
 \begin{aligned}
 w_j(t) & = t\times x_j - x_j\times S \\
-&= (t-S)\times x_j \\<br>
+&= (t-S)\times x_j \\
 &&lt; 0
 \end{aligned}
 $$</p>
@@ -341,8 +341,8 @@ $$</p>
 <p>假设在$t$时刻，我们连续选择了$x_i-1$次$i$节点。在这之前，我们选择了$n$次$j$节点且$j$节点仍未被轮询完，也即$0\leq n\leq x_j-1$，则有：</p>
 <p>$$
 \begin{aligned}
-w_i(t) &= t\times x_i - (x_i-1)\times S \\<br>
-w_j(t) &= t\times x_j - n\times S \\<br>
+w_i(t) &= t\times x_i - (x_i-1)\times S \\
+w_j(t) &= t\times x_j - n\times S \\
 &\geq t\times x_j - (x_j-1) \times S
 \end{aligned} \tag {1}
 $$</p>
@@ -350,26 +350,26 @@ $$</p>
 <p><strong>若当前恰好是前$t$个时刻</strong>，则有：</p>
 <p>$$
 \begin{aligned}
-t &= x_i-1 \\<br>
-n &= 0 \\<br>
-w_i(t) &= t\times x_i - (x_i-1)\times S \\<br>
-w_j(t) &= t\times x_j - n\times S \\<br>
+t &= x_i-1 \\
+n &= 0 \\
+w_i(t) &= t\times x_i - (x_i-1)\times S \\
+w_j(t) &= t\times x_j - n\times S \\
 &\geq t\times x_j - (x_j-1) \times S
 \end{aligned}\tag {2}
 $$</p>
 <p>在$t+1$时刻有：</p>
 <p>$$
 \begin{aligned}
-w_i(t) &= (x_i-1)\times x_i - (x_i-1)\times S + x_i \\<br>
-&= (x_i-1)\times(x_i-S) + x_i \\<br>
-&\leq x_i - x_i + 1 \\<br>
+w_i(t) &= (x_i-1)\times x_i - (x_i-1)\times S + x_i \\
+&= (x_i-1)\times(x_i-S) + x_i \\
+&\leq x_i - x_i + 1 \\
 &\leq 1
 \end{aligned}\tag {3}
 $$</p>
 <p>其中第3步中是因为$x_i-S &lt; 0 \Rightarrow x_i - S \leq -1$。其他节点的权重为：</p>
 <p>$$
 \begin{aligned}
-w_j(t) &= (x_i-1)\times x_j + x_j \\<br>
+w_j(t) &= (x_i-1)\times x_j + x_j \\
 &= x_i\times x_j
 \end{aligned}\tag {4}
 $$</p>

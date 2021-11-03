@@ -12,7 +12,7 @@
 <meta name=apple-mobile-web-app-capable content="yes">
 <meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
 <meta name=author content="Gum"><meta name=description content><meta name=keywords content="Photo,Reading,Java,Distribute System">
-<meta name=generator content="Hugo 0.88.1 with theme even">
+<meta name=generator content="Hugo 0.89.0 with theme even">
 <link rel=canonical href=http://localhost:1313/post/netfix%E8%87%AA%E9%80%82%E5%BA%94%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95/>
 <link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
@@ -150,8 +150,8 @@ $$</p>
 <p>Gradient2算法将noLoadRTT设置为RTT的指数移动平均，会随着RTT的增大而增大，缓解了过度保护的情况。Gradient2计算Gradient的方式变为：</p>
 <p>$$
 \begin{aligned}
-\text{LongRTT}_ t &= (1-\frac{1}{w}) \times \text{LongRTT}_{t-1} + \frac{1}{w} \times \text{RTT}_t \\<br>
-\text{gradient} &= \text{Max}(0.5, \text{Min}(1, \frac{\text{LongRTT}_ t}{\text{RTT}_t}))
+\text{LongRTT}_ t &= (1-\frac{1}{w}) \times \text{LongRTT}_{t-1} + \frac{1}{w} \times \text{RTT}<em>t \\
+\text{gradient} &= \text{Max}(0.5, \text{Min}(1, \frac{\text{LongRTT}</em> t}{\text{RTT}_t}))
 \end{aligned}
 $$</p>
 <p>其中w为请求窗口的大小。此时系统有三种可能的状态：</p>
@@ -166,15 +166,15 @@ $$</p>
 <p>TCP Reno的网络拥塞检测是通过是否丢包来判断的，当出现丢包时认为网络出现了拥塞，开始进行拥塞避免。而TCP Vegas算法是根据RTT来判断网络是否出现拥塞。具体来说Vegas会记录网络中出现的最小RTT作为无拥塞情况的RTT，用该RTT计算期望吞吐率，与实际的吞吐率作差，当差值较小时增大窗口,差值较大减少窗口。</p>
 <p>$$
 \begin{aligned}
-\text{Expected} &= \text{cwnd} / \text{RTTNoLoad} \\<br>
+\text{Expected} &= \text{cwnd} / \text{RTTNoLoad} \\
 \text{Actual} &= \text{cwnd} / \text{RTT} \\
 \text{diff} &= \text{Expected} - \text{Actual}
 \end{aligned}
 $$</p>
 <p>$$
 \begin{cases}
-\text{diff} &&lt; \alpha, \quad 扩大窗口 \\<br>
-\text{diff} &> \beta, \quad 缩小窗口 \\<br>
+\text{diff} &&lt; \alpha, \quad 扩大窗口 \\
+\text{diff} &> \beta, \quad 缩小窗口 \\
 \end{cases}
 $$</p>
 <p>其中cwnd为当前窗口的大小。</p>
@@ -183,8 +183,8 @@ $$</p>
 <p>计算调整阈值的函数为：</p>
 <p>$$
 \begin{aligned}
-\alpha &= 3\text{log}_ {10}^{\text{limit}} \\<br>
-\beta &= 6 \text{log}_ {10}^{\text{limit}} \\<br>
+\alpha &= 3\text{log}_ {10}^{\text{limit}} \\
+\beta &= 6 \text{log}_ {10}^{\text{limit}} \\
 \text{threshold} &= \text{log}_ {10}^{\text{limit}}
 \end{aligned}
 $$</p>
@@ -192,9 +192,9 @@ $$</p>
 <p>$$
 \ \text{newLimit} =
 \begin{cases}
-limit + \beta, &\quad \text{queueSize} &lt; \text{threshold} \\<br>
-limit + \text{log}_ {10}^{\text{limit}}, &\quad \text{threshold} &lt; \text{queueSize} &lt;\alpha \\<br>
-limit - \text{log}_ {10}^{\text{limit}}, &\quad \text{queueSize} > \beta \\<br>
+limit + \beta, &\quad \text{queueSize} &lt; \text{threshold} \\
+limit + \text{log}_ {10}^{\text{limit}}, &\quad \text{threshold} &lt; \text{queueSize} &lt;\alpha \\
+limit - \text{log}_ {10}^{\text{limit}}, &\quad \text{queueSize} > \beta \\
 limit, &\quad 其他
 \end{cases}
 $$</p>
