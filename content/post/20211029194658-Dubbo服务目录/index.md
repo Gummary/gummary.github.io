@@ -2,7 +2,7 @@
 title: "Dubbo服务目录"
 slug: Dubbo服务目录
 date: 2021-10-29T19:46:58+08:00
-draft: true
+draft: false
 ---
 
 <!--more-->
@@ -27,14 +27,19 @@ draft: true
 
 # 服务目录源码分析
 
-不介绍staticDirectory
+下面将从服务目录的功能：获取Invoker及动态更新Invoker分析服务目录的源码，由于StaticDirectory比较简单，所以下面分析主要以DynamicDirectory及其子类为主。
 
 ## 列举所有Invoker
 
-## Invoker动态变化
+在RPC调用之前，消费者首先要知道当前可用的服务提供者有哪些，这里就用到了服务能力提供的列举Invoker的能力。整个调用链路如下：
+
+{{< tfigure src="images/列举invoker流程.png" title="列举可用invoker流程" width="" class="align-center">}}
+
+其中当前可用的Invoker列表是保存在AbstractDirectory中，传递到RouterChain进行服务路由后就返回。下面看下可用的Invoker是如何更新的。
+
+## Invoker动态更新
 
 AbstractDirectory
-
 
 # 参考
 
