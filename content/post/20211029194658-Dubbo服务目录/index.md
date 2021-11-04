@@ -39,7 +39,12 @@ draft: true
 
 ## Invoker动态更新
 
-AbstractDirectory
+Invoker更新的时机有处：
+
+1. 服务消费者初始化，获取所有可用的Invoker时
+2. 服务提供者上线、下线时，通知客户端更新可用的Invoker
+
+我们先看下初始化时，服务消费这如何获取
 
 # 参考
 
