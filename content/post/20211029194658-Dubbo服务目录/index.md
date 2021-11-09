@@ -41,10 +41,21 @@ draft: true
 
 Invoker更新的时机有处：
 
-1. 服务消费者初始化，获取所有可用的Invoker时
+1. 服务消费者初始化，获取所有可用的服务提供者时
 2. 服务提供者上线、下线时，通知客户端更新可用的Invoker
 
-我们先看下初始化时，服务消费这如何获取
+我们先看下初始化时，服务消费者如何获取可用的服务提供者。
+
+Dubbo在3.0版本中引入了应用级服务发现，因此服务发现的过程略微有些复杂。Dubbo3.0为了兼容Dubbo2.x版本，在框架中同时保留了接口级服务发现及应用级服务发现。服务提供者可以自由选择在注册中心注册接口or注册应用，还可以两个同时注册（默认行为）。在服务消费者这边，默认也会进行双订阅，但是在服务消费时只能选择接口地址或应用地址调用。
+
+> 有关应用级服务发现、双订阅/双发布请参阅[服务发现](https://dubbo.apache.org/zh/docs/v3.0/concepts/service-discovery/),[应用级地址发现迁移指南](https://dubbo.apache.org/zh/docs/v3.0/migration/migration-service-discovery/)
+
+服务发现的整体流程如下：
+
+1. 判断本地直连or从注册中心获取
+2. 从注册中心获取的话，需要与注册中心交互，这本身也是一种协议，RegistryProtocol
+3. 然后通过注册中心获取所有的消费者
+
 
 # 参考
 
@@ -53,3 +64,4 @@ Invoker更新的时机有处：
 3. https://dubbo.apache.org/zh/docs/concepts/service-discovery/
 4. https://dubbo.apache.org/zh/docs/v2.7/dev/source/directory/
 5. https://dubbo.apache.org/zh/blog/2021/06/02/dubbo3-%E5%BA%94%E7%94%A8%E7%BA%A7%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/
+6. https://juejin.cn/post/6946190804272545805
