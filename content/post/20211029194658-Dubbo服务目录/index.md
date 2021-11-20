@@ -2,7 +2,7 @@
 title: "Dubbo服务目录"
 slug: Dubbo服务目录
 date: 2021-10-29T19:46:58+08:00
-draft: true
+draft: false
 ---
 
 <!--more-->
@@ -25,7 +25,7 @@ draft: true
 
 {{< tfigure src="images/directory类图.jpg" title="Directory类图" width="" class="align-center">}}
 
-# 服务目录源码分析
+# 服务目录分析
 
 下面将从服务目录的功能：获取Invoker及动态更新Invoker分析服务目录的源码，由于StaticDirectory比较简单，所以下面分析主要以DynamicDirectory及其子类为主。
 
@@ -39,29 +39,34 @@ draft: true
 
 ## Invoker动态更新
 
-Invoker更新的时机有处：
+Invoker更新的时机有两处：
 
 1. 服务消费者初始化，获取所有可用的服务提供者时
 2. 服务提供者上线、下线时，通知客户端更新可用的Invoker
 
 我们先看下初始化时，服务消费者如何获取可用的服务提供者。
 
-Dubbo在3.0版本中引入了应用级服务发现，因此服务发现的过程略微有些复杂。Dubbo3.0为了兼容Dubbo2.x版本，在框架中同时保留了接口级服务发现及应用级服务发现。服务提供者可以自由选择在注册中心注册接口or注册应用，还可以两个同时注册（默认行为）。在服务消费者这边，默认也会进行双订阅，但是在服务消费时只能选择接口地址或应用地址调用。
+获取Invoker的过程就是服务发现的过程。在Dubbo3.0之前，Dubbo更多使用的是接口级服务发现，Provider每个接口都会在注册中心注册一条数据。在Dubbo3.0中，引入了应用级服务发现，一个服务只在注册中心注册一条数据。这两种服务发现是完全不同的过程，为了平滑过度，在Dubbo3.0中实现了应用级和服务级服务发现的兼容：Provider端具备同时注册接口和应用地址的能力，而Consumer也具备同时发现接口和应用地址的能力。
+
+控制Consumer发现接口还是应用地址的配置是`dubbo.application.service-discovery.migration`，该参数共有三个可选值：
+
+- FORCE_INTERFACE，只消费接口级地址
+- APPLICATION_FIRST，智能决策接口级/应用级地址，双订阅
+- FORCE_APPLICATION，只消费应用级地址
+
+默认情况下是双订阅模式。在双订阅模式下服务发现的主要流程是：
+
+{{< tfigure src="images/服务发现流程.png" title="双订阅模式下服务发现流程" width="" class="align-center">}}
 
 > 有关应用级服务发现、双订阅/双发布请参阅[服务发现](https://dubbo.apache.org/zh/docs/v3.0/concepts/service-discovery/),[应用级地址发现迁移指南](https://dubbo.apache.org/zh/docs/v3.0/migration/migration-service-discovery/)
-
-服务发现的整体流程如下：
-
-1. 判断本地直连or从注册中心获取
-2. 从注册中心获取的话，需要与注册中心交互，这本身也是一种协议，RegistryProtocol
-3. 然后通过注册中心获取所有的消费者
 
 
 # 参考
 
-1. https://mercyblitz.github.io/2020/05/11/Apache-Dubbo-%E6%9C%8D%E5%8A%A1%E8%87%AA%E7%9C%81%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/
-2. https://www.cnblogs.com/caiyao/p/14949139.html
-3. https://dubbo.apache.org/zh/docs/concepts/service-discovery/
-4. https://dubbo.apache.org/zh/docs/v2.7/dev/source/directory/
-5. https://dubbo.apache.org/zh/blog/2021/06/02/dubbo3-%E5%BA%94%E7%94%A8%E7%BA%A7%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/
-6. https://juejin.cn/post/6946190804272545805
+1. [Apache dubbo 服务自省架构设计 - 小马哥的技术博客](https://mercyblitz.github.io/2020/05/11/Apache-Dubbo-%E6%9C%8D%E5%8A%A1%E8%87%AA%E7%9C%81%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/)
+2. [dubbo源码-服务抽象directory - Birding - 博客园](https://www.cnblogs.com/caiyao/p/14949139.html)
+3. [服务发现 | Apache Dubbo](https://dubbo.apache.org/zh/docs/concepts/service-discovery/)
+4. [服务目录 | Apache Dubbo](https://dubbo.apache.org/zh/docs/v2.7/dev/source/directory/)
+5. [Dubbo3 应用级服务发现 | Apache Dubbo](https://dubbo.apache.org/zh/blog/2021/06/02/dubbo3-%E5%BA%94%E7%94%A8%E7%BA%A7%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/)
+6. [Dubbo服务引入源码流程 - 掘金](https://juejin.cn/post/6946190804272545805)
+7. [集群容错 - Directory | gentryhuang的博客](https://gentryhuang.com/posts/e43ac0a6/)
