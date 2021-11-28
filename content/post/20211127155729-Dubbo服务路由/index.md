@@ -11,7 +11,7 @@ draft: false
 
 # Dubbo服务路由简介
 
-Dubbo中主要是用的有两种路由规则，条件路由和标签路由。条件路由是通过规则匹配的方式是实现Provider筛选，支持Provider服务或Consumer应用两种粒度；标签路由是只能以Provider粒度匹配。
+在Directory从注册中心获取到可用的Invoker之后，会调用`routerChain`进行服务路由，使用服务路由可以实现不同的根据调用方的不同、调用方式的不同选择不同的Provider，在此基础上实现读写分离、机房隔离、Set化等等功能。所以我们下面就从RouterChain开始说起，详细Dubbo中路由规则如何使用及如何实现的。
 
 # RouterChain的构造
 
@@ -91,13 +91,13 @@ java -jar xxx-provider.jar -Ddubbo.provider.tag={the tag you want, may come from
 
 {{< tfigure src="images/创建service路由.png" title="" width="" class="align-center">}}
 
-而具体规则的解析和匹配都在ConditionRouter中。
+具体规则的解析和匹配都在ConditionRouter中。
 
-## ConditionRouter
+## ConditionRouter源码解析
 
-ConditionRouter有两种初始化方式，分别是直接根据URL初始化和根据具体的路由规则进行初始化，二者之间的区别就是获取配置的方式不同。不管使用哪种初始化方式，在得到具体的规则之后，都是调同一个init方法解析规则。
+我们从初始化开始看起，ConditionRouter有两种初始化方式，分别是直接根据URL初始化和根据具体的路由规则进行初始化。二者之间的区别在于获取规则的方式不同，前者从URL中获取，后者从配置中心获取。但不管使用哪种初始化方式，在得到具体的规则之后，都是调同一个init方法解析规则。
 
-我们知道一个路由规则包含两部分，分别是Consumer的匹配器和Provider的过滤器，二者用`=>`隔开。所以在解析规则时，首先利用`=>`将规则切割，然后分别解析匹配器和过滤器，存放到when和then中。
+我们知道一个路由规则包含两部分，分别是Consumer的匹配器和Provider的过滤器，二者用`=>`隔开。所以在解析规则时，首先利用`=>`将规则分开，然后分别解析匹配器和过滤器，存放到when和then中。
 
 ```java
 public void init(String rule) {
@@ -105,10 +105,12 @@ public void init(String rule) {
 		if (rule == null || rule.trim().length() == 0) {
 			throw new IllegalArgumentException("Illegal route rule!");
 		}
+		// step1 分割规则，得到匹配器和过滤器
 		rule = rule.replace("consumer.", "").replace("provider.", "");
 		int i = rule.indexOf("=>");
 		String whenRule = i < 0 ? null : rule.substring(0, i).trim();
 		String thenRule = i < 0 ? rule.trim() : rule.substring(i + 2).trim();
+		// step2 解析规则，存放为MatchPair
 		Map<String, MatchPair> when = StringUtils.isBlank(whenRule) || "true".equals(whenRule) ? new HashMap<String, MatchPair>() : parseRule(whenRule);
 		Map<String, MatchPair> then = StringUtils.isBlank(thenRule) || "false".equals(thenRule) ? null : parseRule(thenRule);
 		// NOTE: It should be determined on the business level whether the `When condition` can be empty or not.
@@ -120,23 +122,29 @@ public void init(String rule) {
 }
 ```
 
-匹配器和过滤器的解析规则相同，所以二者调用同一个parseRule方法。对于一条规则，Dubbo将其看作是由`符号+字母`的组合形式，由符号来控制字母代表的语义：
+匹配器和过滤器的解析规则相同，所以二者调用同一个parseRule方法。对于一条规则，Dubbo将其看作是由多个`符号+字符串`组合的形式，由符号来控制字符串代表的语义，具体有以下几种：
 
 - 符号部分为空，说明是一个规则的开始，直接创建MatchPair
-- 符号为`&`，说明上一个规则已经结束，创建一个新的MatchPair，content为规则的key
-- 符号为`=`，说明是规则的值，将其放入当前的MatchPair中；
-- 符号为`!=`，同`=`，只是放到mismatch中
-- 符号为`,`，说明一个规则中有多个项，也加入到当前的MatchPair中
+- 符号为`&`，说明当前规则有多个条件且上一个条件已经解析结束，所以创建一个新的MatchPair，content为新条件的key
+- 符号为`=`，说明是内容是规则的值，将其放入当前的MatchPair的match集合中；
+- 符号为`!=`，同`=`，只不过将规则的值放到MatchPair的mismatch集合中
+- 符号为`,`，说明一个规则中有多个值，所以将解析出的值也加入到当前的MatchPair中
+
+所以在parseRule中，使用正则表达式不断提取`符号+字符串`这一组合，不断解析规则，构造MatchPair。限于篇幅，下面摘出部分解析的代码进行说明：
 
 ```java
 // ...
+// matcher是正则表达式的匹配结果
 String separator = matcher.group(1);
 String content = matcher.group(2);
+// 处理规则的开始
 if (StringUtils.isEmpty(separator)) {
 	pair = new MatchPair();
 	condition.put(content, pair);
 }
+// 处理多个条件的情况
 else if ("&".equals(separator)) {
+	// condition是一条规则
 	if (condition.get(content) == null) {
 		pair = new MatchPair();
 		condition.put(content, pair);
@@ -147,15 +155,35 @@ else if ("&".equals(separator)) {
 // ...
 ```
 
-构造完规则后，在获取可用的Provider时就会利用这些规则进行匹配，下面我们看下进行匹配的部分。
+所以规则的解析过程就是将键值对拆开并存下来，在服务路由时利用这些规则进行路由匹配，下面我们就看下进行匹配的部分，核心代码如下：
 
-// TODO 流程图
+```java
+// step1 首先判断当前Consumer是否匹配当前规则
+if (!matchWhen(url, invocation)) {
+	return new RouterResult<>(invokers);
+}
+// step2 如果过滤规则为空，说明禁用当前的调用者，直接返回空列表
+List<Invoker<T>> result = new ArrayList<Invoker<T>>();
+if (thenCondition == null) {
+	logger.warn("The current consumer in the service blacklist. consumer: " + NetUtils.getLocalHost() + ", service: " + url.getServiceKey());
+	return new RouterResult<>(result);
+}
+// step3 遍历所有Invoker，如果符合规则条件则加入到结果中
+for (Invoker<T> invoker : invokers) {
+	if (matchThen(invoker.getUrl(), url)) {
+		result.add(invoker);
+	}
+}
+// step4 返回结果
+if (!result.isEmpty()) {
+	return new RouterResult<>(result);
+} else if (this.isForce()) {
+	logger.warn("The route result is empty and force execute. consumer: " + NetUtils.getLocalHost() + ", service: " + url.getServiceKey() + ", router: " + url.getParameterAndDecoded(RULE_KEY));
+	return new RouterResult<>(result);
+}
+```
 
-RouterChain -> ListenableRouter -> ConditionRouter
-
-在ConditionRouter中，首先判断当前规则是否适用于当前调用方，也即现匹配when，如果匹配，则使用then规则过滤当前的Provider url；如果不匹配，则直接返回。
-
-匹配when和then规则的过程稍有不同：
+路由过程中的两个核心方法是matchWhen和matchThen，二者的结构类似，但实现方式完全不同：
 
 ```java
 boolean matchWhen(URL url, Invocation invocation) {
@@ -168,11 +196,9 @@ private boolean matchThen(URL url, URL param) {
 
 when规则的匹配条件是，whenCondition为空或匹配成功；而then规则的匹配方式是当前then规则不为空且匹配成功。也即，如果when规则为空，则表示适用于任意的调用方；而如果then规则为空，则表示禁用所有的Provider。
 
-二者的入参也不同，matchWhen的入参是consumer的地址和invocation，而mathThen的参数是invoker的地址和consumer的地址。
+二者入参和调用matchCondition的方式也不同，matchWhen的入参是consumer的url和invocation，而mathThen的参数是invoker的url和consumer的url作为param。
 
-下面看下二者的共同使用的方式`matchCondition`。在matchCondition中，循环遍历该规则下的所有条件规则，根据匹配规则的key，获取每个规则的匹配内容，然后获取对应的值，判断规则和实际值是否相同。
-
-在matchCondition中，共有以下几种匹配方式：
+下面看下二者的共同使用的方式`matchCondition`。在matchCondition中，循环遍历该规则下的所有键值对，键的不同决定了每个键值对的匹配内容，从传入的param或invocation中获取对应的值，判断匹配规则和实际值是否匹配。在matchCondition中，共有以下几种匹配方式：
 
 1. 参数匹配，根据调用参数判断是否匹配
 2. 根据调用方法名决定是否匹配
@@ -180,16 +206,23 @@ when规则的匹配条件是，whenCondition为空或匹配成功；而then规�
 4. 根据host
 5. 根据url上的参数
 
-根据参数匹配是，判断规则中指定的指和实际调用的参数是否相同，所以比其他的多了提取参数的部分。最终，这些方式都是调用MatchPair的isMatch方法。MatchPair中matches保存的是匹配的值；mismatches中保存的是不匹配的值。
+根据参数匹配是，判断规则中指定的值和实际调用的参数是否相同，所以比其他的多了提取参数的部分。但最终这些方式都是调用MatchPair的isMatch方法。在MatchPair中，有matches和mismatches两个集合，前者保存的是匹配的值，后者保存的是不匹配的值。
 
-在isMatch中有三种情况：
-1. matches不为空，mismatches不为空
-2. mismatches不为空，matches不为空
-3. matches与mismatches同时不为空
+在isMatch中有三种情况，三者的优先级不同：
+1. 当matches不为空，mismatches为空时，判断matches中的内容与值是否相同
+2. 当mismatches不为空，matches不为空，判断mismatches中的内容与值是否相同
+3. 当matches与mismatches同时不为空时，优先判断mismatches中的值是否相同
 
-三者的区别在于，优先级不同。最终都是使用UrlUtils的isMatchGlobPattern方法进行匹配。对于使用了参数的情况，先从参数中取出值，然后再进行匹配。
+判断规则内容和值是否匹配都是使用了`UrlUtils.isMatchGlobPattern`方法。对于使用了参数的情况（包含$），先从参数中取出值，然后再进行匹配。
 
 ```java
+public static boolean isMatchGlobPattern(String pattern, String value, URL param) {
+	if (param != null && pattern.startsWith("$")) {
+		pattern = param.getRawParameter(pattern.substring(1));
+	}
+	return isMatchGlobPattern(pattern, value);
+}
+
 public static boolean isMatchGlobPattern(String pattern, String value) {
 	// 通配符直接返回true
 	if ("*".equals(pattern)) {
@@ -226,6 +259,15 @@ public static boolean isMatchGlobPattern(String pattern, String value) {
 }
 ```
 
+# 总结
+
+以上就是本文的全部内容，先从路由规则的入口RouterChain入手，介绍了路由规则的加载过程，然后介绍了如果配置条件路由和规则路由，其中使用Dubbo控制台的方式更为友好，最后详细分析了条件路由的实现原理。
+
 # 参考文献
 
-1. https://dubbo.apache.org/zh/docsv2.7/dev/source/router/
+1. [服务路由 | Apache Dubbo](https://dubbo.apache.org/zh/docsv2.7/dev/source/router/)
+2. [路由规则 | Apache Dubbo](https://dubbo.apache.org/zh/docs/v3.0/references/features/routing-rule/)
+3. [dubbo源码：dubbo中条件路由配置及原理](https://blog.csdn.net/zhuqiuhui/article/details/90413512#21__10)
+4. [GitHub - apache/dubbo-admin: The ops and reference implementation for Apache Dubbo](https://github.com/apache/dubbo-admin)
+5. [Dubbo-Router条件路由、脚本路由使用](https://blog.csdn.net/hosaos/article/details/103495881)
+6. [6.33 路由规则 · dubbo-user-book](https://dubbo.gitbooks.io/dubbo-user-book/content/demos/routing-rule.html)
