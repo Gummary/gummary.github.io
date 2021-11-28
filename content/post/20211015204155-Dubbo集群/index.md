@@ -3,6 +3,7 @@ title: "Dubbo集群"
 slug: Dubbo集群
 date: 2021-10-15T20:41:55+08:00
 draft: true
+categories: ["Dubbo"]
 ---
 
 <!--more-->

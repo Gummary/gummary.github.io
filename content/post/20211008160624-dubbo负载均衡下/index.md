@@ -3,6 +3,7 @@ title: "Dubbo中的负载均衡策略（下）"
 slug: dubbo负载均衡下
 date: 2021-10-08T16:06:24+08:00
 draft: false
+categories: ["Dubbo"]
 ---
 
 <!--more-->

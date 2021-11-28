@@ -3,6 +3,7 @@ title: "Dubbo中的服务目录"
 slug: Dubbo服务目录
 date: 2021-10-29T19:46:58+08:00
 draft: false
+categories: ["Dubbo"]
 ---
 
 <!--more-->
