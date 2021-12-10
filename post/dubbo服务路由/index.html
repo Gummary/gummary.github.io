@@ -12,7 +12,7 @@
 <meta name=apple-mobile-web-app-capable content="yes">
 <meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
 <meta name=author content="Gum"><meta name=description content><meta name=keywords content="Photo,Reading,Java,Distribute System">
-<meta name=generator content="Hugo 0.89.4 with theme even">
+<meta name=generator content="Hugo 0.90.0 with theme even">
 <link rel=canonical href=http://localhost:1313/post/dubbo%E6%9C%8D%E5%8A%A1%E8%B7%AF%E7%94%B1/>
 <link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
@@ -30,7 +30,7 @@
 <meta itemprop=name content="Dubbo中的服务路由">
 <meta itemprop=description content><meta itemprop=datePublished content="2021-11-27T15:57:29+08:00">
 <meta itemprop=dateModified content="2021-11-27T15:57:29+08:00">
-<meta itemprop=wordCount content="4065">
+<meta itemprop=wordCount content="4781">
 <meta itemprop=keywords content><meta name=twitter:card content="summary">
 <meta name=twitter:title content="Dubbo中的服务路由">
 <meta name=twitter:description content><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
@@ -91,8 +91,8 @@
 <h1 class=post-title>Dubbo中的服务路由</h1>
 <div class=post-meta>
 <span class=post-time> 2021-11-27 </span>
-<span class=more-meta> 4065 words </span>
-<span class=more-meta> 9 mins read </span>
+<span class=more-meta> 4781 words </span>
+<span class=more-meta> 10 mins read </span>
 </div>
 </header>
 <div class=post-toc id=post-toc>
@@ -108,6 +108,7 @@
 <li><a href=#conditionrouter源码解析>ConditionRouter源码解析</a></li>
 </ul>
 </li>
+<li><a href=#标签路由源码解析>标签路由源码解析</a></li>
 <li><a href=#总结>总结</a></li>
 <li><a href=#参考文献>参考文献</a></li>
 </ul>
@@ -139,18 +140,18 @@
 </span></code></pre></td>
 <td class=lntd>
 <pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>private</span> <span class=nf>RouterChain</span><span class=o>(</span><span class=n>URL</span> <span class=n>url</span><span class=o>)</span> <span class=o>{</span>
-	<span class=c1>// ...
-</span><span class=c1></span>	<span class=c1>// step1 加载所有的路由扩展
-</span><span class=c1></span>	<span class=n>List</span><span class=o>&lt;</span><span class=n>RouterFactory</span><span class=o>&gt;</span> <span class=n>extensionFactories</span> <span class=o>=</span> <span class=n>url</span><span class=o>.</span><span class=na>getOrDefaultApplicationModel</span><span class=o>().</span><span class=na>getExtensionLoader</span><span class=o>(</span><span class=n>RouterFactory</span><span class=o>.</span><span class=na>class</span><span class=o>)</span>
-		<span class=o>.</span><span class=na>getActivateExtension</span><span class=o>(</span><span class=n>url</span><span class=o>,</span> <span class=n>ROUTER_KEY</span><span class=o>);</span>
-	<span class=c1>// step2 构造路由规则，并按照优先级排序
-</span><span class=c1></span>	<span class=n>List</span><span class=o>&lt;</span><span class=n>Router</span><span class=o>&gt;</span> <span class=n>routers</span> <span class=o>=</span> <span class=n>extensionFactories</span><span class=o>.</span><span class=na>stream</span><span class=o>()</span>
-		<span class=o>.</span><span class=na>map</span><span class=o>(</span><span class=n>factory</span> <span class=o>-&gt;</span> <span class=n>factory</span><span class=o>.</span><span class=na>getRouter</span><span class=o>(</span><span class=n>url</span><span class=o>))</span>
-		<span class=o>.</span><span class=na>sorted</span><span class=o>(</span><span class=n>Router</span><span class=o>::</span><span class=n>compareTo</span><span class=o>)</span>
-		<span class=o>.</span><span class=na>collect</span><span class=o>(</span><span class=n>Collectors</span><span class=o>.</span><span class=na>toList</span><span class=o>());</span>
-	<span class=c1>// step3 初始化
-</span><span class=c1></span>	<span class=n>initWithRouters</span><span class=o>(</span><span class=n>routers</span><span class=o>);</span>
-	<span class=c1>// ... 
+    <span class=c1>// ...
+</span><span class=c1></span>    <span class=c1>// step1 加载所有的路由扩展
+</span><span class=c1></span>    <span class=n>List</span><span class=o>&lt;</span><span class=n>RouterFactory</span><span class=o>&gt;</span> <span class=n>extensionFactories</span> <span class=o>=</span> <span class=n>url</span><span class=o>.</span><span class=na>getOrDefaultApplicationModel</span><span class=o>().</span><span class=na>getExtensionLoader</span><span class=o>(</span><span class=n>RouterFactory</span><span class=o>.</span><span class=na>class</span><span class=o>)</span>
+        <span class=o>.</span><span class=na>getActivateExtension</span><span class=o>(</span><span class=n>url</span><span class=o>,</span> <span class=n>ROUTER_KEY</span><span class=o>);</span>
+    <span class=c1>// step2 构造路由规则，并按照优先级排序
+</span><span class=c1></span>    <span class=n>List</span><span class=o>&lt;</span><span class=n>Router</span><span class=o>&gt;</span> <span class=n>routers</span> <span class=o>=</span> <span class=n>extensionFactories</span><span class=o>.</span><span class=na>stream</span><span class=o>()</span>
+        <span class=o>.</span><span class=na>map</span><span class=o>(</span><span class=n>factory</span> <span class=o>-&gt;</span> <span class=n>factory</span><span class=o>.</span><span class=na>getRouter</span><span class=o>(</span><span class=n>url</span><span class=o>))</span>
+        <span class=o>.</span><span class=na>sorted</span><span class=o>(</span><span class=n>Router</span><span class=o>::</span><span class=n>compareTo</span><span class=o>)</span>
+        <span class=o>.</span><span class=na>collect</span><span class=o>(</span><span class=n>Collectors</span><span class=o>.</span><span class=na>toList</span><span class=o>());</span>
+    <span class=c1>// step3 初始化
+</span><span class=c1></span>    <span class=n>initWithRouters</span><span class=o>(</span><span class=n>routers</span><span class=o>);</span>
+    <span class=c1>// ... 
 </span><span class=c1></span><span class=o>}</span>
 </code></pre></td></tr></table>
 </div>
@@ -172,7 +173,7 @@
 <figure class=align-center>
 <img src=https://blog-1302636809.file.myqcloud.com/post/dubbo%E6%9C%8D%E5%8A%A1%E8%B7%AF%E7%94%B1/images/2021-11-27-16-50-44.png width=70%>
 </figure>
-<p>标签路由的配置方式类似这里不再赘述。</p>
+<p>标签路由的配置方式类似，这里不再赘述。</p>
 <p><strong>使用硬编码配置</strong></p>
 <p>使用硬编码配置条件路由的方式是，在服务调用前时，向注册中心写入配置即可：</p>
 <div class=highlight><div class=chroma>
@@ -205,7 +206,7 @@ java -jar xxx-provider.jar -Ddubbo.provider.tag={the tag you want, may come from
 <figure class=align-center>
 <img src=https://blog-1302636809.file.myqcloud.com/post/dubbo%E6%9C%8D%E5%8A%A1%E8%B7%AF%E7%94%B1/images/%e6%9d%a1%e4%bb%b6%e8%b7%af%e7%94%b1%e7%b1%bb%e5%9b%be.png>
 </figure>
-<p>其中Router是接口，定义了路由相关的行为；AbstractRouter是框架（Effective Java Item20）；ListenableRouter是AbstractRouter的实现，同时实现了ConfigurationListener接口，监听配置的变更；AppRouter和ServiceRouter则是ListenableRouter的模板子类，定义了自己的优先级和名称。</p>
+<p>其中Router是接口，定义了路由相关的行为；AbstractRouter是框架（Effective Java Item20）；ListenableRouter是AbstractRouter的实现，同时实现了ConfigurationListener接口，监听配置的变更；AppRouter和ServiceRouter则是ListenableRouter的模板子类，分别用于应用级和接口级，在子类内部定义了自己的优先级和名称。</p>
 <p>对于一个路由规则，从整体上可以分成两部分：conditions和其他。其中conditions下的内容是详细规则，作为ConditionRouter存储在ListenableRouter中；而其他配置则作为原始规则存储在ListenableRouter中。创建一个条件路由规则（以service为例）的整体流程如下图所示：</p>
 <figure class=align-center>
 <img src=https://blog-1302636809.file.myqcloud.com/post/dubbo%E6%9C%8D%E5%8A%A1%E8%B7%AF%E7%94%B1/images/%e5%88%9b%e5%bb%baservice%e8%b7%af%e7%94%b1.png>
@@ -239,24 +240,24 @@ java -jar xxx-provider.jar -Ddubbo.provider.tag={the tag you want, may come from
 </span></code></pre></td>
 <td class=lntd>
 <pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kt>void</span> <span class=nf>init</span><span class=o>(</span><span class=n>String</span> <span class=n>rule</span><span class=o>)</span> <span class=o>{</span>
-	<span class=k>try</span> <span class=o>{</span>
-		<span class=k>if</span> <span class=o>(</span><span class=n>rule</span> <span class=o>==</span> <span class=kc>null</span> <span class=o>||</span> <span class=n>rule</span><span class=o>.</span><span class=na>trim</span><span class=o>().</span><span class=na>length</span><span class=o>()</span> <span class=o>==</span> <span class=n>0</span><span class=o>)</span> <span class=o>{</span>
-			<span class=k>throw</span> <span class=k>new</span> <span class=n>IllegalArgumentException</span><span class=o>(</span><span class=s>&#34;Illegal route rule!&#34;</span><span class=o>);</span>
-		<span class=o>}</span>
-		<span class=c1>// step1 分割规则，得到匹配器和过滤器
-</span><span class=c1></span>		<span class=n>rule</span> <span class=o>=</span> <span class=n>rule</span><span class=o>.</span><span class=na>replace</span><span class=o>(</span><span class=s>&#34;consumer.&#34;</span><span class=o>,</span> <span class=s>&#34;&#34;</span><span class=o>).</span><span class=na>replace</span><span class=o>(</span><span class=s>&#34;provider.&#34;</span><span class=o>,</span> <span class=s>&#34;&#34;</span><span class=o>);</span>
-		<span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>rule</span><span class=o>.</span><span class=na>indexOf</span><span class=o>(</span><span class=s>&#34;=&gt;&#34;</span><span class=o>);</span>
-		<span class=n>String</span> <span class=n>whenRule</span> <span class=o>=</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>0</span> <span class=o>?</span> <span class=kc>null</span> <span class=o>:</span> <span class=n>rule</span><span class=o>.</span><span class=na>substring</span><span class=o>(</span><span class=n>0</span><span class=o>,</span> <span class=n>i</span><span class=o>).</span><span class=na>trim</span><span class=o>();</span>
-		<span class=n>String</span> <span class=n>thenRule</span> <span class=o>=</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>0</span> <span class=o>?</span> <span class=n>rule</span><span class=o>.</span><span class=na>trim</span><span class=o>()</span> <span class=o>:</span> <span class=n>rule</span><span class=o>.</span><span class=na>substring</span><span class=o>(</span><span class=n>i</span> <span class=o>+</span> <span class=n>2</span><span class=o>).</span><span class=na>trim</span><span class=o>();</span>
-		<span class=c1>// step2 解析规则，存放为MatchPair
-</span><span class=c1></span>		<span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>MatchPair</span><span class=o>&gt;</span> <span class=n>when</span> <span class=o>=</span> <span class=n>StringUtils</span><span class=o>.</span><span class=na>isBlank</span><span class=o>(</span><span class=n>whenRule</span><span class=o>)</span> <span class=o>||</span> <span class=s>&#34;true&#34;</span><span class=o>.</span><span class=na>equals</span><span class=o>(</span><span class=n>whenRule</span><span class=o>)</span> <span class=o>?</span> <span class=k>new</span> <span class=n>HashMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>MatchPair</span><span class=o>&gt;()</span> <span class=o>:</span> <span class=n>parseRule</span><span class=o>(</span><span class=n>whenRule</span><span class=o>);</span>
-		<span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>MatchPair</span><span class=o>&gt;</span> <span class=n>then</span> <span class=o>=</span> <span class=n>StringUtils</span><span class=o>.</span><span class=na>isBlank</span><span class=o>(</span><span class=n>thenRule</span><span class=o>)</span> <span class=o>||</span> <span class=s>&#34;false&#34;</span><span class=o>.</span><span class=na>equals</span><span class=o>(</span><span class=n>thenRule</span><span class=o>)</span> <span class=o>?</span> <span class=kc>null</span> <span class=o>:</span> <span class=n>parseRule</span><span class=o>(</span><span class=n>thenRule</span><span class=o>);</span>
-		<span class=c1>// NOTE: It should be determined on the business level whether the `When condition` can be empty or not.
-</span><span class=c1></span>		<span class=k>this</span><span class=o>.</span><span class=na>whenCondition</span> <span class=o>=</span> <span class=n>when</span><span class=o>;</span>
-		<span class=k>this</span><span class=o>.</span><span class=na>thenCondition</span> <span class=o>=</span> <span class=n>then</span><span class=o>;</span>
-	<span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>ParseException</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
-		<span class=k>throw</span> <span class=k>new</span> <span class=n>IllegalStateException</span><span class=o>(</span><span class=n>e</span><span class=o>.</span><span class=na>getMessage</span><span class=o>(),</span> <span class=n>e</span><span class=o>);</span>
-	<span class=o>}</span>
+    <span class=k>try</span> <span class=o>{</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>rule</span> <span class=o>==</span> <span class=kc>null</span> <span class=o>||</span> <span class=n>rule</span><span class=o>.</span><span class=na>trim</span><span class=o>().</span><span class=na>length</span><span class=o>()</span> <span class=o>==</span> <span class=n>0</span><span class=o>)</span> <span class=o>{</span>
+            <span class=k>throw</span> <span class=k>new</span> <span class=n>IllegalArgumentException</span><span class=o>(</span><span class=s>&#34;Illegal route rule!&#34;</span><span class=o>);</span>
+        <span class=o>}</span>
+        <span class=c1>// step1 分割规则，得到匹配器和过滤器
+</span><span class=c1></span>        <span class=n>rule</span> <span class=o>=</span> <span class=n>rule</span><span class=o>.</span><span class=na>replace</span><span class=o>(</span><span class=s>&#34;consumer.&#34;</span><span class=o>,</span> <span class=s>&#34;&#34;</span><span class=o>).</span><span class=na>replace</span><span class=o>(</span><span class=s>&#34;provider.&#34;</span><span class=o>,</span> <span class=s>&#34;&#34;</span><span class=o>);</span>
+        <span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>rule</span><span class=o>.</span><span class=na>indexOf</span><span class=o>(</span><span class=s>&#34;=&gt;&#34;</span><span class=o>);</span>
+        <span class=n>String</span> <span class=n>whenRule</span> <span class=o>=</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>0</span> <span class=o>?</span> <span class=kc>null</span> <span class=o>:</span> <span class=n>rule</span><span class=o>.</span><span class=na>substring</span><span class=o>(</span><span class=n>0</span><span class=o>,</span> <span class=n>i</span><span class=o>).</span><span class=na>trim</span><span class=o>();</span>
+        <span class=n>String</span> <span class=n>thenRule</span> <span class=o>=</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>0</span> <span class=o>?</span> <span class=n>rule</span><span class=o>.</span><span class=na>trim</span><span class=o>()</span> <span class=o>:</span> <span class=n>rule</span><span class=o>.</span><span class=na>substring</span><span class=o>(</span><span class=n>i</span> <span class=o>+</span> <span class=n>2</span><span class=o>).</span><span class=na>trim</span><span class=o>();</span>
+        <span class=c1>// step2 解析规则，存放为MatchPair
+</span><span class=c1></span>        <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>MatchPair</span><span class=o>&gt;</span> <span class=n>when</span> <span class=o>=</span> <span class=n>StringUtils</span><span class=o>.</span><span class=na>isBlank</span><span class=o>(</span><span class=n>whenRule</span><span class=o>)</span> <span class=o>||</span> <span class=s>&#34;true&#34;</span><span class=o>.</span><span class=na>equals</span><span class=o>(</span><span class=n>whenRule</span><span class=o>)</span> <span class=o>?</span> <span class=k>new</span> <span class=n>HashMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>MatchPair</span><span class=o>&gt;()</span> <span class=o>:</span> <span class=n>parseRule</span><span class=o>(</span><span class=n>whenRule</span><span class=o>);</span>
+        <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>MatchPair</span><span class=o>&gt;</span> <span class=n>then</span> <span class=o>=</span> <span class=n>StringUtils</span><span class=o>.</span><span class=na>isBlank</span><span class=o>(</span><span class=n>thenRule</span><span class=o>)</span> <span class=o>||</span> <span class=s>&#34;false&#34;</span><span class=o>.</span><span class=na>equals</span><span class=o>(</span><span class=n>thenRule</span><span class=o>)</span> <span class=o>?</span> <span class=kc>null</span> <span class=o>:</span> <span class=n>parseRule</span><span class=o>(</span><span class=n>thenRule</span><span class=o>);</span>
+        <span class=c1>// NOTE: It should be determined on the business level whether the `When condition` can be empty or not.
+</span><span class=c1></span>        <span class=k>this</span><span class=o>.</span><span class=na>whenCondition</span> <span class=o>=</span> <span class=n>when</span><span class=o>;</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>thenCondition</span> <span class=o>=</span> <span class=n>then</span><span class=o>;</span>
+    <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>ParseException</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>throw</span> <span class=k>new</span> <span class=n>IllegalStateException</span><span class=o>(</span><span class=n>e</span><span class=o>.</span><span class=na>getMessage</span><span class=o>(),</span> <span class=n>e</span><span class=o>);</span>
+    <span class=o>}</span>
 <span class=o>}</span>
 </code></pre></td></tr></table>
 </div>
@@ -299,18 +300,18 @@ java -jar xxx-provider.jar -Ddubbo.provider.tag={the tag you want, may come from
 <span class=n>String</span> <span class=n>content</span> <span class=o>=</span> <span class=n>matcher</span><span class=o>.</span><span class=na>group</span><span class=o>(</span><span class=n>2</span><span class=o>);</span>
 <span class=c1>// 处理规则的开始
 </span><span class=c1></span><span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>separator</span><span class=o>))</span> <span class=o>{</span>
-	<span class=n>pair</span> <span class=o>=</span> <span class=k>new</span> <span class=n>MatchPair</span><span class=o>();</span>
-	<span class=n>condition</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>content</span><span class=o>,</span> <span class=n>pair</span><span class=o>);</span>
+    <span class=n>pair</span> <span class=o>=</span> <span class=k>new</span> <span class=n>MatchPair</span><span class=o>();</span>
+    <span class=n>condition</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>content</span><span class=o>,</span> <span class=n>pair</span><span class=o>);</span>
 <span class=o>}</span>
 <span class=c1>// 处理多个条件的情况
 </span><span class=c1></span><span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=s>&#34;&amp;&#34;</span><span class=o>.</span><span class=na>equals</span><span class=o>(</span><span class=n>separator</span><span class=o>))</span> <span class=o>{</span>
-	<span class=c1>// condition是一条规则
-</span><span class=c1></span>	<span class=k>if</span> <span class=o>(</span><span class=n>condition</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>content</span><span class=o>)</span> <span class=o>==</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
-		<span class=n>pair</span> <span class=o>=</span> <span class=k>new</span> <span class=n>MatchPair</span><span class=o>();</span>
-		<span class=n>condition</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>content</span><span class=o>,</span> <span class=n>pair</span><span class=o>);</span>
-	<span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
-		<span class=n>pair</span> <span class=o>=</span> <span class=n>condition</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>content</span><span class=o>);</span>
-	<span class=o>}</span>
+    <span class=c1>// condition是一条规则
+</span><span class=c1></span>    <span class=k>if</span> <span class=o>(</span><span class=n>condition</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>content</span><span class=o>)</span> <span class=o>==</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>pair</span> <span class=o>=</span> <span class=k>new</span> <span class=n>MatchPair</span><span class=o>();</span>
+        <span class=n>condition</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>content</span><span class=o>,</span> <span class=n>pair</span><span class=o>);</span>
+    <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+        <span class=n>pair</span> <span class=o>=</span> <span class=n>condition</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>content</span><span class=o>);</span>
+    <span class=o>}</span>
 <span class=o>}</span>
 <span class=c1>// ...
 </span></code></pre></td></tr></table>
@@ -345,26 +346,26 @@ java -jar xxx-provider.jar -Ddubbo.provider.tag={the tag you want, may come from
 <td class=lntd>
 <pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=c1>// step1 首先判断当前Consumer是否匹配当前规则
 </span><span class=c1></span><span class=k>if</span> <span class=o>(!</span><span class=n>matchWhen</span><span class=o>(</span><span class=n>url</span><span class=o>,</span> <span class=n>invocation</span><span class=o>))</span> <span class=o>{</span>
-	<span class=k>return</span> <span class=k>new</span> <span class=n>RouterResult</span><span class=o>&lt;&gt;(</span><span class=n>invokers</span><span class=o>);</span>
+    <span class=k>return</span> <span class=k>new</span> <span class=n>RouterResult</span><span class=o>&lt;&gt;(</span><span class=n>invokers</span><span class=o>);</span>
 <span class=o>}</span>
 <span class=c1>// step2 如果过滤规则为空，说明禁用当前的调用者，直接返回空列表
 </span><span class=c1></span><span class=n>List</span><span class=o>&lt;</span><span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;&gt;</span> <span class=n>result</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;</span><span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;&gt;();</span>
 <span class=k>if</span> <span class=o>(</span><span class=n>thenCondition</span> <span class=o>==</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
-	<span class=n>logger</span><span class=o>.</span><span class=na>warn</span><span class=o>(</span><span class=s>&#34;The current consumer in the service blacklist. consumer: &#34;</span> <span class=o>+</span> <span class=n>NetUtils</span><span class=o>.</span><span class=na>getLocalHost</span><span class=o>()</span> <span class=o>+</span> <span class=s>&#34;, service: &#34;</span> <span class=o>+</span> <span class=n>url</span><span class=o>.</span><span class=na>getServiceKey</span><span class=o>());</span>
-	<span class=k>return</span> <span class=k>new</span> <span class=n>RouterResult</span><span class=o>&lt;&gt;(</span><span class=n>result</span><span class=o>);</span>
+    <span class=n>logger</span><span class=o>.</span><span class=na>warn</span><span class=o>(</span><span class=s>&#34;The current consumer in the service blacklist. consumer: &#34;</span> <span class=o>+</span> <span class=n>NetUtils</span><span class=o>.</span><span class=na>getLocalHost</span><span class=o>()</span> <span class=o>+</span> <span class=s>&#34;, service: &#34;</span> <span class=o>+</span> <span class=n>url</span><span class=o>.</span><span class=na>getServiceKey</span><span class=o>());</span>
+    <span class=k>return</span> <span class=k>new</span> <span class=n>RouterResult</span><span class=o>&lt;&gt;(</span><span class=n>result</span><span class=o>);</span>
 <span class=o>}</span>
 <span class=c1>// step3 遍历所有Invoker，如果符合规则条件则加入到结果中
 </span><span class=c1></span><span class=k>for</span> <span class=o>(</span><span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=n>invoker</span> <span class=o>:</span> <span class=n>invokers</span><span class=o>)</span> <span class=o>{</span>
-	<span class=k>if</span> <span class=o>(</span><span class=n>matchThen</span><span class=o>(</span><span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>(),</span> <span class=n>url</span><span class=o>))</span> <span class=o>{</span>
-		<span class=n>result</span><span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=n>invoker</span><span class=o>);</span>
-	<span class=o>}</span>
+    <span class=k>if</span> <span class=o>(</span><span class=n>matchThen</span><span class=o>(</span><span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>(),</span> <span class=n>url</span><span class=o>))</span> <span class=o>{</span>
+        <span class=n>result</span><span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=n>invoker</span><span class=o>);</span>
+    <span class=o>}</span>
 <span class=o>}</span>
 <span class=c1>// step4 返回结果
 </span><span class=c1></span><span class=k>if</span> <span class=o>(!</span><span class=n>result</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>())</span> <span class=o>{</span>
-	<span class=k>return</span> <span class=k>new</span> <span class=n>RouterResult</span><span class=o>&lt;&gt;(</span><span class=n>result</span><span class=o>);</span>
+<span class=n>ret</span> <span class=n>urn</span> <span class=k>new</span> <span class=n>RouterResult</span><span class=o>&lt;&gt;(</span><span class=n>result</span><span class=o>);</span>
 <span class=o>}</span> <span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=k>this</span><span class=o>.</span><span class=na>isForce</span><span class=o>())</span> <span class=o>{</span>
-	<span class=n>logger</span><span class=o>.</span><span class=na>warn</span><span class=o>(</span><span class=s>&#34;The route result is empty and force execute. consumer: &#34;</span> <span class=o>+</span> <span class=n>NetUtils</span><span class=o>.</span><span class=na>getLocalHost</span><span class=o>()</span> <span class=o>+</span> <span class=s>&#34;, service: &#34;</span> <span class=o>+</span> <span class=n>url</span><span class=o>.</span><span class=na>getServiceKey</span><span class=o>()</span> <span class=o>+</span> <span class=s>&#34;, router: &#34;</span> <span class=o>+</span> <span class=n>url</span><span class=o>.</span><span class=na>getParameterAndDecoded</span><span class=o>(</span><span class=n>RULE_KEY</span><span class=o>));</span>
-	<span class=k>return</span> <span class=k>new</span> <span class=n>RouterResult</span><span class=o>&lt;&gt;(</span><span class=n>result</span><span class=o>);</span>
+    <span class=n>logger</span><span class=o>.</span><span class=na>warn</span><span class=o>(</span><span class=s>&#34;The route result is empty and force execute. consumer: &#34;</span> <span class=o>+</span> <span class=n>NetUtils</span><span class=o>.</span><span class=na>getLocalHost</span><span class=o>()</span> <span class=o>+</span> <span class=s>&#34;, service: &#34;</span> <span class=o>+</span> <span class=n>url</span><span class=o>.</span><span class=na>getServiceKey</span><span class=o>()</span> <span class=o>+</span> <span class=s>&#34;, router: &#34;</span> <span class=o>+</span> <span class=n>url</span><span class=o>.</span><span class=na>getParameterAndDecoded</span><span class=o>(</span><span class=n>RULE_KEY</span><span class=o>));</span>
+    <span class=k>return</span> <span class=k>new</span> <span class=n>RouterResult</span><span class=o>&lt;&gt;(</span><span class=n>result</span><span class=o>);</span>
 <span class=o>}</span>
 </code></pre></td></tr></table>
 </div>
@@ -380,10 +381,10 @@ java -jar xxx-provider.jar -Ddubbo.provider.tag={the tag you want, may come from
 </span></code></pre></td>
 <td class=lntd>
 <pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kt>boolean</span> <span class=nf>matchWhen</span><span class=o>(</span><span class=n>URL</span> <span class=n>url</span><span class=o>,</span> <span class=n>Invocation</span> <span class=n>invocation</span><span class=o>)</span> <span class=o>{</span>
-	<span class=k>return</span> <span class=n>CollectionUtils</span><span class=o>.</span><span class=na>isEmptyMap</span><span class=o>(</span><span class=n>whenCondition</span><span class=o>)</span> <span class=o>||</span> <span class=n>matchCondition</span><span class=o>(</span><span class=n>whenCondition</span><span class=o>,</span> <span class=n>url</span><span class=o>,</span> <span class=kc>null</span><span class=o>,</span> <span class=n>invocation</span><span class=o>);</span>
+    <span class=k>return</span> <span class=n>CollectionUtils</span><span class=o>.</span><span class=na>isEmptyMap</span><span class=o>(</span><span class=n>whenCondition</span><span class=o>)</span> <span class=o>||</span> <span class=n>matchCondition</span><span class=o>(</span><span class=n>whenCondition</span><span class=o>,</span> <span class=n>url</span><span class=o>,</span> <span class=kc>null</span><span class=o>,</span> <span class=n>invocation</span><span class=o>);</span>
 <span class=o>}</span>
 <span class=kd>private</span> <span class=kt>boolean</span> <span class=nf>matchThen</span><span class=o>(</span><span class=n>URL</span> <span class=n>url</span><span class=o>,</span> <span class=n>URL</span> <span class=n>param</span><span class=o>)</span> <span class=o>{</span>
-	<span class=k>return</span> <span class=n>CollectionUtils</span><span class=o>.</span><span class=na>isNotEmptyMap</span><span class=o>(</span><span class=n>thenCondition</span><span class=o>)</span> <span class=o>&amp;&amp;</span> <span class=n>matchCondition</span><span class=o>(</span><span class=n>thenCondition</span><span class=o>,</span> <span class=n>url</span><span class=o>,</span> <span class=n>param</span><span class=o>,</span> <span class=kc>null</span><span class=o>);</span>
+    <span class=k>return</span> <span class=n>CollectionUtils</span><span class=o>.</span><span class=na>isNotEmptyMap</span><span class=o>(</span><span class=n>thenCondition</span><span class=o>)</span> <span class=o>&amp;&amp;</span> <span class=n>matchCondition</span><span class=o>(</span><span class=n>thenCondition</span><span class=o>,</span> <span class=n>url</span><span class=o>,</span> <span class=n>param</span><span class=o>,</span> <span class=kc>null</span><span class=o>);</span>
 <span class=o>}</span>
 </code></pre></td></tr></table>
 </div>
@@ -451,50 +452,165 @@ java -jar xxx-provider.jar -Ddubbo.provider.tag={the tag you want, may come from
 </span></code></pre></td>
 <td class=lntd>
 <pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>static</span> <span class=kt>boolean</span> <span class=nf>isMatchGlobPattern</span><span class=o>(</span><span class=n>String</span> <span class=n>pattern</span><span class=o>,</span> <span class=n>String</span> <span class=n>value</span><span class=o>,</span> <span class=n>URL</span> <span class=n>param</span><span class=o>)</span> <span class=o>{</span>
-	<span class=k>if</span> <span class=o>(</span><span class=n>param</span> <span class=o>!=</span> <span class=kc>null</span> <span class=o>&amp;&amp;</span> <span class=n>pattern</span><span class=o>.</span><span class=na>startsWith</span><span class=o>(</span><span class=s>&#34;$&#34;</span><span class=o>))</span> <span class=o>{</span>
-		<span class=n>pattern</span> <span class=o>=</span> <span class=n>param</span><span class=o>.</span><span class=na>getRawParameter</span><span class=o>(</span><span class=n>pattern</span><span class=o>.</span><span class=na>substring</span><span class=o>(</span><span class=n>1</span><span class=o>));</span>
-	<span class=o>}</span>
-	<span class=k>return</span> <span class=n>isMatchGlobPattern</span><span class=o>(</span><span class=n>pattern</span><span class=o>,</span> <span class=n>value</span><span class=o>);</span>
+    <span class=k>if</span> <span class=o>(</span><span class=n>param</span> <span class=o>!=</span> <span class=kc>null</span> <span class=o>&amp;&amp;</span> <span class=n>pattern</span><span class=o>.</span><span class=na>startsWith</span><span class=o>(</span><span class=s>&#34;$&#34;</span><span class=o>))</span> <span class=o>{</span>
+        <span class=n>pattern</span> <span class=o>=</span> <span class=n>param</span><span class=o>.</span><span class=na>getRawParameter</span><span class=o>(</span><span class=n>pattern</span><span class=o>.</span><span class=na>substring</span><span class=o>(</span><span class=n>1</span><span class=o>));</span>
+    <span class=o>}</span>
+    <span class=k>return</span> <span class=n>isMatchGlobPattern</span><span class=o>(</span><span class=n>pattern</span><span class=o>,</span> <span class=n>value</span><span class=o>);</span>
 <span class=o>}</span>
 
 <span class=kd>public</span> <span class=kd>static</span> <span class=kt>boolean</span> <span class=nf>isMatchGlobPattern</span><span class=o>(</span><span class=n>String</span> <span class=n>pattern</span><span class=o>,</span> <span class=n>String</span> <span class=n>value</span><span class=o>)</span> <span class=o>{</span>
-	<span class=c1>// 通配符直接返回true
-</span><span class=c1></span>	<span class=k>if</span> <span class=o>(</span><span class=s>&#34;*&#34;</span><span class=o>.</span><span class=na>equals</span><span class=o>(</span><span class=n>pattern</span><span class=o>))</span> <span class=o>{</span>
-		<span class=k>return</span> <span class=kc>true</span><span class=o>;</span>
-	<span class=o>}</span>
-	<span class=c1>// 匹配内容或对象均为空返回true
-</span><span class=c1></span>	<span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>pattern</span><span class=o>)</span> <span class=o>&amp;&amp;</span> <span class=n>StringUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>value</span><span class=o>))</span> <span class=o>{</span>
-		<span class=k>return</span> <span class=kc>true</span><span class=o>;</span>
-	<span class=o>}</span>
-	<span class=c1>// 匹配内容或对象有一项为空返回true
-</span><span class=c1></span>	<span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>pattern</span><span class=o>)</span> <span class=o>||</span> <span class=n>StringUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>value</span><span class=o>))</span> <span class=o>{</span>
-		<span class=k>return</span> <span class=kc>false</span><span class=o>;</span>
-	<span class=o>}</span>
-	<span class=c1>// 判断是否使用了通配符的情况
-</span><span class=c1></span>	<span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>pattern</span><span class=o>.</span><span class=na>lastIndexOf</span><span class=o>(</span><span class=sc>&#39;*&#39;</span><span class=o>);</span>
-	<span class=c1>// 未使用通配符，全量匹配
-</span><span class=c1></span>	<span class=k>if</span> <span class=o>(</span><span class=n>i</span> <span class=o>==</span> <span class=o>-</span><span class=n>1</span><span class=o>)</span> <span class=o>{</span>
-		<span class=k>return</span> <span class=n>value</span><span class=o>.</span><span class=na>equals</span><span class=o>(</span><span class=n>pattern</span><span class=o>);</span>
-	<span class=o>}</span>
-	<span class=c1>// &#34;*&#34; 在最后，判断value的起始是否与其相同
-</span><span class=c1></span>	<span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=n>i</span> <span class=o>==</span> <span class=n>pattern</span><span class=o>.</span><span class=na>length</span><span class=o>()</span> <span class=o>-</span> <span class=n>1</span><span class=o>)</span> <span class=o>{</span>
-		<span class=k>return</span> <span class=n>value</span><span class=o>.</span><span class=na>startsWith</span><span class=o>(</span><span class=n>pattern</span><span class=o>.</span><span class=na>substring</span><span class=o>(</span><span class=n>0</span><span class=o>,</span> <span class=n>i</span><span class=o>));</span>
-	<span class=o>}</span>
-	<span class=c1>// &#34;*&#34; 在开始，判断value的结束是否相同
-</span><span class=c1></span>	<span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=n>i</span> <span class=o>==</span> <span class=n>0</span><span class=o>)</span> <span class=o>{</span>
-		<span class=k>return</span> <span class=n>value</span><span class=o>.</span><span class=na>endsWith</span><span class=o>(</span><span class=n>pattern</span><span class=o>.</span><span class=na>substring</span><span class=o>(</span><span class=n>i</span> <span class=o>+</span> <span class=n>1</span><span class=o>));</span>
-	<span class=o>}</span>
-	<span class=c1>// &#34;*&#34; 在中间，同时判断其实和结束
-</span><span class=c1></span>	<span class=k>else</span> <span class=o>{</span>
-		<span class=n>String</span> <span class=n>prefix</span> <span class=o>=</span> <span class=n>pattern</span><span class=o>.</span><span class=na>substring</span><span class=o>(</span><span class=n>0</span><span class=o>,</span> <span class=n>i</span><span class=o>);</span>
-		<span class=n>String</span> <span class=n>suffix</span> <span class=o>=</span> <span class=n>pattern</span><span class=o>.</span><span class=na>substring</span><span class=o>(</span><span class=n>i</span> <span class=o>+</span> <span class=n>1</span><span class=o>);</span>
-		<span class=k>return</span> <span class=n>value</span><span class=o>.</span><span class=na>startsWith</span><span class=o>(</span><span class=n>prefix</span><span class=o>)</span> <span class=o>&amp;&amp;</span> <span class=n>value</span><span class=o>.</span><span class=na>endsWith</span><span class=o>(</span><span class=n>suffix</span><span class=o>);</span>
-	<span class=o>}</span>
+    <span class=c1>// 通配符直接返回true
+</span><span class=c1></span>    <span class=k>if</span> <span class=o>(</span><span class=s>&#34;*&#34;</span><span class=o>.</span><span class=na>equals</span><span class=o>(</span><span class=n>pattern</span><span class=o>))</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=kc>true</span><span class=o>;</span>
+    <span class=o>}</span>
+    <span class=c1>// 匹配内容或对象均为空返回true
+</span><span class=c1></span>    <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>pattern</span><span class=o>)</span> <span class=o>&amp;&amp;</span> <span class=n>StringUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>value</span><span class=o>))</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=kc>true</span><span class=o>;</span>
+    <span class=o>}</span>
+    <span class=c1>// 匹配内容或对象有一项为空返回true
+</span><span class=c1></span>    <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>pattern</span><span class=o>)</span> <span class=o>||</span> <span class=n>StringUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>value</span><span class=o>))</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=kc>false</span><span class=o>;</span>
+    <span class=o>}</span>
+    <span class=c1>// 判断是否使用了通配符的情况
+</span><span class=c1></span>    <span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>pattern</span><span class=o>.</span><span class=na>lastIndexOf</span><span class=o>(</span><span class=sc>&#39;*&#39;</span><span class=o>);</span>
+    <span class=c1>// 未使用通配符，全量匹配
+</span><span class=c1></span>    <span class=k>if</span> <span class=o>(</span><span class=n>i</span> <span class=o>==</span> <span class=o>-</span><span class=n>1</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>value</span><span class=o>.</span><span class=na>equals</span><span class=o>(</span><span class=n>pattern</span><span class=o>);</span>
+    <span class=o>}</span>
+    <span class=c1>// &#34;*&#34; 在最后，判断value的起始是否与其相同
+</span><span class=c1></span>    <span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=n>i</span> <span class=o>==</span> <span class=n>pattern</span><span class=o>.</span><span class=na>length</span><span class=o>()</span> <span class=o>-</span> <span class=n>1</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>value</span><span class=o>.</span><span class=na>startsWith</span><span class=o>(</span><span class=n>pattern</span><span class=o>.</span><span class=na>substring</span><span class=o>(</span><span class=n>0</span><span class=o>,</span> <span class=n>i</span><span class=o>));</span>
+    <span class=o>}</span>
+    <span class=c1>// &#34;*&#34; 在开始，判断value的结束是否相同
+</span><span class=c1></span>    <span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=n>i</span> <span class=o>==</span> <span class=n>0</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>value</span><span class=o>.</span><span class=na>endsWith</span><span class=o>(</span><span class=n>pattern</span><span class=o>.</span><span class=na>substring</span><span class=o>(</span><span class=n>i</span> <span class=o>+</span> <span class=n>1</span><span class=o>));</span>
+    <span class=o>}</span>
+    <span class=c1>// &#34;*&#34; 在中间，同时判断其实和结束
+</span><span class=c1></span>    <span class=k>else</span> <span class=o>{</span>
+        <span class=n>String</span> <span class=n>prefix</span> <span class=o>=</span> <span class=n>pattern</span><span class=o>.</span><span class=na>substring</span><span class=o>(</span><span class=n>0</span><span class=o>,</span> <span class=n>i</span><span class=o>);</span>
+        <span class=n>String</span> <span class=n>suffix</span> <span class=o>=</span> <span class=n>pattern</span><span class=o>.</span><span class=na>substring</span><span class=o>(</span><span class=n>i</span> <span class=o>+</span> <span class=n>1</span><span class=o>);</span>
+        <span class=k>return</span> <span class=n>value</span><span class=o>.</span><span class=na>startsWith</span><span class=o>(</span><span class=n>prefix</span><span class=o>)</span> <span class=o>&amp;&amp;</span> <span class=n>value</span><span class=o>.</span><span class=na>endsWith</span><span class=o>(</span><span class=n>suffix</span><span class=o>);</span>
+    <span class=o>}</span>
 <span class=o>}</span>
 </code></pre></td></tr></table>
 </div>
-</div><h1 id=总结>总结</h1>
-<p>以上就是本文的全部内容，先从路由规则的入口RouterChain入手，介绍了路由规则的加载过程，然后介绍了如果配置条件路由和规则路由，其中使用Dubbo控制台的方式更为友好，最后详细分析了条件路由的实现原理。</p>
+</div><h1 id=标签路由源码解析>标签路由源码解析</h1>
+<p>标签路由相对简单，标签规则作为一个列表存储在TagStateRouter中，我们重点看下路由的过程。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=c1>// ...
+</span><span class=c1></span>
+<span class=n>BitList</span><span class=o>&lt;</span><span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;&gt;</span> <span class=n>result</span> <span class=o>=</span> <span class=n>invokers</span><span class=o>;</span>
+<span class=n>String</span> <span class=n>tag</span> <span class=o>=</span> <span class=n>StringUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>invocation</span><span class=o>.</span><span class=na>getAttachment</span><span class=o>(</span><span class=n>TAG_KEY</span><span class=o>))</span> <span class=o>?</span> <span class=n>url</span><span class=o>.</span><span class=na>getParameter</span><span class=o>(</span><span class=n>TAG_KEY</span><span class=o>)</span> <span class=o>:</span>
+    <span class=n>invocation</span><span class=o>.</span><span class=na>getAttachment</span><span class=o>(</span><span class=n>TAG_KEY</span><span class=o>);</span>
+
+<span class=c1>// 如果consumer在调用时指定了tag
+</span><span class=c1></span><span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isNotEmpty</span><span class=o>(</span><span class=n>tag</span><span class=o>))</span> <span class=o>{</span>
+    <span class=c1>// 获取动态标签规则(配置中心配置)中匹配该tag的所有invoker地址
+</span><span class=c1></span>    <span class=n>List</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span> <span class=n>addresses</span> <span class=o>=</span> <span class=n>tagRouterRuleCopy</span><span class=o>.</span><span class=na>getTagnameToAddresses</span><span class=o>().</span><span class=na>get</span><span class=o>(</span><span class=n>tag</span><span class=o>);</span>
+    <span class=k>if</span> <span class=o>(</span><span class=n>CollectionUtils</span><span class=o>.</span><span class=na>isNotEmpty</span><span class=o>(</span><span class=n>addresses</span><span class=o>))</span> <span class=o>{</span>
+        <span class=n>result</span> <span class=o>=</span> <span class=n>filterInvoker</span><span class=o>(</span><span class=n>invokers</span><span class=o>,</span> <span class=n>invoker</span> <span class=o>-&gt;</span> <span class=n>addressMatches</span><span class=o>(</span><span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>(),</span> <span class=n>addresses</span><span class=o>));</span>
+        <span class=c1>// if result is not null OR it&#39;s null but force=true, return result directly
+</span><span class=c1></span>        <span class=k>if</span> <span class=o>(</span><span class=n>CollectionUtils</span><span class=o>.</span><span class=na>isNotEmpty</span><span class=o>(</span><span class=n>result</span><span class=o>)</span> <span class=o>||</span> <span class=n>tagRouterRuleCopy</span><span class=o>.</span><span class=na>isForce</span><span class=o>())</span> <span class=o>{</span>
+            <span class=k>return</span> <span class=k>new</span> <span class=n>StateRouterResult</span><span class=o>&lt;&gt;(</span><span class=n>result</span><span class=o>,</span>
+                <span class=n>needToPrintMessage</span> <span class=o>?</span> <span class=s>&#34;Use tag &#34;</span> <span class=o>+</span> <span class=n>tag</span> <span class=o>+</span> <span class=s>&#34; to route. Reason: result is not null OR it&#39;s null but force=true&#34;</span> <span class=o>:</span> <span class=kc>null</span><span class=o>);</span>
+        <span class=o>}</span>
+    <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+        <span class=c1>// 从invoker的url参数中获取代码指定的标签，获取所有匹配当前标签的路由
+</span><span class=c1></span>        <span class=n>result</span> <span class=o>=</span> <span class=n>filterInvoker</span><span class=o>(</span><span class=n>invokers</span><span class=o>,</span> <span class=n>invoker</span> <span class=o>-&gt;</span> <span class=n>tag</span><span class=o>.</span><span class=na>equals</span><span class=o>(</span><span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>().</span><span class=na>getParameter</span><span class=o>(</span><span class=n>TAG_KEY</span><span class=o>)));</span>
+    <span class=o>}</span>
+    <span class=c1>// 如果路由结果不为空或强制使用标签路由，则直接返回过滤结果
+</span><span class=c1></span>    <span class=k>if</span> <span class=o>(</span><span class=n>CollectionUtils</span><span class=o>.</span><span class=na>isNotEmpty</span><span class=o>(</span><span class=n>result</span><span class=o>)</span> <span class=o>||</span> <span class=n>isForceUseTag</span><span class=o>(</span><span class=n>invocation</span><span class=o>))</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=k>new</span> <span class=n>StateRouterResult</span><span class=o>&lt;&gt;(</span><span class=n>result</span><span class=o>,</span>
+            <span class=n>needToPrintMessage</span> <span class=o>?</span> <span class=s>&#34;Use tag &#34;</span> <span class=o>+</span> <span class=n>tag</span> <span class=o>+</span> <span class=s>&#34; to route. Reason: result is not empty or ForceUseTag key is true in invocation&#34;</span> <span class=o>:</span> <span class=kc>null</span><span class=o>);</span>
+    <span class=o>}</span>
+    <span class=k>else</span> <span class=o>{</span>
+        <span class=c1>// 如果没有找到对应标签的provider，那么返回所有不含标签的provider
+</span><span class=c1></span>        <span class=n>BitList</span><span class=o>&lt;</span><span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;&gt;</span> <span class=n>tmp</span> <span class=o>=</span> <span class=n>filterInvoker</span><span class=o>(</span><span class=n>invokers</span><span class=o>,</span> <span class=n>invoker</span> <span class=o>-&gt;</span> <span class=n>addressNotMatches</span><span class=o>(</span><span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>(),</span>
+            <span class=n>tagRouterRuleCopy</span><span class=o>.</span><span class=na>getAddresses</span><span class=o>()));</span>
+        <span class=k>return</span> <span class=k>new</span> <span class=n>StateRouterResult</span><span class=o>&lt;&gt;(</span><span class=n>filterInvoker</span><span class=o>(</span><span class=n>tmp</span><span class=o>,</span> <span class=n>invoker</span> <span class=o>-&gt;</span> <span class=n>StringUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>().</span><span class=na>getParameter</span><span class=o>(</span><span class=n>TAG_KEY</span><span class=o>))),</span>
+            <span class=n>needToPrintMessage</span> <span class=o>?</span> <span class=s>&#34;FAILOVER: return all Providers without any tags&#34;</span> <span class=o>:</span> <span class=kc>null</span><span class=o>);</span>
+    <span class=o>}</span>
+<span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+    <span class=c1>// 对于调用时不指定标签的情况，将invoker中包含静态标签和动态标签的provider过滤掉
+</span><span class=c1></span>    <span class=n>List</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span> <span class=n>addresses</span> <span class=o>=</span> <span class=n>tagRouterRuleCopy</span><span class=o>.</span><span class=na>getAddresses</span><span class=o>();</span>
+    <span class=k>if</span> <span class=o>(</span><span class=n>CollectionUtils</span><span class=o>.</span><span class=na>isNotEmpty</span><span class=o>(</span><span class=n>addresses</span><span class=o>))</span> <span class=o>{</span>
+        <span class=n>result</span> <span class=o>=</span> <span class=n>filterInvoker</span><span class=o>(</span><span class=n>invokers</span><span class=o>,</span> <span class=n>invoker</span> <span class=o>-&gt;</span> <span class=n>addressNotMatches</span><span class=o>(</span><span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>(),</span> <span class=n>addresses</span><span class=o>));</span>
+        <span class=c1>// 1. all addresses are in dynamic tag group, return empty list.
+</span><span class=c1></span>        <span class=k>if</span> <span class=o>(</span><span class=n>CollectionUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>result</span><span class=o>))</span> <span class=o>{</span>
+            <span class=k>return</span> <span class=k>new</span> <span class=n>StateRouterResult</span><span class=o>&lt;&gt;(</span><span class=n>result</span><span class=o>,</span>
+                <span class=n>needToPrintMessage</span> <span class=o>?</span> <span class=s>&#34;all addresses are in dynamic tag group, return empty list&#34;</span> <span class=o>:</span> <span class=kc>null</span><span class=o>);</span>
+        <span class=o>}</span>
+        <span class=c1>// 2. if there are some addresses that are not in any dynamic tag group, continue to filter using the
+</span><span class=c1></span>        <span class=c1>// static tag group.
+</span><span class=c1></span>    <span class=o>}</span>
+    <span class=k>return</span> <span class=k>new</span> <span class=n>StateRouterResult</span><span class=o>&lt;&gt;(</span><span class=n>filterInvoker</span><span class=o>(</span><span class=n>result</span><span class=o>,</span> <span class=n>invoker</span> <span class=o>-&gt;</span> <span class=o>{</span>
+        <span class=n>String</span> <span class=n>localTag</span> <span class=o>=</span> <span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>().</span><span class=na>getParameter</span><span class=o>(</span><span class=n>TAG_KEY</span><span class=o>);</span>
+        <span class=k>return</span> <span class=n>StringUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>localTag</span><span class=o>)</span> <span class=o>||</span> <span class=o>!</span><span class=n>tagRouterRuleCopy</span><span class=o>.</span><span class=na>getTagNames</span><span class=o>().</span><span class=na>contains</span><span class=o>(</span><span class=n>localTag</span><span class=o>);</span>
+    <span class=o>}),</span> <span class=n>needToPrintMessage</span> <span class=o>?</span> <span class=s>&#34;filter using the static tag group&#34;</span> <span class=o>:</span> <span class=kc>null</span><span class=o>);</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>以上就是标签路由的核心流程，比条件路由容易理解。总体来看就是：</p>
+<ul>
+<li>如果调用打标签了，就过滤出有标签的provider，如果没有则返回无标签的provider</li>
+<li>如果没打标签，就把所有有静态和动态标签的provider过滤掉，返回剩下的provider</li>
+</ul>
+<h1 id=总结>总结</h1>
+<p>以上就是本文的全部内容，先从路由规则的入口RouterChain入手，介绍了路由规则的加载过程，然后介绍了如果配置条件路由和规则路由，其中使用Dubbo控制台的方式更为友好，最后详细分析了条件路由和标签路由的实现原理。</p>
 <h1 id=参考文献>参考文献</h1>
 <ol>
 <li><a href=https://dubbo.apache.org/zh/docsv2.7/dev/source/router/>服务路由 | Apache Dubbo</a></li>
