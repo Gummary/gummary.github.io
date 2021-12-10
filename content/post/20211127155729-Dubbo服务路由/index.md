@@ -19,18 +19,18 @@ draft: false
 
 ```java
 private RouterChain(URL url) {
-	// ...
-	// step1 加载所有的路由扩展
-	List<RouterFactory> extensionFactories = url.getOrDefaultApplicationModel().getExtensionLoader(RouterFactory.class)
-		.getActivateExtension(url, ROUTER_KEY);
-	// step2 构造路由规则，并按照优先级排序
-	List<Router> routers = extensionFactories.stream()
-		.map(factory -> factory.getRouter(url))
-		.sorted(Router::compareTo)
-		.collect(Collectors.toList());
-	// step3 初始化
-	initWithRouters(routers);
-	// ... 
+    // ...
+    // step1 加载所有的路由扩展
+    List<RouterFactory> extensionFactories = url.getOrDefaultApplicationModel().getExtensionLoader(RouterFactory.class)
+        .getActivateExtension(url, ROUTER_KEY);
+    // step2 构造路由规则，并按照优先级排序
+    List<Router> routers = extensionFactories.stream()
+        .map(factory -> factory.getRouter(url))
+        .sorted(Router::compareTo)
+        .collect(Collectors.toList());
+    // step3 初始化
+    initWithRouters(routers);
+    // ... 
 }
 ```
 
@@ -58,7 +58,7 @@ service、app和tag分别是Provider服务粒度的条件路由、Consumer应用
 
 {{< tfigure src="images/2021-11-27-16-50-44.png" title="" width="70%" class="align-center">}}
 
-标签路由的配置方式类似这里不再赘述。
+标签路由的配置方式类似，这里不再赘述。
 
 **使用硬编码配置**
 
@@ -85,7 +85,7 @@ java -jar xxx-provider.jar -Ddubbo.provider.tag={the tag you want, may come from
 
 {{< tfigure src="images/条件路由类图.png" title="" width="" class="align-center">}}
 
-其中Router是接口，定义了路由相关的行为；AbstractRouter是框架（Effective Java Item20）；ListenableRouter是AbstractRouter的实现，同时实现了ConfigurationListener接口，监听配置的变更；AppRouter和ServiceRouter则是ListenableRouter的模板子类，定义了自己的优先级和名称。
+其中Router是接口，定义了路由相关的行为；AbstractRouter是框架（Effective Java Item20）；ListenableRouter是AbstractRouter的实现，同时实现了ConfigurationListener接口，监听配置的变更；AppRouter和ServiceRouter则是ListenableRouter的模板子类，分别用于应用级和接口级，在子类内部定义了自己的优先级和名称。
 
 对于一个路由规则，从整体上可以分成两部分：conditions和其他。其中conditions下的内容是详细规则，作为ConditionRouter存储在ListenableRouter中；而其他配置则作为原始规则存储在ListenableRouter中。创建一个条件路由规则（以service为例）的整体流程如下图所示：
 
@@ -101,24 +101,24 @@ java -jar xxx-provider.jar -Ddubbo.provider.tag={the tag you want, may come from
 
 ```java
 public void init(String rule) {
-	try {
-		if (rule == null || rule.trim().length() == 0) {
-			throw new IllegalArgumentException("Illegal route rule!");
-		}
-		// step1 分割规则，得到匹配器和过滤器
-		rule = rule.replace("consumer.", "").replace("provider.", "");
-		int i = rule.indexOf("=>");
-		String whenRule = i < 0 ? null : rule.substring(0, i).trim();
-		String thenRule = i < 0 ? rule.trim() : rule.substring(i + 2).trim();
-		// step2 解析规则，存放为MatchPair
-		Map<String, MatchPair> when = StringUtils.isBlank(whenRule) || "true".equals(whenRule) ? new HashMap<String, MatchPair>() : parseRule(whenRule);
-		Map<String, MatchPair> then = StringUtils.isBlank(thenRule) || "false".equals(thenRule) ? null : parseRule(thenRule);
-		// NOTE: It should be determined on the business level whether the `When condition` can be empty or not.
-		this.whenCondition = when;
-		this.thenCondition = then;
-	} catch (ParseException e) {
-		throw new IllegalStateException(e.getMessage(), e);
-	}
+    try {
+        if (rule == null || rule.trim().length() == 0) {
+            throw new IllegalArgumentException("Illegal route rule!");
+        }
+        // step1 分割规则，得到匹配器和过滤器
+        rule = rule.replace("consumer.", "").replace("provider.", "");
+        int i = rule.indexOf("=>");
+        String whenRule = i < 0 ? null : rule.substring(0, i).trim();
+        String thenRule = i < 0 ? rule.trim() : rule.substring(i + 2).trim();
+        // step2 解析规则，存放为MatchPair
+        Map<String, MatchPair> when = StringUtils.isBlank(whenRule) || "true".equals(whenRule) ? new HashMap<String, MatchPair>() : parseRule(whenRule);
+        Map<String, MatchPair> then = StringUtils.isBlank(thenRule) || "false".equals(thenRule) ? null : parseRule(thenRule);
+        // NOTE: It should be determined on the business level whether the `When condition` can be empty or not.
+        this.whenCondition = when;
+        this.thenCondition = then;
+    } catch (ParseException e) {
+        throw new IllegalStateException(e.getMessage(), e);
+    }
 }
 ```
 
@@ -139,18 +139,18 @@ String separator = matcher.group(1);
 String content = matcher.group(2);
 // 处理规则的开始
 if (StringUtils.isEmpty(separator)) {
-	pair = new MatchPair();
-	condition.put(content, pair);
+    pair = new MatchPair();
+    condition.put(content, pair);
 }
 // 处理多个条件的情况
 else if ("&".equals(separator)) {
-	// condition是一条规则
-	if (condition.get(content) == null) {
-		pair = new MatchPair();
-		condition.put(content, pair);
-	} else {
-		pair = condition.get(content);
-	}
+    // condition是一条规则
+    if (condition.get(content) == null) {
+        pair = new MatchPair();
+        condition.put(content, pair);
+    } else {
+        pair = condition.get(content);
+    }
 }
 // ...
 ```
@@ -160,26 +160,26 @@ else if ("&".equals(separator)) {
 ```java
 // step1 首先判断当前Consumer是否匹配当前规则
 if (!matchWhen(url, invocation)) {
-	return new RouterResult<>(invokers);
+    return new RouterResult<>(invokers);
 }
 // step2 如果过滤规则为空，说明禁用当前的调用者，直接返回空列表
 List<Invoker<T>> result = new ArrayList<Invoker<T>>();
 if (thenCondition == null) {
-	logger.warn("The current consumer in the service blacklist. consumer: " + NetUtils.getLocalHost() + ", service: " + url.getServiceKey());
-	return new RouterResult<>(result);
+    logger.warn("The current consumer in the service blacklist. consumer: " + NetUtils.getLocalHost() + ", service: " + url.getServiceKey());
+    return new RouterResult<>(result);
 }
 // step3 遍历所有Invoker，如果符合规则条件则加入到结果中
 for (Invoker<T> invoker : invokers) {
-	if (matchThen(invoker.getUrl(), url)) {
-		result.add(invoker);
-	}
+    if (matchThen(invoker.getUrl(), url)) {
+        result.add(invoker);
+    }
 }
 // step4 返回结果
 if (!result.isEmpty()) {
-	return new RouterResult<>(result);
+ret urn new RouterResult<>(result);
 } else if (this.isForce()) {
-	logger.warn("The route result is empty and force execute. consumer: " + NetUtils.getLocalHost() + ", service: " + url.getServiceKey() + ", router: " + url.getParameterAndDecoded(RULE_KEY));
-	return new RouterResult<>(result);
+    logger.warn("The route result is empty and force execute. consumer: " + NetUtils.getLocalHost() + ", service: " + url.getServiceKey() + ", router: " + url.getParameterAndDecoded(RULE_KEY));
+    return new RouterResult<>(result);
 }
 ```
 
@@ -187,10 +187,10 @@ if (!result.isEmpty()) {
 
 ```java
 boolean matchWhen(URL url, Invocation invocation) {
-	return CollectionUtils.isEmptyMap(whenCondition) || matchCondition(whenCondition, url, null, invocation);
+    return CollectionUtils.isEmptyMap(whenCondition) || matchCondition(whenCondition, url, null, invocation);
 }
 private boolean matchThen(URL url, URL param) {
-	return CollectionUtils.isNotEmptyMap(thenCondition) && matchCondition(thenCondition, url, param, null);
+    return CollectionUtils.isNotEmptyMap(thenCondition) && matchCondition(thenCondition, url, param, null);
 }
 ```
 
@@ -217,51 +217,114 @@ when规则的匹配条件是，whenCondition为空或匹配成功；而then规�
 
 ```java
 public static boolean isMatchGlobPattern(String pattern, String value, URL param) {
-	if (param != null && pattern.startsWith("$")) {
-		pattern = param.getRawParameter(pattern.substring(1));
-	}
-	return isMatchGlobPattern(pattern, value);
+    if (param != null && pattern.startsWith("$")) {
+        pattern = param.getRawParameter(pattern.substring(1));
+    }
+    return isMatchGlobPattern(pattern, value);
 }
 
 public static boolean isMatchGlobPattern(String pattern, String value) {
-	// 通配符直接返回true
-	if ("*".equals(pattern)) {
-		return true;
-	}
-	// 匹配内容或对象均为空返回true
-	if (StringUtils.isEmpty(pattern) && StringUtils.isEmpty(value)) {
-		return true;
-	}
-	// 匹配内容或对象有一项为空返回true
-	if (StringUtils.isEmpty(pattern) || StringUtils.isEmpty(value)) {
-		return false;
-	}
-	// 判断是否使用了通配符的情况
-	int i = pattern.lastIndexOf('*');
-	// 未使用通配符，全量匹配
-	if (i == -1) {
-		return value.equals(pattern);
-	}
-	// "*" 在最后，判断value的起始是否与其相同
-	else if (i == pattern.length() - 1) {
-		return value.startsWith(pattern.substring(0, i));
-	}
-	// "*" 在开始，判断value的结束是否相同
-	else if (i == 0) {
-		return value.endsWith(pattern.substring(i + 1));
-	}
-	// "*" 在中间，同时判断其实和结束
-	else {
-		String prefix = pattern.substring(0, i);
-		String suffix = pattern.substring(i + 1);
-		return value.startsWith(prefix) && value.endsWith(suffix);
-	}
+    // 通配符直接返回true
+    if ("*".equals(pattern)) {
+        return true;
+    }
+    // 匹配内容或对象均为空返回true
+    if (StringUtils.isEmpty(pattern) && StringUtils.isEmpty(value)) {
+        return true;
+    }
+    // 匹配内容或对象有一项为空返回true
+    if (StringUtils.isEmpty(pattern) || StringUtils.isEmpty(value)) {
+        return false;
+    }
+    // 判断是否使用了通配符的情况
+    int i = pattern.lastIndexOf('*');
+    // 未使用通配符，全量匹配
+    if (i == -1) {
+        return value.equals(pattern);
+    }
+    // "*" 在最后，判断value的起始是否与其相同
+    else if (i == pattern.length() - 1) {
+        return value.startsWith(pattern.substring(0, i));
+    }
+    // "*" 在开始，判断value的结束是否相同
+    else if (i == 0) {
+        return value.endsWith(pattern.substring(i + 1));
+    }
+    // "*" 在中间，同时判断其实和结束
+    else {
+        String prefix = pattern.substring(0, i);
+        String suffix = pattern.substring(i + 1);
+        return value.startsWith(prefix) && value.endsWith(suffix);
+    }
 }
 ```
 
+# 标签路由源码解析
+
+标签路由相对简单，标签规则作为一个列表存储在TagStateRouter中，我们重点看下路由的过程。
+
+```java
+// ...
+
+BitList<Invoker<T>> result = invokers;
+String tag = StringUtils.isEmpty(invocation.getAttachment(TAG_KEY)) ? url.getParameter(TAG_KEY) :
+    invocation.getAttachment(TAG_KEY);
+
+// 如果consumer在调用时指定了tag
+if (StringUtils.isNotEmpty(tag)) {
+    // 获取动态标签规则(配置中心配置)中匹配该tag的所有invoker地址
+    List<String> addresses = tagRouterRuleCopy.getTagnameToAddresses().get(tag);
+    if (CollectionUtils.isNotEmpty(addresses)) {
+        result = filterInvoker(invokers, invoker -> addressMatches(invoker.getUrl(), addresses));
+        // if result is not null OR it's null but force=true, return result directly
+        if (CollectionUtils.isNotEmpty(result) || tagRouterRuleCopy.isForce()) {
+            return new StateRouterResult<>(result,
+                needToPrintMessage ? "Use tag " + tag + " to route. Reason: result is not null OR it's null but force=true" : null);
+        }
+    } else {
+        // 从invoker的url参数中获取代码指定的标签，获取所有匹配当前标签的路由
+        result = filterInvoker(invokers, invoker -> tag.equals(invoker.getUrl().getParameter(TAG_KEY)));
+    }
+    // 如果路由结果不为空或强制使用标签路由，则直接返回过滤结果
+    if (CollectionUtils.isNotEmpty(result) || isForceUseTag(invocation)) {
+        return new StateRouterResult<>(result,
+            needToPrintMessage ? "Use tag " + tag + " to route. Reason: result is not empty or ForceUseTag key is true in invocation" : null);
+    }
+    else {
+        // 如果没有找到对应标签的provider，那么返回所有不含标签的provider
+        BitList<Invoker<T>> tmp = filterInvoker(invokers, invoker -> addressNotMatches(invoker.getUrl(),
+            tagRouterRuleCopy.getAddresses()));
+        return new StateRouterResult<>(filterInvoker(tmp, invoker -> StringUtils.isEmpty(invoker.getUrl().getParameter(TAG_KEY))),
+            needToPrintMessage ? "FAILOVER: return all Providers without any tags" : null);
+    }
+} else {
+    // 对于调用时不指定标签的情况，将invoker中包含静态标签和动态标签的provider过滤掉
+    List<String> addresses = tagRouterRuleCopy.getAddresses();
+    if (CollectionUtils.isNotEmpty(addresses)) {
+        result = filterInvoker(invokers, invoker -> addressNotMatches(invoker.getUrl(), addresses));
+        // 1. all addresses are in dynamic tag group, return empty list.
+        if (CollectionUtils.isEmpty(result)) {
+            return new StateRouterResult<>(result,
+                needToPrintMessage ? "all addresses are in dynamic tag group, return empty list" : null);
+        }
+        // 2. if there are some addresses that are not in any dynamic tag group, continue to filter using the
+        // static tag group.
+    }
+    return new StateRouterResult<>(filterInvoker(result, invoker -> {
+        String localTag = invoker.getUrl().getParameter(TAG_KEY);
+        return StringUtils.isEmpty(localTag) || !tagRouterRuleCopy.getTagNames().contains(localTag);
+    }), needToPrintMessage ? "filter using the static tag group" : null);
+}
+```
+
+以上就是标签路由的核心流程，比条件路由容易理解。总体来看就是：
+
+- 如果调用打标签了，就过滤出有标签的provider，如果没有则返回无标签的provider
+- 如果没打标签，就把所有有静态和动态标签的provider过滤掉，返回剩下的provider
+
 # 总结
 
-以上就是本文的全部内容，先从路由规则的入口RouterChain入手，介绍了路由规则的加载过程，然后介绍了如果配置条件路由和规则路由，其中使用Dubbo控制台的方式更为友好，最后详细分析了条件路由的实现原理。
+以上就是本文的全部内容，先从路由规则的入口RouterChain入手，介绍了路由规则的加载过程，然后介绍了如果配置条件路由和规则路由，其中使用Dubbo控制台的方式更为友好，最后详细分析了条件路由和标签路由的实现原理。
 
 # 参考文献
 
