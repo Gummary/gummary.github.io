@@ -1,8 +1,9 @@
 ---
-title: "Dubbo集群容错"
+title: "Dubbo中的集群容错"
 slug: Dubbo集群容错
 date: 2021-12-11T13:46:30+08:00
 draft: false
+categories: ["Dubbo"]
 ---
 
 <!--more-->
@@ -81,5 +82,5 @@ public Result doInvoke(Invocation invocation, final List<Invoker<T>> invokers, L
 
 # 参考文献
 
-1. https://dubbo.apache.org/zh/docs/advanced/fault-tolerent-strategy/
-1. https://www.cnblogs.com/zhangyjblogs/p/15073220.html
+1. [集群容错 | Apache Dubbo](https://dubbo.apache.org/zh/docs/advanced/fault-tolerent-strategy/)
+1. [dubbo系列四、dubbo集群容错和负载均衡 - 不晓得侬 - 博客园](https://www.cnblogs.com/zhangyjblogs/p/15073220.html)

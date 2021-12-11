@@ -44,7 +44,7 @@ def replace_urls_in_reference(post):
 		article.append(new_refer)
 	return article
 
-post_path = "content/post/20211127155729-Dubbo服务路由/index.md"
+post_path = "content/post/20211211134630-Dubbo集群容错/index.md"
 article = replace_urls_in_reference(post_path)
 with open(post_path, "w") as f:
 	f.write("".join(article))
