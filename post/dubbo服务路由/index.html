@@ -30,7 +30,7 @@
 <meta itemprop=name content="Dubbo中的服务路由">
 <meta itemprop=description content><meta itemprop=datePublished content="2021-11-27T15:57:29+08:00">
 <meta itemprop=dateModified content="2021-11-27T15:57:29+08:00">
-<meta itemprop=wordCount content="4774">
+<meta itemprop=wordCount content="4797">
 <meta itemprop=keywords content><meta name=twitter:card content="summary">
 <meta name=twitter:title content="Dubbo中的服务路由">
 <meta name=twitter:description content><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
@@ -91,7 +91,7 @@
 <h1 class=post-title>Dubbo中的服务路由</h1>
 <div class=post-meta>
 <span class=post-time> 2021-11-27 </span>
-<span class=more-meta> 4774 words </span>
+<span class=more-meta> 4797 words </span>
 <span class=more-meta> 10 mins read </span>
 </div>
 </header>
@@ -606,8 +606,8 @@ java -jar xxx-provider.jar -Ddubbo.provider.tag={the tag you want, may come from
 </div>
 </div><p>以上就是标签路由的核心流程，比条件路由容易理解。总体来看就是：</p>
 <ul>
-<li>如果调用打标签了，就过滤出有标签的provider，如果没有则返回无标签的provider</li>
-<li>如果没打标签，就把所有有静态和动态标签的provider过滤掉，返回剩下的provider</li>
+<li>如果客户端打标签了，就过滤出所有有该标签的provider；如果没有符合条件的provider，则返回所有无标签的provider</li>
+<li>如果客户端没打标签，就把所有有静态和动态标签的provider过滤掉，返回剩下的provider</li>
 </ul>
 <h1 id=总结>总结</h1>
 <p>以上就是本文的全部内容，先从路由规则的入口RouterChain入手，介绍了路由规则的加载过程，然后介绍了如果配置条件路由和规则路由，其中使用Dubbo控制台的方式更为友好，最后详细分析了条件路由和标签路由的实现原理。</p>
