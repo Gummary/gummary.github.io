@@ -12,7 +12,7 @@
 <meta name=apple-mobile-web-app-capable content="yes">
 <meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
 <meta name=author content="Gum"><meta name=description content><meta name=keywords content="Photo,Reading,Java,Distribute System">
-<meta name=generator content="Hugo 0.90.1 with theme even">
+<meta name=generator content="Hugo 0.92.0 with theme even">
 <link rel=canonical href=http://localhost:1313/post/dubbo%E6%9C%8D%E5%8A%A1%E8%B7%AF%E7%94%B1/>
 <link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
@@ -30,7 +30,7 @@
 <meta itemprop=name content="Dubbo中的服务路由">
 <meta itemprop=description content><meta itemprop=datePublished content="2021-11-27T15:57:29+08:00">
 <meta itemprop=dateModified content="2021-11-27T15:57:29+08:00">
-<meta itemprop=wordCount content="4781">
+<meta itemprop=wordCount content="4774">
 <meta itemprop=keywords content><meta name=twitter:card content="summary">
 <meta name=twitter:title content="Dubbo中的服务路由">
 <meta name=twitter:description content><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
@@ -91,7 +91,7 @@
 <h1 class=post-title>Dubbo中的服务路由</h1>
 <div class=post-meta>
 <span class=post-time> 2021-11-27 </span>
-<span class=more-meta> 4781 words </span>
+<span class=more-meta> 4774 words </span>
 <span class=more-meta> 10 mins read </span>
 </div>
 </header>
@@ -118,7 +118,7 @@
 <div class=post-content>
 <p>在<a href=/post/dubbo%E6%9C%8D%E5%8A%A1%E7%9B%AE%E5%BD%95/>Dubbo服务目录</a>中介绍了当Dubbo客户端如何从注册中心获取到可用的Provider，在这之后Dubbo会使用服务路由对这些Provider进行筛选，得到符合配置条件的Provider地址。本文将介绍Dubbo服务路由的使用及实现原理。</p>
 <h1 id=dubbo服务路由简介>Dubbo服务路由简介</h1>
-<p>在Directory从注册中心获取到可用的Invoker之后，会调用<code>routerChain</code>进行服务路由，使用服务路由可以实现不同的根据调用方的不同、调用方式的不同选择不同的Provider，在此基础上实现读写分离、机房隔离、Set化等等功能。所以我们下面就从RouterChain开始说起，详细Dubbo中路由规则如何使用及如何实现的。</p>
+<p>在Directory从注册中心获取到可用的Invoker之后，会调用<code>routerChain</code>进行服务路由，使用服务路由可以实现根据调用方、调用方式不同选择不同的Provider，在此基础上实现读写分离、机房隔离、Set化等等功能。所以我们下面就从RouterChain开始说起，详细Dubbo中路由规则如何使用及如何实现的。</p>
 <h1 id=routerchain的构造>RouterChain的构造</h1>
 <p>在Directory中是通过RouterChain类实现对Provider地址的过滤，我们先来看下RouterChain是如何构造的。</p>
 <div class=highlight><div class=chroma>
@@ -668,7 +668,7 @@ java -jar xxx-provider.jar -Ddubbo.provider.tag={the tag you want, may come from
 <span>Gum</span>
 &copy;
 2017 -
-2021</span>
+2022</span>
 </div>
 </footer>
 <div class=back-to-top id=back-to-top>

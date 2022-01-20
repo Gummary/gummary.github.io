@@ -12,7 +12,7 @@
 <meta name=apple-mobile-web-app-capable content="yes">
 <meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
 <meta name=author content="Gum"><meta name=description content><meta name=keywords content="Photo,Reading,Java,Distribute System">
-<meta name=generator content="Hugo 0.90.1 with theme even">
+<meta name=generator content="Hugo 0.92.0 with theme even">
 <link rel=canonical href=http://localhost:1313/post/dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B8%8B/>
 <link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
@@ -30,7 +30,7 @@
 <meta itemprop=name content="Dubbo中的负载均衡策略（下）">
 <meta itemprop=description content><meta itemprop=datePublished content="2021-10-08T16:06:24+08:00">
 <meta itemprop=dateModified content="2021-10-08T16:06:24+08:00">
-<meta itemprop=wordCount content="2673">
+<meta itemprop=wordCount content="2634">
 <meta itemprop=keywords content><meta name=twitter:card content="summary">
 <meta name=twitter:title content="Dubbo中的负载均衡策略（下）">
 <meta name=twitter:description content><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
@@ -94,7 +94,7 @@
 <div class=post-category>
 <a href=/categories/dubbo/> Dubbo </a>
 </div>
-<span class=more-meta> 2673 words </span>
+<span class=more-meta> 2634 words </span>
 <span class=more-meta> 6 mins read </span>
 </div>
 </header>
@@ -133,7 +133,7 @@
 </ul>
 <p>在中篇中介绍了最少连接数和最短时间响应两种负载均衡算法，在本篇中介绍Dubbo中最后一种负载均衡算法——一致性Hash算法。我们首先介绍下最基础的Hash算法及其存在的问题，然后介绍一致性哈希算法是如何缓解这个问题的，最后介绍一致性哈希负载均衡在Dubbo中的实现。</p>
 <h1 id=哈希算法>哈希算法</h1>
-<p>假设我们现在有3台服务器，我们希望将来源ip地址相同的请求都分配到同一个Provider上。最简单的实现方式是，对来源ip进行hash，使用hash值对节点数量取余，然后用余数选择服务器。伪代码为：</p>
+<p>在某些场景下，我们需要在客户端断连又重连后选择的是同一个机器。实现的方式可以是记录来源ip，对来源ip进行hash，使用hash值对节点数量取余，然后用余数选择服务器。假设我们现在有3台服务器，实现的伪代码为：</p>
 <div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
@@ -148,7 +148,7 @@
 	<span class=k>return</span> <span class=n>servers</span><span class=p>[</span><span class=n>idx</span><span class=p>]</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>如果服务器的数量不发生变化，那么这种算法可以保证相同来源ip的流量被准确转发到同一个机器上。但是，如果一个服务器挂了或者新增一个服务器节点，就会使原来的哈希值失效。我们以增加一台服务器为例，此时hash的过程从<code>hash(ip) % 3</code>变为<code>hash(ip) % 4</code>，假设之前选择2号服务器，也即取余结果为2，则hash值为<code>n=3t+2</code>，那么新的hash值为<code>(3t+2) % 4 = [3(t%4)+2]%4</code>，其结果可能为0，1，2，3。所以有75%的概率不能分配到原来的服务器中。如果用户的缓存都存在原服务器上，为了防止出现缓存失效导致的缓存雪崩等问题，就需要对这些用户信息进行转移，极大的增加了扩容成本。</p>
+</div><p>如果服务器的数量不发生变化，那么这种算法可以保证相同来源ip的流量被准确转发到同一个机器上。但是，如果一个服务器挂了或者新增一个服务器节点，就会使原来的哈希值失效。我们以增加一台服务器为例，此时hash的过程从<code>hash(ip) % 3</code>变为<code>hash(ip) % 4</code>，假设之前选择2号服务器，也即取余结果为1，则hash值为<code>n=3t+1</code>，那么新的hash值为<code>(3t+1) % 4</code>，其结果可能为0，1，2，3。所以有75%的概率不能分配到原来的服务器中。如果用户的缓存都存在原服务器上，就有很大概率出现缓存失效问题。</p>
 <h1 id=一致性哈希算法>一致性哈希算法</h1>
 <h2 id=一致哈希算法原理>一致哈希算法原理</h2>
 <p>一致性哈希算法可以很好的解决服务器变动带来的哈希值变化的问题。一致性哈希的核心数据结构是一个哈希环，哈希环由$2^{32}$个节点组成，结构如下图所示：</p>
@@ -393,7 +393,7 @@
 <span>Gum</span>
 &copy;
 2017 -
-2021</span>
+2022</span>
 </div>
 </footer>
 <div class=back-to-top id=back-to-top>
