@@ -319,8 +319,8 @@ if (StringUtils.isNotEmpty(tag)) {
 
 以上就是标签路由的核心流程，比条件路由容易理解。总体来看就是：
 
-- 如果调用打标签了，就过滤出有标签的provider，如果没有则返回无标签的provider
-- 如果没打标签，就把所有有静态和动态标签的provider过滤掉，返回剩下的provider
+- 如果客户端打标签了，就过滤出所有有该标签的provider；如果没有符合条件的provider，则返回所有无标签的provider
+- 如果客户端没打标签，就把所有有静态和动态标签的provider过滤掉，返回剩下的provider
 
 # 总结
 
