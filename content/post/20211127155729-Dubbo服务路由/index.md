@@ -11,7 +11,7 @@ draft: false
 
 # Dubbo服务路由简介
 
-在Directory从注册中心获取到可用的Invoker之后，会调用`routerChain`进行服务路由，使用服务路由可以实现不同的根据调用方的不同、调用方式的不同选择不同的Provider，在此基础上实现读写分离、机房隔离、Set化等等功能。所以我们下面就从RouterChain开始说起，详细Dubbo中路由规则如何使用及如何实现的。
+在Directory从注册中心获取到可用的Invoker之后，会调用`routerChain`进行服务路由，使用服务路由可以实现根据调用方、调用方式不同选择不同的Provider，在此基础上实现读写分离、机房隔离、Set化等等功能。所以我们下面就从RouterChain开始说起，详细Dubbo中路由规则如何使用及如何实现的。
 
 # RouterChain的构造
 
