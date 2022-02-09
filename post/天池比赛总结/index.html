@@ -12,7 +12,7 @@
 <meta name=apple-mobile-web-app-capable content="yes">
 <meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
 <meta name=author content="Gum"><meta name=description content><meta name=keywords content="Photo,Reading,Java,Distribute System">
-<meta name=generator content="Hugo 0.92.0 with theme even">
+<meta name=generator content="Hugo 0.92.1 with theme even">
 <link rel=canonical href=http://localhost:1313/post/%E5%A4%A9%E6%B1%A0%E6%AF%94%E8%B5%9B%E6%80%BB%E7%BB%93/>
 <link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
@@ -30,7 +30,7 @@
 <meta itemprop=name content="天池比赛总结">
 <meta itemprop=description content><meta itemprop=datePublished content="2021-11-12T20:25:05+08:00">
 <meta itemprop=dateModified content="2021-11-12T20:25:05+08:00">
-<meta itemprop=wordCount content="2884">
+<meta itemprop=wordCount content="3668">
 <meta itemprop=keywords content><meta name=twitter:card content="summary">
 <meta name=twitter:title content="天池比赛总结">
 <meta name=twitter:description content><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
@@ -91,8 +91,8 @@
 <h1 class=post-title>天池比赛总结</h1>
 <div class=post-meta>
 <span class=post-time> 2021-11-12 </span>
-<span class=more-meta> 2884 words </span>
-<span class=more-meta> 6 mins read </span>
+<span class=more-meta> 3668 words </span>
+<span class=more-meta> 8 mins read </span>
 </div>
 </header>
 <div class=post-toc id=post-toc>
@@ -110,6 +110,12 @@
 </ul>
 </li>
 <li><a href=#总结>总结</a></li>
+<li><a href=#其他团队方案>其他团队方案</a>
+<ul>
+<li><a href=#第二名方案>第二名方案</a></li>
+<li><a href=#第三名方案>第三名方案</a></li>
+</ul>
+</li>
 <li><a href=#参考>参考</a></li>
 </ul>
 </nav>
@@ -216,6 +222,38 @@
 <p>这时候留给A榜的时间不多了，所以就没再尝试其他算法，又去做动态探测了。但是在写concurrency-limits的代码分析时意识到，其实可以给最小的Rtt做一个限制的。</p>
 <h1 id=总结>总结</h1>
 <p>这次比赛收获还是很大的，一方面是自己技能的收获，至少把之前面试背的负载均衡算法、限流算法的具体实现都看了一遍，顺便也看了看Dubbo的源码。还有就是比赛本身收获，首先就是打比赛，日志画图很重要，清晰的把日志画出对分析赛题帮助非常大；另外就是理性分析也很重要，比如在看完Vegas算法就能想到过度限流的问题，乱尝试还是比较浪费时间的。</p>
+<h1 id=其他团队方案>其他团队方案</h1>
+<p>比赛结束后大佬们都分享下了自己的方案，这里做个学习记录。我仔细看了下<a href="https://tianchi.aliyun.com/forum/postDetail?spm=5176.12586969.1002.6.569861a2UigI8m&postId=325133">第二名</a>和<a href="https://tianchi.aliyun.com/forum/postDetail?spm=5176.12586969.1002.3.569861a2UigI8m&postId=326699">第三名</a>的方案。</p>
+<h2 id=第二名方案>第二名方案</h2>
+<p>在<strong>超时机制</strong>上，使用的方式是直接使用上次成功请求的rtt+常量作为本次rtt，快速忽略异常超时调用。这种算法实现简单快速，而且能快速忽略最近的异常值。</p>
+<p>然后该方案中的核心是对“吞吐量-并发度-延迟”的分析情况，这里引用他们的图如下：</p>
+<figure class=align-center>
+<img src=https://blog-1302636809.file.myqcloud.com/post/%E5%A4%A9%E6%B1%A0%E6%AF%94%E8%B5%9B%E6%80%BB%E7%BB%93/images/2022-02-09-16-31-29.png><figcaption>
+<h4>吞吐量，延时与并发度关系</h4></figcaption>
+</figure>
+<p>如果要做<strong>限流</strong>，就需要估计出最佳的并发大小，将并发度限制在最佳的位置处。该方案采用的估计算法是在预热阶段使用爬山算法，评测阶段动态微调：</p>
+<blockquote>
+<p>第一阶段：基于爬山算法的最优容量探测： 固定并发度限制，统计一段时间间隔内的正确请求数量，根据本次和上一次不同并发度限制所统计的正确请求数，动态的调整并发度限制。假设步长设置的合理，在预热阶段结束后，并发度限制设置会大致收敛于蓝线左右。
+第二阶段：基于延时反馈的最佳容量微调： 在消费端比较固定请求数的平均处理时间与历史总请求的平均处理时间，依此对服务端并发度限制进行微小的动态调整。</p>
+</blockquote>
+<p>这么做的原因在于，统计TPS比较耗时，所以在评测时用延迟时间动态微调。</p>
+<p>在该方案的<strong>负载均衡</strong>算法中，同样使用了最优并发度这个参数。该方案计算权重的方式如下：</p>
+<p>$$
+\text{weight} = \frac{\text{当前并发数}}{\text{最优并发数}}
+$$</p>
+<h2 id=第三名方案>第三名方案</h2>
+<p>在<strong>超时机制</strong>上，该方案使用的是平均值+随机系数。</p>
+<p>该方案同样分析了"吞吐量-并发度-延迟"的关系，除了最佳并发量外，还计算了最佳的TPS。</p>
+<p><strong>限流算法</strong>中，直接只用了计算出的最佳并发量。在<strong>负载均衡算</strong>法上，使用了加权负载均衡算法，权重为最佳TPS。</p>
+<p>除了上述的三个算法外，该方案还提出了一种整流算法。当当前的并发数大于最大并发值时，将请求加入到一个队列中；当并发数小于最大并发值时，从队列中取出请求。通过队列实现削峰填谷的作用，效果如下：</p>
+<figure class=align-center>
+<img src=https://blog-1302636809.file.myqcloud.com/post/%E5%A4%A9%E6%B1%A0%E6%AF%94%E8%B5%9B%E6%80%BB%E7%BB%93/images/2022-02-09-16-58-15.png><figcaption>
+<h4>整流前</h4></figcaption>
+</figure>
+<figure class=align-center>
+<img src=https://blog-1302636809.file.myqcloud.com/post/%E5%A4%A9%E6%B1%A0%E6%AF%94%E8%B5%9B%E6%80%BB%E7%BB%93/images/2022-02-09-16-58-23.png><figcaption>
+<h4>整流后</h4></figcaption>
+</figure>
 <h1 id=参考>参考</h1>
 <ol>
 <li><a href=https://github.com/Netflix/concurrency-limits>GitHub - Netflix/concurrency-limits</a></li>

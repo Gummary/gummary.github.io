@@ -12,7 +12,7 @@
 <meta name=apple-mobile-web-app-capable content="yes">
 <meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
 <meta name=author content="Gum"><meta name=description content><meta name=keywords content="Photo,Reading,Java,Distribute System">
-<meta name=generator content="Hugo 0.92.0 with theme even">
+<meta name=generator content="Hugo 0.92.1 with theme even">
 <link rel=canonical href=http://localhost:1313/post/dubbo%E9%9B%86%E7%BE%A4%E5%AE%B9%E9%94%99/>
 <link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
@@ -30,7 +30,7 @@
 <meta itemprop=name content="Dubbo中的集群容错">
 <meta itemprop=description content><meta itemprop=datePublished content="2021-12-11T13:46:30+08:00">
 <meta itemprop=dateModified content="2021-12-11T13:46:30+08:00">
-<meta itemprop=wordCount content="1063">
+<meta itemprop=wordCount content="1061">
 <meta itemprop=keywords content><meta name=twitter:card content="summary">
 <meta name=twitter:title content="Dubbo中的集群容错">
 <meta name=twitter:description content><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
@@ -94,7 +94,7 @@
 <div class=post-category>
 <a href=/categories/dubbo/> Dubbo </a>
 </div>
-<span class=more-meta> 1063 words </span>
+<span class=more-meta> 1061 words </span>
 <span class=more-meta> 3 mins read </span>
 </div>
 </header>
@@ -114,7 +114,7 @@
 <div class=post-content>
 <p>本文是Dubbo集群的最厚一部分内容，之前的博客中介绍了Dubbo使用服务目录获取可用的Provider，然后通过服务路由得到符合配置的Provider，然后通过负载均衡算法选出最佳的Provider，对该Provider发起RPC调用。但是RPC调用并不是一定成功的，那么如何处理调用失败呢？这就是本文将要讨论的内容，Dubbo中的集群容错策略。</p>
 <h1 id=集群容错简介>集群容错简介</h1>
-<p>集群容错是指，当rpc调用失败时，处理这个调用失败所采用的机制。Dubbo中共提供了9中集群容错机制，下面是一个总结：</p>
+<p>集群容错是指，当rpc调用失败时，处理这个调用失败所采用的机制。Dubbo中共提供了九种容错机制，下面是一个总结：</p>
 <table>
 <thead>
 <tr>
@@ -156,7 +156,7 @@
 <td>资源充足，实时性要求高</td>
 </tr>
 <tr>
-<td style=text-align:left>Broadcast，对所有Provider发起掉用</td>
+<td style=text-align:left>Broadcast，对所有Provider发起调用</td>
 <td>可以对所有Provider发起调用</td>
 <td>消耗资源</td>
 <td>通知所有Provider执行某项操作</td>
