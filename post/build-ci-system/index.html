@@ -1,0 +1,435 @@
+<!doctype html><html lang=en>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>使用Github Action和阿里云容器镜像服务搭建CI系统 - Gum</title>
+<meta name=renderer content="webkit">
+<meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta http-equiv=cache-control content="no-transform">
+<meta http-equiv=cache-control content="no-siteapp">
+<meta name=theme-color content="#f8f5ec">
+<meta name=msapplication-navbutton-color content="#f8f5ec">
+<meta name=apple-mobile-web-app-capable content="yes">
+<meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
+<meta name=author content="Gum"><meta name=description content><meta name=keywords content="Photo,Reading,Java,Distribute System">
+<meta name=generator content="Hugo 0.92.2 with theme even">
+<link rel=canonical href=http://localhost:1313/post/build-ci-system/>
+<link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png>
+<link rel=manifest href=/manifest.json>
+<link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5>
+<link href=/sass/main.min.40f3224b12ad17cb3dd58c8d5dfc3d1d6ad48ed6335de8962e4710a613bf3702.css rel=stylesheet>
+<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous>
+<meta property="og:title" content="使用Github Action和阿里云容器镜像服务搭建CI系统">
+<meta property="og:description" content>
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://localhost:1313/post/build-ci-system/"><meta property="article:section" content="post">
+<meta property="article:published_time" content="2022-02-19T15:22:15+08:00">
+<meta property="article:modified_time" content="2022-02-19T15:22:15+08:00">
+<meta itemprop=name content="使用Github Action和阿里云容器镜像服务搭建CI系统">
+<meta itemprop=description content><meta itemprop=datePublished content="2022-02-19T15:22:15+08:00">
+<meta itemprop=dateModified content="2022-02-19T15:22:15+08:00">
+<meta itemprop=wordCount content="2544">
+<meta itemprop=keywords content><meta name=twitter:card content="summary">
+<meta name=twitter:title content="使用Github Action和阿里云容器镜像服务搭建CI系统">
+<meta name=twitter:description content><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]-->
+</head>
+<body>
+<div id=mobile-navbar class=mobile-navbar>
+<div class=mobile-header-logo>
+<a href=/ class=logo>Gum</a>
+</div>
+<div class=mobile-navbar-icon>
+<span></span>
+<span></span>
+<span></span>
+</div>
+</div>
+<nav id=mobile-menu class="mobile-menu slideout-menu">
+<ul class=mobile-menu-list>
+<a href=/>
+<li class=mobile-menu-item>Home</li>
+</a><a href=/post/>
+<li class=mobile-menu-item>Archives</li>
+</a><a href=/tags/>
+<li class=mobile-menu-item>Tags</li>
+</a><a href=/categories/>
+<li class=mobile-menu-item>Categories</li>
+</a><a href=/about/>
+<li class=mobile-menu-item>About</li>
+</a>
+</ul>
+</nav>
+<div class=container id=mobile-panel>
+<header id=header class=header>
+<div class=logo-wrapper>
+<a href=/ class=logo>Gum</a>
+</div>
+<nav class=site-navbar>
+<ul id=menu class=menu>
+<li class=menu-item>
+<a class=menu-item-link href=/>Home</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/post/>Archives</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/tags/>Tags</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/categories/>Categories</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/about/>About</a>
+</li>
+</ul>
+</nav>
+</header>
+<main id=main class=main>
+<div class=content-wrapper>
+<div id=content class=content>
+<article class=post>
+<header class=post-header>
+<h1 class=post-title>使用Github Action和阿里云容器镜像服务搭建CI系统</h1>
+<div class=post-meta>
+<span class=post-time> 2022-02-19 </span>
+<span class=more-meta> 2544 words </span>
+<span class=more-meta> 6 mins read </span>
+</div>
+</header>
+<div class=post-toc id=post-toc>
+<h2 class=post-toc-title>Contents</h2>
+<div class="post-toc-content always-active">
+<nav id=TableOfContents>
+<ul>
+<li><a href=#引言>引言</a></li>
+<li><a href=#一些基础知识>一些基础知识</a></li>
+<li><a href=#实操环节>实操环节</a>
+<ul>
+<li><a href=#应用代码管理与发布>应用代码管理与发布</a></li>
+<li><a href=#使用阿里云容器镜像管理>使用阿里云容器镜像管理</a></li>
+<li><a href=#使用github-action>使用GitHub Action</a></li>
+</ul>
+</li>
+<li><a href=#参考>参考</a></li>
+</ul>
+</nav>
+</div>
+</div>
+<div class=post-content>
+<h1 id=引言>引言</h1>
+<p>在公司写代码的流程是一般是先在本地开发，然后推送到远程代码仓库，然后使用发布工具构建+执行就可以实现<strong>自动拉取代码->编译代码->将程序及编译环境打包成Docker镜像->拉取镜像->启动镜像运行程序</strong>这个流程。刚接触这个系统的时候，对这个自动化的编译构建运行启动非常好奇，也想自己构建一个这样一个系统。这个周比较闲，就抽空了解了一下，实现了一个简易的系统，本文主要记录下搭建的过程。</p>
+<h1 id=一些基础知识>一些基础知识</h1>
+<p>前言所述的自动打包发布流程正式名称是CI/CD，也即持续集成/持续交付（持续部署）。<strong>持续集成</strong>是指，同一个团队不同开发者开发时可以频繁地将对应用的修改集成到代码的主干，持续集成工具可以自动构建、自动运行测试，确保修改代码的正确性。<strong>持续交付</strong>是指在合并到主干后，将代码交付给测试人员或用户，供他们部署到类生产环境中进行测试，如果测试通过，则手动部署到生产环境中。最后<strong>持续部署</strong>是持续交付的延伸，将最后手动部署的步骤也自动化。</p>
+<h1 id=实操环节>实操环节</h1>
+<p>在公司内，CI/CD流程的主要流程是，开发者开发完代码后发布到代码仓库，然后触发CI/CD流程，Jenkins会自动拉取代码，构建后打包成一个容器镜像，然后拉取该镜像，发布到K8S集群上。本文借助Github实现代码管理，Github Action实现自动构建容器镜像，阿里容器镜像管理服务实现一个简单的持续集成系统。</p>
+<h2 id=应用代码管理与发布>应用代码管理与发布</h2>
+<p>本文使用的例子程序是一个简单的Java生产者消费者应用，分别包含生产者应用和消费者应用，二者通过消息队列实现通信。这里不展开叙述应用的具体实现，主要关注两个应用的打包发布流程。</p>
+<p>这两个应用均由Maven管理，放在同一个Module下，共同依赖DemoApi，代码结构如下图所示。其中<code>setup/docker/*Dockerfile</code>为实现构建的dockerfile。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>Demo/
+├─ Producer/
+│  ├─ pom.xml
+│  ├─ src/
+├─ Consumer/
+│  ├─ pom.xml
+│  ├─ src/
+├─ DemApi/
+│  ├─ src/
+│  ├─ pom.xml
+├─ setup/
+│  ├─ docker/
+│  │  ├─ ProducerDockerfile
+│  │  ├─ ConsumerDockerfile
+├─ pom.xml
+</code></pre></td></tr></table>
+</div>
+</div><p>我们先来看一下实现构建的Dockerfile，这里以ProducerDockerfile为例：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-dockerfile data-lang=dockerfile><span class=c>#</span><span class=err>
+</span><span class=err></span><span class=c># 构建阶段</span><span class=err>
+</span><span class=err></span><span class=c>#</span><span class=err>
+</span><span class=err></span><span class=k>FROM</span><span class=s> maven:3.6.0-jdk-11-slim AS build # 1</span><span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=k>WORKDIR</span><span class=s> /home/app/ 	# 2</span><span class=err>
+</span><span class=err></span><span class=k>COPY</span> Consumer/src Consumer/pom.xml /home/app/Consumer/ <span class=err>
+</span><span class=err></span><span class=k>COPY</span> Producer/src Producer/pom.xml /home/app/Producer/<span class=err>
+</span><span class=err></span><span class=k>COPY</span> DemoApi/src DemoApi/pom.xml /home/app/DemoApi/<span class=err>
+</span><span class=err></span><span class=k>COPY</span> pom.xml /home/app/pom.xml<span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=k>RUN</span> mvn -pl Producer -am -f /home/app/pom.xml clean package <span class=c1># 3</span><span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=c>#</span><span class=err>
+</span><span class=err></span><span class=c># 打包阶段</span><span class=err>
+</span><span class=err></span><span class=c>#</span><span class=err>
+</span><span class=err></span><span class=k>FROM</span><span class=s> openjdk:11-jre-slim # 4</span><span class=err>
+</span><span class=err></span><span class=k>COPY</span> --from<span class=o>=</span>build /home/app/Producer/target/Producer-1.0-SNAPSHOT-jar-with-dependencies.jar /usr/local/lib/producer.jar<span class=err>
+</span><span class=err></span><span class=k>ENTRYPOINT</span> <span class=p>[</span><span class=s2>&#34;java&#34;</span><span class=p>,</span><span class=s2>&#34;-jar&#34;</span><span class=p>,</span><span class=s2>&#34;/usr/local/lib/producer.jar&#34;</span><span class=p>]</span> <span class=err>
+</span></code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>首先制定构建镜像，这个应用使用Maven管理，所以使用基于maven的docker镜像</li>
+<li>指定构建的根目录并将需要的代码都拷贝到根目录中</li>
+<li>执行构建命令，这里只构建Producer这个应用</li>
+<li>这里使用了Docker的<a href=https://docs.docker.com/develop/develop-images/multistage-build/>mult-stage build</a>，可以在一个Dockerfile中使用多个镜像。这里使用了两个镜像，在第一个镜像中构建，将构建的结果保存在第二个镜像中。这样做的好处是可以减少docker image的体积。</li>
+</ol>
+<p>在本地，我们可以在根目录执行<code>docker build -t kafka.producer:latest -f ./setup/docker/Producer</code>实现该镜像的构建，构建完成后运行该docker即可。这里注意，在build时的根目录为当前目录，而不是Dockerfile所在的目录，所以Dockerfile内COPY的参数是相对build执行所在的目录。</p>
+<h2 id=使用阿里云容器镜像管理>使用阿里云容器镜像管理</h2>
+<p>在实现本地构建后，我们需要将容器镜像发布到一个Registry，供交付工具拉取镜像。常用的Docker Registry包括Docker Hub、GitHub Packages、阿里容器镜像服务、腾讯云容器镜像服务等，由于网络环境问题，这里采用阿里云容器镜像管理服务作为Docker Registry。</p>
+<p>首先在阿里云容器镜像服务的实例列表中创建个人实例：</p>
+<figure class=align-center>
+<img src=https://blog-1302636809.file.myqcloud.com/post/build-ci-system/images/2022-02-19-17-17-45.png>
+</figure>
+<p>然后创建一个命名空间，在命名空间中创建镜像仓库，最后设置访问阿里云镜像管理服务的账号密码：</p>
+<figure class=align-center>
+<img src=https://blog-1302636809.file.myqcloud.com/post/build-ci-system/images/2022-02-19-17-20-14.png>
+</figure>
+<p>这里解释下命名空间、镜像仓库之间的关系。在pull一个镜像时，一个镜像的地址可能是：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>registry.cn-shenzhen.aliyuncs.com/gum/kafka.producer:latest
+</code></pre></td></tr></table>
+</div>
+</div><p>该地址由<code>registry/namespace/image:tag</code>组成。其中registry用于存储和分发所有的docker镜像，namespace可以用于区分不同环境下的容器镜像，image为实际的镜像名称，tag用于标识同一镜像的多个版本。而之前提到的镜像仓库则是挂在命名空间下，一个镜像仓库只存储一种镜像的多种版本。</p>
+<p>我们看下在本地如何推送打包好的镜像：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=c1># 登录到阿里云镜像仓库</span>
+$ docker login --username<span class=o>=</span>用户名 registry.cn-hangzhou.aliyuncs.com
+<span class=c1># 给生成的镜像打标签，这里必须加上阿里云registry的地址，否则无法推送镜像</span>
+$ docker tag kafka.producer registry.cn-hangzhou.aliyuncs.com/gum/kafka.producer:latest
+<span class=c1># 推送镜像</span>
+$ docker push registry.cn-hangzhou.aliyuncs.com/gum/kafka.producer:latest
+</code></pre></td></tr></table>
+</div>
+</div><h2 id=使用github-action>使用GitHub Action</h2>
+<p>上述的两个动作都是通过手动执行命令实现的，下面我们通过Github Action实现开发完代码后自动构建镜像并推送。使用Github Action有两种实现方式：</p>
+<ol>
+<li>构建Github Action Steps实现编译，然后用构建的可执行文件创建一个新的镜像，将新镜像推送到Registry。也即将上述的Dockerfile的内容拆解到Github Action Steps。</li>
+<li>在容器内构建，将构建好的镜像推送到Registry。也即组合上述两个步骤。</li>
+</ol>
+<p>下面给出第二个方法的yml文件：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=c># This is a basic workflow to help you get started with Actions</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>CI</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># 在push和pr合并到master时触发</span><span class=w>
+</span><span class=w></span><span class=nt>on</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>push</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>branches</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=w> </span><span class=l>master ]</span><span class=w>
+</span><span class=w>  </span><span class=nt>pull_request</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>branches</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=w> </span><span class=l>master ]</span><span class=w>
+</span><span class=w>  </span><span class=nt>workflow_dispatch</span><span class=p>:</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=nt>jobs</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>build</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>runs-on</span><span class=p>:</span><span class=w> </span><span class=l>ubuntu-latest</span><span class=w>
+</span><span class=w>
+</span><span class=w>    </span><span class=nt>steps</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span>- <span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>actions/checkout@v2</span><span class=w>
+</span><span class=w>
+</span><span class=w>      </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>Set up Docker Buildx</span><span class=w>
+</span><span class=w>        </span><span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>docker/setup-buildx-action@v1</span><span class=w>
+</span><span class=w>			
+</span><span class=w>			</span><span class=c># 这里登录到阿里Registry</span><span class=w>
+</span><span class=w>      </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>Login to DockerHub</span><span class=w>
+</span><span class=w>        </span><span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>docker/login-action@v1</span><span class=w>
+</span><span class=w>        </span><span class=nt>with</span><span class=p>:</span><span class=w>
+</span><span class=w>          </span><span class=nt>registry</span><span class=p>:</span><span class=w> </span><span class=l>${{ secrets.ALI_DOCKER_HUB_REGISTRY }}</span><span class=w>
+</span><span class=w>          </span><span class=nt>username</span><span class=p>:</span><span class=w> </span><span class=l>${{ secrets.ALI_DOCKER_HUB_USN }}</span><span class=w>
+</span><span class=w>          </span><span class=nt>password</span><span class=p>:</span><span class=w> </span><span class=l>${{ secrets.ALI_DOCKER_HUB_PWD }}</span><span class=w>
+</span><span class=w>			
+</span><span class=w>			</span><span class=c># 构建Producer的镜像并推送</span><span class=w>
+</span><span class=w>      </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>Build Producer and Push</span><span class=w>
+</span><span class=w>        </span><span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>docker/build-push-action@v2</span><span class=w>
+</span><span class=w>        </span><span class=nt>with</span><span class=p>:</span><span class=w>
+</span><span class=w>          </span><span class=nt>context</span><span class=p>:</span><span class=w> </span><span class=l>.</span><span class=w>
+</span><span class=w>          </span><span class=nt>file</span><span class=p>:</span><span class=w> </span><span class=l>./setup/docker/Producer</span><span class=w>
+</span><span class=w>          </span><span class=nt>push</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span><span class=w>          </span><span class=nt>tags</span><span class=p>:</span><span class=w> </span><span class=l>registry.cn-hangzhou.aliyuncs.com/gum/kafka.producer:latest</span><span class=w>
+</span><span class=w>
+</span><span class=w>			</span><span class=c># 构建Consumer的镜像并推送</span><span class=w>
+</span><span class=w>      </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>Build Consumer and Push</span><span class=w>
+</span><span class=w>        </span><span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>docker/build-push-action@v2</span><span class=w>
+</span><span class=w>        </span><span class=nt>with</span><span class=p>:</span><span class=w>
+</span><span class=w>          </span><span class=nt>context</span><span class=p>:</span><span class=w> </span><span class=l>.</span><span class=w>
+</span><span class=w>          </span><span class=nt>file</span><span class=p>:</span><span class=w> </span><span class=l>./setup/docker/Consumer</span><span class=w>
+</span><span class=w>          </span><span class=nt>push</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span><span class=w>          </span><span class=nt>tags</span><span class=p>:</span><span class=w> </span><span class=l>registry.cn-hangzhou.aliyuncs.com/gum/kafka.consumer:latest</span><span class=w>
+</span><span class=w>
+</span></code></pre></td></tr></table>
+</div>
+</div><p>在构建镜像并推送时，with下的内容就是前面命令行构建的拆解。</p>
+<h1 id=参考>参考</h1>
+<ol>
+<li><a href=https://www.redhat.com/zh/topics/devops/what-is-ci-cd>什么是 CI/CD？一文带你理解CI持续集成和CD持续交付/部署 - 红帽</a></li>
+<li><a href=https://www.mindtheproduct.com/what-the-hell-are-ci-cd-and-devops-a-cheatsheet-for-the-rest-of-us/>The Product Managers' Guide to Continuous Delivery and DevOps - Mind the Product</a></li>
+<li><a href=https://docs.microsoft.com/en-us/azure/container-registry/container-registry-concepts>About registries, repositories, images, and artifacts - Azure Container Registry | Microsoft Docs</a></li>
+<li><a href=https://mincong.io/cn/github-actions-acr/>GitHub Actions持续集成阿里云容器镜像服务（ACR） - Mincong Huang</a></li>
+<li><a href=https://stackoverflow.com/questions/24537340/docker-adding-a-file-from-a-parent-directory>Docker: adding a file from a parent directory - Stack Overflow</a></li>
+<li><a href=https://event-driven.io/en/how_to_buid_an_optimal_docker_image_for_your_application/>How to build an optimal Docker image for your application? - Event-Driven.io</a></li>
+<li><a href=https://github.com/marketplace/actions/build-and-push-docker-images#git-context>Build and push Docker images · Actions · GitHub Marketplace · GitHub</a></li>
+<li><a href=https://stackoverflow.com/questions/63786311/how-to-set-correct-working-directory-for-docker-building-and-publishing-in-githu>How to set correct working-directory for Docker building and publishing in GitHub action? - Stack Overflow</a></li>
+<li><a href=https://docs.docker.com/develop/develop-images/multistage-build/>Use multi-stage builds | Docker Documentation</a></li>
+<li><a href=https://stackoverflow.com/questions/27767264/how-to-dockerize-maven-project-and-how-many-ways-to-accomplish-it>java - How to dockerize maven project? and how many ways to accomplish it? - Stack Overflow</a></li>
+<li><a href=https://www.cnblogs.com/jiuliangbaicaizhou/p/15224138.html>两种github action 打包.Net Core 项目docker镜像推送到阿里云镜像仓库 - 九两白菜粥 - 博客园</a></li>
+</ol>
+<div class=post-copyright>
+<p class=copyright-item>
+<span class=item-title>Author</span>
+<span class=item-content>Gum</span>
+</p>
+<p class=copyright-item>
+<span class=item-title>LastMod</span>
+<span class=item-content>
+2022-02-19
+</span>
+</p>
+<p class=copyright-item>
+<span class=item-title>License</span>
+<span class=item-content><a rel="license noopener" href=https://creativecommons.org/licenses/by-nc-nd/4.0/ target=_blank>CC BY-NC-ND 4.0</a></span>
+</p>
+</div>
+<footer class=post-footer>
+<nav class=post-nav>
+<a class=next href=/post/dubbo%E9%9B%86%E7%BE%A4/>
+<span class="next-text nav-default">Dubbo集群总结</span>
+<span class="next-text nav-mobile">Next</span>
+<i class="iconfont icon-right"></i>
+</a>
+</nav>
+</footer>
+</article>
+</div>
+<script src=https://utteranc.es/client.js repo=Gummary/blog-comment issue-term=pathname theme=github-light crossorigin=anonymous async></script>
+<noscript>Please enable JavaScript to view the <a href=https://github.com/utterance>comments powered by utterances.</a></noscript>
+</div>
+</main>
+<footer id=footer class=footer>
+<div class=social-links>
+<a href=mailto:sdythp@gmail.com class="iconfont icon-email" title=email target=_blank></a>
+<a href=https://github.com/Gummary/ class="iconfont icon-github" title=github target=_blank></a>
+<a href=http://localhost:1313/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a>
+</div>
+<div class=poem>What I cannot create, I do not understand.</div>
+<div class=copyright>
+<span class=copyright-year>
+<span>Gum</span>
+&copy;
+2017 -
+2022</span>
+</div>
+</footer>
+<div class=back-to-top id=back-to-top>
+<i class="iconfont icon-up"></i>
+</div>
+</div>
+<script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script>
+<script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script>
+<script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script>
+</body>
+</html>
