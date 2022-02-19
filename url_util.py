@@ -4,6 +4,7 @@ import re
 
 
 pattern = re.compile("([0-9]+)\. (http[s]?://.*)")
+headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36'}
 
 def get_title(url:str):
 	proxies = {
@@ -11,7 +12,7 @@ def get_title(url:str):
 		'https':'https://127.0.0.1:7890'
 	}
 	try:
-		res = requests.get(url, proxies=proxies)
+		res = requests.get(url, proxies=proxies, headers=headers)
 	except requests.exceptions.SSLError:
 		return None
 	except requests.exceptions.ProxyError:
@@ -46,7 +47,7 @@ def replace_urls_in_reference(post):
 		article.append(new_refer)
 	return article
 
-post_path = input("Please input ")
+post_path = input("Please input markdown file:\n")
 article = replace_urls_in_reference(post_path)
 with open(post_path, "w") as f:
 	f.write("".join(article))
