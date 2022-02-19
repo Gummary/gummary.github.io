@@ -14,6 +14,8 @@ def get_title(url:str):
 		res = requests.get(url, proxies=proxies)
 	except requests.exceptions.SSLError:
 		return None
+	except requests.exceptions.ProxyError:
+		return None
 	if res.status_code != 200:
 		return None
 	res.encoding = 'utf-8'
@@ -44,7 +46,7 @@ def replace_urls_in_reference(post):
 		article.append(new_refer)
 	return article
 
-post_path = "content/post/20211211134630-Dubbo集群容错/index.md"
+post_path = input("Please input ")
 article = replace_urls_in_reference(post_path)
 with open(post_path, "w") as f:
 	f.write("".join(article))
