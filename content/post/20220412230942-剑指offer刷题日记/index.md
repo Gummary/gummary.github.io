@@ -2,7 +2,7 @@
 title: "剑指offer刷题日记"
 slug: 剑指offer刷题日记
 date: 2022-04-12T23:09:45+08:00
-draft: true
+draft: false
 ---
 
 <!--more-->
@@ -26,6 +26,44 @@ class CQueue:
             self.s2.append(self.s1.pop())
         return self.s2.pop()
 ```
+
+{{< fcode python >}}
+
+class MinStack:
+
+    def __init__(self):
+        """
+        initialize your data structure here.
+        """
+        self.min_stack = []
+        self.stack = []
+
+    def push(self, x: int) -> None:
+        self.stack.append(x)
+        if not self.min_stack:
+            self.min_stack.append(x)
+        elif x <= self.min_stack[-1]:
+            self.min_stack.append(x)
+        else:
+            self.min_stack.append(self.min_stack[-1])
+
+    def pop(self) -> None:
+        if not self.stack:
+            return
+        self.stack.pop()
+        self.min_stack.pop()
+
+    def top(self) -> int:
+        if not self.stack:
+            return None
+        return self.stack[-1]
+
+    def min(self) -> int:
+        if not self.min_stack:
+            return None
+        return self.min_stack[-1]
+
+{{< /fcode >}}
 
 ## 包含min函数的栈
 
