@@ -1,168 +1,8 @@
-<!doctype html><html lang=en>
-<head>
-<meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<title>Dubbo中的负载均衡策略（上） - Gum</title>
-<meta name=renderer content="webkit">
-<meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta http-equiv=cache-control content="no-transform">
-<meta http-equiv=cache-control content="no-siteapp">
-<meta name=theme-color content="#f8f5ec">
-<meta name=msapplication-navbutton-color content="#f8f5ec">
-<meta name=apple-mobile-web-app-capable content="yes">
-<meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
-<meta name=author content="Gum"><meta name=description content><meta name=keywords content="Photo,Reading,Java,Distribute System">
-<meta name=generator content="Hugo 0.92.2 with theme even">
-<link rel=canonical href=http://localhost:1313/post/dubbo3%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1-%E4%B8%8A/>
-<link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
-<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png>
-<link rel=manifest href=/manifest.json>
-<link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5>
-<link href=/sass/main.min.40f3224b12ad17cb3dd58c8d5dfc3d1d6ad48ed6335de8962e4710a613bf3702.css rel=stylesheet>
-<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous>
-<meta property="og:title" content="Dubbo中的负载均衡策略（上）">
-<meta property="og:description" content>
-<meta property="og:type" content="article">
-<meta property="og:url" content="http://localhost:1313/post/dubbo3%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1-%E4%B8%8A/"><meta property="article:section" content="post">
-<meta property="article:published_time" content="2021-09-09T20:52:17+08:00">
-<meta property="article:modified_time" content="2021-09-09T20:52:17+08:00">
-<meta itemprop=name content="Dubbo中的负载均衡策略（上）">
-<meta itemprop=description content><meta itemprop=datePublished content="2021-09-09T20:52:17+08:00">
-<meta itemprop=dateModified content="2021-09-09T20:52:17+08:00">
-<meta itemprop=wordCount content="3477">
-<meta itemprop=keywords content><meta name=twitter:card content="summary">
-<meta name=twitter:title content="Dubbo中的负载均衡策略（上）">
-<meta name=twitter:description content><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
-<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]-->
-</head>
-<body>
-<div id=mobile-navbar class=mobile-navbar>
-<div class=mobile-header-logo>
-<a href=/ class=logo>Gum</a>
-</div>
-<div class=mobile-navbar-icon>
+<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Dubbo中的负载均衡策略（上） - Gum</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="Gum"><meta name=description content><meta name=keywords content="Photo,Reading,Java,Distribute System"><meta name=generator content="Hugo 0.96.0 with theme even"><link rel=canonical href=http://localhost:1313/post/dubbo3%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1-%E4%B8%8A/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.40f3224b12ad17cb3dd58c8d5dfc3d1d6ad48ed6335de8962e4710a613bf3702.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="Dubbo中的负载均衡策略（上）"><meta property="og:description" content><meta property="og:type" content="article"><meta property="og:url" content="http://localhost:1313/post/dubbo3%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1-%E4%B8%8A/"><meta property="article:section" content="post"><meta property="article:published_time" content="2021-09-09T20:52:17+08:00"><meta property="article:modified_time" content="2021-09-09T20:52:17+08:00"><meta itemprop=name content="Dubbo中的负载均衡策略（上）"><meta itemprop=description content><meta itemprop=datePublished content="2021-09-09T20:52:17+08:00"><meta itemprop=dateModified content="2021-09-09T20:52:17+08:00"><meta itemprop=wordCount content="3477"><meta itemprop=keywords content><meta name=twitter:card content="summary"><meta name=twitter:title content="Dubbo中的负载均衡策略（上）"><meta name=twitter:description content><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>Gum</a></div><div class=mobile-navbar-icon><span></span>
 <span></span>
-<span></span>
-<span></span>
-</div>
-</div>
-<nav id=mobile-menu class="mobile-menu slideout-menu">
-<ul class=mobile-menu-list>
-<a href=/>
-<li class=mobile-menu-item>Home</li>
-</a><a href=/post/>
-<li class=mobile-menu-item>Archives</li>
-</a><a href=/tags/>
-<li class=mobile-menu-item>Tags</li>
-</a><a href=/categories/>
-<li class=mobile-menu-item>Categories</li>
-</a><a href=/about/>
-<li class=mobile-menu-item>About</li>
-</a>
-</ul>
-</nav>
-<div class=container id=mobile-panel>
-<header id=header class=header>
-<div class=logo-wrapper>
-<a href=/ class=logo>Gum</a>
-</div>
-<nav class=site-navbar>
-<ul id=menu class=menu>
-<li class=menu-item>
-<a class=menu-item-link href=/>Home</a>
-</li><li class=menu-item>
-<a class=menu-item-link href=/post/>Archives</a>
-</li><li class=menu-item>
-<a class=menu-item-link href=/tags/>Tags</a>
-</li><li class=menu-item>
-<a class=menu-item-link href=/categories/>Categories</a>
-</li><li class=menu-item>
-<a class=menu-item-link href=/about/>About</a>
-</li>
-</ul>
-</nav>
-</header>
-<main id=main class=main>
-<div class=content-wrapper>
-<div id=content class=content>
-<article class=post>
-<header class=post-header>
-<h1 class=post-title>Dubbo中的负载均衡策略（上）</h1>
-<div class=post-meta>
-<span class=post-time> 2021-09-09 </span>
-<div class=post-category>
-<a href=/categories/dubbo/> Dubbo </a>
-</div>
-<span class=more-meta> 3477 words </span>
-<span class=more-meta> 7 mins read </span>
-</div>
-</header>
-<div class=post-toc id=post-toc>
-<h2 class=post-toc-title>Contents</h2>
-<div class="post-toc-content always-active">
-<nav id=TableOfContents>
-<ul>
-<li><a href=#引言>引言</a></li>
-<li><a href=#随机负载均衡>随机负载均衡</a>
-<ul>
-<li><a href=#负载均衡算法简介>负载均衡算法简介</a></li>
-<li><a href=#dubbo中的加权随机负载均衡实现>Dubbo中的加权随机负载均衡实现</a></li>
-</ul>
-</li>
-<li><a href=#轮询负载均衡>轮询负载均衡</a>
-<ul>
-<li><a href=#完全轮询负载均衡>完全轮询负载均衡</a></li>
-<li><a href=#加权轮询负载均衡>加权轮询负载均衡</a></li>
-<li><a href=#平滑加权轮询负载均衡>平滑加权轮询负载均衡</a></li>
-<li><a href=#dubbo中的平滑加权轮询负载均衡实现>Dubbo中的平滑加权轮询负载均衡实现</a></li>
-</ul>
-</li>
-<li><a href=#附录>附录</a>
-<ul>
-<li><a href=#dubbo中计算权重的方式>Dubbo中计算权重的方式</a></li>
-</ul>
-</li>
-<li><a href=#参考文献>参考文献</a></li>
-</ul>
-</nav>
-</div>
-</div>
-<div class=post-content>
-<h1 id=引言>引言</h1>
-<figure class=align-center>
-<img src=https://blog-1302636809.file.myqcloud.com/post/dubbo3%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1-%E4%B8%8A/images/2021-09-09-20-53-52.png><figcaption>
-<h4>Dubbo架构图</h4></figcaption>
-</figure>
-<p>Dubbo负载均衡是在Dubbo框架的第5层（自上而下）Cluster层，客户端根据注册中心提供的服务端列表，根据配置的负载均衡算法选择一个最佳的调用者。Dubbo提供的负载均衡算法列表如下：</p>
-<ul>
-<li>RandomLoadBalance，加权随机负载均衡</li>
-<li>RoundRobinLoadBalance，加权轮询负载均衡</li>
-<li>LeastActiveLoadBalance，最少连接数</li>
-<li>ShortestResponseLoadBalance，最短响应时间</li>
-<li>ConsistentHashLoadBalance，一致性 Hash</li>
-</ul>
-<p>由于篇幅原因，本文只介绍随机负载均衡和轮询负载均衡的原理，然后结合Dubbo中代码分析具体实现。</p>
-<h1 id=随机负载均衡>随机负载均衡</h1>
-<h2 id=负载均衡算法简介>负载均衡算法简介</h2>
-<p>随机负载均衡是从服务器列表中随机选择一个服务器提供服务，当请求量足够大时，各服务器分配到的流量近似相同。这样完全随机有一个问题是，不同服务器的处理能力不同，完全随机不能将处理能力强的服务器的能力全部发挥出来，另外也会对处理能力弱的服务器造成一定压力。所以我们需要根据服务器的处理能力给服务器添加权重，让高权重的服务器处理更多的请求。</p>
-<p>在有了各服务器的权重后，如何进行分配呢？这里介绍一种非常巧妙的算法：</p>
-<p>假设我们现在有A,B,C三个Provider，权重分别为2,8,1，权重和为11，将invoker根据权重放在坐标轴上有：</p>
-<figure class=align-center>
-<img src=https://blog-1302636809.file.myqcloud.com/post/dubbo3%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1-%E4%B8%8A/images/2021-09-09-22-03-33.png>
-</figure>
-<p>然后生成一个大于0小于权重和的随机数，假设生成的随机数为s，若：</p>
-<ul>
-<li>$0\leq s &lt; 2$，则选择服务A；</li>
-<li>$2\leq s &lt; 10$，则选择服务B；</li>
-<li>$10\leq s &lt; 11$，则选择服务C。</li>
-</ul>
-<p>这样，权重越大的服务器，生成的随机数命中该服务器权重区域的概率就越大。</p>
-<h2 id=dubbo中的加权随机负载均衡实现>Dubbo中的加权随机负载均衡实现</h2>
-<p>加权随机负载均衡是Dubbo使用的默认负载均衡算法，用户可指定不同服务器的权重，使用相同的默认权重。RandomLoadBalance的核心代码如下：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a><a href=/about/><li class=mobile-menu-item>About</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>Gum</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Dubbo中的负载均衡策略（上）</h1><div class=post-meta><span class=post-time>2021-09-09</span><div class=post-category><a href=/categories/dubbo/>Dubbo</a></div><span class=more-meta>3477 words</span>
+<span class=more-meta>7 mins read</span></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>Contents</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><a href=#引言>引言</a></li><li><a href=#随机负载均衡>随机负载均衡</a><ul><li><a href=#负载均衡算法简介>负载均衡算法简介</a></li><li><a href=#dubbo中的加权随机负载均衡实现>Dubbo中的加权随机负载均衡实现</a></li></ul></li><li><a href=#轮询负载均衡>轮询负载均衡</a><ul><li><a href=#完全轮询负载均衡>完全轮询负载均衡</a></li><li><a href=#加权轮询负载均衡>加权轮询负载均衡</a></li><li><a href=#平滑加权轮询负载均衡>平滑加权轮询负载均衡</a></li><li><a href=#dubbo中的平滑加权轮询负载均衡实现>Dubbo中的平滑加权轮询负载均衡实现</a></li></ul></li><li><a href=#附录>附录</a><ul><li><a href=#dubbo中计算权重的方式>Dubbo中计算权重的方式</a></li></ul></li><li><a href=#参考文献>参考文献</a></li></ul></nav></div></div><div class=post-content><h1 id=引言>引言</h1><figure class=align-center><img src=https://blog-1302636809.file.myqcloud.com/post/dubbo3%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1-%E4%B8%8A/images/2021-09-09-20-53-52.png><figcaption><h4>Dubbo架构图</h4></figcaption></figure><p>Dubbo负载均衡是在Dubbo框架的第5层（自上而下）Cluster层，客户端根据注册中心提供的服务端列表，根据配置的负载均衡算法选择一个最佳的调用者。Dubbo提供的负载均衡算法列表如下：</p><ul><li>RandomLoadBalance，加权随机负载均衡</li><li>RoundRobinLoadBalance，加权轮询负载均衡</li><li>LeastActiveLoadBalance，最少连接数</li><li>ShortestResponseLoadBalance，最短响应时间</li><li>ConsistentHashLoadBalance，一致性 Hash</li></ul><p>由于篇幅原因，本文只介绍随机负载均衡和轮询负载均衡的原理，然后结合Dubbo中代码分析具体实现。</p><h1 id=随机负载均衡>随机负载均衡</h1><h2 id=负载均衡算法简介>负载均衡算法简介</h2><p>随机负载均衡是从服务器列表中随机选择一个服务器提供服务，当请求量足够大时，各服务器分配到的流量近似相同。这样完全随机有一个问题是，不同服务器的处理能力不同，完全随机不能将处理能力强的服务器的能力全部发挥出来，另外也会对处理能力弱的服务器造成一定压力。所以我们需要根据服务器的处理能力给服务器添加权重，让高权重的服务器处理更多的请求。</p><p>在有了各服务器的权重后，如何进行分配呢？这里介绍一种非常巧妙的算法：</p><p>假设我们现在有A,B,C三个Provider，权重分别为2,8,1，权重和为11，将invoker根据权重放在坐标轴上有：</p><figure class=align-center><img src=https://blog-1302636809.file.myqcloud.com/post/dubbo3%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1-%E4%B8%8A/images/2021-09-09-22-03-33.png></figure><p>然后生成一个大于0小于权重和的随机数，假设生成的随机数为s，若：</p><ul><li>$0\leq s &lt; 2$，则选择服务A；</li><li>$2\leq s &lt; 10$，则选择服务B；</li><li>$10\leq s &lt; 11$，则选择服务C。</li></ul><p>这样，权重越大的服务器，生成的随机数命中该服务器权重区域的概率就越大。</p><h2 id=dubbo中的加权随机负载均衡实现>Dubbo中的加权随机负载均衡实现</h2><p>加权随机负载均衡是Dubbo使用的默认负载均衡算法，用户可指定不同服务器的权重，使用相同的默认权重。RandomLoadBalance的核心代码如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -202,76 +42,59 @@
 </span><span class=lnt>38
 </span><span class=lnt>39
 </span><span class=lnt>40
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>protected</span> <span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=nf>doSelect</span><span class=o>(</span><span class=n>List</span><span class=o>&lt;</span><span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;&gt;</span> <span class=n>invokers</span><span class=o>,</span> <span class=n>URL</span> <span class=n>url</span><span class=o>,</span> <span class=n>Invocation</span> <span class=n>invocation</span><span class=o>)</span> <span class=o>{</span>
-	
-	<span class=c1>// 获得所有invoker的数量
-</span><span class=c1></span>	<span class=kt>int</span> <span class=n>length</span> <span class=o>=</span> <span class=n>invokers</span><span class=o>.</span><span class=na>size</span><span class=o>();</span>
-
-	<span class=k>if</span> <span class=o>(!</span><span class=n>needWeightLoadBalance</span><span class=o>(</span><span class=n>invokers</span><span class=o>,</span><span class=n>invocation</span><span class=o>)){</span>
-		<span class=k>return</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>ThreadLocalRandom</span><span class=o>.</span><span class=na>current</span><span class=o>().</span><span class=na>nextInt</span><span class=o>(</span><span class=n>length</span><span class=o>));</span>
-	<span class=o>}</span>
-
-	<span class=c1>// 用于判断是否所有的invoker都有相同的权重
-</span><span class=c1></span>	<span class=kt>boolean</span> <span class=n>sameWeight</span> <span class=o>=</span> <span class=kc>true</span><span class=o>;</span>
-	<span class=c1>// 存储每个invoker的最大权重，也即累积和
-</span><span class=c1></span>	<span class=kt>int</span><span class=o>[]</span> <span class=n>weights</span> <span class=o>=</span> <span class=k>new</span> <span class=kt>int</span><span class=o>[</span><span class=n>length</span><span class=o>];</span>
-	<span class=c1>// 计算权重和
-</span><span class=c1></span>	<span class=kt>int</span> <span class=n>totalWeight</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span>
-	<span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>length</span><span class=o>;</span> <span class=n>i</span><span class=o>++)</span> <span class=o>{</span>
-		<span class=c1>// 计算每个invoker的权重
-</span><span class=c1></span>		<span class=kt>int</span> <span class=n>weight</span> <span class=o>=</span> <span class=n>getWeight</span><span class=o>(</span><span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>i</span><span class=o>),</span> <span class=n>invocation</span><span class=o>);</span>
-		<span class=c1>// 求和
-</span><span class=c1></span>		<span class=n>totalWeight</span> <span class=o>+=</span> <span class=n>weight</span><span class=o>;</span>
-		<span class=c1>// 存储每个invoker当前的累积和
-</span><span class=c1></span>		<span class=n>weights</span><span class=o>[</span><span class=n>i</span><span class=o>]</span> <span class=o>=</span> <span class=n>totalWeight</span><span class=o>;</span>
-		<span class=c1>// 判断权重是否不同
-</span><span class=c1></span>		<span class=k>if</span> <span class=o>(</span><span class=n>sameWeight</span> <span class=o>&amp;&amp;</span> <span class=n>totalWeight</span> <span class=o>!=</span> <span class=n>weight</span> <span class=o>*</span> <span class=o>(</span><span class=n>i</span> <span class=o>+</span> <span class=n>1</span><span class=o>))</span> <span class=o>{</span>
-			<span class=n>sameWeight</span> <span class=o>=</span> <span class=kc>false</span><span class=o>;</span>
-		<span class=o>}</span>
-	<span class=o>}</span>
-	
-	<span class=k>if</span> <span class=o>(</span><span class=n>totalWeight</span> <span class=o>&gt;</span> <span class=n>0</span> <span class=o>&amp;&amp;</span> <span class=o>!</span><span class=n>sameWeight</span><span class=o>)</span> <span class=o>{</span>
-		<span class=c1>// 如果各个invoker的权重不相同，则根据我们上一节介绍的算法随机选出一个invoker
-</span><span class=c1></span>		<span class=kt>int</span> <span class=n>offset</span> <span class=o>=</span> <span class=n>ThreadLocalRandom</span><span class=o>.</span><span class=na>current</span><span class=o>().</span><span class=na>nextInt</span><span class=o>(</span><span class=n>totalWeight</span><span class=o>);</span>
-		<span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>length</span><span class=o>;</span> <span class=n>i</span><span class=o>++)</span> <span class=o>{</span>
-			<span class=k>if</span> <span class=o>(</span><span class=n>offset</span> <span class=o>&lt;</span> <span class=n>weights</span><span class=o>[</span><span class=n>i</span><span class=o>])</span> <span class=o>{</span>
-				<span class=k>return</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>i</span><span class=o>);</span>
-			<span class=o>}</span>
-		<span class=o>}</span>
-	<span class=o>}</span>
-	<span class=c1>// 如果权重和为0或权重均相同，则随机返回一个
-</span><span class=c1></span>	<span class=k>return</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>ThreadLocalRandom</span><span class=o>.</span><span class=na>current</span><span class=o>().</span><span class=na>nextInt</span><span class=o>(</span><span class=n>length</span><span class=o>));</span>
-<span class=o>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><h1 id=轮询负载均衡>轮询负载均衡</h1>
-<h2 id=完全轮询负载均衡>完全轮询负载均衡</h2>
-<p>完全轮询负载均衡算法比较简单，不断遍历服务器列表即可。与随机算法相同，不能根据服务器的能力去分配流量。所以也需要通过权重控制流量分配。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kd>protected</span> <span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=nf>doSelect</span><span class=o>(</span><span class=n>List</span><span class=o>&lt;</span><span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;&gt;</span> <span class=n>invokers</span><span class=o>,</span> <span class=n>URL</span> <span class=n>url</span><span class=o>,</span> <span class=n>Invocation</span> <span class=n>invocation</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>	
+</span></span><span class=line><span class=cl>	<span class=c1>// 获得所有invoker的数量
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=kt>int</span> <span class=n>length</span> <span class=o>=</span> <span class=n>invokers</span><span class=o>.</span><span class=na>size</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>if</span> <span class=o>(!</span><span class=n>needWeightLoadBalance</span><span class=o>(</span><span class=n>invokers</span><span class=o>,</span><span class=n>invocation</span><span class=o>)){</span>
+</span></span><span class=line><span class=cl>		<span class=k>return</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>ThreadLocalRandom</span><span class=o>.</span><span class=na>current</span><span class=o>().</span><span class=na>nextInt</span><span class=o>(</span><span class=n>length</span><span class=o>));</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=c1>// 用于判断是否所有的invoker都有相同的权重
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=kt>boolean</span> <span class=n>sameWeight</span> <span class=o>=</span> <span class=kc>true</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 存储每个invoker的最大权重，也即累积和
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=kt>int</span><span class=o>[]</span> <span class=n>weights</span> <span class=o>=</span> <span class=k>new</span> <span class=kt>int</span><span class=o>[</span><span class=n>length</span><span class=o>];</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 计算权重和
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=kt>int</span> <span class=n>totalWeight</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>length</span><span class=o>;</span> <span class=n>i</span><span class=o>++)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=c1>// 计算每个invoker的权重
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=kt>int</span> <span class=n>weight</span> <span class=o>=</span> <span class=n>getWeight</span><span class=o>(</span><span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>i</span><span class=o>),</span> <span class=n>invocation</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>		<span class=c1>// 求和
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=n>totalWeight</span> <span class=o>+=</span> <span class=n>weight</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>		<span class=c1>// 存储每个invoker当前的累积和
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=n>weights</span><span class=o>[</span><span class=n>i</span><span class=o>]</span> <span class=o>=</span> <span class=n>totalWeight</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>		<span class=c1>// 判断权重是否不同
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=k>if</span> <span class=o>(</span><span class=n>sameWeight</span> <span class=o>&amp;&amp;</span> <span class=n>totalWeight</span> <span class=o>!=</span> <span class=n>weight</span> <span class=o>*</span> <span class=o>(</span><span class=n>i</span> <span class=o>+</span> <span class=n>1</span><span class=o>))</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=n>sameWeight</span> <span class=o>=</span> <span class=kc>false</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>	
+</span></span><span class=line><span class=cl>	<span class=k>if</span> <span class=o>(</span><span class=n>totalWeight</span> <span class=o>&gt;</span> <span class=n>0</span> <span class=o>&amp;&amp;</span> <span class=o>!</span><span class=n>sameWeight</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=c1>// 如果各个invoker的权重不相同，则根据我们上一节介绍的算法随机选出一个invoker
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=kt>int</span> <span class=n>offset</span> <span class=o>=</span> <span class=n>ThreadLocalRandom</span><span class=o>.</span><span class=na>current</span><span class=o>().</span><span class=na>nextInt</span><span class=o>(</span><span class=n>totalWeight</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>		<span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>length</span><span class=o>;</span> <span class=n>i</span><span class=o>++)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=k>if</span> <span class=o>(</span><span class=n>offset</span> <span class=o>&lt;</span> <span class=n>weights</span><span class=o>[</span><span class=n>i</span><span class=o>])</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=k>return</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>i</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 如果权重和为0或权重均相同，则随机返回一个
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=k>return</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>ThreadLocalRandom</span><span class=o>.</span><span class=na>current</span><span class=o>().</span><span class=na>nextInt</span><span class=o>(</span><span class=n>length</span><span class=o>));</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><h1 id=轮询负载均衡>轮询负载均衡</h1><h2 id=完全轮询负载均衡>完全轮询负载均衡</h2><p>完全轮询负载均衡算法比较简单，不断遍历服务器列表即可。与随机算法相同，不能根据服务器的能力去分配流量。所以也需要通过权重控制流量分配。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=n>servers</span> <span class=o>=</span> <span class=p>[</span><span class=s1>&#39;A&#39;</span><span class=p>,</span> <span class=s1>&#39;B&#39;</span><span class=p>,</span> <span class=s1>&#39;C&#39;</span><span class=p>]</span>
-<span class=n>index</span> <span class=o>=</span> <span class=mi>0</span>
-<span class=k>def</span> <span class=nf>select</span><span class=p>():</span>
-	<span class=k>global</span> <span class=n>index</span>
-	<span class=n>index</span> <span class=o>=</span> <span class=p>(</span><span class=n>index</span><span class=o>+</span><span class=mi>1</span><span class=p>)</span> <span class=o>%</span> <span class=nb>len</span><span class=p>(</span><span class=n>servers</span><span class=p>)</span>
-	<span class=k>return</span> <span class=n>servers</span><span class=p>[</span><span class=n>index</span><span class=p>]</span>
-</code></pre></td></tr></table>
-</div>
-</div><h2 id=加权轮询负载均衡>加权轮询负载均衡</h2>
-<p>加权轮询负载均衡与加权随机算法实现方式类似，但是不再生成随机数，而是累计一个值，该值在哪个区间内就请求哪个服务器。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>servers</span> <span class=o>=</span> <span class=p>[</span><span class=s1>&#39;A&#39;</span><span class=p>,</span> <span class=s1>&#39;B&#39;</span><span class=p>,</span> <span class=s1>&#39;C&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=n>index</span> <span class=o>=</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>select</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>	<span class=k>global</span> <span class=n>index</span>
+</span></span><span class=line><span class=cl>	<span class=n>index</span> <span class=o>=</span> <span class=p>(</span><span class=n>index</span><span class=o>+</span><span class=mi>1</span><span class=p>)</span> <span class=o>%</span> <span class=nb>len</span><span class=p>(</span><span class=n>servers</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=n>servers</span><span class=p>[</span><span class=n>index</span><span class=p>]</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=加权轮询负载均衡>加权轮询负载均衡</h2><p>加权轮询负载均衡与加权随机算法实现方式类似，但是不再生成随机数，而是累计一个值，该值在哪个区间内就请求哪个服务器。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -288,67 +111,36 @@
 </span><span class=lnt>15
 </span><span class=lnt>16
 </span><span class=lnt>17
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=n>servers</span> <span class=o>=</span> <span class=p>[(</span><span class=mi>2</span><span class=p>,</span> <span class=s1>&#39;A&#39;</span><span class=p>),</span> <span class=p>(</span><span class=mi>8</span><span class=p>,</span> <span class=s1>&#39;B&#39;</span><span class=p>),</span> <span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=s1>&#39;C&#39;</span><span class=p>)]</span>
-<span class=n>index</span> <span class=o>=</span> <span class=mi>0</span>
-
-<span class=k>def</span> <span class=nf>select</span><span class=p>():</span>
-	<span class=k>global</span> <span class=n>index</span>
-	<span class=n>total_weight</span> <span class=o>=</span> <span class=mi>0</span>
-	<span class=n>weights</span> <span class=o>=</span> <span class=p>[</span><span class=mi>0</span><span class=p>]</span> <span class=o>*</span> <span class=nb>len</span><span class=p>(</span><span class=n>servers</span><span class=p>)</span>
-	<span class=n>target_server</span> <span class=o>=</span> <span class=n>servers</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span>
-	<span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=nb>len</span><span class=p>(</span><span class=n>servers</span><span class=p>)):</span>
-		<span class=n>total_weight</span> <span class=o>+=</span> <span class=n>servers</span><span class=p>[</span><span class=n>i</span><span class=p>][</span><span class=mi>0</span><span class=p>]</span>
-		<span class=n>weights</span><span class=p>[</span><span class=n>i</span><span class=p>]</span> <span class=o>=</span> <span class=n>total_weight</span>
-	<span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=nb>len</span><span class=p>(</span><span class=n>servers</span><span class=p>)):</span>
-		<span class=k>if</span> <span class=n>index</span> <span class=o>&lt;</span> <span class=n>weights</span><span class=p>[</span><span class=n>i</span><span class=p>]:</span>
-			<span class=n>target_server</span> <span class=o>=</span> <span class=n>servers</span><span class=p>[</span><span class=n>i</span><span class=p>]</span>
-			<span class=k>break</span>
-	<span class=n>index</span> <span class=o>=</span> <span class=p>(</span><span class=n>index</span> <span class=o>+</span> <span class=mi>1</span><span class=p>)</span> <span class=o>%</span> <span class=n>total_weight</span>
-	<span class=k>return</span> <span class=n>target_server</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>这种负载均衡算法也有其缺点，考虑当某个服务器的权重特别大时，那么所有的请求都会发送给该服务器，而其他的服务器则没有流量。</p>
-<h2 id=平滑加权轮询负载均衡>平滑加权轮询负载均衡</h2>
-<p>为了防止出现某个服务器压力过大的情况，Nginx在一次更新中提出一种平滑负载均衡算法，算法原文描述为：</p>
-<blockquote>
-<p>Algorithm is as follows: on each peer selection we increase current_weight of each eligible peer by its weight, select peer with greatest current_weight and reduce its current_weight by total number of weight points distributed among peers.</p>
-</blockquote>
-<p>假设共有n个节点，每个节点的权重分别为$[x_1, \dots, x_n]$，和为$S$，初始化时将所有节点的当前权重设置为0，在每次负载均衡选择执行两个步骤：</p>
-<ol>
-<li>将每个节点的当前权重加上每个节点的权重，选出当前权重最大的节点。</li>
-<li>将权重最大的节点的当前权重减去权重和S。</li>
-</ol>
-<p>算法的步骤很简单，但是背后的原理却很反直觉，为什么这样平滑了呢？这样就能均衡的访问每个服务器吗？下面给出一个数学证明，对此不感兴趣的读者可直接跳到<a href=#dubbo中的平滑加权轮询负载均衡>Dubbo实现</a>。</p>
-<p>我们先来证明均衡性，也即在选择$S$次后，每个节点选择的次数均为$x_i$。</p>
-<p>假设在第$t$轮的时候，第$j$个节点已经选了$x_j$次，其中$x_j \leq t &lt; S$，此时第$j$个节点的权重为:</p>
-<p>$$
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>servers</span> <span class=o>=</span> <span class=p>[(</span><span class=mi>2</span><span class=p>,</span> <span class=s1>&#39;A&#39;</span><span class=p>),</span> <span class=p>(</span><span class=mi>8</span><span class=p>,</span> <span class=s1>&#39;B&#39;</span><span class=p>),</span> <span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=s1>&#39;C&#39;</span><span class=p>)]</span>
+</span></span><span class=line><span class=cl><span class=n>index</span> <span class=o>=</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>select</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>	<span class=k>global</span> <span class=n>index</span>
+</span></span><span class=line><span class=cl>	<span class=n>total_weight</span> <span class=o>=</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl>	<span class=n>weights</span> <span class=o>=</span> <span class=p>[</span><span class=mi>0</span><span class=p>]</span> <span class=o>*</span> <span class=nb>len</span><span class=p>(</span><span class=n>servers</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=n>target_server</span> <span class=o>=</span> <span class=n>servers</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>	<span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=nb>len</span><span class=p>(</span><span class=n>servers</span><span class=p>)):</span>
+</span></span><span class=line><span class=cl>		<span class=n>total_weight</span> <span class=o>+=</span> <span class=n>servers</span><span class=p>[</span><span class=n>i</span><span class=p>][</span><span class=mi>0</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>		<span class=n>weights</span><span class=p>[</span><span class=n>i</span><span class=p>]</span> <span class=o>=</span> <span class=n>total_weight</span>
+</span></span><span class=line><span class=cl>	<span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=nb>len</span><span class=p>(</span><span class=n>servers</span><span class=p>)):</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=n>index</span> <span class=o>&lt;</span> <span class=n>weights</span><span class=p>[</span><span class=n>i</span><span class=p>]:</span>
+</span></span><span class=line><span class=cl>			<span class=n>target_server</span> <span class=o>=</span> <span class=n>servers</span><span class=p>[</span><span class=n>i</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>			<span class=k>break</span>
+</span></span><span class=line><span class=cl>	<span class=n>index</span> <span class=o>=</span> <span class=p>(</span><span class=n>index</span> <span class=o>+</span> <span class=mi>1</span><span class=p>)</span> <span class=o>%</span> <span class=n>total_weight</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=n>target_server</span>
+</span></span></code></pre></td></tr></table></div></div><p>这种负载均衡算法也有其缺点，考虑当某个服务器的权重特别大时，那么所有的请求都会发送给该服务器，而其他的服务器则没有流量。</p><h2 id=平滑加权轮询负载均衡>平滑加权轮询负载均衡</h2><p>为了防止出现某个服务器压力过大的情况，Nginx在一次更新中提出一种平滑负载均衡算法，算法原文描述为：</p><blockquote><p>Algorithm is as follows: on each peer selection we increase current_weight of each eligible peer by its weight, select peer with greatest current_weight and reduce its current_weight by total number of weight points distributed among peers.</p></blockquote><p>假设共有n个节点，每个节点的权重分别为$[x_1, \dots, x_n]$，和为$S$，初始化时将所有节点的当前权重设置为0，在每次负载均衡选择执行两个步骤：</p><ol><li>将每个节点的当前权重加上每个节点的权重，选出当前权重最大的节点。</li><li>将权重最大的节点的当前权重减去权重和S。</li></ol><p>算法的步骤很简单，但是背后的原理却很反直觉，为什么这样平滑了呢？这样就能均衡的访问每个服务器吗？下面给出一个数学证明，对此不感兴趣的读者可直接跳到<a href=#dubbo中的平滑加权轮询负载均衡>Dubbo实现</a>。</p><p>我们先来证明均衡性，也即在选择$S$次后，每个节点选择的次数均为$x_i$。</p><p>假设在第$t$轮的时候，第$j$个节点已经选了$x_j$次，其中$x_j \leq t &lt; S$，此时第$j$个节点的权重为:</p><p>$$
 \begin{aligned}
 w_j(t) & = t\times x_j - x_j\times S \\
 &= (t-S)\times x_j \\
 &&lt; 0
 \end{aligned}
-$$</p>
-<p>而我们在每个loadbalance的过程中，先将每个节点的当前权重加上每个节点的权重，然后最大的减去权重和，总的来看，所有节点的权重和仍然为0.</p>
-<ol>
-<li>$x_1 + \dots + x_n$，假设最大的为第$j$个</li>
-<li>$x_1 + \dots + (x_j - S) + \dots + x_n = x_1 + \dots + x_n - S = 0$</li>
-</ol>
-<p>所以每次进行选择时当前权重和均为0，又有$w_j(t) &lt; 0$，那么必定存在一个节点的权重满足$w_p(t) > 0$。所以当一个节点被选择$x_j$次之后一定不会再选择该节点。在之后的$S-t$次选择中，随着t的增大$w_j(t)= (t-S)\times x_j$会不断趋向于0，直至$t=S$时，$w_j(t)=0$。</p>
-<p>所以，每个节点在被选择$x_i$次之后，都不会再被选择，而我们一共选择S次，所以每个节点都会被恰好选择$x_i$次，满足均衡性。</p>
-<p>我们再来证明平滑性。平滑性是指，当$x_i > 1$时，在选择$x_i-1$次某个节点之后，下一次一定不会再选择第i个节点了。</p>
-<p>假设在$t$时刻，我们连续选择了$x_i-1$次$i$节点。在这之前，我们选择了$n$次$j$节点且$j$节点仍未被轮询完，也即$0\leq n\leq x_j-1$，则有：</p>
-<p>$$
+$$</p><p>而我们在每个loadbalance的过程中，先将每个节点的当前权重加上每个节点的权重，然后最大的减去权重和，总的来看，所有节点的权重和仍然为0.</p><ol><li>$x_1 + \dots + x_n$，假设最大的为第$j$个</li><li>$x_1 + \dots + (x_j - S) + \dots + x_n = x_1 + \dots + x_n - S = 0$</li></ol><p>所以每次进行选择时当前权重和均为0，又有$w_j(t) &lt; 0$，那么必定存在一个节点的权重满足$w_p(t) > 0$。所以当一个节点被选择$x_j$次之后一定不会再选择该节点。在之后的$S-t$次选择中，随着t的增大$w_j(t)= (t-S)\times x_j$会不断趋向于0，直至$t=S$时，$w_j(t)=0$。</p><p>所以，每个节点在被选择$x_i$次之后，都不会再被选择，而我们一共选择S次，所以每个节点都会被恰好选择$x_i$次，满足均衡性。</p><p>我们再来证明平滑性。平滑性是指，当$x_i > 1$时，在选择$x_i-1$次某个节点之后，下一次一定不会再选择第i个节点了。</p><p>假设在$t$时刻，我们连续选择了$x_i-1$次$i$节点。在这之前，我们选择了$n$次$j$节点且$j$节点仍未被轮询完，也即$0\leq n\leq x_j-1$，则有：</p><p>$$
 \begin{aligned}
 w_i(t) &= t\times x_i - (x_i-1)\times S \\
 w_j(t) &= t\times x_j - n\times S \\
 &\geq t\times x_j - (x_j-1) \times S
 \end{aligned} \tag {1}
-$$</p>
-<p>此时分两种情况讨：</p>
-<p><strong>若当前恰好是前$t$个时刻</strong>，则有：</p>
-<p>$$
+$$</p><p>此时分两种情况讨：</p><p><strong>若当前恰好是前$t$个时刻</strong>，则有：</p><p>$$
 \begin{aligned}
 t &= x_i-1 \\
 n &= 0 \\
@@ -356,31 +148,19 @@ w_i(t) &= t\times x_i - (x_i-1)\times S \\
 w_j(t) &= t\times x_j - n\times S \\
 &\geq t\times x_j - (x_j-1) \times S
 \end{aligned}\tag {2}
-$$</p>
-<p>在$t+1$时刻有：</p>
-<p>$$
+$$</p><p>在$t+1$时刻有：</p><p>$$
 \begin{aligned}
 w_i(t) &= (x_i-1)\times x_i - (x_i-1)\times S + x_i \\
 &= (x_i-1)\times(x_i-S) + x_i \\
 &\leq x_i - x_i + 1 \\
 &\leq 1
 \end{aligned}\tag {3}
-$$</p>
-<p>其中第3步中是因为$x_i-S &lt; 0 \Rightarrow x_i - S \leq -1$。其他节点的权重为：</p>
-<p>$$
+$$</p><p>其中第3步中是因为$x_i-S &lt; 0 \Rightarrow x_i - S \leq -1$。其他节点的权重为：</p><p>$$
 \begin{aligned}
 w_j(t) &= (x_i-1)\times x_j + x_j \\
 &= x_i\times x_j
 \end{aligned}\tag {4}
-$$</p>
-<p>所以$w_i(t) &lt; w_j(t)$，在$t+1$时刻一定不会选i节点。</p>
-<p>再来看<strong>t不是前t个时刻</strong>:</p>
-<p>因为我们在选择i节点之前已经选择过j节点，说明$x_j>x_i$，所以带入到公式$(1)$中就有$w_j(t) > w_i(t)$</p>
-<h2 id=dubbo中的平滑加权轮询负载均衡实现>Dubbo中的平滑加权轮询负载均衡实现</h2>
-<p>先看下Dubbo中的数据结构：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+$$</p><p>所以$w_i(t) &lt; w_j(t)$，在$t+1$时刻一定不会选i节点。</p><p>再来看<strong>t不是前t个时刻</strong>:</p><p>因为我们在选择i节点之前已经选择过j节点，说明$x_j>x_i$，所以带入到公式$(1)$中就有$w_j(t) > w_i(t)$</p><h2 id=dubbo中的平滑加权轮询负载均衡实现>Dubbo中的平滑加权轮询负载均衡实现</h2><p>先看下Dubbo中的数据结构：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -388,22 +168,15 @@ $$</p>
 </span><span class=lnt>6
 </span><span class=lnt>7
 </span><span class=lnt>8
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>protected</span> <span class=kd>static</span> <span class=kd>class</span> <span class=nc>WeightedRoundRobin</span> <span class=o>{</span>
-	<span class=c1>// 节点的权重
-</span><span class=c1></span>	<span class=kd>private</span> <span class=kt>int</span> <span class=n>weight</span><span class=o>;</span>
-	<span class=c1>// 节点的当前权重
-</span><span class=c1></span>	<span class=kd>private</span> <span class=n>AtomicLong</span> <span class=n>current</span> <span class=o>=</span> <span class=k>new</span> <span class=n>AtomicLong</span><span class=o>(</span><span class=n>0</span><span class=o>);</span>
-	<span class=c1>// 节点权重的上次更新时间
-</span><span class=c1></span>	<span class=kd>private</span> <span class=kt>long</span> <span class=n>lastUpdate</span><span class=o>;</span>
-<span class=o>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>基于这个数据结构实现的负载均衡算法如下：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kd>protected</span> <span class=kd>static</span> <span class=kd>class</span> <span class=nc>WeightedRoundRobin</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 节点的权重
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=kd>private</span> <span class=kt>int</span> <span class=n>weight</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 节点的当前权重
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=kd>private</span> <span class=n>AtomicLong</span> <span class=n>current</span> <span class=o>=</span> <span class=k>new</span> <span class=n>AtomicLong</span><span class=o>(</span><span class=n>0</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 节点权重的上次更新时间
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=kd>private</span> <span class=kt>long</span> <span class=n>lastUpdate</span><span class=o>;</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>基于这个数据结构实现的负载均衡算法如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -451,65 +224,55 @@ $$</p>
 </span><span class=lnt>46
 </span><span class=lnt>47
 </span><span class=lnt>48
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=nd>@Override</span>
-<span class=kd>protected</span> <span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=nf>doSelect</span><span class=o>(</span><span class=n>List</span><span class=o>&lt;</span><span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;&gt;</span> <span class=n>invokers</span><span class=o>,</span> <span class=n>URL</span> <span class=n>url</span><span class=o>,</span> <span class=n>Invocation</span> <span class=n>invocation</span><span class=o>)</span> <span class=o>{</span>
-    <span class=c1>// 负载均衡实现的粒度是方法
-</span><span class=c1></span>    <span class=n>String</span> <span class=n>key</span> <span class=o>=</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>0</span><span class=o>).</span><span class=na>getUrl</span><span class=o>().</span><span class=na>getServiceKey</span><span class=o>()</span> <span class=o>+</span> <span class=s>&#34;.&#34;</span> <span class=o>+</span> <span class=n>invocation</span><span class=o>.</span><span class=na>getMethodName</span><span class=o>();</span>
-    <span class=c1>// 根据方法key获取invoker的负载均衡map
-</span><span class=c1></span>    <span class=n>ConcurrentMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>WeightedRoundRobin</span><span class=o>&gt;</span> <span class=n>map</span> <span class=o>=</span> <span class=n>methodWeightMap</span><span class=o>.</span><span class=na>computeIfAbsent</span><span class=o>(</span><span class=n>key</span><span class=o>,</span> <span class=n>k</span> <span class=o>-&gt;</span> <span class=k>new</span> <span class=n>ConcurrentHashMap</span><span class=o>&lt;&gt;());</span>
-	<span class=kt>int</span> <span class=n>totalWeight</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span>
-	<span class=kt>long</span> <span class=n>maxCurrent</span> <span class=o>=</span> <span class=n>Long</span><span class=o>.</span><span class=na>MIN_VALUE</span><span class=o>;</span>
-	<span class=kt>long</span> <span class=n>now</span> <span class=o>=</span> <span class=n>System</span><span class=o>.</span><span class=na>currentTimeMillis</span><span class=o>();</span>
-	<span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=n>selectedInvoker</span> <span class=o>=</span> <span class=kc>null</span><span class=o>;</span>
-	<span class=n>WeightedRoundRobin</span> <span class=n>selectedWRR</span> <span class=o>=</span> <span class=kc>null</span><span class=o>;</span>
-	<span class=k>for</span> <span class=o>(</span><span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=n>invoker</span> <span class=o>:</span> <span class=n>invokers</span><span class=o>)</span> <span class=o>{</span>
-		<span class=c1>// 获取每个invoker的唯一标识
-</span><span class=c1></span>		<span class=n>String</span> <span class=n>identifyString</span> <span class=o>=</span> <span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>().</span><span class=na>toIdentityString</span><span class=o>();</span>
-		<span class=kt>int</span> <span class=n>weight</span> <span class=o>=</span> <span class=n>getWeight</span><span class=o>(</span><span class=n>invoker</span><span class=o>,</span> <span class=n>invocation</span><span class=o>);</span>
-		<span class=c1>// 根据唯一标志获取该inoker的当前权重，如果没有就新建
-</span><span class=c1></span>		<span class=n>WeightedRoundRobin</span> <span class=n>weightedRoundRobin</span> <span class=o>=</span> <span class=n>map</span><span class=o>.</span><span class=na>computeIfAbsent</span><span class=o>(</span><span class=n>identifyString</span><span class=o>,</span> <span class=n>k</span> <span class=o>-&gt;</span> <span class=o>{</span>
-			<span class=n>WeightedRoundRobin</span> <span class=n>wrr</span> <span class=o>=</span> <span class=k>new</span> <span class=n>WeightedRoundRobin</span><span class=o>();</span>
-			<span class=n>wrr</span><span class=o>.</span><span class=na>setWeight</span><span class=o>(</span><span class=n>weight</span><span class=o>);</span>
-			<span class=k>return</span> <span class=n>wrr</span><span class=o>;</span>
-		<span class=o>});</span>
-		<span class=c1>// 如果权重发生变化，那么就重新设置权重。这里会将当前权重置0，同时设置节点权重
-</span><span class=c1></span>		<span class=k>if</span> <span class=o>(</span><span class=n>weight</span> <span class=o>!=</span> <span class=n>weightedRoundRobin</span><span class=o>.</span><span class=na>getWeight</span><span class=o>())</span> <span class=o>{</span>
-			<span class=c1>//weight changed
-</span><span class=c1></span>			<span class=n>weightedRoundRobin</span><span class=o>.</span><span class=na>setWeight</span><span class=o>(</span><span class=n>weight</span><span class=o>);</span>
-		<span class=o>}</span>
-		<span class=c1>// 更新节点的当前权重，current = current + weight
-</span><span class=c1></span>		<span class=kt>long</span> <span class=n>cur</span> <span class=o>=</span> <span class=n>weightedRoundRobin</span><span class=o>.</span><span class=na>increaseCurrent</span><span class=o>();</span>
-		<span class=n>weightedRoundRobin</span><span class=o>.</span><span class=na>setLastUpdate</span><span class=o>(</span><span class=n>now</span><span class=o>);</span>
-		<span class=k>if</span> <span class=o>(</span><span class=n>cur</span> <span class=o>&gt;</span> <span class=n>maxCurrent</span><span class=o>)</span> <span class=o>{</span>
-			<span class=n>maxCurrent</span> <span class=o>=</span> <span class=n>cur</span><span class=o>;</span>
-			<span class=n>selectedInvoker</span> <span class=o>=</span> <span class=n>invoker</span><span class=o>;</span>
-			<span class=n>selectedWRR</span> <span class=o>=</span> <span class=n>weightedRoundRobin</span><span class=o>;</span>
-		<span class=o>}</span>
-		<span class=n>totalWeight</span> <span class=o>+=</span> <span class=n>weight</span><span class=o>;</span>
-	<span class=o>}</span>
-	<span class=c1>// 移除已经不活跃的invker的权重，将在外下一次负载均衡生效
-</span><span class=c1></span>	<span class=k>if</span> <span class=o>(</span><span class=n>invokers</span><span class=o>.</span><span class=na>size</span><span class=o>()</span> <span class=o>!=</span> <span class=n>map</span><span class=o>.</span><span class=na>size</span><span class=o>())</span> <span class=o>{</span>
-		<span class=n>map</span><span class=o>.</span><span class=na>entrySet</span><span class=o>().</span><span class=na>removeIf</span><span class=o>(</span><span class=n>item</span> <span class=o>-&gt;</span> <span class=n>now</span> <span class=o>-</span> <span class=n>item</span><span class=o>.</span><span class=na>getValue</span><span class=o>().</span><span class=na>getLastUpdate</span><span class=o>()</span> <span class=o>&gt;</span> <span class=n>RECYCLE_PERIOD</span><span class=o>);</span>
-	<span class=o>}</span>
-	<span class=c1>// 选出invoker后，将该invoker的当前权重减去权重和
-</span><span class=c1></span>	<span class=k>if</span> <span class=o>(</span><span class=n>selectedInvoker</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
-		<span class=n>selectedWRR</span><span class=o>.</span><span class=na>sel</span><span class=o>(</span><span class=n>totalWeight</span><span class=o>);</span>
-		<span class=k>return</span> <span class=n>selectedInvoker</span><span class=o>;</span>
-	<span class=o>}</span>
-	<span class=c1>// should not happen here
-</span><span class=c1></span>	<span class=k>return</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>0</span><span class=o>);</span>
-<span class=o>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><h1 id=附录>附录</h1>
-<h2 id=dubbo中计算权重的方式>Dubbo中计算权重的方式</h2>
-<p>Dubbo的权重计算考虑了服务器的预热时间。防止在系统启动之初，在缓存等组件还未初始化完毕时就分配了大量请求，出现将服务器压垮的情况。</p>
-<p>Dubbo通过服务器权重进行服务器预热，服务器的权重会随着运行时间的延长逐渐增大，逐渐分配更多的流量。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Override</span>
+</span></span><span class=line><span class=cl><span class=kd>protected</span> <span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=nf>doSelect</span><span class=o>(</span><span class=n>List</span><span class=o>&lt;</span><span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;&gt;</span> <span class=n>invokers</span><span class=o>,</span> <span class=n>URL</span> <span class=n>url</span><span class=o>,</span> <span class=n>Invocation</span> <span class=n>invocation</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 负载均衡实现的粒度是方法
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>String</span> <span class=n>key</span> <span class=o>=</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>0</span><span class=o>).</span><span class=na>getUrl</span><span class=o>().</span><span class=na>getServiceKey</span><span class=o>()</span> <span class=o>+</span> <span class=s>&#34;.&#34;</span> <span class=o>+</span> <span class=n>invocation</span><span class=o>.</span><span class=na>getMethodName</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 根据方法key获取invoker的负载均衡map
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>ConcurrentMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>WeightedRoundRobin</span><span class=o>&gt;</span> <span class=n>map</span> <span class=o>=</span> <span class=n>methodWeightMap</span><span class=o>.</span><span class=na>computeIfAbsent</span><span class=o>(</span><span class=n>key</span><span class=o>,</span> <span class=n>k</span> <span class=o>-&gt;</span> <span class=k>new</span> <span class=n>ConcurrentHashMap</span><span class=o>&lt;&gt;());</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>totalWeight</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>long</span> <span class=n>maxCurrent</span> <span class=o>=</span> <span class=n>Long</span><span class=o>.</span><span class=na>MIN_VALUE</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>long</span> <span class=n>now</span> <span class=o>=</span> <span class=n>System</span><span class=o>.</span><span class=na>currentTimeMillis</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>	<span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=n>selectedInvoker</span> <span class=o>=</span> <span class=kc>null</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>WeightedRoundRobin</span> <span class=n>selectedWRR</span> <span class=o>=</span> <span class=kc>null</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>for</span> <span class=o>(</span><span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=n>invoker</span> <span class=o>:</span> <span class=n>invokers</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=c1>// 获取每个invoker的唯一标识
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=n>String</span> <span class=n>identifyString</span> <span class=o>=</span> <span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>().</span><span class=na>toIdentityString</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>		<span class=kt>int</span> <span class=n>weight</span> <span class=o>=</span> <span class=n>getWeight</span><span class=o>(</span><span class=n>invoker</span><span class=o>,</span> <span class=n>invocation</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>		<span class=c1>// 根据唯一标志获取该inoker的当前权重，如果没有就新建
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=n>WeightedRoundRobin</span> <span class=n>weightedRoundRobin</span> <span class=o>=</span> <span class=n>map</span><span class=o>.</span><span class=na>computeIfAbsent</span><span class=o>(</span><span class=n>identifyString</span><span class=o>,</span> <span class=n>k</span> <span class=o>-&gt;</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=n>WeightedRoundRobin</span> <span class=n>wrr</span> <span class=o>=</span> <span class=k>new</span> <span class=n>WeightedRoundRobin</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>			<span class=n>wrr</span><span class=o>.</span><span class=na>setWeight</span><span class=o>(</span><span class=n>weight</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>			<span class=k>return</span> <span class=n>wrr</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>		<span class=o>});</span>
+</span></span><span class=line><span class=cl>		<span class=c1>// 如果权重发生变化，那么就重新设置权重。这里会将当前权重置0，同时设置节点权重
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=k>if</span> <span class=o>(</span><span class=n>weight</span> <span class=o>!=</span> <span class=n>weightedRoundRobin</span><span class=o>.</span><span class=na>getWeight</span><span class=o>())</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=c1>//weight changed
+</span></span></span><span class=line><span class=cl><span class=c1></span>			<span class=n>weightedRoundRobin</span><span class=o>.</span><span class=na>setWeight</span><span class=o>(</span><span class=n>weight</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=c1>// 更新节点的当前权重，current = current + weight
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=kt>long</span> <span class=n>cur</span> <span class=o>=</span> <span class=n>weightedRoundRobin</span><span class=o>.</span><span class=na>increaseCurrent</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>		<span class=n>weightedRoundRobin</span><span class=o>.</span><span class=na>setLastUpdate</span><span class=o>(</span><span class=n>now</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=o>(</span><span class=n>cur</span> <span class=o>&gt;</span> <span class=n>maxCurrent</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=n>maxCurrent</span> <span class=o>=</span> <span class=n>cur</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>			<span class=n>selectedInvoker</span> <span class=o>=</span> <span class=n>invoker</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>			<span class=n>selectedWRR</span> <span class=o>=</span> <span class=n>weightedRoundRobin</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=n>totalWeight</span> <span class=o>+=</span> <span class=n>weight</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 移除已经不活跃的invker的权重，将在外下一次负载均衡生效
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=k>if</span> <span class=o>(</span><span class=n>invokers</span><span class=o>.</span><span class=na>size</span><span class=o>()</span> <span class=o>!=</span> <span class=n>map</span><span class=o>.</span><span class=na>size</span><span class=o>())</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=n>map</span><span class=o>.</span><span class=na>entrySet</span><span class=o>().</span><span class=na>removeIf</span><span class=o>(</span><span class=n>item</span> <span class=o>-&gt;</span> <span class=n>now</span> <span class=o>-</span> <span class=n>item</span><span class=o>.</span><span class=na>getValue</span><span class=o>().</span><span class=na>getLastUpdate</span><span class=o>()</span> <span class=o>&gt;</span> <span class=n>RECYCLE_PERIOD</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 选出invoker后，将该invoker的当前权重减去权重和
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=k>if</span> <span class=o>(</span><span class=n>selectedInvoker</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=n>selectedWRR</span><span class=o>.</span><span class=na>sel</span><span class=o>(</span><span class=n>totalWeight</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>		<span class=k>return</span> <span class=n>selectedInvoker</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// should not happen here
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=k>return</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>0</span><span class=o>);</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><h1 id=附录>附录</h1><h2 id=dubbo中计算权重的方式>Dubbo中计算权重的方式</h2><p>Dubbo的权重计算考虑了服务器的预热时间。防止在系统启动之初，在缓存等组件还未初始化完毕时就分配了大量请求，出现将服务器压垮的情况。</p><p>Dubbo通过服务器权重进行服务器预热，服务器的权重会随着运行时间的延长逐渐增大，逐渐分配更多的流量。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -544,112 +307,56 @@ $$</p>
 </span><span class=lnt>33
 </span><span class=lnt>34
 </span><span class=lnt>35
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kt>int</span> <span class=nf>getWeight</span><span class=o>(</span><span class=n>Invoker</span><span class=o>&lt;?&gt;</span> <span class=n>invoker</span><span class=o>,</span> <span class=n>Invocation</span> <span class=n>invocation</span><span class=o>)</span> <span class=o>{</span>
-	<span class=kt>int</span> <span class=n>weight</span><span class=o>;</span>
-	<span class=n>URL</span> <span class=n>url</span> <span class=o>=</span> <span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>();</span>
-	<span class=c1>// Multiple registry scenario, load balance among multiple registries.
-</span><span class=c1></span>	<span class=k>if</span> <span class=o>(</span><span class=n>REGISTRY_SERVICE_REFERENCE_PATH</span><span class=o>.</span><span class=na>equals</span><span class=o>(</span><span class=n>url</span><span class=o>.</span><span class=na>getServiceInterface</span><span class=o>()))</span> <span class=o>{</span>
-		<span class=n>weight</span> <span class=o>=</span> <span class=n>url</span><span class=o>.</span><span class=na>getParameter</span><span class=o>(</span><span class=n>REGISTRY_KEY</span> <span class=o>+</span> <span class=s>&#34;.&#34;</span> <span class=o>+</span> <span class=n>WEIGHT_KEY</span><span class=o>,</span> <span class=n>DEFAULT_WEIGHT</span><span class=o>);</span>
-	<span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
-		<span class=c1>// 从Method中获取权重参数
-</span><span class=c1></span>		<span class=n>weight</span> <span class=o>=</span> <span class=n>url</span><span class=o>.</span><span class=na>getMethodParameter</span><span class=o>(</span><span class=n>invocation</span><span class=o>.</span><span class=na>getMethodName</span><span class=o>(),</span> <span class=n>WEIGHT_KEY</span><span class=o>,</span> <span class=n>DEFAULT_WEIGHT</span><span class=o>);</span>
-		<span class=k>if</span> <span class=o>(</span><span class=n>weight</span> <span class=o>&gt;</span> <span class=n>0</span><span class=o>)</span> <span class=o>{</span>
-			<span class=c1>// 获取服务器启动时间
-</span><span class=c1></span>			<span class=kt>long</span> <span class=n>timestamp</span> <span class=o>=</span> <span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>().</span><span class=na>getParameter</span><span class=o>(</span><span class=n>TIMESTAMP_KEY</span><span class=o>,</span> <span class=n>0L</span><span class=o>);</span>
-			<span class=k>if</span> <span class=o>(</span><span class=n>timestamp</span> <span class=o>&gt;</span> <span class=n>0L</span><span class=o>)</span> <span class=o>{</span>
-				<span class=kt>long</span> <span class=n>uptime</span> <span class=o>=</span> <span class=n>System</span><span class=o>.</span><span class=na>currentTimeMillis</span><span class=o>()</span> <span class=o>-</span> <span class=n>timestamp</span><span class=o>;</span>
-				<span class=k>if</span> <span class=o>(</span><span class=n>uptime</span> <span class=o>&lt;</span> <span class=n>0</span><span class=o>)</span> <span class=o>{</span>
-					<span class=k>return</span> <span class=n>1</span><span class=o>;</span>
-				<span class=o>}</span>
-				<span class=c1>// 获取warmup时间
-</span><span class=c1></span>				<span class=kt>int</span> <span class=n>warmup</span> <span class=o>=</span> <span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>().</span><span class=na>getParameter</span><span class=o>(</span><span class=n>WARMUP_KEY</span><span class=o>,</span> <span class=n>DEFAULT_WARMUP</span><span class=o>);</span>
-				<span class=k>if</span> <span class=o>(</span><span class=n>uptime</span> <span class=o>&gt;</span> <span class=n>0</span> <span class=o>&amp;&amp;</span> <span class=n>uptime</span> <span class=o>&lt;</span> <span class=n>warmup</span><span class=o>)</span> <span class=o>{</span>
-					<span class=c1>// 计算预热期权重
-</span><span class=c1></span>					<span class=n>weight</span> <span class=o>=</span> <span class=n>calculateWarmupWeight</span><span class=o>((</span><span class=kt>int</span><span class=o>)</span><span class=n>uptime</span><span class=o>,</span> <span class=n>warmup</span><span class=o>,</span> <span class=n>weight</span><span class=o>);</span>
-				<span class=o>}</span>
-			<span class=o>}</span>
-		<span class=o>}</span>
-	<span class=o>}</span>
-	<span class=k>return</span> <span class=n>Math</span><span class=o>.</span><span class=na>max</span><span class=o>(</span><span class=n>weight</span><span class=o>,</span> <span class=n>0</span><span class=o>);</span>
-<span class=o>}</span>
-
-<span class=kd>static</span> <span class=kt>int</span> <span class=nf>calculateWarmupWeight</span><span class=o>(</span><span class=kt>int</span> <span class=n>uptime</span><span class=o>,</span> <span class=kt>int</span> <span class=n>warmup</span><span class=o>,</span> <span class=kt>int</span> <span class=n>weight</span><span class=o>)</span> <span class=o>{</span>
-	<span class=c1>// 随着uptime增大，uptime/warmup逐渐变大
-</span><span class=c1></span>	<span class=kt>int</span> <span class=n>ww</span> <span class=o>=</span> <span class=o>(</span><span class=kt>int</span><span class=o>)</span> <span class=o>(</span> <span class=n>uptime</span> <span class=o>/</span> <span class=o>((</span><span class=kt>float</span><span class=o>)</span> <span class=n>warmup</span> <span class=o>/</span> <span class=n>weight</span><span class=o>));</span>
-	<span class=c1>// 当uptime/warmup &gt; 1时为weight
-</span><span class=c1></span>	<span class=k>return</span> <span class=n>ww</span> <span class=o>&lt;</span> <span class=n>1</span> <span class=o>?</span> <span class=n>1</span> <span class=o>:</span> <span class=o>(</span><span class=n>Math</span><span class=o>.</span><span class=na>min</span><span class=o>(</span><span class=n>ww</span><span class=o>,</span> <span class=n>weight</span><span class=o>));</span>
-<span class=o>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><h1 id=参考文献>参考文献</h1>
-<ol>
-<li><a href=http://aibenlin.com/algorithm/2019/07/22/algorithm-weight.html>http://aibenlin.com/algorithm/2019/07/22/algorithm-weight.html</a></li>
-<li><a href=https://tenfy.cn/2018/11/12/smooth-weighted-round-robin/>https://tenfy.cn/2018/11/12/smooth-weighted-round-robin/</a></li>
-<li><a href=https://hedzr.com/golang/algorithm/go-load-balancer-1/#%E5%B8%A6%E6%9D%83%E9%87%8D%E7%9A%84%E8%BD%AE%E8%AF%A2%E7%AE%97%E6%B3%95-weighted-round-robin>https://hedzr.com/golang/algorithm/go-load-balancer-1/#%E5%B8%A6%E6%9D%83%E9%87%8D%E7%9A%84%E8%BD%AE%E8%AF%A2%E7%AE%97%E6%B3%95-weighted-round-robin</a></li>
-<li><a href=https://colobu.com/2016/12/04/smooth-weighted-round-robin-algorithm/>https://colobu.com/2016/12/04/smooth-weighted-round-robin-algorithm/</a></li>
-</ol>
-<div class=post-copyright>
-<p class=copyright-item>
-<span class=item-title>Author</span>
-<span class=item-content>Gum</span>
-</p>
-<p class=copyright-item>
-<span class=item-title>LastMod</span>
-<span class=item-content>
-2021-09-09
-</span>
-</p>
-<p class=copyright-item>
-<span class=item-title>License</span>
-<span class=item-content><a rel="license noopener" href=https://creativecommons.org/licenses/by-nc-nd/4.0/ target=_blank>CC BY-NC-ND 4.0</a></span>
-</p>
-</div>
-<footer class=post-footer>
-<nav class=post-nav>
-<a class=prev href=/post/dubbo3%E6%97%B6%E9%97%B4%E8%BD%AE%E7%AE%97%E6%B3%95/>
-<i class="iconfont icon-left"></i>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kt>int</span> <span class=nf>getWeight</span><span class=o>(</span><span class=n>Invoker</span><span class=o>&lt;?&gt;</span> <span class=n>invoker</span><span class=o>,</span> <span class=n>Invocation</span> <span class=n>invocation</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>weight</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>URL</span> <span class=n>url</span> <span class=o>=</span> <span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// Multiple registry scenario, load balance among multiple registries.
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=k>if</span> <span class=o>(</span><span class=n>REGISTRY_SERVICE_REFERENCE_PATH</span><span class=o>.</span><span class=na>equals</span><span class=o>(</span><span class=n>url</span><span class=o>.</span><span class=na>getServiceInterface</span><span class=o>()))</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=n>weight</span> <span class=o>=</span> <span class=n>url</span><span class=o>.</span><span class=na>getParameter</span><span class=o>(</span><span class=n>REGISTRY_KEY</span> <span class=o>+</span> <span class=s>&#34;.&#34;</span> <span class=o>+</span> <span class=n>WEIGHT_KEY</span><span class=o>,</span> <span class=n>DEFAULT_WEIGHT</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=c1>// 从Method中获取权重参数
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=n>weight</span> <span class=o>=</span> <span class=n>url</span><span class=o>.</span><span class=na>getMethodParameter</span><span class=o>(</span><span class=n>invocation</span><span class=o>.</span><span class=na>getMethodName</span><span class=o>(),</span> <span class=n>WEIGHT_KEY</span><span class=o>,</span> <span class=n>DEFAULT_WEIGHT</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=o>(</span><span class=n>weight</span> <span class=o>&gt;</span> <span class=n>0</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=c1>// 获取服务器启动时间
+</span></span></span><span class=line><span class=cl><span class=c1></span>			<span class=kt>long</span> <span class=n>timestamp</span> <span class=o>=</span> <span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>().</span><span class=na>getParameter</span><span class=o>(</span><span class=n>TIMESTAMP_KEY</span><span class=o>,</span> <span class=n>0L</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>			<span class=k>if</span> <span class=o>(</span><span class=n>timestamp</span> <span class=o>&gt;</span> <span class=n>0L</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=kt>long</span> <span class=n>uptime</span> <span class=o>=</span> <span class=n>System</span><span class=o>.</span><span class=na>currentTimeMillis</span><span class=o>()</span> <span class=o>-</span> <span class=n>timestamp</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>				<span class=k>if</span> <span class=o>(</span><span class=n>uptime</span> <span class=o>&lt;</span> <span class=n>0</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>					<span class=k>return</span> <span class=n>1</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>				<span class=o>}</span>
+</span></span><span class=line><span class=cl>				<span class=c1>// 获取warmup时间
+</span></span></span><span class=line><span class=cl><span class=c1></span>				<span class=kt>int</span> <span class=n>warmup</span> <span class=o>=</span> <span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>().</span><span class=na>getParameter</span><span class=o>(</span><span class=n>WARMUP_KEY</span><span class=o>,</span> <span class=n>DEFAULT_WARMUP</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>				<span class=k>if</span> <span class=o>(</span><span class=n>uptime</span> <span class=o>&gt;</span> <span class=n>0</span> <span class=o>&amp;&amp;</span> <span class=n>uptime</span> <span class=o>&lt;</span> <span class=n>warmup</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>					<span class=c1>// 计算预热期权重
+</span></span></span><span class=line><span class=cl><span class=c1></span>					<span class=n>weight</span> <span class=o>=</span> <span class=n>calculateWarmupWeight</span><span class=o>((</span><span class=kt>int</span><span class=o>)</span><span class=n>uptime</span><span class=o>,</span> <span class=n>warmup</span><span class=o>,</span> <span class=n>weight</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>				<span class=o>}</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=n>Math</span><span class=o>.</span><span class=na>max</span><span class=o>(</span><span class=n>weight</span><span class=o>,</span> <span class=n>0</span><span class=o>);</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>static</span> <span class=kt>int</span> <span class=nf>calculateWarmupWeight</span><span class=o>(</span><span class=kt>int</span> <span class=n>uptime</span><span class=o>,</span> <span class=kt>int</span> <span class=n>warmup</span><span class=o>,</span> <span class=kt>int</span> <span class=n>weight</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 随着uptime增大，uptime/warmup逐渐变大
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=kt>int</span> <span class=n>ww</span> <span class=o>=</span> <span class=o>(</span><span class=kt>int</span><span class=o>)</span> <span class=o>(</span> <span class=n>uptime</span> <span class=o>/</span> <span class=o>((</span><span class=kt>float</span><span class=o>)</span> <span class=n>warmup</span> <span class=o>/</span> <span class=n>weight</span><span class=o>));</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 当uptime/warmup &gt; 1时为weight
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=k>return</span> <span class=n>ww</span> <span class=o>&lt;</span> <span class=n>1</span> <span class=o>?</span> <span class=n>1</span> <span class=o>:</span> <span class=o>(</span><span class=n>Math</span><span class=o>.</span><span class=na>min</span><span class=o>(</span><span class=n>ww</span><span class=o>,</span> <span class=n>weight</span><span class=o>));</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><h1 id=参考文献>参考文献</h1><ol><li><a href=http://aibenlin.com/algorithm/2019/07/22/algorithm-weight.html>http://aibenlin.com/algorithm/2019/07/22/algorithm-weight.html</a></li><li><a href=https://tenfy.cn/2018/11/12/smooth-weighted-round-robin/>https://tenfy.cn/2018/11/12/smooth-weighted-round-robin/</a></li><li><a href=https://hedzr.com/golang/algorithm/go-load-balancer-1/#%E5%B8%A6%E6%9D%83%E9%87%8D%E7%9A%84%E8%BD%AE%E8%AF%A2%E7%AE%97%E6%B3%95-weighted-round-robin>https://hedzr.com/golang/algorithm/go-load-balancer-1/#%E5%B8%A6%E6%9D%83%E9%87%8D%E7%9A%84%E8%BD%AE%E8%AF%A2%E7%AE%97%E6%B3%95-weighted-round-robin</a></li><li><a href=https://colobu.com/2016/12/04/smooth-weighted-round-robin-algorithm/>https://colobu.com/2016/12/04/smooth-weighted-round-robin-algorithm/</a></li></ol><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
+<span class=item-content>Gum</span></p><p class=copyright-item><span class=item-title>LastMod</span>
+<span class=item-content>2021-09-09</span></p><p class=copyright-item><span class=item-title>License</span>
+<span class=item-content><a rel="license noopener" href=https://creativecommons.org/licenses/by-nc-nd/4.0/ target=_blank>CC BY-NC-ND 4.0</a></span></p></div><footer class=post-footer><nav class=post-nav><a class=prev href=/post/dubbo3%E6%97%B6%E9%97%B4%E8%BD%AE%E7%AE%97%E6%B3%95/><i class="iconfont icon-left"></i>
 <span class="prev-text nav-default">Dubbo中的时间轮算法</span>
-<span class="prev-text nav-mobile">Prev</span>
-</a>
-<a class=next href=/post/java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%AD%E7%9A%84task/>
-<span class="next-text nav-default">Java多线程中的task</span>
+<span class="prev-text nav-mobile">Prev</span></a>
+<a class=next href=/post/java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%AD%E7%9A%84task/><span class="next-text nav-default">Java多线程中的task</span>
 <span class="next-text nav-mobile">Next</span>
-<i class="iconfont icon-right"></i>
-</a>
-</nav>
-</footer>
-</article>
-</div>
-<script src=https://utteranc.es/client.js repo=Gummary/blog-comment issue-term=pathname theme=github-light crossorigin=anonymous async></script>
-<noscript>Please enable JavaScript to view the <a href=https://github.com/utterance>comments powered by utterances.</a></noscript>
-</div>
-</main>
-<footer id=footer class=footer>
-<div class=social-links>
-<a href=mailto:sdythp@gmail.com class="iconfont icon-email" title=email target=_blank></a>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div><script src=https://utteranc.es/client.js repo=Gummary/blog-comment issue-term=pathname theme=github-light crossorigin=anonymous async></script><noscript>Please enable JavaScript to view the <a href=https://github.com/utterance>comments powered by utterances.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=mailto:sdythp@gmail.com class="iconfont icon-email" title=email target=_blank></a>
 <a href=https://github.com/Gummary/ class="iconfont icon-github" title=github target=_blank></a>
-<a href=http://localhost:1313/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a>
-</div>
-<div class=poem>What I cannot create, I do not understand.</div>
-<div class=copyright>
-<span class=copyright-year>
-<span>Gum</span>
+<a href=http://localhost:1313/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=poem>What I cannot create, I do not understand.</div><div class=copyright><span class=copyright-year><span>Gum</span>
 &copy;
 2017 -
-2022</span>
-</div>
-</footer>
-<div class=back-to-top id=back-to-top>
-<i class="iconfont icon-up"></i>
-</div>
-</div>
-<script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+2022</span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
 <script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
 <script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
-<script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script>
-<script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script>
-<script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script>
-</body>
-</html>
+<script type=text/javascript src=/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js></script>
+<script type=text/javascript>window.MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]]}}</script><script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script></body></html>

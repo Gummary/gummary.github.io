@@ -1,140 +1,8 @@
-<!doctype html><html lang=en>
-<head>
-<meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<title>Dubbo中的负载均衡策略（中） - Gum</title>
-<meta name=renderer content="webkit">
-<meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta http-equiv=cache-control content="no-transform">
-<meta http-equiv=cache-control content="no-siteapp">
-<meta name=theme-color content="#f8f5ec">
-<meta name=msapplication-navbutton-color content="#f8f5ec">
-<meta name=apple-mobile-web-app-capable content="yes">
-<meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
-<meta name=author content="Gum"><meta name=description content><meta name=keywords content="Photo,Reading,Java,Distribute System">
-<meta name=generator content="Hugo 0.92.2 with theme even">
-<link rel=canonical href=http://localhost:1313/post/dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B8%AD/>
-<link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
-<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png>
-<link rel=manifest href=/manifest.json>
-<link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5>
-<link href=/sass/main.min.40f3224b12ad17cb3dd58c8d5dfc3d1d6ad48ed6335de8962e4710a613bf3702.css rel=stylesheet>
-<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous>
-<meta property="og:title" content="Dubbo中的负载均衡策略（中）">
-<meta property="og:description" content>
-<meta property="og:type" content="article">
-<meta property="og:url" content="http://localhost:1313/post/dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B8%AD/"><meta property="article:section" content="post">
-<meta property="article:published_time" content="2021-09-24T18:17:49+08:00">
-<meta property="article:modified_time" content="2021-09-24T18:17:49+08:00">
-<meta itemprop=name content="Dubbo中的负载均衡策略（中）">
-<meta itemprop=description content><meta itemprop=datePublished content="2021-09-24T18:17:49+08:00">
-<meta itemprop=dateModified content="2021-09-24T18:17:49+08:00">
-<meta itemprop=wordCount content="3406">
-<meta itemprop=keywords content><meta name=twitter:card content="summary">
-<meta name=twitter:title content="Dubbo中的负载均衡策略（中）">
-<meta name=twitter:description content><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
-<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]-->
-</head>
-<body>
-<div id=mobile-navbar class=mobile-navbar>
-<div class=mobile-header-logo>
-<a href=/ class=logo>Gum</a>
-</div>
-<div class=mobile-navbar-icon>
+<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Dubbo中的负载均衡策略（中） - Gum</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="Gum"><meta name=description content><meta name=keywords content="Photo,Reading,Java,Distribute System"><meta name=generator content="Hugo 0.96.0 with theme even"><link rel=canonical href=http://localhost:1313/post/dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B8%AD/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.40f3224b12ad17cb3dd58c8d5dfc3d1d6ad48ed6335de8962e4710a613bf3702.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="Dubbo中的负载均衡策略（中）"><meta property="og:description" content><meta property="og:type" content="article"><meta property="og:url" content="http://localhost:1313/post/dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B8%AD/"><meta property="article:section" content="post"><meta property="article:published_time" content="2021-09-24T18:17:49+08:00"><meta property="article:modified_time" content="2021-09-24T18:17:49+08:00"><meta itemprop=name content="Dubbo中的负载均衡策略（中）"><meta itemprop=description content><meta itemprop=datePublished content="2021-09-24T18:17:49+08:00"><meta itemprop=dateModified content="2021-09-24T18:17:49+08:00"><meta itemprop=wordCount content="3406"><meta itemprop=keywords content><meta name=twitter:card content="summary"><meta name=twitter:title content="Dubbo中的负载均衡策略（中）"><meta name=twitter:description content><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>Gum</a></div><div class=mobile-navbar-icon><span></span>
 <span></span>
-<span></span>
-<span></span>
-</div>
-</div>
-<nav id=mobile-menu class="mobile-menu slideout-menu">
-<ul class=mobile-menu-list>
-<a href=/>
-<li class=mobile-menu-item>Home</li>
-</a><a href=/post/>
-<li class=mobile-menu-item>Archives</li>
-</a><a href=/tags/>
-<li class=mobile-menu-item>Tags</li>
-</a><a href=/categories/>
-<li class=mobile-menu-item>Categories</li>
-</a><a href=/about/>
-<li class=mobile-menu-item>About</li>
-</a>
-</ul>
-</nav>
-<div class=container id=mobile-panel>
-<header id=header class=header>
-<div class=logo-wrapper>
-<a href=/ class=logo>Gum</a>
-</div>
-<nav class=site-navbar>
-<ul id=menu class=menu>
-<li class=menu-item>
-<a class=menu-item-link href=/>Home</a>
-</li><li class=menu-item>
-<a class=menu-item-link href=/post/>Archives</a>
-</li><li class=menu-item>
-<a class=menu-item-link href=/tags/>Tags</a>
-</li><li class=menu-item>
-<a class=menu-item-link href=/categories/>Categories</a>
-</li><li class=menu-item>
-<a class=menu-item-link href=/about/>About</a>
-</li>
-</ul>
-</nav>
-</header>
-<main id=main class=main>
-<div class=content-wrapper>
-<div id=content class=content>
-<article class=post>
-<header class=post-header>
-<h1 class=post-title>Dubbo中的负载均衡策略（中）</h1>
-<div class=post-meta>
-<span class=post-time> 2021-09-24 </span>
-<div class=post-category>
-<a href=/categories/dubbo/> Dubbo </a>
-</div>
-<span class=more-meta> 3406 words </span>
-<span class=more-meta> 7 mins read </span>
-</div>
-</header>
-<div class=post-toc id=post-toc>
-<h2 class=post-toc-title>Contents</h2>
-<div class="post-toc-content always-active">
-<nav id=TableOfContents>
-<ul>
-<li><a href=#引言>引言</a></li>
-<li><a href=#统计rpc调用性能>统计RPC调用性能</a></li>
-<li><a href=#最小连接数负载均衡算法>最小连接数负载均衡算法</a></li>
-<li><a href=#最短响应时间负载均衡算法>最短响应时间负载均衡算法</a></li>
-<li><a href=#扩展peakewmaloadbalance>扩展：PeakEwmaLoadBalance</a></li>
-<li><a href=#总结>总结</a></li>
-<li><a href=#参考>参考</a></li>
-</ul>
-</nav>
-</div>
-</div>
-<div class=post-content>
-<h1 id=引言>引言</h1>
-<figure class=align-center>
-<img src=https://blog-1302636809.file.myqcloud.com/post/dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B8%AD/images/2021-09-09-20-53-52.png><figcaption>
-<h4>Dubbo架构图</h4></figcaption>
-</figure>
-<p>Dubbo负载均衡是在Dubbo框架的第5层（自上而下）Cluster层，客户端根据注册中心提供的服务端列表，根据配置的负载均衡算法选择一个最佳的调用者。Dubbo提供的负载均衡算法列表如下：</p>
-<ul>
-<li>RandomLoadBalance，加权随机负载均衡</li>
-<li>RoundRobinLoadBalance，加权轮询负载均衡</li>
-<li>LeastActiveLoadBalance，最少连接数</li>
-<li>ShortestResponseLoadBalance，最短响应时间</li>
-<li>ConsistentHashLoadBalance，一致性 Hash</li>
-</ul>
-<p>在上篇中介绍了加权随机负载均衡与加权轮询负载均衡算法，在本篇中主要介绍最短响应时间和最少活跃调用数这两种负载均衡算法，另外简单介绍Dubbo扩展提供的PeakEwma算法。</p>
-<h1 id=统计rpc调用性能>统计RPC调用性能</h1>
-<p>对于最短响应时间和最少活跃调用数这两种负载均衡算法都需要统计RPC调用状态，最短响应时间需要求出每个Provider的平均响应时间，最少活跃调用数需要统计每个Provider的调用请求。这两个指标都是利用RPCStatus这个类提供的方法进行统计的，所以这里先介绍下RPCStatus这个类。</p>
-<p>RpcStatus是一个线程安全的类，可以提供Service/Method粒度的Rpc调用统计信息。先看下RpcStatus的主要成员变量。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a><a href=/about/><li class=mobile-menu-item>About</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>Gum</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Dubbo中的负载均衡策略（中）</h1><div class=post-meta><span class=post-time>2021-09-24</span><div class=post-category><a href=/categories/dubbo/>Dubbo</a></div><span class=more-meta>3406 words</span>
+<span class=more-meta>7 mins read</span></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>Contents</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><a href=#引言>引言</a></li><li><a href=#统计rpc调用性能>统计RPC调用性能</a></li><li><a href=#最小连接数负载均衡算法>最小连接数负载均衡算法</a></li><li><a href=#最短响应时间负载均衡算法>最短响应时间负载均衡算法</a></li><li><a href=#扩展peakewmaloadbalance>扩展：PeakEwmaLoadBalance</a></li><li><a href=#总结>总结</a></li><li><a href=#参考>参考</a></li></ul></nav></div></div><div class=post-content><h1 id=引言>引言</h1><figure class=align-center><img src=https://blog-1302636809.file.myqcloud.com/post/dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B8%AD/images/2021-09-09-20-53-52.png><figcaption><h4>Dubbo架构图</h4></figcaption></figure><p>Dubbo负载均衡是在Dubbo框架的第5层（自上而下）Cluster层，客户端根据注册中心提供的服务端列表，根据配置的负载均衡算法选择一个最佳的调用者。Dubbo提供的负载均衡算法列表如下：</p><ul><li>RandomLoadBalance，加权随机负载均衡</li><li>RoundRobinLoadBalance，加权轮询负载均衡</li><li>LeastActiveLoadBalance，最少连接数</li><li>ShortestResponseLoadBalance，最短响应时间</li><li>ConsistentHashLoadBalance，一致性 Hash</li></ul><p>在上篇中介绍了加权随机负载均衡与加权轮询负载均衡算法，在本篇中主要介绍最短响应时间和最少活跃调用数这两种负载均衡算法，另外简单介绍Dubbo扩展提供的PeakEwma算法。</p><h1 id=统计rpc调用性能>统计RPC调用性能</h1><p>对于最短响应时间和最少活跃调用数这两种负载均衡算法都需要统计RPC调用状态，最短响应时间需要求出每个Provider的平均响应时间，最少活跃调用数需要统计每个Provider的调用请求。这两个指标都是利用RPCStatus这个类提供的方法进行统计的，所以这里先介绍下RPCStatus这个类。</p><p>RpcStatus是一个线程安全的类，可以提供Service/Method粒度的Rpc调用统计信息。先看下RpcStatus的主要成员变量。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -161,42 +29,34 @@
 </span><span class=lnt>25
 </span><span class=lnt>26
 </span><span class=lnt>27
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>RpcStatus</span> <span class=o>{</span>
-	<span class=c1>// Service级别的统计信息
-</span><span class=c1></span>    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>ConcurrentMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>RpcStatus</span><span class=o>&gt;</span> <span class=n>SERVICE_STATISTICS</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ConcurrentHashMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span>
-            <span class=n>RpcStatus</span><span class=o>&gt;();</span>
-	<span class=c1>// Method级别的统计信息
-</span><span class=c1></span>    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>ConcurrentMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>ConcurrentMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>RpcStatus</span><span class=o>&gt;&gt;</span> <span class=n>METHOD_STATISTICS</span> <span class=o>=</span>
-            <span class=k>new</span> <span class=n>ConcurrentHashMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>ConcurrentMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>RpcStatus</span><span class=o>&gt;&gt;();</span>
-	<span class=c1>// 其他信息
-</span><span class=c1></span>    <span class=kd>private</span> <span class=kd>final</span> <span class=n>ConcurrentMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=n>values</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ConcurrentHashMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;();</span>
-
-	<span class=c1>// 记录当前活跃的连接数量
-</span><span class=c1></span>    <span class=kd>private</span> <span class=kd>final</span> <span class=n>AtomicInteger</span> <span class=n>active</span> <span class=o>=</span> <span class=k>new</span> <span class=n>AtomicInteger</span><span class=o>();</span>
-	<span class=c1>// 记录请求的总数量
-</span><span class=c1></span>    <span class=kd>private</span> <span class=kd>final</span> <span class=n>AtomicLong</span> <span class=n>total</span> <span class=o>=</span> <span class=k>new</span> <span class=n>AtomicLong</span><span class=o>();</span>
-	<span class=c1>// 记录失败请求的总数量
-</span><span class=c1></span>    <span class=kd>private</span> <span class=kd>final</span> <span class=n>AtomicInteger</span> <span class=n>failed</span> <span class=o>=</span> <span class=k>new</span> <span class=n>AtomicInteger</span><span class=o>();</span>
-	<span class=c1>// 记录请求的总响应时间
-</span><span class=c1></span>    <span class=kd>private</span> <span class=kd>final</span> <span class=n>AtomicLong</span> <span class=n>totalElapsed</span> <span class=o>=</span> <span class=k>new</span> <span class=n>AtomicLong</span><span class=o>();</span>
-	<span class=c1>// 记录失败请求的总响应时间
-</span><span class=c1></span>    <span class=kd>private</span> <span class=kd>final</span> <span class=n>AtomicLong</span> <span class=n>failedElapsed</span> <span class=o>=</span> <span class=k>new</span> <span class=n>AtomicLong</span><span class=o>();</span>
-	<span class=c1>// 记录最长的请求响应时间 = max(failed, succeeded)
-</span><span class=c1></span>    <span class=kd>private</span> <span class=kd>final</span> <span class=n>AtomicLong</span> <span class=n>maxElapsed</span> <span class=o>=</span> <span class=k>new</span> <span class=n>AtomicLong</span><span class=o>();</span>
-	<span class=c1>// 记录最长的失败请求响应时间
-</span><span class=c1></span>    <span class=kd>private</span> <span class=kd>final</span> <span class=n>AtomicLong</span> <span class=n>failedMaxElapsed</span> <span class=o>=</span> <span class=k>new</span> <span class=n>AtomicLong</span><span class=o>();</span>
-	<span class=c1>// 记录最长的成功请求响应时间
-</span><span class=c1></span>    <span class=kd>private</span> <span class=kd>final</span> <span class=n>AtomicLong</span> <span class=n>succeededMaxElapsed</span> <span class=o>=</span> <span class=k>new</span> <span class=n>AtomicLong</span><span class=o>();</span>
-<span class=o>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>RpcStatus提供了两个方法beginCount和endCount两个方法，在每次进行Rpc调用之前调用beginCount，Rpc调用结束之后调用endCount即可完成对这次Rpc调用的统计，所以通常会将这两个方法的调用放在某个Filter中执行。</p>
-<p>先来看下beginCount方法，在beginCount方法中，只更新活跃的连接数量。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kd>public</span> <span class=kd>class</span> <span class=nc>RpcStatus</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// Service级别的统计信息
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>ConcurrentMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>RpcStatus</span><span class=o>&gt;</span> <span class=n>SERVICE_STATISTICS</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ConcurrentHashMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span>
+</span></span><span class=line><span class=cl>            <span class=n>RpcStatus</span><span class=o>&gt;();</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// Method级别的统计信息
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>ConcurrentMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>ConcurrentMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>RpcStatus</span><span class=o>&gt;&gt;</span> <span class=n>METHOD_STATISTICS</span> <span class=o>=</span>
+</span></span><span class=line><span class=cl>            <span class=k>new</span> <span class=n>ConcurrentHashMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>ConcurrentMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>RpcStatus</span><span class=o>&gt;&gt;();</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 其他信息
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kd>private</span> <span class=kd>final</span> <span class=n>ConcurrentMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=n>values</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ConcurrentHashMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=c1>// 记录当前活跃的连接数量
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kd>private</span> <span class=kd>final</span> <span class=n>AtomicInteger</span> <span class=n>active</span> <span class=o>=</span> <span class=k>new</span> <span class=n>AtomicInteger</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 记录请求的总数量
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kd>private</span> <span class=kd>final</span> <span class=n>AtomicLong</span> <span class=n>total</span> <span class=o>=</span> <span class=k>new</span> <span class=n>AtomicLong</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 记录失败请求的总数量
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kd>private</span> <span class=kd>final</span> <span class=n>AtomicInteger</span> <span class=n>failed</span> <span class=o>=</span> <span class=k>new</span> <span class=n>AtomicInteger</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 记录请求的总响应时间
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kd>private</span> <span class=kd>final</span> <span class=n>AtomicLong</span> <span class=n>totalElapsed</span> <span class=o>=</span> <span class=k>new</span> <span class=n>AtomicLong</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 记录失败请求的总响应时间
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kd>private</span> <span class=kd>final</span> <span class=n>AtomicLong</span> <span class=n>failedElapsed</span> <span class=o>=</span> <span class=k>new</span> <span class=n>AtomicLong</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 记录最长的请求响应时间 = max(failed, succeeded)
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kd>private</span> <span class=kd>final</span> <span class=n>AtomicLong</span> <span class=n>maxElapsed</span> <span class=o>=</span> <span class=k>new</span> <span class=n>AtomicLong</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 记录最长的失败请求响应时间
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kd>private</span> <span class=kd>final</span> <span class=n>AtomicLong</span> <span class=n>failedMaxElapsed</span> <span class=o>=</span> <span class=k>new</span> <span class=n>AtomicLong</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 记录最长的成功请求响应时间
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kd>private</span> <span class=kd>final</span> <span class=n>AtomicLong</span> <span class=n>succeededMaxElapsed</span> <span class=o>=</span> <span class=k>new</span> <span class=n>AtomicLong</span><span class=o>();</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>RpcStatus提供了两个方法beginCount和endCount两个方法，在每次进行Rpc调用之前调用beginCount，Rpc调用结束之后调用endCount即可完成对这次Rpc调用的统计，所以通常会将这两个方法的调用放在某个Filter中执行。</p><p>先来看下beginCount方法，在beginCount方法中，只更新活跃的连接数量。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -222,40 +82,33 @@
 </span><span class=lnt>24
 </span><span class=lnt>25
 </span><span class=lnt>26
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>static</span> <span class=kt>boolean</span> <span class=nf>beginCount</span><span class=o>(</span><span class=n>URL</span> <span class=n>url</span><span class=o>,</span> <span class=n>String</span> <span class=n>methodName</span><span class=o>,</span> <span class=kt>int</span> <span class=n>max</span><span class=o>)</span> <span class=o>{</span>
-	<span class=n>max</span> <span class=o>=</span> <span class=o>(</span><span class=n>max</span> <span class=o>&lt;=</span> <span class=n>0</span><span class=o>)</span> <span class=o>?</span> <span class=n>Integer</span><span class=o>.</span><span class=na>MAX_VALUE</span> <span class=o>:</span> <span class=n>max</span><span class=o>;</span>
-	<span class=c1>// 获取Service粒度的RpcStatus
-</span><span class=c1></span>	<span class=n>RpcStatus</span> <span class=n>appStatus</span> <span class=o>=</span> <span class=n>getStatus</span><span class=o>(</span><span class=n>url</span><span class=o>);</span>
-	<span class=c1>// 获取Method粒度的RpcStatus
-</span><span class=c1></span>	<span class=n>RpcStatus</span> <span class=n>methodStatus</span> <span class=o>=</span> <span class=n>getStatus</span><span class=o>(</span><span class=n>url</span><span class=o>,</span> <span class=n>methodName</span><span class=o>);</span>
-
-	<span class=k>if</span> <span class=o>(</span><span class=n>methodStatus</span><span class=o>.</span><span class=na>active</span><span class=o>.</span><span class=na>get</span><span class=o>()</span> <span class=o>==</span> <span class=n>Integer</span><span class=o>.</span><span class=na>MAX_VALUE</span><span class=o>)</span> <span class=o>{</span>
-		<span class=k>return</span> <span class=kc>false</span><span class=o>;</span>
-	<span class=o>}</span>
-	<span class=c1>// CAS方式更新method粒度的active数量，原因见https://github.com/apache/dubbo/pull/5881
-</span><span class=c1></span>	<span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span><span class=o>;</span> <span class=o>;</span> <span class=o>)</span> <span class=o>{</span>
-		<span class=n>i</span> <span class=o>=</span> <span class=n>methodStatus</span><span class=o>.</span><span class=na>active</span><span class=o>.</span><span class=na>get</span><span class=o>();</span>
-
-		<span class=k>if</span> <span class=o>(</span><span class=n>i</span> <span class=o>==</span> <span class=n>Integer</span><span class=o>.</span><span class=na>MAX_VALUE</span> <span class=o>||</span> <span class=n>i</span> <span class=o>+</span> <span class=n>1</span> <span class=o>&gt;</span> <span class=n>max</span><span class=o>)</span> <span class=o>{</span>
-			<span class=k>return</span> <span class=kc>false</span><span class=o>;</span>
-		<span class=o>}</span>
-
-		<span class=k>if</span> <span class=o>(</span><span class=n>methodStatus</span><span class=o>.</span><span class=na>active</span><span class=o>.</span><span class=na>compareAndSet</span><span class=o>(</span><span class=n>i</span><span class=o>,</span> <span class=n>i</span> <span class=o>+</span> <span class=n>1</span><span class=o>))</span> <span class=o>{</span>
-			<span class=k>break</span><span class=o>;</span>
-		<span class=o>}</span>
-	<span class=o>}</span>
-	<span class=c1>// 更新service粒度的active数量
-</span><span class=c1></span>	<span class=n>appStatus</span><span class=o>.</span><span class=na>active</span><span class=o>.</span><span class=na>incrementAndGet</span><span class=o>();</span>
-	<span class=k>return</span> <span class=kc>true</span><span class=o>;</span>
-<span class=o>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>再来看下endCount方法，在endCount方法中，同时更新了请求数量、时间和活跃连接数等信息。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=kt>boolean</span> <span class=nf>beginCount</span><span class=o>(</span><span class=n>URL</span> <span class=n>url</span><span class=o>,</span> <span class=n>String</span> <span class=n>methodName</span><span class=o>,</span> <span class=kt>int</span> <span class=n>max</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=n>max</span> <span class=o>=</span> <span class=o>(</span><span class=n>max</span> <span class=o>&lt;=</span> <span class=n>0</span><span class=o>)</span> <span class=o>?</span> <span class=n>Integer</span><span class=o>.</span><span class=na>MAX_VALUE</span> <span class=o>:</span> <span class=n>max</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 获取Service粒度的RpcStatus
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=n>RpcStatus</span> <span class=n>appStatus</span> <span class=o>=</span> <span class=n>getStatus</span><span class=o>(</span><span class=n>url</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 获取Method粒度的RpcStatus
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=n>RpcStatus</span> <span class=n>methodStatus</span> <span class=o>=</span> <span class=n>getStatus</span><span class=o>(</span><span class=n>url</span><span class=o>,</span> <span class=n>methodName</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>if</span> <span class=o>(</span><span class=n>methodStatus</span><span class=o>.</span><span class=na>active</span><span class=o>.</span><span class=na>get</span><span class=o>()</span> <span class=o>==</span> <span class=n>Integer</span><span class=o>.</span><span class=na>MAX_VALUE</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=k>return</span> <span class=kc>false</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// CAS方式更新method粒度的active数量，原因见https://github.com/apache/dubbo/pull/5881
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span><span class=o>;</span> <span class=o>;</span> <span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=n>i</span> <span class=o>=</span> <span class=n>methodStatus</span><span class=o>.</span><span class=na>active</span><span class=o>.</span><span class=na>get</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=o>(</span><span class=n>i</span> <span class=o>==</span> <span class=n>Integer</span><span class=o>.</span><span class=na>MAX_VALUE</span> <span class=o>||</span> <span class=n>i</span> <span class=o>+</span> <span class=n>1</span> <span class=o>&gt;</span> <span class=n>max</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=k>return</span> <span class=kc>false</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=o>(</span><span class=n>methodStatus</span><span class=o>.</span><span class=na>active</span><span class=o>.</span><span class=na>compareAndSet</span><span class=o>(</span><span class=n>i</span><span class=o>,</span> <span class=n>i</span> <span class=o>+</span> <span class=n>1</span><span class=o>))</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=k>break</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 更新service粒度的active数量
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=n>appStatus</span><span class=o>.</span><span class=na>active</span><span class=o>.</span><span class=na>incrementAndGet</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=kc>true</span><span class=o>;</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>再来看下endCount方法，在endCount方法中，同时更新了请求数量、时间和活跃连接数等信息。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -282,42 +135,34 @@
 </span><span class=lnt>25
 </span><span class=lnt>26
 </span><span class=lnt>27
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>endCount</span><span class=o>(</span><span class=n>URL</span> <span class=n>url</span><span class=o>,</span> <span class=n>String</span> <span class=n>methodName</span><span class=o>,</span> <span class=kt>long</span> <span class=n>elapsed</span><span class=o>,</span> <span class=kt>boolean</span> <span class=n>succeeded</span><span class=o>)</span> <span class=o>{</span>
-	<span class=c1>// 更新Service粒度的Status
-</span><span class=c1></span>	<span class=n>endCount</span><span class=o>(</span><span class=n>getStatus</span><span class=o>(</span><span class=n>url</span><span class=o>),</span> <span class=n>elapsed</span><span class=o>,</span> <span class=n>succeeded</span><span class=o>);</span>
-	<span class=c1>// 更新Method粒度的Status
-</span><span class=c1></span>	<span class=n>endCount</span><span class=o>(</span><span class=n>getStatus</span><span class=o>(</span><span class=n>url</span><span class=o>,</span> <span class=n>methodName</span><span class=o>),</span> <span class=n>elapsed</span><span class=o>,</span> <span class=n>succeeded</span><span class=o>);</span>
-<span class=o>}</span>
-
-<span class=kd>private</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>endCount</span><span class=o>(</span><span class=n>RpcStatus</span> <span class=n>status</span><span class=o>,</span> <span class=kt>long</span> <span class=n>elapsed</span><span class=o>,</span> <span class=kt>boolean</span> <span class=n>succeeded</span><span class=o>)</span> <span class=o>{</span>
-	<span class=c1>// 是否成功及请求响应时间都是由调用者传入的
-</span><span class=c1></span>	<span class=n>status</span><span class=o>.</span><span class=na>active</span><span class=o>.</span><span class=na>decrementAndGet</span><span class=o>();</span>
-	<span class=n>status</span><span class=o>.</span><span class=na>total</span><span class=o>.</span><span class=na>incrementAndGet</span><span class=o>();</span>
-	<span class=n>status</span><span class=o>.</span><span class=na>totalElapsed</span><span class=o>.</span><span class=na>addAndGet</span><span class=o>(</span><span class=n>elapsed</span><span class=o>);</span>
-	<span class=k>if</span> <span class=o>(</span><span class=n>status</span><span class=o>.</span><span class=na>maxElapsed</span><span class=o>.</span><span class=na>get</span><span class=o>()</span> <span class=o>&lt;</span> <span class=n>elapsed</span><span class=o>)</span> <span class=o>{</span>
-		<span class=n>status</span><span class=o>.</span><span class=na>maxElapsed</span><span class=o>.</span><span class=na>set</span><span class=o>(</span><span class=n>elapsed</span><span class=o>);</span>
-	<span class=o>}</span>
-	<span class=k>if</span> <span class=o>(</span><span class=n>succeeded</span><span class=o>)</span> <span class=o>{</span>
-		<span class=k>if</span> <span class=o>(</span><span class=n>status</span><span class=o>.</span><span class=na>succeededMaxElapsed</span><span class=o>.</span><span class=na>get</span><span class=o>()</span> <span class=o>&lt;</span> <span class=n>elapsed</span><span class=o>)</span> <span class=o>{</span>
-			<span class=n>status</span><span class=o>.</span><span class=na>succeededMaxElapsed</span><span class=o>.</span><span class=na>set</span><span class=o>(</span><span class=n>elapsed</span><span class=o>);</span>
-		<span class=o>}</span>
-	<span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
-		<span class=n>status</span><span class=o>.</span><span class=na>failed</span><span class=o>.</span><span class=na>incrementAndGet</span><span class=o>();</span>
-		<span class=n>status</span><span class=o>.</span><span class=na>failedElapsed</span><span class=o>.</span><span class=na>addAndGet</span><span class=o>(</span><span class=n>elapsed</span><span class=o>);</span>
-		<span class=k>if</span> <span class=o>(</span><span class=n>status</span><span class=o>.</span><span class=na>failedMaxElapsed</span><span class=o>.</span><span class=na>get</span><span class=o>()</span> <span class=o>&lt;</span> <span class=n>elapsed</span><span class=o>)</span> <span class=o>{</span>
-			<span class=n>status</span><span class=o>.</span><span class=na>failedMaxElapsed</span><span class=o>.</span><span class=na>set</span><span class=o>(</span><span class=n>elapsed</span><span class=o>);</span>
-		<span class=o>}</span>
-	<span class=o>}</span>
-<span class=o>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><h1 id=最小连接数负载均衡算法>最小连接数负载均衡算法</h1>
-<p>在有了RpcStatus这个统计工具类之后，我们来看下如何计算一个Service的最短响应时间。先从简单的最小连接数开始，最小连接数负载均衡算法主要利用了RpcStatus中的active变量，在负载均衡时选择该值最小的一个Provider。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>endCount</span><span class=o>(</span><span class=n>URL</span> <span class=n>url</span><span class=o>,</span> <span class=n>String</span> <span class=n>methodName</span><span class=o>,</span> <span class=kt>long</span> <span class=n>elapsed</span><span class=o>,</span> <span class=kt>boolean</span> <span class=n>succeeded</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 更新Service粒度的Status
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=n>endCount</span><span class=o>(</span><span class=n>getStatus</span><span class=o>(</span><span class=n>url</span><span class=o>),</span> <span class=n>elapsed</span><span class=o>,</span> <span class=n>succeeded</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 更新Method粒度的Status
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=n>endCount</span><span class=o>(</span><span class=n>getStatus</span><span class=o>(</span><span class=n>url</span><span class=o>,</span> <span class=n>methodName</span><span class=o>),</span> <span class=n>elapsed</span><span class=o>,</span> <span class=n>succeeded</span><span class=o>);</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>private</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>endCount</span><span class=o>(</span><span class=n>RpcStatus</span> <span class=n>status</span><span class=o>,</span> <span class=kt>long</span> <span class=n>elapsed</span><span class=o>,</span> <span class=kt>boolean</span> <span class=n>succeeded</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 是否成功及请求响应时间都是由调用者传入的
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=n>status</span><span class=o>.</span><span class=na>active</span><span class=o>.</span><span class=na>decrementAndGet</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>	<span class=n>status</span><span class=o>.</span><span class=na>total</span><span class=o>.</span><span class=na>incrementAndGet</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>	<span class=n>status</span><span class=o>.</span><span class=na>totalElapsed</span><span class=o>.</span><span class=na>addAndGet</span><span class=o>(</span><span class=n>elapsed</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>	<span class=k>if</span> <span class=o>(</span><span class=n>status</span><span class=o>.</span><span class=na>maxElapsed</span><span class=o>.</span><span class=na>get</span><span class=o>()</span> <span class=o>&lt;</span> <span class=n>elapsed</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=n>status</span><span class=o>.</span><span class=na>maxElapsed</span><span class=o>.</span><span class=na>set</span><span class=o>(</span><span class=n>elapsed</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=k>if</span> <span class=o>(</span><span class=n>succeeded</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=o>(</span><span class=n>status</span><span class=o>.</span><span class=na>succeededMaxElapsed</span><span class=o>.</span><span class=na>get</span><span class=o>()</span> <span class=o>&lt;</span> <span class=n>elapsed</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=n>status</span><span class=o>.</span><span class=na>succeededMaxElapsed</span><span class=o>.</span><span class=na>set</span><span class=o>(</span><span class=n>elapsed</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=n>status</span><span class=o>.</span><span class=na>failed</span><span class=o>.</span><span class=na>incrementAndGet</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>		<span class=n>status</span><span class=o>.</span><span class=na>failedElapsed</span><span class=o>.</span><span class=na>addAndGet</span><span class=o>(</span><span class=n>elapsed</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=o>(</span><span class=n>status</span><span class=o>.</span><span class=na>failedMaxElapsed</span><span class=o>.</span><span class=na>get</span><span class=o>()</span> <span class=o>&lt;</span> <span class=n>elapsed</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=n>status</span><span class=o>.</span><span class=na>failedMaxElapsed</span><span class=o>.</span><span class=na>set</span><span class=o>(</span><span class=n>elapsed</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><h1 id=最小连接数负载均衡算法>最小连接数负载均衡算法</h1><p>在有了RpcStatus这个统计工具类之后，我们来看下如何计算一个Service的最短响应时间。先从简单的最小连接数开始，最小连接数负载均衡算法主要利用了RpcStatus中的active变量，在负载均衡时选择该值最小的一个Provider。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -361,61 +206,51 @@
 </span><span class=lnt>42
 </span><span class=lnt>43
 </span><span class=lnt>44
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>protected</span> <span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=nf>doSelect</span><span class=o>(</span><span class=n>List</span><span class=o>&lt;</span><span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;&gt;</span> <span class=n>invokers</span><span class=o>,</span> <span class=n>URL</span> <span class=n>url</span><span class=o>,</span> <span class=n>Invocation</span> <span class=n>invocation</span><span class=o>)</span> <span class=o>{</span>
-	<span class=c1>// ... 省略变量定义
-</span><span class=c1></span>
-	<span class=c1>// 遍历invoker，找到连接数最小的Provider
-</span><span class=c1></span>	<span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>length</span><span class=o>;</span> <span class=n>i</span><span class=o>++)</span> <span class=o>{</span>
-		<span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=n>invoker</span> <span class=o>=</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>i</span><span class=o>);</span>
-		<span class=c1>// 获取Invoker的活跃请求数量
-</span><span class=c1></span>		<span class=kt>int</span> <span class=n>active</span> <span class=o>=</span> <span class=n>RpcStatus</span><span class=o>.</span><span class=na>getStatus</span><span class=o>(</span><span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>(),</span> <span class=n>invocation</span><span class=o>.</span><span class=na>getMethodName</span><span class=o>()).</span><span class=na>getActive</span><span class=o>();</span>
-		<span class=c1>// 获取默认权重
-</span><span class=c1></span>		<span class=kt>int</span> <span class=n>afterWarmup</span> <span class=o>=</span> <span class=n>getWeight</span><span class=o>(</span><span class=n>invoker</span><span class=o>,</span> <span class=n>invocation</span><span class=o>);</span>
-		<span class=c1>// save for later use
-</span><span class=c1></span>		<span class=n>weights</span><span class=o>[</span><span class=n>i</span><span class=o>]</span> <span class=o>=</span> <span class=n>afterWarmup</span><span class=o>;</span>
-		<span class=c1>// 比较得到最小连接数的Provider
-</span><span class=c1></span>		<span class=k>if</span> <span class=o>(</span><span class=n>leastActive</span> <span class=o>==</span> <span class=o>-</span><span class=n>1</span> <span class=o>||</span> <span class=n>active</span> <span class=o>&lt;</span> <span class=n>leastActive</span><span class=o>)</span> <span class=o>{</span>
-			<span class=n>leastActive</span> <span class=o>=</span> <span class=n>active</span><span class=o>;</span>
-			<span class=n>leastCount</span> <span class=o>=</span> <span class=n>1</span><span class=o>;</span>
-			<span class=n>leastIndexes</span><span class=o>[</span><span class=n>0</span><span class=o>]</span> <span class=o>=</span> <span class=n>i</span><span class=o>;</span>
-			<span class=n>totalWeight</span> <span class=o>=</span> <span class=n>afterWarmup</span><span class=o>;</span>
-			<span class=n>firstWeight</span> <span class=o>=</span> <span class=n>afterWarmup</span><span class=o>;</span>
-			<span class=n>sameWeight</span> <span class=o>=</span> <span class=kc>true</span><span class=o>;</span>
-		<span class=o>}</span> <span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=n>active</span> <span class=o>==</span> <span class=n>leastActive</span><span class=o>)</span> <span class=o>{</span>
-			<span class=n>leastIndexes</span><span class=o>[</span><span class=n>leastCount</span><span class=o>++]</span> <span class=o>=</span> <span class=n>i</span><span class=o>;</span>
-			<span class=n>totalWeight</span> <span class=o>+=</span> <span class=n>afterWarmup</span><span class=o>;</span>
-			<span class=k>if</span> <span class=o>(</span><span class=n>sameWeight</span> <span class=o>&amp;&amp;</span> <span class=n>afterWarmup</span> <span class=o>!=</span> <span class=n>firstWeight</span><span class=o>)</span> <span class=o>{</span>
-				<span class=n>sameWeight</span> <span class=o>=</span> <span class=kc>false</span><span class=o>;</span>
-			<span class=o>}</span>
-		<span class=o>}</span>
-	<span class=o>}</span>
-	<span class=c1>// 连接数相同根据权重随机选，权重相同直接随机选择
-</span><span class=c1></span>	<span class=k>if</span> <span class=o>(</span><span class=n>leastCount</span> <span class=o>==</span> <span class=n>1</span><span class=o>)</span> <span class=o>{</span>
-		<span class=k>return</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>leastIndexes</span><span class=o>[</span><span class=n>0</span><span class=o>]);</span>
-	<span class=o>}</span>
-	<span class=k>if</span> <span class=o>(!</span><span class=n>sameWeight</span> <span class=o>&amp;&amp;</span> <span class=n>totalWeight</span> <span class=o>&gt;</span> <span class=n>0</span><span class=o>)</span> <span class=o>{</span>
-		<span class=kt>int</span> <span class=n>offsetWeight</span> <span class=o>=</span> <span class=n>ThreadLocalRandom</span><span class=o>.</span><span class=na>current</span><span class=o>().</span><span class=na>nextInt</span><span class=o>(</span><span class=n>totalWeight</span><span class=o>);</span>
-		<span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>leastCount</span><span class=o>;</span> <span class=n>i</span><span class=o>++)</span> <span class=o>{</span>
-			<span class=kt>int</span> <span class=n>leastIndex</span> <span class=o>=</span> <span class=n>leastIndexes</span><span class=o>[</span><span class=n>i</span><span class=o>];</span>
-			<span class=n>offsetWeight</span> <span class=o>-=</span> <span class=n>weights</span><span class=o>[</span><span class=n>leastIndex</span><span class=o>];</span>
-			<span class=k>if</span> <span class=o>(</span><span class=n>offsetWeight</span> <span class=o>&lt;</span> <span class=n>0</span><span class=o>)</span> <span class=o>{</span>
-				<span class=k>return</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>leastIndex</span><span class=o>);</span>
-			<span class=o>}</span>
-		<span class=o>}</span>
-	<span class=o>}</span>
-	<span class=k>return</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>leastIndexes</span><span class=o>[</span><span class=n>ThreadLocalRandom</span><span class=o>.</span><span class=na>current</span><span class=o>().</span><span class=na>nextInt</span><span class=o>(</span><span class=n>leastCount</span><span class=o>)]);</span>
-<span class=o>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>这种处理方式有个问题是，如果不同的Service的处理能力不同，那么整个cluster的性能最终都被限制在处理能力最小的那个机器上了。</p>
-<h1 id=最短响应时间负载均衡算法>最短响应时间负载均衡算法</h1>
-<p>最短响应时间负载均衡算法可以根据Provider的处理能力进行流量分配。先说下基本原理，ShortestResponseLoadBalance是先统计一段时间窗口内响应时间的平均值，然后计算该Provider的平均响应时间与当前连接数量的乘积作为最短响应时间。使用乘积的方式可以在负载均衡的时候同时考虑连接数+响应时间，让性能更优的服务器处理更多的响应。而只统计一段时间窗口内的平均响应时间是因为，当Provider长时间运行时，平均的响应时间不会受短时间内网络波动的影响。</p>
-<p>我们来看下时间窗口的结构体：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kd>protected</span> <span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=nf>doSelect</span><span class=o>(</span><span class=n>List</span><span class=o>&lt;</span><span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;&gt;</span> <span class=n>invokers</span><span class=o>,</span> <span class=n>URL</span> <span class=n>url</span><span class=o>,</span> <span class=n>Invocation</span> <span class=n>invocation</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// ... 省略变量定义
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 遍历invoker，找到连接数最小的Provider
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>length</span><span class=o>;</span> <span class=n>i</span><span class=o>++)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=n>invoker</span> <span class=o>=</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>i</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>		<span class=c1>// 获取Invoker的活跃请求数量
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=kt>int</span> <span class=n>active</span> <span class=o>=</span> <span class=n>RpcStatus</span><span class=o>.</span><span class=na>getStatus</span><span class=o>(</span><span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>(),</span> <span class=n>invocation</span><span class=o>.</span><span class=na>getMethodName</span><span class=o>()).</span><span class=na>getActive</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>		<span class=c1>// 获取默认权重
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=kt>int</span> <span class=n>afterWarmup</span> <span class=o>=</span> <span class=n>getWeight</span><span class=o>(</span><span class=n>invoker</span><span class=o>,</span> <span class=n>invocation</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>		<span class=c1>// save for later use
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=n>weights</span><span class=o>[</span><span class=n>i</span><span class=o>]</span> <span class=o>=</span> <span class=n>afterWarmup</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>		<span class=c1>// 比较得到最小连接数的Provider
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=k>if</span> <span class=o>(</span><span class=n>leastActive</span> <span class=o>==</span> <span class=o>-</span><span class=n>1</span> <span class=o>||</span> <span class=n>active</span> <span class=o>&lt;</span> <span class=n>leastActive</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=n>leastActive</span> <span class=o>=</span> <span class=n>active</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>			<span class=n>leastCount</span> <span class=o>=</span> <span class=n>1</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>			<span class=n>leastIndexes</span><span class=o>[</span><span class=n>0</span><span class=o>]</span> <span class=o>=</span> <span class=n>i</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>			<span class=n>totalWeight</span> <span class=o>=</span> <span class=n>afterWarmup</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>			<span class=n>firstWeight</span> <span class=o>=</span> <span class=n>afterWarmup</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>			<span class=n>sameWeight</span> <span class=o>=</span> <span class=kc>true</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span> <span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=n>active</span> <span class=o>==</span> <span class=n>leastActive</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=n>leastIndexes</span><span class=o>[</span><span class=n>leastCount</span><span class=o>++]</span> <span class=o>=</span> <span class=n>i</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>			<span class=n>totalWeight</span> <span class=o>+=</span> <span class=n>afterWarmup</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>			<span class=k>if</span> <span class=o>(</span><span class=n>sameWeight</span> <span class=o>&amp;&amp;</span> <span class=n>afterWarmup</span> <span class=o>!=</span> <span class=n>firstWeight</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=n>sameWeight</span> <span class=o>=</span> <span class=kc>false</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 连接数相同根据权重随机选，权重相同直接随机选择
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=k>if</span> <span class=o>(</span><span class=n>leastCount</span> <span class=o>==</span> <span class=n>1</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=k>return</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>leastIndexes</span><span class=o>[</span><span class=n>0</span><span class=o>]);</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=k>if</span> <span class=o>(!</span><span class=n>sameWeight</span> <span class=o>&amp;&amp;</span> <span class=n>totalWeight</span> <span class=o>&gt;</span> <span class=n>0</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=kt>int</span> <span class=n>offsetWeight</span> <span class=o>=</span> <span class=n>ThreadLocalRandom</span><span class=o>.</span><span class=na>current</span><span class=o>().</span><span class=na>nextInt</span><span class=o>(</span><span class=n>totalWeight</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>		<span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>leastCount</span><span class=o>;</span> <span class=n>i</span><span class=o>++)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=kt>int</span> <span class=n>leastIndex</span> <span class=o>=</span> <span class=n>leastIndexes</span><span class=o>[</span><span class=n>i</span><span class=o>];</span>
+</span></span><span class=line><span class=cl>			<span class=n>offsetWeight</span> <span class=o>-=</span> <span class=n>weights</span><span class=o>[</span><span class=n>leastIndex</span><span class=o>];</span>
+</span></span><span class=line><span class=cl>			<span class=k>if</span> <span class=o>(</span><span class=n>offsetWeight</span> <span class=o>&lt;</span> <span class=n>0</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=k>return</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>leastIndex</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>leastIndexes</span><span class=o>[</span><span class=n>ThreadLocalRandom</span><span class=o>.</span><span class=na>current</span><span class=o>().</span><span class=na>nextInt</span><span class=o>(</span><span class=n>leastCount</span><span class=o>)]);</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>这种处理方式有个问题是，如果不同的Service的处理能力不同，那么整个cluster的性能最终都被限制在处理能力最小的那个机器上了。</p><h1 id=最短响应时间负载均衡算法>最短响应时间负载均衡算法</h1><p>最短响应时间负载均衡算法可以根据Provider的处理能力进行流量分配。先说下基本原理，ShortestResponseLoadBalance是先统计一段时间窗口内响应时间的平均值，然后计算该Provider的平均响应时间与当前连接数量的乘积作为最短响应时间。使用乘积的方式可以在负载均衡的时候同时考虑连接数+响应时间，让性能更优的服务器处理更多的响应。而只统计一段时间窗口内的平均响应时间是因为，当Provider长时间运行时，平均的响应时间不会受短时间内网络波动的影响。</p><p>我们来看下时间窗口的结构体：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -452,51 +287,44 @@
 </span><span class=lnt>35
 </span><span class=lnt>36
 </span><span class=lnt>37
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>protected</span> <span class=kd>static</span> <span class=kd>class</span> <span class=nc>SlideWindowData</span> <span class=o>{</span>
-	<span class=c1>// 定时更新统计数据的线程池
-</span><span class=c1></span>	<span class=kd>private</span> <span class=kd>final</span> <span class=kd>static</span> <span class=n>ExecutorService</span> <span class=n>EXECUTOR_SERVICE</span> <span class=o>=</span> <span class=n>Executors</span><span class=o>.</span><span class=na>newSingleThreadExecutor</span><span class=o>((</span><span class=k>new</span> <span class=n>NamedThreadFactory</span><span class=o>(</span><span class=s>&#34;Dubbo-slidePeriod-reset&#34;</span><span class=o>)));</span>
-
-	<span class=kd>private</span> <span class=kt>long</span> <span class=n>succeededOffset</span><span class=o>;</span>
-	<span class=kd>private</span> <span class=kt>long</span> <span class=n>succeededElapsedOffset</span><span class=o>;</span>
-	<span class=kd>private</span> <span class=n>RpcStatus</span> <span class=n>rpcStatus</span><span class=o>;</span>
-
-	<span class=kd>public</span> <span class=nf>SlideWindowData</span><span class=o>(</span><span class=n>RpcStatus</span> <span class=n>rpcStatus</span><span class=o>)</span> <span class=o>{</span>
-		<span class=k>this</span><span class=o>.</span><span class=na>rpcStatus</span> <span class=o>=</span> <span class=n>rpcStatus</span><span class=o>;</span>
-		<span class=k>this</span><span class=o>.</span><span class=na>succeededOffset</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span>
-		<span class=k>this</span><span class=o>.</span><span class=na>succeededElapsedOffset</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span>
-	<span class=o>}</span>
-
-	<span class=c1>// 更新时间窗口的值
-</span><span class=c1></span>	<span class=kd>public</span> <span class=kt>void</span> <span class=nf>reset</span><span class=o>()</span> <span class=o>{</span>
-		<span class=k>this</span><span class=o>.</span><span class=na>succeededOffset</span> <span class=o>=</span> <span class=n>rpcStatus</span><span class=o>.</span><span class=na>getSucceeded</span><span class=o>();</span>
-		<span class=k>this</span><span class=o>.</span><span class=na>succeededElapsedOffset</span> <span class=o>=</span> <span class=n>rpcStatus</span><span class=o>.</span><span class=na>getSucceededElapsed</span><span class=o>();</span>
-	<span class=o>}</span>
-
-	<span class=c1>// 该Provider的平均响应时间
-</span><span class=c1></span>	<span class=kd>private</span> <span class=kt>long</span> <span class=nf>getSucceededAverageElapsed</span><span class=o>()</span> <span class=o>{</span>
-		<span class=c1>// 获取成功的请求数量
-</span><span class=c1></span>		<span class=kt>long</span> <span class=n>succeed</span> <span class=o>=</span> <span class=k>this</span><span class=o>.</span><span class=na>rpcStatus</span><span class=o>.</span><span class=na>getSucceeded</span><span class=o>()</span> <span class=o>-</span> <span class=k>this</span><span class=o>.</span><span class=na>succeededOffset</span><span class=o>;</span>
-		<span class=k>if</span> <span class=o>(</span><span class=n>succeed</span> <span class=o>==</span> <span class=n>0</span><span class=o>)</span> <span class=o>{</span>
-			<span class=k>return</span> <span class=n>0</span><span class=o>;</span>
-		<span class=o>}</span>
-		<span class=c1>// 平均响应时间
-</span><span class=c1></span>		<span class=k>return</span> <span class=o>(</span><span class=k>this</span><span class=o>.</span><span class=na>rpcStatus</span><span class=o>.</span><span class=na>getSucceededElapsed</span><span class=o>()</span> <span class=o>-</span> <span class=k>this</span><span class=o>.</span><span class=na>succeededElapsedOffset</span><span class=o>)</span> <span class=o>/</span> <span class=n>succeed</span><span class=o>;</span>
-	<span class=o>}</span>
-
-	<span class=kd>public</span> <span class=kt>long</span> <span class=nf>getEstimateResponse</span><span class=o>()</span> <span class=o>{</span>
-		<span class=c1>// 活跃数 * 平均响应时间
-</span><span class=c1></span>		<span class=kt>int</span> <span class=n>active</span> <span class=o>=</span> <span class=k>this</span><span class=o>.</span><span class=na>rpcStatus</span><span class=o>.</span><span class=na>getActive</span><span class=o>()</span> <span class=o>+</span> <span class=n>1</span><span class=o>;</span>
-		<span class=k>return</span> <span class=n>getSucceededAverageElapsed</span><span class=o>()</span> <span class=o>*</span> <span class=n>active</span><span class=o>;</span>
-	<span class=o>}</span>
-<span class=o>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>基于该时间窗口实现的平均响应时间最短算法为：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kd>protected</span> <span class=kd>static</span> <span class=kd>class</span> <span class=nc>SlideWindowData</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 定时更新统计数据的线程池
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=kd>private</span> <span class=kd>final</span> <span class=kd>static</span> <span class=n>ExecutorService</span> <span class=n>EXECUTOR_SERVICE</span> <span class=o>=</span> <span class=n>Executors</span><span class=o>.</span><span class=na>newSingleThreadExecutor</span><span class=o>((</span><span class=k>new</span> <span class=n>NamedThreadFactory</span><span class=o>(</span><span class=s>&#34;Dubbo-slidePeriod-reset&#34;</span><span class=o>)));</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=kd>private</span> <span class=kt>long</span> <span class=n>succeededOffset</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>	<span class=kd>private</span> <span class=kt>long</span> <span class=n>succeededElapsedOffset</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>	<span class=kd>private</span> <span class=n>RpcStatus</span> <span class=n>rpcStatus</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=kd>public</span> <span class=nf>SlideWindowData</span><span class=o>(</span><span class=n>RpcStatus</span> <span class=n>rpcStatus</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=k>this</span><span class=o>.</span><span class=na>rpcStatus</span> <span class=o>=</span> <span class=n>rpcStatus</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>		<span class=k>this</span><span class=o>.</span><span class=na>succeededOffset</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>		<span class=k>this</span><span class=o>.</span><span class=na>succeededElapsedOffset</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=c1>// 更新时间窗口的值
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=kd>public</span> <span class=kt>void</span> <span class=nf>reset</span><span class=o>()</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=k>this</span><span class=o>.</span><span class=na>succeededOffset</span> <span class=o>=</span> <span class=n>rpcStatus</span><span class=o>.</span><span class=na>getSucceeded</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>		<span class=k>this</span><span class=o>.</span><span class=na>succeededElapsedOffset</span> <span class=o>=</span> <span class=n>rpcStatus</span><span class=o>.</span><span class=na>getSucceededElapsed</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=c1>// 该Provider的平均响应时间
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=kd>private</span> <span class=kt>long</span> <span class=nf>getSucceededAverageElapsed</span><span class=o>()</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=c1>// 获取成功的请求数量
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=kt>long</span> <span class=n>succeed</span> <span class=o>=</span> <span class=k>this</span><span class=o>.</span><span class=na>rpcStatus</span><span class=o>.</span><span class=na>getSucceeded</span><span class=o>()</span> <span class=o>-</span> <span class=k>this</span><span class=o>.</span><span class=na>succeededOffset</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=o>(</span><span class=n>succeed</span> <span class=o>==</span> <span class=n>0</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=k>return</span> <span class=n>0</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=c1>// 平均响应时间
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=k>return</span> <span class=o>(</span><span class=k>this</span><span class=o>.</span><span class=na>rpcStatus</span><span class=o>.</span><span class=na>getSucceededElapsed</span><span class=o>()</span> <span class=o>-</span> <span class=k>this</span><span class=o>.</span><span class=na>succeededElapsedOffset</span><span class=o>)</span> <span class=o>/</span> <span class=n>succeed</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=kd>public</span> <span class=kt>long</span> <span class=nf>getEstimateResponse</span><span class=o>()</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=c1>// 活跃数 * 平均响应时间
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=kt>int</span> <span class=n>active</span> <span class=o>=</span> <span class=k>this</span><span class=o>.</span><span class=na>rpcStatus</span><span class=o>.</span><span class=na>getActive</span><span class=o>()</span> <span class=o>+</span> <span class=n>1</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>		<span class=k>return</span> <span class=n>getSucceededAverageElapsed</span><span class=o>()</span> <span class=o>*</span> <span class=n>active</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>基于该时间窗口实现的平均响应时间最短算法为：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -556,152 +384,86 @@
 </span><span class=lnt>58
 </span><span class=lnt>59
 </span><span class=lnt>60
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=nd>@Override</span>
-<span class=kd>protected</span> <span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=nf>doSelect</span><span class=o>(</span><span class=n>List</span><span class=o>&lt;</span><span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;&gt;</span> <span class=n>invokers</span><span class=o>,</span> <span class=n>URL</span> <span class=n>url</span><span class=o>,</span> <span class=n>Invocation</span> <span class=n>invocation</span><span class=o>)</span> <span class=o>{</span>
-
-	<span class=c1>// 省略变量定义...
-</span><span class=c1></span>
-	<span class=c1>// 选出响应时间最短的invoker
-</span><span class=c1></span>	<span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>length</span><span class=o>;</span> <span class=n>i</span><span class=o>++)</span> <span class=o>{</span>
-		<span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=n>invoker</span> <span class=o>=</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>i</span><span class=o>);</span>
-		<span class=n>RpcStatus</span> <span class=n>rpcStatus</span> <span class=o>=</span> <span class=n>RpcStatus</span><span class=o>.</span><span class=na>getStatus</span><span class=o>(</span><span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>(),</span> <span class=n>invocation</span><span class=o>.</span><span class=na>getMethodName</span><span class=o>());</span>
-		<span class=n>SlideWindowData</span> <span class=n>slideWindowData</span> <span class=o>=</span> <span class=n>methodMap</span><span class=o>.</span><span class=na>computeIfAbsent</span><span class=o>(</span><span class=n>rpcStatus</span><span class=o>,</span> <span class=n>SlideWindowData</span><span class=o>::</span><span class=k>new</span><span class=o>);</span>
-
-		<span class=c1>// 计算当前的估计的响应时间
-</span><span class=c1></span>		<span class=kt>long</span> <span class=n>estimateResponse</span> <span class=o>=</span> <span class=n>slideWindowData</span><span class=o>.</span><span class=na>getEstimateResponse</span><span class=o>();</span>
-		<span class=kt>int</span> <span class=n>afterWarmup</span> <span class=o>=</span> <span class=n>getWeight</span><span class=o>(</span><span class=n>invoker</span><span class=o>,</span> <span class=n>invocation</span><span class=o>);</span>
-		<span class=n>weights</span><span class=o>[</span><span class=n>i</span><span class=o>]</span> <span class=o>=</span> <span class=n>afterWarmup</span><span class=o>;</span>
-		<span class=c1>// Same as LeastActiveLoadBalance
-</span><span class=c1></span>		<span class=k>if</span> <span class=o>(</span><span class=n>estimateResponse</span> <span class=o>&lt;</span> <span class=n>shortestResponse</span><span class=o>)</span> <span class=o>{</span>
-			<span class=n>shortestResponse</span> <span class=o>=</span> <span class=n>estimateResponse</span><span class=o>;</span>
-			<span class=n>shortestCount</span> <span class=o>=</span> <span class=n>1</span><span class=o>;</span>
-			<span class=n>shortestIndexes</span><span class=o>[</span><span class=n>0</span><span class=o>]</span> <span class=o>=</span> <span class=n>i</span><span class=o>;</span>
-			<span class=n>totalWeight</span> <span class=o>=</span> <span class=n>afterWarmup</span><span class=o>;</span>
-			<span class=n>firstWeight</span> <span class=o>=</span> <span class=n>afterWarmup</span><span class=o>;</span>
-			<span class=n>sameWeight</span> <span class=o>=</span> <span class=kc>true</span><span class=o>;</span>
-		<span class=o>}</span> <span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=n>estimateResponse</span> <span class=o>==</span> <span class=n>shortestResponse</span><span class=o>)</span> <span class=o>{</span>
-			<span class=n>shortestIndexes</span><span class=o>[</span><span class=n>shortestCount</span><span class=o>++]</span> <span class=o>=</span> <span class=n>i</span><span class=o>;</span>
-			<span class=n>totalWeight</span> <span class=o>+=</span> <span class=n>afterWarmup</span><span class=o>;</span>
-			<span class=k>if</span> <span class=o>(</span><span class=n>sameWeight</span> <span class=o>&amp;&amp;</span> <span class=n>i</span> <span class=o>&gt;</span> <span class=n>0</span>
-				<span class=o>&amp;&amp;</span> <span class=n>afterWarmup</span> <span class=o>!=</span> <span class=n>firstWeight</span><span class=o>)</span> <span class=o>{</span>
-				<span class=n>sameWeight</span> <span class=o>=</span> <span class=kc>false</span><span class=o>;</span>
-			<span class=o>}</span>
-		<span class=o>}</span>
-	<span class=o>}</span>
-
-	<span class=c1>// 更新时间窗口
-</span><span class=c1></span>	<span class=k>if</span> <span class=o>(</span><span class=n>System</span><span class=o>.</span><span class=na>currentTimeMillis</span><span class=o>()</span> <span class=o>-</span> <span class=n>lastUpdateTime</span> <span class=o>&gt;</span> <span class=n>SLIDE_PERIOD</span>
-		<span class=o>&amp;&amp;</span> <span class=n>onResetSlideWindow</span><span class=o>.</span><span class=na>compareAndSet</span><span class=o>(</span><span class=kc>false</span><span class=o>,</span> <span class=kc>true</span><span class=o>))</span> <span class=o>{</span>
-		<span class=c1>//reset slideWindowData in async way
-</span><span class=c1></span>		<span class=n>SlideWindowData</span><span class=o>.</span><span class=na>EXECUTOR_SERVICE</span><span class=o>.</span><span class=na>execute</span><span class=o>(()</span> <span class=o>-&gt;</span> <span class=o>{</span>
-			<span class=n>methodMap</span><span class=o>.</span><span class=na>values</span><span class=o>().</span><span class=na>forEach</span><span class=o>(</span><span class=n>SlideWindowData</span><span class=o>::</span><span class=n>reset</span><span class=o>);</span>
-			<span class=n>lastUpdateTime</span> <span class=o>=</span> <span class=n>System</span><span class=o>.</span><span class=na>currentTimeMillis</span><span class=o>();</span>
-			<span class=n>onResetSlideWindow</span><span class=o>.</span><span class=na>set</span><span class=o>(</span><span class=kc>false</span><span class=o>);</span>
-		<span class=o>});</span>
-	<span class=o>}</span>
-
-	<span class=c1>// response相同根据权重随机选，权重相同直接随机选择
-</span><span class=c1></span>	<span class=k>if</span> <span class=o>(</span><span class=n>shortestCount</span> <span class=o>==</span> <span class=n>1</span><span class=o>)</span> <span class=o>{</span>
-		<span class=k>return</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>shortestIndexes</span><span class=o>[</span><span class=n>0</span><span class=o>]);</span>
-	<span class=o>}</span>
-	<span class=k>if</span> <span class=o>(!</span><span class=n>sameWeight</span> <span class=o>&amp;&amp;</span> <span class=n>totalWeight</span> <span class=o>&gt;</span> <span class=n>0</span><span class=o>)</span> <span class=o>{</span>
-		<span class=kt>int</span> <span class=n>offsetWeight</span> <span class=o>=</span> <span class=n>ThreadLocalRandom</span><span class=o>.</span><span class=na>current</span><span class=o>().</span><span class=na>nextInt</span><span class=o>(</span><span class=n>totalWeight</span><span class=o>);</span>
-		<span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>shortestCount</span><span class=o>;</span> <span class=n>i</span><span class=o>++)</span> <span class=o>{</span>
-			<span class=kt>int</span> <span class=n>shortestIndex</span> <span class=o>=</span> <span class=n>shortestIndexes</span><span class=o>[</span><span class=n>i</span><span class=o>];</span>
-			<span class=n>offsetWeight</span> <span class=o>-=</span> <span class=n>weights</span><span class=o>[</span><span class=n>shortestIndex</span><span class=o>];</span>
-			<span class=k>if</span> <span class=o>(</span><span class=n>offsetWeight</span> <span class=o>&lt;</span> <span class=n>0</span><span class=o>)</span> <span class=o>{</span>
-				<span class=k>return</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>shortestIndex</span><span class=o>);</span>
-			<span class=o>}</span>
-		<span class=o>}</span>
-	<span class=o>}</span>
-	<span class=k>return</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>shortestIndexes</span><span class=o>[</span><span class=n>ThreadLocalRandom</span><span class=o>.</span><span class=na>current</span><span class=o>().</span><span class=na>nextInt</span><span class=o>(</span><span class=n>shortestCount</span><span class=o>)]);</span>
-<span class=o>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>该负载均衡算法解决了最小连接数负载均衡算法中无法根据服务器能力分配流量的问题，但是由于使用平均响应时间，所以该负载均衡算法对一些延迟比较大的响应并不敏感。</p>
-<h1 id=扩展peakewmaloadbalance>扩展：PeakEwmaLoadBalance</h1>
-<p>PeakEwma也是一种利用响应时间进行负载均衡的算法。与最短响应时间中使用平均响应时间作为权重不同的是，PeakEwma使用Peak Exponential Weighted Moving Averagea，数移动加权平均代替平均响应时间。与直接平均相比，PEwma对网络波动更为敏感。在计算负载均衡的权重时，最近几次响应时间比历史的响应时间拥有更高的权重。</p>
-<p>PeakEwma的计算公式如下:</p>
-<p>$$
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Override</span>
+</span></span><span class=line><span class=cl><span class=kd>protected</span> <span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=nf>doSelect</span><span class=o>(</span><span class=n>List</span><span class=o>&lt;</span><span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;&gt;</span> <span class=n>invokers</span><span class=o>,</span> <span class=n>URL</span> <span class=n>url</span><span class=o>,</span> <span class=n>Invocation</span> <span class=n>invocation</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=c1>// 省略变量定义...
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl>	<span class=c1>// 选出响应时间最短的invoker
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>length</span><span class=o>;</span> <span class=n>i</span><span class=o>++)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=n>Invoker</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span> <span class=n>invoker</span> <span class=o>=</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>i</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>		<span class=n>RpcStatus</span> <span class=n>rpcStatus</span> <span class=o>=</span> <span class=n>RpcStatus</span><span class=o>.</span><span class=na>getStatus</span><span class=o>(</span><span class=n>invoker</span><span class=o>.</span><span class=na>getUrl</span><span class=o>(),</span> <span class=n>invocation</span><span class=o>.</span><span class=na>getMethodName</span><span class=o>());</span>
+</span></span><span class=line><span class=cl>		<span class=n>SlideWindowData</span> <span class=n>slideWindowData</span> <span class=o>=</span> <span class=n>methodMap</span><span class=o>.</span><span class=na>computeIfAbsent</span><span class=o>(</span><span class=n>rpcStatus</span><span class=o>,</span> <span class=n>SlideWindowData</span><span class=o>::</span><span class=k>new</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>		<span class=c1>// 计算当前的估计的响应时间
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=kt>long</span> <span class=n>estimateResponse</span> <span class=o>=</span> <span class=n>slideWindowData</span><span class=o>.</span><span class=na>getEstimateResponse</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>		<span class=kt>int</span> <span class=n>afterWarmup</span> <span class=o>=</span> <span class=n>getWeight</span><span class=o>(</span><span class=n>invoker</span><span class=o>,</span> <span class=n>invocation</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>		<span class=n>weights</span><span class=o>[</span><span class=n>i</span><span class=o>]</span> <span class=o>=</span> <span class=n>afterWarmup</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>		<span class=c1>// Same as LeastActiveLoadBalance
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=k>if</span> <span class=o>(</span><span class=n>estimateResponse</span> <span class=o>&lt;</span> <span class=n>shortestResponse</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=n>shortestResponse</span> <span class=o>=</span> <span class=n>estimateResponse</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>			<span class=n>shortestCount</span> <span class=o>=</span> <span class=n>1</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>			<span class=n>shortestIndexes</span><span class=o>[</span><span class=n>0</span><span class=o>]</span> <span class=o>=</span> <span class=n>i</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>			<span class=n>totalWeight</span> <span class=o>=</span> <span class=n>afterWarmup</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>			<span class=n>firstWeight</span> <span class=o>=</span> <span class=n>afterWarmup</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>			<span class=n>sameWeight</span> <span class=o>=</span> <span class=kc>true</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span> <span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=n>estimateResponse</span> <span class=o>==</span> <span class=n>shortestResponse</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=n>shortestIndexes</span><span class=o>[</span><span class=n>shortestCount</span><span class=o>++]</span> <span class=o>=</span> <span class=n>i</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>			<span class=n>totalWeight</span> <span class=o>+=</span> <span class=n>afterWarmup</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>			<span class=k>if</span> <span class=o>(</span><span class=n>sameWeight</span> <span class=o>&amp;&amp;</span> <span class=n>i</span> <span class=o>&gt;</span> <span class=n>0</span>
+</span></span><span class=line><span class=cl>				<span class=o>&amp;&amp;</span> <span class=n>afterWarmup</span> <span class=o>!=</span> <span class=n>firstWeight</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=n>sameWeight</span> <span class=o>=</span> <span class=kc>false</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=c1>// 更新时间窗口
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=k>if</span> <span class=o>(</span><span class=n>System</span><span class=o>.</span><span class=na>currentTimeMillis</span><span class=o>()</span> <span class=o>-</span> <span class=n>lastUpdateTime</span> <span class=o>&gt;</span> <span class=n>SLIDE_PERIOD</span>
+</span></span><span class=line><span class=cl>		<span class=o>&amp;&amp;</span> <span class=n>onResetSlideWindow</span><span class=o>.</span><span class=na>compareAndSet</span><span class=o>(</span><span class=kc>false</span><span class=o>,</span> <span class=kc>true</span><span class=o>))</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=c1>//reset slideWindowData in async way
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=n>SlideWindowData</span><span class=o>.</span><span class=na>EXECUTOR_SERVICE</span><span class=o>.</span><span class=na>execute</span><span class=o>(()</span> <span class=o>-&gt;</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=n>methodMap</span><span class=o>.</span><span class=na>values</span><span class=o>().</span><span class=na>forEach</span><span class=o>(</span><span class=n>SlideWindowData</span><span class=o>::</span><span class=n>reset</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>			<span class=n>lastUpdateTime</span> <span class=o>=</span> <span class=n>System</span><span class=o>.</span><span class=na>currentTimeMillis</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>			<span class=n>onResetSlideWindow</span><span class=o>.</span><span class=na>set</span><span class=o>(</span><span class=kc>false</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>		<span class=o>});</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=c1>// response相同根据权重随机选，权重相同直接随机选择
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=k>if</span> <span class=o>(</span><span class=n>shortestCount</span> <span class=o>==</span> <span class=n>1</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=k>return</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>shortestIndexes</span><span class=o>[</span><span class=n>0</span><span class=o>]);</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=k>if</span> <span class=o>(!</span><span class=n>sameWeight</span> <span class=o>&amp;&amp;</span> <span class=n>totalWeight</span> <span class=o>&gt;</span> <span class=n>0</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=kt>int</span> <span class=n>offsetWeight</span> <span class=o>=</span> <span class=n>ThreadLocalRandom</span><span class=o>.</span><span class=na>current</span><span class=o>().</span><span class=na>nextInt</span><span class=o>(</span><span class=n>totalWeight</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>		<span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>shortestCount</span><span class=o>;</span> <span class=n>i</span><span class=o>++)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=kt>int</span> <span class=n>shortestIndex</span> <span class=o>=</span> <span class=n>shortestIndexes</span><span class=o>[</span><span class=n>i</span><span class=o>];</span>
+</span></span><span class=line><span class=cl>			<span class=n>offsetWeight</span> <span class=o>-=</span> <span class=n>weights</span><span class=o>[</span><span class=n>shortestIndex</span><span class=o>];</span>
+</span></span><span class=line><span class=cl>			<span class=k>if</span> <span class=o>(</span><span class=n>offsetWeight</span> <span class=o>&lt;</span> <span class=n>0</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=k>return</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>shortestIndex</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=n>invokers</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>shortestIndexes</span><span class=o>[</span><span class=n>ThreadLocalRandom</span><span class=o>.</span><span class=na>current</span><span class=o>().</span><span class=na>nextInt</span><span class=o>(</span><span class=n>shortestCount</span><span class=o>)]);</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>该负载均衡算法解决了最小连接数负载均衡算法中无法根据服务器能力分配流量的问题，但是由于使用平均响应时间，所以该负载均衡算法对一些延迟比较大的响应并不敏感。</p><h1 id=扩展peakewmaloadbalance>扩展：PeakEwmaLoadBalance</h1><p>PeakEwma也是一种利用响应时间进行负载均衡的算法。与最短响应时间中使用平均响应时间作为权重不同的是，PeakEwma使用Peak Exponential Weighted Moving Averagea，数移动加权平均代替平均响应时间。与直接平均相比，PEwma对网络波动更为敏感。在计算负载均衡的权重时，最近几次响应时间比历史的响应时间拥有更高的权重。</p><p>PeakEwma的计算公式如下:</p><p>$$
 \begin{aligned}
 V_t &= w \times V_{t-1} + (1-w) \times R_t \\
 w &= \frac{1}{e^{k*\Delta_t}}
 \end{aligned}
-$$</p>
-<p>其中，$V_t$为当前节点的PEwma值，用于负载均衡的权重，$V_{t-1}$为历史PEwma值，$R_t$为当前的响应时间，w用于平衡当前响应时间与历史响应时间的关系，$\Delta_t$为两次请求之间的间隔时间。从公式可以看出，两次间隔时间越长，w越小，最近的响应时间的权重越大。</p>
-<p>PeakEwmaLoadBalance在Dubbo中是以扩展的形式提供的，代码位于<a href=https://github.com/apache/dubbo-spi-extensions/blob/master/dubbo-cluster-extensions/dubbo-cluster-loadbalance-peakewma/src/main/java/org/apache/dubbo/rpc/cluster/loadbalance/PeakEwmaLoadBalance.java>PeakEwmaLoadBalance</a></p>
-<p>该负载均衡算法实现相对比较简单，限于篇幅这里不再展开。</p>
-<h1 id=总结>总结</h1>
-<p>本文对Dubbo框架中提供的最少连接数和最小响应时间及PEwma算法做了分析，其中最少连接数算法适用于Provider性能相近的场景，最小响应时间算法可以根据Provider端实时响应情况进行流量分配，而PEwma算法对网络波动比最小响应时间算法更为敏感。</p>
-<h1 id=参考>参考</h1>
-<ol>
-<li><a href=https://blog.51cto.com/u_15175878/3513414>自适应负载均衡算法原理与实现【附源码】_Kevin Wan_51CTO博客</a></li>
-<li><a href=https://blog.cloudflare.com/i-wanna-go-fast-load-balancing-dynamic-steering/>I Wanna Go Fast - Load Balancing Dynamic Steering</a></li>
-<li><a href=https://github.com/apache/dubbo-spi-extensions>GitHub - apache/dubbo-spi-extensions: Apache Dubbo SPI Extensions</a></li>
-<li><a href=https://dubbo.apache.org/zh/docs/v2.7/dev/source/loadbalance/>负载均衡 | Apache Dubbo</a></li>
-</ol>
-<div class=post-copyright>
-<p class=copyright-item>
-<span class=item-title>Author</span>
-<span class=item-content>Gum</span>
-</p>
-<p class=copyright-item>
-<span class=item-title>LastMod</span>
-<span class=item-content>
-2021-09-24
-</span>
-</p>
-<p class=copyright-item>
-<span class=item-title>License</span>
-<span class=item-content><a rel="license noopener" href=https://creativecommons.org/licenses/by-nc-nd/4.0/ target=_blank>CC BY-NC-ND 4.0</a></span>
-</p>
-</div>
-<footer class=post-footer>
-<nav class=post-nav>
-<a class=prev href=/post/dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B8%8B/>
-<i class="iconfont icon-left"></i>
+$$</p><p>其中，$V_t$为当前节点的PEwma值，用于负载均衡的权重，$V_{t-1}$为历史PEwma值，$R_t$为当前的响应时间，w用于平衡当前响应时间与历史响应时间的关系，$\Delta_t$为两次请求之间的间隔时间。从公式可以看出，两次间隔时间越长，w越小，最近的响应时间的权重越大。</p><p>PeakEwmaLoadBalance在Dubbo中是以扩展的形式提供的，代码位于<a href=https://github.com/apache/dubbo-spi-extensions/blob/master/dubbo-cluster-extensions/dubbo-cluster-loadbalance-peakewma/src/main/java/org/apache/dubbo/rpc/cluster/loadbalance/PeakEwmaLoadBalance.java>PeakEwmaLoadBalance</a></p><p>该负载均衡算法实现相对比较简单，限于篇幅这里不再展开。</p><h1 id=总结>总结</h1><p>本文对Dubbo框架中提供的最少连接数和最小响应时间及PEwma算法做了分析，其中最少连接数算法适用于Provider性能相近的场景，最小响应时间算法可以根据Provider端实时响应情况进行流量分配，而PEwma算法对网络波动比最小响应时间算法更为敏感。</p><h1 id=参考>参考</h1><ol><li><a href=https://blog.51cto.com/u_15175878/3513414>自适应负载均衡算法原理与实现【附源码】_Kevin Wan_51CTO博客</a></li><li><a href=https://blog.cloudflare.com/i-wanna-go-fast-load-balancing-dynamic-steering/>I Wanna Go Fast - Load Balancing Dynamic Steering</a></li><li><a href=https://github.com/apache/dubbo-spi-extensions>GitHub - apache/dubbo-spi-extensions: Apache Dubbo SPI Extensions</a></li><li><a href=https://dubbo.apache.org/zh/docs/v2.7/dev/source/loadbalance/>负载均衡 | Apache Dubbo</a></li></ol><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
+<span class=item-content>Gum</span></p><p class=copyright-item><span class=item-title>LastMod</span>
+<span class=item-content>2021-09-24</span></p><p class=copyright-item><span class=item-title>License</span>
+<span class=item-content><a rel="license noopener" href=https://creativecommons.org/licenses/by-nc-nd/4.0/ target=_blank>CC BY-NC-ND 4.0</a></span></p></div><footer class=post-footer><nav class=post-nav><a class=prev href=/post/dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B8%8B/><i class="iconfont icon-left"></i>
 <span class="prev-text nav-default">Dubbo中的负载均衡策略（下）</span>
-<span class="prev-text nav-mobile">Prev</span>
-</a>
-<a class=next href=/post/dubbo3%E6%97%B6%E9%97%B4%E8%BD%AE%E7%AE%97%E6%B3%95/>
-<span class="next-text nav-default">Dubbo中的时间轮算法</span>
+<span class="prev-text nav-mobile">Prev</span></a>
+<a class=next href=/post/dubbo3%E6%97%B6%E9%97%B4%E8%BD%AE%E7%AE%97%E6%B3%95/><span class="next-text nav-default">Dubbo中的时间轮算法</span>
 <span class="next-text nav-mobile">Next</span>
-<i class="iconfont icon-right"></i>
-</a>
-</nav>
-</footer>
-</article>
-</div>
-<script src=https://utteranc.es/client.js repo=Gummary/blog-comment issue-term=pathname theme=github-light crossorigin=anonymous async></script>
-<noscript>Please enable JavaScript to view the <a href=https://github.com/utterance>comments powered by utterances.</a></noscript>
-</div>
-</main>
-<footer id=footer class=footer>
-<div class=social-links>
-<a href=mailto:sdythp@gmail.com class="iconfont icon-email" title=email target=_blank></a>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div><script src=https://utteranc.es/client.js repo=Gummary/blog-comment issue-term=pathname theme=github-light crossorigin=anonymous async></script><noscript>Please enable JavaScript to view the <a href=https://github.com/utterance>comments powered by utterances.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=mailto:sdythp@gmail.com class="iconfont icon-email" title=email target=_blank></a>
 <a href=https://github.com/Gummary/ class="iconfont icon-github" title=github target=_blank></a>
-<a href=http://localhost:1313/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a>
-</div>
-<div class=poem>What I cannot create, I do not understand.</div>
-<div class=copyright>
-<span class=copyright-year>
-<span>Gum</span>
+<a href=http://localhost:1313/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=poem>What I cannot create, I do not understand.</div><div class=copyright><span class=copyright-year><span>Gum</span>
 &copy;
 2017 -
-2022</span>
-</div>
-</footer>
-<div class=back-to-top id=back-to-top>
-<i class="iconfont icon-up"></i>
-</div>
-</div>
-<script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+2022</span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
 <script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
 <script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
-<script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script>
-<script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script>
-<script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script>
-</body>
-</html>
+<script type=text/javascript src=/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js></script>
+<script type=text/javascript>window.MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]]}}</script><script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script></body></html>
