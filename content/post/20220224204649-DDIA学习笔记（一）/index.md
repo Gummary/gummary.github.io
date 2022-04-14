@@ -13,3 +13,4 @@ draft: true
 
 # Chapter 1. Reliable, Scalable, and Maintainable Applications
 
+目前很多应用不再是CPU密集型，而是数据密集型，
