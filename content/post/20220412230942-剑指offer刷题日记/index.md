@@ -195,7 +195,7 @@ class Solution:
         return ''.join(result)
 ```
 
-## 
+## 左旋转字符串
 
 ```python
 class Solution:
@@ -208,7 +208,7 @@ class Solution:
 
 # Day Four
 
-## 
+## 数组中重复的数字
 
 ```python
 class Solution:
@@ -226,7 +226,7 @@ class Solution:
             nums[n], nums[i] = n, nums[n]
 ```
 
-## 
+## 数组中重复的数字
 
 这个题的本质是求出target的左边界和右边界，然后相减得到长度。
 
@@ -258,7 +258,7 @@ class Solution:
         return r - l -1
 ```
 
-## 
+## 0～n-1中缺失的数字
 
 有序搜索先往二分上靠。
 
@@ -273,6 +273,47 @@ class Solution:
             else:
                 r = mid
         return r
+```
+
+## 二维数组中的查找
+
+```python
+class Solution:
+    def findNumberIn2DArray(self, matrix: List[List[int]], target: int) -> bool:
+        if not matrix: return False
+        end = len(matrix[0])
+        for i in range(len(matrix)):
+            possiable_array = matrix[i]
+            if end == 0: return False
+            l, r = 0, end
+            while l < r:
+                mid = (l+r) // 2
+                if possiable_array[mid] == target:
+                    return True
+                elif possiable_array[mid] > target:
+                    r = mid
+                else:
+                    l = mid + 1
+            end = l
+        return False
+```
+
+一种更简单的解法是，将矩阵向左旋转45°，然后可以将其看作二叉树，左边节点比中间的数值小，右边的比中间的大，因此可转换为二叉查找树的搜索。
+
+```python
+class Solution:
+    def findNumberIn2DArray(self, matrix: List[List[int]], target: int) -> bool:
+        if not matrix: return False
+        i, j = 0, len(matrix[0])-1
+        while i < len(matrix) and j >= 0:
+            if matrix[i][j] > target:
+                j -= 1
+            elif matrix[i][j] < target:
+                i += 1
+            else:
+                return True
+
+        return False
 ```
 
 # Reference
