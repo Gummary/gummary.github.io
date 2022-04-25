@@ -275,6 +275,8 @@ class Solution:
         return r
 ```
 
+# Day Five
+
 ## 二维数组中的查找
 
 ```python
@@ -314,6 +316,177 @@ class Solution:
                 return True
 
         return False
+```
+
+## 旋转数组的最小数字
+
+很有意思的一道题。这个题的输入是一个含重复元素的有序数组，我们先降低一下难度，看下如果没有重复元素我们怎么解。
+
+**没有重复元素**
+
+如果没有重复元素，那输入就是一个有旋转的有序数组，在有序数组中查找元素，我们首先就应该往二分查找上靠。而二分查找的关键在于，比较中间元素与目标元素的大小，然后让区间逼近目标元素。
+
+在本题中，我们要找的是最小值，让区间逼近这个最小值，那么我们的中间元素应该和谁比呢？既然我们是用区间逼近，最后取值是区间位置的值，那么我们可以让中间元素和区间两端的值比较。在本题中只能与右区间比较（原因下面解释）。
+
+当数组旋转后，我们可以利用旋转数组的性质来移动区间：
+
+- 当中间值比右区间端点值大时，说明mid在最小值的左侧
+- 当中间值比右区间端点值大时，说明mid在最小值的右侧或mid为最小值
+  
+有了这个判断后，我们很容易写出如下代码：
+
+```python
+class Solution:
+    def minArray(self, numbers: List[int]) -> int:
+        l, r = 0, len(numbers)-1
+        while l <= r:
+            mid = (l+r) // 2
+            if numbers[mid] > numbers[r]: l = mid + 1
+            elif numbers[mid] < numbers[r]: r = mid    # mid可能为最小值
+            else: break
+        return numbers[r]
+```
+
+我们再来看下为什么不能和左区间比较？如果和左端点比较，则移动区间的方法与右端点相反，这里不再赘述。下面考虑一个反例，如果数组没有旋转，那么array[l]为最小值，array[mid] > array[l]，但我们认为最小值位于mid的右侧，会让l=mid+1，丢失最小值，所以只能与右端点比较。
+
+**有重复元素**
+
+我们再来看下有重复元素如何处理。有重复元素时我们额外需要考虑mid和右端点相等的情况下怎么处理，如果二者相等，则有两种情况：
+
+1. 右端点与中间值相同，均为最小值
+2. 最小值在二者之间
+
+所以我们不能让r=mid，我们要让右端点移动的更为谨慎：r -= 1.
+
+另外在有重复值后，最终最小值也不再是右端点了。因为随着r的不断减小，mid会不断趋近于l，最终等于l，那么当l=r时，r会继续向左移动，最终最小值会在l的位置上。所以最终代码为：
+
+```python
+class Solution:
+    def minArray(self, numbers: List[int]) -> int:
+        l, r = 0, len(numbers)-1
+        while l <= r:
+            mid = (l+r) // 2
+            if numbers[mid] > numbers[r]: l = mid + 1
+            elif numbers[mid] < numbers[r]: r = mid
+            else: r -= 1
+        return numbers[l]
+```
+
+## 第一个只出现一次的字符
+
+```python
+class Solution:
+    def minArray(self, numbers: List[int]) -> int:
+        l, r = 0, len(numbers)-1
+        while l <= r:
+            mid = (l+r) // 2
+            if numbers[mid] > numbers[r]: l = mid + 1
+            elif numbers[mid] < numbers[r]: r = mid
+            else: r -= 1
+        return numbers[l]
+```
+
+# Day Six
+
+## 从上到下打印二叉树 I
+
+```python
+class Solution:
+    def levelOrder(self, root: TreeNode) -> List[int]:
+        if not root: return []
+        result, q = [], [root]
+        while q:
+            node = q.pop(0)
+            if node.left: q.append(node.left)
+            if node.right: q.append(node.right)
+            result.append(node.val)
+        return result
+```
+
+## 从上到下打印二叉树 II
+
+```python
+class Solution:
+    def levelOrder(self, root: TreeNode) -> List[List[int]]:
+        if not root: return []
+        result, q = [], [root]
+        while q:
+            tmp = []
+            result.append([n.val for n in q])
+            for n in q:
+                if n.left: tmp.append(n.left)
+                if n.right: tmp.append(n.right)
+            q = tmp
+        return result
+```
+
+## 从上到下打印二叉树 III
+
+```python
+class Solution:
+    def levelOrder(self, root: TreeNode) -> List[List[int]]:
+        if not root: return []
+        result, q, reverse = [], [root], False
+        while q:
+            tmp = []
+            if reverse: q = q[::-1]
+            result.append([n.val for n in q])
+            if reverse: q = q[::-1]
+            for n in q:
+                if n.left: tmp.append(n.left)
+                if n.right: tmp.append(n.right)
+            q = tmp
+            reverse = not reverse
+        return result
+```
+
+# Day Seven
+
+## 树的子结构
+
+```python
+class Solution:
+    def isSubStructure(self, A: TreeNode, B: TreeNode) -> bool:
+        if not A or not B:
+            return False
+
+        def helper(A, B):
+            if not B:
+                return True
+            if not A or A.val != B.val:
+                return False
+            return helper(A.left, B.left) and helper(A.right, B.right)
+
+        return helper(A, B) or self.isSubStructure(A.left, B) or self.isSubStructure(A.right, B)
+```
+
+## 二叉树的镜像
+
+```python
+class Solution:
+    def mirrorTree(self, root: TreeNode) -> TreeNode:
+        if not root: return root
+        root.left, root.right = root.right, root.left
+        root.left = self.mirrorTree(root.left)
+        root.right = self.mirrorTree(root.right)
+        return root
+```
+
+## 对称的二叉树
+
+```python
+class Solution:
+    def isSymmetric(self, root: TreeNode) -> bool:
+        if not root:
+            return True
+    
+        def helper(l, r):
+            if not l and not r:
+                return True
+            if not l or not r or l.val != r.val: return False
+            return helper(l.left, r.right) and helper(l.right, r.left)
+
+        return helper(root.left, root.right)
 ```
 
 # Reference
