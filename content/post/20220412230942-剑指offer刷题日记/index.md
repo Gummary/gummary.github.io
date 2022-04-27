@@ -489,6 +489,42 @@ class Solution:
         return helper(root.left, root.right)
 ```
 
+# Day Eight
+
+## 青蛙跳台阶问题
+
+```python
+class Solution:
+    def numWays(self, n: int) -> int:
+        a, b = 1, 1
+        for _ in range(n):
+            a, b = b, a + b
+        return a % 1000000007
+```
+
+## 股票的最大利润
+
+动态规划类型，重点是算出状态转移方程。这个题要求最大利润，先不考虑动态规划。那么我们需要两个for循环，计算当前值和之后值之间的一个最大值的差。再来看最大利润的定义，应该是当前值和之前的最小值之间的差。所以我们可以用两个变量，分别记录之前的最大利润和之前的最小值。这样用一个循环即可。
+
+状态转移方程：
+
+$$
+p[i] = max(p[i-1], v-\text{min})
+$$
+
+```python
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        if not prices: return 0
+        min_val = prices[0]
+        p = 0
+        for n in prices[1:]:
+            p = max(p, n-min_val)
+            if n < min_val:
+                min_val = n
+        return p
+```
+
 # Reference
 
 1. https://leetcode-cn.com/study-plan/lcof/?progress=ixaa2is
