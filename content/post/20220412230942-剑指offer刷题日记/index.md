@@ -525,6 +525,45 @@ class Solution:
         return p
 ```
 
+# Day Nine
+
+## 连续子数组的最大和
+
+```python
+class Solution:
+    def maxSubArray(self, nums: List[int]) -> int:
+        dp = [0] * len(nums)
+        dp[0] = nums[0]
+        result = nums[0]
+        for i, n in enumerate(nums):
+            if i == 0: continue
+            dp[i] = max(nums[i], dp[i-1] + nums[i])
+            result = max(dp[i], result)
+        return result
+```
+
+## 礼物的最大价值
+
+```python
+class Solution:
+    def maxValue(self, grid: List[List[int]]) -> int:
+        if not grid or not grid[0]: return 0
+        dp = [[0]*len(grid[0]) for _ in range(len(grid))]
+        dp[0][0] = grid[0][0]
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if i == 0 and j == 0:
+                    continue
+                if i == 0:
+                    dp[i][j] = grid[i][j] + dp[i][j-1]
+                    continue
+                if j == 0:
+                    dp[i][j] = grid[i][j] + dp[i-1][j]
+                    continue
+                dp[i][j] = grid[i][j] + max(dp[i-1][j], dp[i][j-1])
+        return dp[-1][-1]       
+```
+
 # Reference
 
 1. https://leetcode-cn.com/study-plan/lcof/?progress=ixaa2is
