@@ -145,3 +145,22 @@ B-tree的好处在于，每个key只会在硬盘中存储一次。可以直接�
 
 ## Transaction Processing or Analytics
 
+Transaction Processing是指用户可以低延迟的完成读写操作，并不一定需要有ACID属性；与之相对的是Batch Processing，周期执行，每次执行时间较长。
+
+用户在使用索引来对某几条数据进行增删改查的操作称之为online transaction processing（OLTP）；而范围查询大批量数据进行分析的操作称为online analytic processing (OLAP)。
+
+OLTP通常要求快速低延迟的完成数据操作，因此通常不在OLTP数据库上进行大规模数据的分析操作。为了实现大规模数据分析，衍生出data warehouse，数仓这个产品。数仓中的数据是OLTP数据库的一个拷贝，通过ETL完成。在数仓中完成OLAP操作可以避免对OLTP数据库产生影响。
+
+另外，由于OLTP和OLAP的侧重点不同，因此这两种数据库的实现方式、优化方式也不同。OLTP与OLAP之间的区别：
+
+| Property | OLTP | OLAP |
+|----------|------|------|
+|      读模式    |   每次利用索引读取少量数据   |  每次聚合大量数据    |
+|      写模式    |    随机、低延迟写入  |   通过ETL或事件系统大规模导入   |
+|     主要用于     |   给终端用户使用   |  内部数据分析    |
+|     数据内容     |   最新的数据   |   历史数据   |
+| 数据量 | GB - TB | TB - PB |
+
+与OLAP数据库对应的数据模型只有两种：星状模型和雪花模型。星状模型是指，使用一个事实表来存储发生的事件，事实表中存储的都是外键，外键是周围维表的主键。维表中包含的是数据的真正含义。而雪花模型是指，维表可以继续使用外键来索引其他表。
+
+## Column-Oriented Storage
