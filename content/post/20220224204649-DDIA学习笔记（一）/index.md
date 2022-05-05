@@ -194,8 +194,17 @@ OLTP通常要求快速低延迟的完成数据操作，因此通常不在OLTP数
 
 ### Json，XML及其二进制变种
 
-### Thrift及Protocol Buffer
+Json、XML、CSV都是一些与语言无关的编码方式。这些方式的一些缺点在于：
 
+1. 对数字的编码不友好。XML无法区分数字和字符串，而JSON无法区分浮点和整型。
+2. 不支持二进制字符串。一个折中的办法是将二进制字符串变成base64作为字符串存储在xml和json中。
+3. xml和json对数据schema的支持过于复杂
+4. CSV没有schema，因此添加和删除列都需要编码。
+
+XML、JSON、CSV多用于组织之间的数据交换。因为组织间的数据交换更多的是在形式上达成一致，通常不考虑性能。
+
+### Thrift及Protocol Buffer
 
 ### Avro
 
+## 
