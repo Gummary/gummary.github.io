@@ -143,6 +143,73 @@ draft: true
 
 防止这种情况需要实现 consistent prefix reads。也即如果按照一定的顺序写入数据，那么读取数据时一定会按照该顺序读出来。
 
+### Solutions for Replication Lag
+
+在应用层处理时延的问题非常复杂且容易出错。因此数据库通常会提供事务来保证数据的一致性。
+
+## Multi-Leader Replication
+
+Single-Leader Replication的问题在于，只有一个节点可以接受写请求，因此当这个节点挂了之后，用户就无法写数据。
+
+使用多个leader提供写请求的吞吐率。
+
+### Use Cases for Multi-Leader Replication
+
+**多数据中心场景**
+
+一般multi-leader replication多用在多数据中心的场景下，例如每个数据中心一个主节点。相比singler-leader的好处在于：
+
+1. 性能更好。用户可以向离其最近的数据中心写入。
+2. 容错能力更强。如果使用single-leader，那么当主节点或所在的数据中心挂了，那么需要在其他数据中心中选出一个作为leader。
+3. 对公网的性能要求弱一些。single-leader场景下，写请求需要同步写入到其他数据中心，因此对公网的要求更加敏感。
+
+multi-leader可能导致的一些问题在于，需要处理并发写入的问题，也即要处理冲突。
+
+**Clients with offline operation**
+
+某些应用需要在无网络的情况下工作，这种也可以看作是一种多数据中心的情况，每个app所在的device是一个数据中心。
+
+**Collaborative editing**
+
+多人协作场景也类似。用户在本地对文档进行修改，然后异步同步给服务器及其他用户。
+
+### Handling Write Conflicts
+
+### Multi-Leader Replication Topologies
+
+multi-leader最大的问题在于，写冲突。如果两个用户，同时向两个数据中心，对同同一份数据进行修改，那么两个数据中心在同步数据的时候就会冲突。
+
+对于single-leader来说，A用户在写的时候，会请求一个锁；B用户只有在A用户写完之后才可以写，或事务回滚，过一会再写入。但对于multi-leader的情况，如果用了锁，multi-leader就会退化成single-leader。
+
+另一种方式是避免冲突，同一份数据的修改只在同一个数据中心内完成，这样不同的数据中心就不会出现冲突。但是如果某个数据中心挂了，仍会出现同一份数据在不同数据中心写入的问题。
+
+如果冲突无法避免，那就需要让数据最终趋向一致。single-leader中，写入数据的顺序是按写请求的顺序，但是multi-leader中无法确定两次请求的先后顺序。一些让数据趋向一致的方法：
+
+1. 给每个写请求生成一个uuid，uuid大的作为后来的请求
+2. 给每个节点一个uuid，uuid大的节点请求优先级高
+3. 合并两个写请求
+4. 同时保存这两个写请求，然后将写请求的取舍留给用户。例如git的代码合并。
+
+### Custom conflict resolution logic
+
+让用户自定义代码处理冲突，当有冲突时，数据库执行用户代码解决冲突。
+
+- On write，再写入时如果有冲突，则调用用户代码处理冲突。
+- On read，再写入时，保存写入的内容，在读取时，如果遇到冲突，那么交由用户处理冲突。
+
+
+### Multi-Leader Replication Topologies
+
+multi-leader之间同步写消息的方式通常有以下几种：
+
+{{< tfigure src="images/20220529213143.png" title="" width="" class="align-center">}}
+
+circlar和star这两种同步方式中，一个消息会经过多个节点。因此节点内需要记录是否处理过某个请求，防止出现无线循环。另一个问题是，如果某一个节点挂了，同步过程就会中断。一般需要手动忽略这个失败的节点。
+
+all-to-all的问题在于，可能出现类似“Consistent Prefix Read”的问题，如下图所示：
+
+{{< tfigure src="images/20220529213535.png" title="" width="" class="align-center">}}
+
 # Reference
 
 1. https://dev.mysql.com/doc/internals/en/replication.html
