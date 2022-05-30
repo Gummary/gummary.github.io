@@ -210,6 +210,24 @@ all-to-all的问题在于，可能出现类似“Consistent Prefix Read”的问
 
 {{< tfigure src="images/20220529213535.png" title="" width="" class="align-center">}}
 
+## Leaderless Replication
+
+Leadersless的实现通常有两种，客户端直接向多个节点写入，或客户端向某一个协调节点发送请求，由协调节点代表客户端向节点发送写请求。
+
+### Writing to the Database When a Node Is Down
+
+当节点下线时，客户端并发向所有节点发送写请求，只有成功处理的请求会返回正确结果。在读取时，如果下线的节点重启后上线了，那么客户端从该节点中读取的数据就是过时的数据。客户端可根据各个节点返回数据中的版本号决定哪一个时新的数据。
+
+数据库系统为了保证最终的数据是一致的，通常采用两种方式：
+
+1. Read repair，在读取时判断版本号，向旧版本的节点发送新的请求数据。如果某些数据读取的频率很小，那么其更新的频率也很小，可能会出现数据的丢失。
+2. anti-entropy，使用一个后台线程，扫描各个节点之间的数据差异，并更新旧版本的数据。
+
+### Quorums for reading and writing
+
+在向节点写入数据时，写入多少个节点认为是写入成功，读取时，多少个节点返回结果认为读取成功呢？假设共n个节点，读取和写入的数量分别为r和w，一般来说需要w+r>n.n通常是整数，w和r一般是(n+1)//2.
+
+
 # Reference
 
 1. https://dev.mysql.com/doc/internals/en/replication.html
