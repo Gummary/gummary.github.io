@@ -227,6 +227,34 @@ Leadersless的实现通常有两种，客户端直接向多个节点写入，或
 
 在向节点写入数据时，写入多少个节点认为是写入成功，读取时，多少个节点返回结果认为读取成功呢？假设共n个节点，读取和写入的数量分别为r和w，一般来说需要w+r>n.n通常是整数，w和r一般是(n+1)//2.
 
+### Limitations of Quorum Consistency
+
+Quorum consistency只是理想情况下的约束，有很多edge case会让这个约束失效：
+
+1. write concurrently
+2. write和read并发发生，无法确保read返回的是新值还是旧值
+3. 如果某些节点在写时失败了，而成功的节点没有回滚，就会导致约束失效
+4. 节点更新了数据库中的值，但是下线了，上线时从其他节点读取的确实旧值，会导致约束失效
+
+在Leaderless的架构中，很难监控各个节点值的是否是最新的。
+
+### Sloppy Quorums and Hinted Handoff
+
+在某些情况下，某个客户端可能因为网路问题无法连接到大量的数据库节点，这时有两种选择：
+
+1. 认为写入失败
+2. 写入到不位于这n个节点中的节点
+
+第二种方法称为sloppy quorums。
+
+当网络恢复时，再将写请求发送给应该写入的节点，这个过程称之为hinted Handoff
+
+对于leaderless架构同样支持多数据中心的操作。n可以是所有数据中心中的所有节点，也可以是一个数据中心的节点，不同数据中心的数据同步由异步线程完成。
+
+## Detecting Concurrent Writes
+
+
+
 
 # Reference
 
