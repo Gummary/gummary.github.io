@@ -93,5 +93,9 @@ pizza.cut()
 2. No class should derive from a concrete class.
 3. No method should override an implemented method of any of its base classes.
 
+简单工厂和工厂方法模式都是只创建一个类，如果一个大的类型下面有多个类，此时可以在一个抽象类中，添加多个创建函数，让子类实现具体的创建过程，将这种模式称为抽象工厂。抽象工厂是通过组合的方式，作为一个成员变量放到其他的成员类中。
+
+
+
 
 
