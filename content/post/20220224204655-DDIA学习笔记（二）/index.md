@@ -349,6 +349,24 @@ Rebalancing是当数据库无法满足当前存储的要求，需要扩容时进
 
 一些系统是依赖一些第三方组件，例如zookeeper，zookeeper中保存了key的映射关系，然后代理节点订阅这些映射关系的变化。
 
+还有一些系统是采用了一些共识算法，将映射关系存储到每个节点上，客户端直接请求每个节点。
+
+# Chapter 7. Transactions
+
+事务是为了简化程序访问数据库而诞生的概念。
+
+## The Slippery Concept of a Transaction
+
+### ACID
+
+**atomic**
+
+一致性在并发编程领域是指，一个线程执行了一个原子操作，其他线程不会看到该操作导致的一个中间态。
+
+而在数据库领域中，原子性是指，一个应用程序提交了一个事务，事务内多个写操作，要么全部成功，如果失败了，那么之前成功写入的数据都要回滚。
+
+没有原子性会导致，应用程序很难知道哪些操作成功了，哪些操作失败。
+
 # Reference
 
 1. https://dev.mysql.com/doc/internals/en/replication.html
