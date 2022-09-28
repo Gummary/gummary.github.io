@@ -145,3 +145,7 @@ pizza.cut()
 {{< tfigure src="images/20220913211956.png" title="" width="" class="align-center">}}
 
 当Thermometer发生变化时，我们只需要修改Station类即可。
+
+# 迭代器模式
+
+## Composite模式
