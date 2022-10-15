@@ -149,3 +149,66 @@ pizza.cut()
 # 迭代器模式
 
 ## Composite模式
+
+# 状态模式
+
+状态模式主要用于对象行为随着对象本身状态改变的场景。对象在不同状态下可以采取一些相同的行为，但是在不同状态下，这些行为的执行过程不同。
+
+在画出对象状态流转的状态机后，定义对象所有可以进行的操作，然后再定义每个操作在每个状态下的行为。
+
+一种实现方式是：
+
+```java
+public class ExpenseOperator {
+    private ExpenseWorkflowState currentState;
+    
+    public void submitExpense() {
+        if (currentState == ExpenseWorkflowState.DRAFT) {
+            System.out.println("submit expense");
+        } else if (currentState == ExpenseWorkflowState.AUDIT) {
+            System.out.println("already submit");
+        } else {
+            // ...
+        }
+    }
+}
+```
+
+在每个操作中都需要判断当前对象是在什么状态，每当新增一个状态时，需要在所有的操作中新增对新状态的判断，违反了开闭原则。
+
+使用状态模式可以将具体的State的封装成一个接口，接口中包含所有对象可进行的操作，当调用对象相应的方法时，直接调用当前状态对应的方法即可。
+
+```java
+public class ExpenseOperator {
+    private ExpenseWorkflowState currentState;
+    public void submitExpense() {
+        currentState.submitExpense();
+    }
+}
+
+// 状态接口
+public interface ExpenseWorkflowState {
+    public void submitExpense();
+}
+
+// 具体状态实现
+public class ExpenseAuditState implements ExpenseWorkflowState {
+    @Override
+    public void submitExpense() {
+        System.out.println("already submit");
+    }
+}
+
+public class ExpenseDraftState implements ExpenseWorkflowState{
+    @Override
+    public void submitExpense() {
+        System.out.println("submit expense");
+    }
+}
+```
+
+这么做的好处是当新增一个新的状态时，只需要实现对象在各个状态下的行为，调整下与该状态相关状态的行为即可，不必对所有状态都进行修改。
+
+对象状态之间的过渡如果是固定的，那么可以放在Context中，否则放在具体的State中。为了避免State之间过度依赖，可以在Context中使用get方法，获取对应的状态，get方法返回的是State接口，而不是具体的类。
+
+状态模式和策略模式非常相似，但是二者之间的本质区别在于对象状态（具体策略）的过滤逻辑。状态模式的状态变化是客户端调用具体行为之，自发改变的，客户端是无感知的；而策略模式是客户端主动选择不同的策略执行。
