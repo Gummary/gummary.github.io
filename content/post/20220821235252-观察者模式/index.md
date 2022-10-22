@@ -112,3 +112,116 @@ pizza.cut()
 
 
 
+# 命令模式
+
+命令模式是将任务的请求者和任务的实际执行者进行解耦。适用于请求方是一个统一的入口，而实际的执行对象有多个且可能会变化的场景。
+
+{{< tfigure src="images/20220904201544.png" title="" width="" class="align-center">}}
+
+命令模式通过一个Command接口实现解耦，Command接口中只包含调用的函数，具体如何执行则由该接口的具体实现完成。
+
+在每个Command接口的具体实现中，包含了实际执行该动作的对象和执行时需要的信息。
+
+当有一个新的请求时，只需要创建一个对应的Command类，封装好具体的执行对象，由执行者直接调用接口的执行方法即可。
+
+{{< tfigure src="images/20220904202222.png" title="" width="" class="align-center">}}
+
+之前的监听者模式其实也是一种命令模式。监听者接口可以看作是Command接口，update()函数就是实际的执行函数。注册监听者时就是创建实际的命令对象，当有事件发生时，监听者会被回掉，执行具体的任务。
+
+# 适配器模式
+
+适配器模式主要用在两个已有系统的对接上，可以不修改双方接口，通过一个中间层——适配器，完成双方系统的对接。
+
+{{< tfigure src="images/20220913193735.png" title="" width="" class="align-center">}}
+
+与装饰器模式类似，适配器模式也是对一个接口进行包装。但是装饰器模式是对一个类赋予更多的职责，而适配器是在不改变当前类功能的情况下对一个类进行包装，将其行为变成另一个类。
+
+## 外观模式
+
+外观模式主要是为了简化一个子系统，使用一个简单的api来简化一个子系统，提高子系统的可读性。
+
+{{< tfigure src="images/20220913210843.png" title="" width="" class="align-center">}}
+
+外观模式中应用的设计原则：尽可能降低某个系统涉及的类。
+
+通过降低接触类的数量，当某个类发生变动时，可以减少系统的修改。
+
+对于一个类的方法来说，应当只访问以下几种方法：
+
+- 类自身的
+- 参数的方法
+- 方法初始化的类
+- 类的成员变量
+
+例如：
+
+{{< tfigure src="images/20220913211956.png" title="" width="" class="align-center">}}
+
+当Thermometer发生变化时，我们只需要修改Station类即可。
+
+# 迭代器模式
+
+## Composite模式
+
+# 状态模式
+
+状态模式主要用于对象行为随着对象本身状态改变的场景。对象在不同状态下可以采取一些相同的行为，但是在不同状态下，这些行为的执行过程不同。
+
+在画出对象状态流转的状态机后，定义对象所有可以进行的操作，然后再定义每个操作在每个状态下的行为。
+
+一种实现方式是：
+
+```java
+public class ExpenseOperator {
+    private ExpenseWorkflowState currentState;
+    
+    public void submitExpense() {
+        if (currentState == ExpenseWorkflowState.DRAFT) {
+            System.out.println("submit expense");
+        } else if (currentState == ExpenseWorkflowState.AUDIT) {
+            System.out.println("already submit");
+        } else {
+            // ...
+        }
+    }
+}
+```
+
+在每个操作中都需要判断当前对象是在什么状态，每当新增一个状态时，需要在所有的操作中新增对新状态的判断，违反了开闭原则。
+
+使用状态模式可以将具体的State的封装成一个接口，接口中包含所有对象可进行的操作，当调用对象相应的方法时，直接调用当前状态对应的方法即可。
+
+```java
+public class ExpenseOperator {
+    private ExpenseWorkflowState currentState;
+    public void submitExpense() {
+        currentState.submitExpense();
+    }
+}
+
+// 状态接口
+public interface ExpenseWorkflowState {
+    public void submitExpense();
+}
+
+// 具体状态实现
+public class ExpenseAuditState implements ExpenseWorkflowState {
+    @Override
+    public void submitExpense() {
+        System.out.println("already submit");
+    }
+}
+
+public class ExpenseDraftState implements ExpenseWorkflowState{
+    @Override
+    public void submitExpense() {
+        System.out.println("submit expense");
+    }
+}
+```
+
+这么做的好处是当新增一个新的状态时，只需要实现对象在各个状态下的行为，调整下与该状态相关状态的行为即可，不必对所有状态都进行修改。
+
+对象状态之间的过渡如果是固定的，那么可以放在Context中，否则放在具体的State中。为了避免State之间过度依赖，可以在Context中使用get方法，获取对应的状态，get方法返回的是State接口，而不是具体的类。
+
+状态模式和策略模式非常相似，但是二者之间的本质区别在于对象状态（具体策略）的过滤逻辑。状态模式的状态变化是客户端调用具体行为之，自发改变的，客户端是无感知的；而策略模式是客户端主动选择不同的策略执行。
