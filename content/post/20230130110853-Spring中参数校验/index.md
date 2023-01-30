@@ -15,7 +15,10 @@ tags: ["Java", "Spring"]
 
 Emmanuel Bernard在2009年发布了JSR 303（Bean Validation 1.0），在该标准中定义了如何使用注解对JavaBean进行校验；Emmanuel于2013年又发布了JSR 349（Bean Validation 1.1），在该版本中引入了对方法参数校验、校验器依赖注入等特性的支持；在Java8发布后，Gunnar Morling于2013年又发布了JSR 380（Bean Validation 2.0），该版本中大量使用了Java8的新特性，如Optional、Lambda表达式、Type Annotation等。
 
-目前被业界广泛使用的实现为Hibernate Validator框架。
+Hibernate Validator是JSR 380的一个参考实现，被业界广泛使用，能够在展示层、业务层、数据层对输入进行校验。
+
+{{< tfigure src="images/20230130142747.png" title="" width="" class="align-center">}}
+
 
 # Java Bean Validation的基本用法
 
