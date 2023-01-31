@@ -19,10 +19,93 @@ Hibernate Validator是JSR 380的一个参考实现，被业界广泛使用，能
 
 {{< tfigure src="images/20230130142747.png" title="" width="" class="align-center">}}
 
-
-# Java Bean Validation的基本用法
-
 # Spring中应用Java Bean Validation
+
+在Spring也有对Java Bean Validation的封装，maven组建为：
+
+```maven
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-validation</artifactId>
+</dependency>
+```
+
+## Spring Controller参数校验
+
+在使用Spring进行Web开发时，接收参数的方式有以下两种：
+
+1. 对于HTTP Get等请求，通常使用@RequestParam、@PathVariable注解接收请求参数及URL中的参数；
+2. 对于HTTP Post请求，通常是用@RequestBody注解接受请求体。
+
+下面看下如何对Get、Post请求进行参数校验。
+
+首先定义接受请求参数的类，并对类中的参数增加校验项：
+
+```java
+@Data
+@Builder
+public class UserVO {
+
+    private Long id;
+
+    @NotBlank(message = "名称不能为空")
+    private String name;
+
+    @Email(message = "邮箱格式错误")
+    private String email;
+}
+```
+
+get请求中，如果参数数量较少，可以使用简单类型+@RequestParam注解接收，然后给需要校验的参数加校验注解；如果参数数量过多，可以将参数聚合到一个类中，然后给该类的参数添加@Valid注解。无论是使用简单类型还是类来接收参数，如果需要校验参数，都**必须**在Contoller类上加@Validated注解。
+
+```java
+@Slf4j
+@Validated
+@RestController
+public class UserQueryController {
+
+    @GetMapping("/user/query/id")
+    public UserVO queryUserById(@RequestParam @Min(5) int id) {
+        log.info("[queryUserById] {}", id);
+        return null;
+    }
+
+    @GetMapping("/user/query/full")
+    public UserVO queryUser(@Valid UserVO userVo) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        log.info("[queryUser] {}", objectMapper.writeValueAsString(userVo));
+
+        return null;
+    }
+}
+```
+
+对于post请求，后端通常用@RequestBody并使用一个类来接受请求体的内容，在类中添加校验项后，只需要在参数上加@Valid或@Validated注解即可。
+
+```java
+@Slf4j
+@RestController
+public class UserOperateController {
+    @PostMapping("/user/add")
+    public UserVO addUser(@Valid @RequestBody UserVO userVO) {
+
+        log.info("add user");
+        return null;
+    }
+}
+```
+
+### 统一处理校验错误
+
+## 自定义校验器
+
+## 分组校验
+
+## Service层进行校验
+
+## 显式校验
+
+
 
 # 源码分析
 
@@ -32,3 +115,6 @@ Hibernate Validator是JSR 380的一个参考实现，被业界广泛使用，能
 2. https://beanvalidation.org/news/
 3. https://hibernate.org/validator/
 4. https://www.baeldung.com/javax-validation
+5. https://segmentfault.com/a/1190000023471742#item-1-3
+6. https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#rest-http-interface-method-parameters
+7. 
