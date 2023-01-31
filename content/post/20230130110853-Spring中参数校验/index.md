@@ -21,12 +21,12 @@ Hibernate Validator是JSR 380的一个参考实现，被业界广泛使用，能
 
 # Spring中应用Java Bean Validation
 
-在Spring也有对Java Bean Validation的封装，maven组建为：
+在Spring也有对Java Bean Validation的封装，maven组件为：
 
-```maven
+```xml
 <dependency>
-	<groupId>org.springframework.boot</groupId>
-	<artifactId>spring-boot-starter-validation</artifactId>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-validation</artifactId>
 </dependency>
 ```
 
@@ -56,7 +56,7 @@ public class UserVO {
 }
 ```
 
-get请求中，如果参数数量较少，可以使用简单类型+@RequestParam注解接收，然后给需要校验的参数加校验注解；如果参数数量过多，可以将参数聚合到一个类中，然后给该类的参数添加@Valid注解。无论是使用简单类型还是类来接收参数，如果需要校验参数，都**必须**在Contoller类上加@Validated注解。
+get请求中，如果参数数量较少，可以使用简单类型并使用@RequestParam注解接收参数，然后给需要校验的参数加校验注解；如果参数数量过多，可以将参数聚合到一个类中，然后给该类的参数添加@Valid注解。无论是使用简单类型还是类来接收参数，如果需要校验参数，都**必须**在Contoller类上加@Validated注解。
 
 ```java
 @Slf4j
@@ -117,4 +117,3 @@ public class UserOperateController {
 4. https://www.baeldung.com/javax-validation
 5. https://segmentfault.com/a/1190000023471742#item-1-3
 6. https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#rest-http-interface-method-parameters
-7. 
