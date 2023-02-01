@@ -15,6 +15,8 @@ tags: ["Java", "Spring"]
 
 Emmanuel Bernard在2009年发布了JSR 303（Bean Validation 1.0），在该标准中定义了如何使用注解对JavaBean进行校验；Emmanuel于2013年又发布了JSR 349（Bean Validation 1.1），在该版本中引入了对方法参数校验、校验器依赖注入等特性的支持；在Java8发布后，Gunnar Morling于2013年又发布了JSR 380（Bean Validation 2.0），该版本中大量使用了Java8的新特性，如Optional、Lambda表达式、Type Annotation等。
 
+{{< tfigure src="images/spring-validation-history.png" title="" width="" class="align-center">}}
+
 Hibernate Validator是JSR 380的一个参考实现，被业界广泛使用，能够在展示层、业务层、数据层对输入进行校验。
 
 {{< tfigure src="images/20230130142747.png" title="" width="" class="align-center">}}
@@ -96,6 +98,74 @@ public class UserOperateController {
 ```
 
 ### 统一处理校验错误
+
+当参数校验失败时，Spring会抛出异常，在不同场景下抛出的异常有所不同，具体区别如下：
+
+| HTTP请求 | 参数注解     | 抛出异常类型                    | HTTP 返回状态码 |
+| -------- | ------------ | ------------------------------- | --------------- |
+| GET      | 无注解       | BindException                   | 400             |
+| GET      | RequestParam | MethodArgumentNotValidException | 500             |
+| GET      | PathVariable | MethodArgumentNotValidException | 500             |
+| POST     | RequestBody  | ConstraintViolationException    | 400             |
+
+如果想要返回统一的结构或针对校验失败返回统一的状态码，有两种方法。
+
+如果只针对某一个Controller设置，则可以在该Controller中新增一个方法，处理抛出的异常，并返回400：
+
+```java
+@ExceptionHandler(ConstraintViolationException.class)
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException e) {
+    return new ResponseEntity<>("参数校验失败：" + e.getMessage(), HttpStatus.BAD_REQUEST);
+}
+```
+
+如果想针对全局配置，则可以添加一个全局处理类，用@ControllerAdvice注解。下面的两个方法分别处理ConstraintViolationException和MethodArgumentNotValidException，并返回了一个统一的结构HttpResponse。
+
+```java
+public class HttpResponse<T> implements Serializable {
+    private static final long serialVersionUID = -5831412260861490028L;
+    private int status;
+    private String msg;
+    private T data;
+}
+```
+
+```java
+@ControllerAdvice
+public class ValidateControllerAdvice {
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    HttpResponse<?> onConstraintValidationException(ConstraintViolationException e) {
+        // 获取错误
+        String errorMsg = e.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(" "));
+        // 构造统一返回结果
+        HttpResponse<?> response = new HttpResponse<>();
+        response.setStatus(500);
+        response.setData(null);
+        response.setMsg(errorMsg);
+        return response;
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    HttpResponse<?> onConstraintViolationException(MethodArgumentNotValidException e) {
+        // 获取错误
+        String errorMsg = e.getBindingResult().getFieldErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(" "));
+        // 构造统一返回结果
+        HttpResponse<?> response = new HttpResponse<>();
+        response.setStatus(500);
+        response.setData(null);
+        response.setMsg(errorMsg);
+        return response;
+    }
+}
+```
+
+Controller中处理方法优先级比全局的处理类高。
 
 ## 自定义校验器
 
