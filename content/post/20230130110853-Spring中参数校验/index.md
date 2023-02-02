@@ -2,7 +2,7 @@
 title: "Java Bean Validation with Spring Boot"
 slug: java-bean-validation-with-spring-boot
 date: 2023-01-30T11:08:53+08:00
-draft: true
+draft: false
 categories: ["spring"]
 tags: ["Java", "Spring"]
 ---
@@ -13,7 +13,7 @@ tags: ["Java", "Spring"]
 
 # Java Bean Validation发展历史
 
-Emmanuel Bernard在2009年发布了JSR 303（Bean Validation 1.0），在该标准中定义了如何使用注解对JavaBean进行校验；Emmanuel于2013年又发布了JSR 349（Bean Validation 1.1），在该版本中引入了对方法参数校验、校验器依赖注入等特性的支持；在Java8发布后，Gunnar Morling于2013年又发布了JSR 380（Bean Validation 2.0），该版本中大量使用了Java8的新特性，如Optional、Lambda表达式、Type Annotation等。
+Emmanuel Bernard在2009年发布了JSR 303（Bean Validation 1.0），在该标准中定义了如何使用注解对JavaBean进行校验；Emmanuel于2013年又发布了JSR 349（Bean Validation 1.1），在该版本中引入了对方法参数校验、校验器依赖注入等特性的支持；在Java8发布后，Gunnar Morling于201年又发布了JSR 380（Bean Validation 2.0），该版本中大量使用了Java8的新特性，如Optional、Lambda表达式、Type Annotation等。
 
 {{< tfigure src="images/spring-validation-history.png" title="" width="" class="align-center">}}
 
@@ -36,10 +36,10 @@ Hibernate Validator是JSR 380的一个参考实现，被业界广泛使用，能
 
 在使用Spring进行Web开发时，接收参数的方式有以下两种：
 
-1. 对于HTTP Get等请求，通常使用@RequestParam、@PathVariable注解接收请求参数及URL中的参数；
-2. 对于HTTP Post请求，通常是用@RequestBody注解接受请求体。
+1. 对于HTTP GET等请求，通常使用@RequestParam、@PathVariable注解接收请求参数及URL中的参数；
+2. 对于HTTP POST请求，通常是用@RequestBody注解接受请求体。
 
-下面看下如何对Get、Post请求进行参数校验。
+下面看下如何对GET、POST请求进行参数校验。
 
 首先定义接受请求参数的类，并对类中的参数增加校验项：
 
@@ -58,7 +58,7 @@ public class UserVO {
 }
 ```
 
-get请求中，如果参数数量较少，可以使用简单类型并使用@RequestParam注解接收参数，然后给需要校验的参数加校验注解；如果参数数量过多，可以将参数聚合到一个类中，然后给该类的参数添加@Valid注解。无论是使用简单类型还是类来接收参数，如果需要校验参数，都**必须**在Contoller类上加@Validated注解。
+GET请求中，如果参数数量较少，可以使用简单类型并使用@RequestParam注解接收参数，然后给需要校验的参数加校验注解；如果参数数量过多，可以将参数聚合到一个类中，然后给该类的参数添加@Valid注解。无论是使用简单类型还是类来接收参数，如果需要校验参数，都**必须**在Contoller类上加@Validated注解。
 
 ```java
 @Slf4j
@@ -82,7 +82,7 @@ public class UserQueryController {
 }
 ```
 
-对于post请求，后端通常用@RequestBody并使用一个类来接受请求体的内容，在类中添加校验项后，只需要在参数上加@Valid或@Validated注解即可。
+对于POST请求，后端通常用@RequestBody并使用一个类来接受请求体的内容，在类中添加校验项后，只需要在参数上加@Valid或@Validated注解即可。
 
 ```java
 @Slf4j
