@@ -169,13 +169,100 @@ Controller中处理方法优先级比全局的处理类高。
 
 ## 自定义校验器
 
+如果javax.validation.constraints中的校验器不满足校验要求，还可以自定义一个校验注解和校验器。
+
+例如我们给UserVO增加一个身份证属性和身份证校验。首先定义注解。定义的注解中必须包含以下内容：
+
+1. message，当校验不通过时的提示信息，默认的信息从ValidationMessages.properties指定
+2. groups，分组校验的组别
+3. payload，用处较少
+4. Constraint注解，指定校验器
+
+```java
+@Target({ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+@Constraint(validatedBy = IdCardNoValidator.class)
+@Documented
+public @interface IdCardNo {
+    String message() default "{IdCardNo.invalid}";
+    Class<?>[] groups() default {};
+    Class<? extends Payload>[] payload() default {};
+}
+```
+
+对应的校验类必须实现ConstraintValidator接口，接口的第一个范型为实际要校验的注解，第二个为校验的类型。
+
+在isValid方法中进行实际的校验，第一个方法参数是要校验的对象，第二个是校验的上下文信息，可以使用该对象自定义错误信息(详见：https://blog.csdn.net/qq_38218238/article/details/81477915)。
+
+```java
+public class IdCardNoValidator implements ConstraintValidator<IdCardNo, String> {
+ 	@Override
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        return validateCard(value);
+    }
+
+    private boolean validateCard(String value) {
+        // 略
+    }
+}
+```
+
+具体使用：
+
+```java
+@Data
+@Builder
+public class UserVO {
+    // ...
+
+    @IdCardNo(message = "身份证号格式错误")
+    private String idCardNo;
+}
+```
+
 ## 分组校验
 
 ## Service层进行校验
 
+除了在Controller层对用户输入校验，还可以在Serivce层进行校验。校验方法是在接口方法及实现方法中给需校验的参数加@Valid注解，在实现类上加@Validated注解。
+
+```java
+public interface UserOperateService {
+    void addUser(@Valid UserVO userVO);
+}
+
+@Slf4j
+@Service
+@Validated
+public class UserOperateServiceImpl implements UserOperateService {
+
+    @Override
+    public void addUser(@Valid UserVO userVO) {
+        log.info("[addUser] userVO: {}", JsonUtil.object2Json(userVO));
+    }
+}
+```
+
 ## 显式校验
 
+在没有Spring框架的情况下，如果也需要对参数进行校验，可以直接调用Hiberate的方法对参数进行校验。
 
+```java
+class ProgrammaticallyValidatingService {
+  void validateInput(Input input) {
+    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    Validator validator = factory.getValidator();
+    Set<ConstraintViolation<Input>> violations = validator.validate(input);
+    if (!violations.isEmpty()) {
+      throw new ConstraintViolationException(violations);
+    }
+  }
+}
+```
+
+这种方式会在每次校验的时候创建一个ValidatorFactory和Validator，而参数校验的时候会获取校验类的所有远数据并缓存起来，提高下次校验时的校验速度。但是每次重新创建，该缓存会失效，所以对于频繁调用的方法，不建议使用这种方式进行校验。
+
+上个校验方法生成的ValidatorFactory和Validator都是线程安全的，因此建议一个Application中只用一个ValidatorFactory单例。
 
 # 源码分析
 
@@ -187,3 +274,4 @@ Controller中处理方法优先级比全局的处理类高。
 4. https://www.baeldung.com/javax-validation
 5. https://segmentfault.com/a/1190000023471742#item-1-3
 6. https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#rest-http-interface-method-parameters
+7. https://docs.jboss.org/hibernate/validator/8.0/reference/en-US/html_single/#chapter-bootstrapping
