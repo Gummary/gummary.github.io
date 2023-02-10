@@ -58,7 +58,7 @@ public class UserVO {
 }
 ```
 
-GET请求中，如果参数数量较少，可以使用简单类型并使用@RequestParam注解接收参数，然后给需要校验的参数加校验注解；如果参数数量过多，可以将参数聚合到一个类中，然后给该类的参数添加@Valid注解。无论是使用简单类型还是类来接收参数，如果需要校验参数，都**必须**在Contoller类上加@Validated注解。
+GET请求中，如果参数数量较少，可以使用简单类型并使用@RequestParam注解接收参数，然后给需要校验的参数加校验注解；如果参数数量过多，可以将参数聚合到一个类中，然后给该类的参数添加@Valid注解。无论是使用简单类型还是类来接收参数，都**必须**在Contoller类上加@Validated注解。
 
 ```java
 @Slf4j
@@ -171,7 +171,7 @@ Controller中处理方法优先级比全局的处理类高。
 
 如果javax.validation.constraints中的校验器不满足校验要求，还可以自定义一个校验注解和校验器。
 
-例如我们给UserVO增加一个身份证属性和身份证校验。首先定义注解。定义的注解中必须包含以下内容：
+例如我们给UserVO增加一个身份证属性并对其进行校验。首先定义校验注解，定义的注解中必须包含以下内容：
 
 1. message，当校验不通过时的提示信息，默认的信息从ValidationMessages.properties指定
 2. groups，分组校验的组别
@@ -262,9 +262,113 @@ class ProgrammaticallyValidatingService {
 
 这种方式会在每次校验的时候创建一个ValidatorFactory和Validator，而参数校验的时候会获取校验类的所有远数据并缓存起来，提高下次校验时的校验速度。但是每次重新创建，该缓存会失效，所以对于频繁调用的方法，不建议使用这种方式进行校验。
 
-上个校验方法生成的ValidatorFactory和Validator都是线程安全的，因此建议一个Application中只用一个ValidatorFactory单例。
+而ValidatorFactory和Validator都是线程安全的，因此一个Application中只用一个ValidatorFactory单例即可。
 
-# 源码分析
+# Spring参数校验源码分析
+
+## 校验类加载
+
+Spring Boot中加载校验类的配置类为ValidationAutoConfiguration，该类为容器中提供了两个类：
+
+- LocalValidatorFactoryBean，当容器中不存在Validator时，作为默认的校验器。
+- MethodValidationPostProcessor，是一个BeanPostProcessor，在应用中Bean初始化完成后，会判断Bean是否使用了@Validated注解，如果使用了则给该Bean的方法加上校验的切面。
+
+
+```java
+@AutoConfiguration
+@ConditionalOnClass(ExecutableValidator.class)
+@ConditionalOnResource(resources = "classpath:META-INF/services/javax.validation.spi.ValidationProvider")
+@Import(PrimaryDefaultValidatorPostProcessor.class)
+public class ValidationAutoConfiguration {
+
+	@Bean
+	@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+	@ConditionalOnMissingBean(Validator.class)
+	public static LocalValidatorFactoryBean defaultValidator(ApplicationContext applicationContext) {
+		LocalValidatorFactoryBean factoryBean = new LocalValidatorFactoryBean();
+		MessageInterpolatorFactory interpolatorFactory = new MessageInterpolatorFactory(applicationContext);
+		factoryBean.setMessageInterpolator(interpolatorFactory.getObject());
+		return factoryBean;
+	}
+
+	@Bean
+	@ConditionalOnMissingBean(search = SearchStrategy.CURRENT)
+	public static MethodValidationPostProcessor methodValidationPostProcessor(Environment environment,
+			@Lazy Validator validator, ObjectProvider<MethodValidationExcludeFilter> excludeFilters) {
+		FilteredMethodValidationPostProcessor processor = new FilteredMethodValidationPostProcessor(
+				excludeFilters.orderedStream());
+		boolean proxyTargetClass = environment.getProperty("spring.aop.proxy-target-class", Boolean.class, true);
+		processor.setProxyTargetClass(proxyTargetClass);
+		processor.setValidator(validator);
+		return processor;
+	}
+}
+```
+
+### 校验切面
+
+在ValidationAutoConfiguration中提供的MethodValidationPostProcessor的继承关系为：
+
+
+在MethodValidationPostProcessor中加载了一个DefaultPointcutAdvisor，包含的pointcut为AnnotationMatchingPointcut，关注的是有Validated注解的类；包含的advise为MethodValidationInterceptor，进行实际的参数校验。
+
+MethodValidationInterceptor的校验部分：
+
+```java
+public Object invoke(MethodInvocation invocation) throws Throwable {
+    // Avoid Validator invocation on FactoryBean.getObjectType/isSingleton
+    if (isFactoryBeanMetadataMethod(invocation.getMethod())) {
+        return invocation.proceed();
+    }
+
+    Class<?>[] groups = determineValidationGroups(invocation);
+
+    // Standard Bean Validation 1.1 API
+    ExecutableValidator execVal = this.validator.forExecutables();
+    Method methodToValidate = invocation.getMethod();
+    Set<ConstraintViolation<Object>> result;
+
+    Object target = invocation.getThis();
+    Assert.state(target != null, "Target must not be null");
+    
+    // 执行方法前检验参数
+    try {
+        result = execVal.validateParameters(target, methodToValidate, invocation.getArguments(), groups);
+    }
+    catch (IllegalArgumentException ex) {
+        // Probably a generic type mismatch between interface and impl as reported in SPR-12237 / HV-1011
+        // Let's try to find the bridged method on the implementation class...
+        methodToValidate = BridgeMethodResolver.findBridgedMethod(
+                ClassUtils.getMostSpecificMethod(invocation.getMethod(), target.getClass()));
+        result = execVal.validateParameters(target, methodToValidate, invocation.getArguments(), groups);
+    }
+    if (!result.isEmpty()) {
+    // 如果有校验不通过，则抛出ConstraintViolationException
+        throw new ConstraintViolationException(result);
+    }
+
+    Object returnValue = invocation.proceed();
+    // 调用结束后校验返回值
+    result = execVal.validateReturnValue(target, methodToValidate, returnValue, groups);
+    if (!result.isEmpty()) {
+    // 如果有校验不通过，则抛出ConstraintViolationException
+        throw new ConstraintViolationException(result);
+    }
+
+    return returnValue;
+}
+```
+
+
+## POST参数校验
+
+Spring处理Http请求时首先根据请求URL定位到要实际调用的方法，然后根据要调用的方法参数确定请求参数的解析类。
+
+对于用RequestBody注解的参数，使用解析类为RequestResponseBodyMethodProcessor，在对参数解析完成后，会对参数进行校验。
+
+## GET参数校验
+
+对于GET参数的校验则不是在校验类中实现的，而是利用了Spring的AOP机制。所以对于GET请求的方法，其Controller类必须加@Validated注解。
 
 # 参考文献
 
