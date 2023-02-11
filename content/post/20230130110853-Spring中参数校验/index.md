@@ -192,7 +192,7 @@ public @interface IdCardNo {
 
 对应的校验类必须实现ConstraintValidator接口，接口的第一个范型为实际要校验的注解，第二个为校验的类型。
 
-在isValid方法中进行实际的校验，第一个方法参数是要校验的对象，第二个是校验的上下文信息，可以使用该对象自定义错误信息(详见：https://blog.csdn.net/qq_38218238/article/details/81477915)。
+在isValid方法中进行实际的校验，第一个方法参数是要校验的对象，第二个是校验的上下文信息，可以使用该对象自定义错误信息(详见：[Validator校验器中重新定义默认的错误信息模板](https://blog.csdn.net/qq_38218238/article/details/81477915))。
 
 ```java
 public class IdCardNoValidator implements ConstraintValidator<IdCardNo, String> {
@@ -219,8 +219,6 @@ public class UserVO {
     private String idCardNo;
 }
 ```
-
-## 分组校验
 
 ## Service层进行校验
 
@@ -309,6 +307,8 @@ public class ValidationAutoConfiguration {
 
 在ValidationAutoConfiguration中提供的MethodValidationPostProcessor的继承关系为：
 
+{{< tfigure src="images/MethodValidationPostProcessor.png" title="" width="" class="align-center">}}
+
 
 在MethodValidationPostProcessor中加载了一个DefaultPointcutAdvisor，包含的pointcut为AnnotationMatchingPointcut，关注的是有Validated注解的类；包含的advise为MethodValidationInterceptor，进行实际的参数校验。
 
@@ -366,16 +366,49 @@ Spring处理Http请求时首先根据请求URL定位到要实际调用的方法�
 
 对于用RequestBody注解的参数，使用解析类为RequestResponseBodyMethodProcessor，在对参数解析完成后，会对参数进行校验。
 
+```java
+@Override
+public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
+        NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
+
+    parameter = parameter.nestedIfOptional();
+    Object arg = readWithMessageConverters(webRequest, parameter, parameter.getNestedGenericParameterType());
+    String name = Conventions.getVariableNameForParameter(parameter);
+
+    if (binderFactory != null) {
+        WebDataBinder binder = binderFactory.createBinder(webRequest, arg, name);
+        if (arg != null) {
+            // 校验参数
+            validateIfApplicable(binder, parameter);
+            if (binder.getBindingResult().hasErrors() && isBindExceptionRequired(binder, parameter)) {
+                throw new MethodArgumentNotValidException(parameter, binder.getBindingResult());
+            }
+        }
+        if (mavContainer != null) {
+            mavContainer.addAttribute(BindingResult.MODEL_KEY_PREFIX + name, binder.getBindingResult());
+        }
+    }
+
+    return adaptArgumentIfNecessary(arg, parameter);
+}
+```
+
 ## GET参数校验
 
 对于GET参数的校验则不是在校验类中实现的，而是利用了Spring的AOP机制。所以对于GET请求的方法，其Controller类必须加@Validated注解。
 
+具体代码见校验切面，这里不再赘述。
+
+# 总结
+
+本文主要介绍了Java Bean Validation的发展历史，在Spring中的应用及Spring中对Web参数校验的原理。
+
 # 参考文献
 
-1. https://jcp.org/en/jsr/summary?id=Bean+Validation
-2. https://beanvalidation.org/news/
-3. https://hibernate.org/validator/
-4. https://www.baeldung.com/javax-validation
-5. https://segmentfault.com/a/1190000023471742#item-1-3
-6. https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#rest-http-interface-method-parameters
-7. https://docs.jboss.org/hibernate/validator/8.0/reference/en-US/html_single/#chapter-bootstrapping
+1. [The Java Community Process(SM) Program - JSRs: Java Specification Requests - summary](https://jcp.org/en/jsr/summary?id=Bean+Validation)
+2. [Jakarta Bean Validation - News](https://beanvalidation.org/news/)
+3. [The Bean Validation reference implementation. - Hibernate Validator](https://hibernate.org/validator/)
+4. [Java Bean Validation Basics](https://www.baeldung.com/javax-validation)
+5. [java - Spring Validation最佳实践及其实现原理，参数校验没那么简单！ - 个人文章 - SegmentFault 思否](https://segmentfault.com/a/1190000023471742#item-1-3)
+6. [Spring Method Parameter](https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#rest-http-interface-method-parameters)
+7. [Hibernate Validator 8.0.0.Final - Jakarta Bean Validation Reference Implementation: Reference Guide](https://docs.jboss.org/hibernate/validator/8.0/reference/en-US/html_single/#chapter-bootstrapping)

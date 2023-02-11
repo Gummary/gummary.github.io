@@ -8,8 +8,8 @@ headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/
 
 def get_title(url:str):
 	proxies = {
-		'http':'http://127.0.0.1:7890',
-		'https':'https://127.0.0.1:7890'
+		# 'http':'http://127.0.0.1:7890',
+		# 'https':'https://127.0.0.1:7890'
 	}
 	try:
 		res = requests.get(url, proxies=proxies, headers=headers)
