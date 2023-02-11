@@ -1,0 +1,24 @@
+@startuml
+
+interface BeanPostProcessor
+interface BeanFactoryAware
+interface InitializingBean
+abstract class AbstractAdvisingBeanPostProcessor
+abstract class AbstractBeanFactoryAwareAdvisingPostProcessor
+class MethodValidationPostProcessor
+class FilteredMethodValidationPostProcessor
+
+BeanPostProcessor <|-- AbstractAdvisingBeanPostProcessor
+
+AbstractAdvisingBeanPostProcessor <|--AbstractBeanFactoryAwareAdvisingPostProcessor
+
+BeanFactoryAware <|-- AbstractBeanFactoryAwareAdvisingPostProcessor
+
+AbstractBeanFactoryAwareAdvisingPostProcessor <|--MethodValidationPostProcessor
+
+InitializingBean <|-- MethodValidationPostProcessor
+
+MethodValidationPostProcessor <|--FilteredMethodValidationPostProcessor
+
+
+@enduml
