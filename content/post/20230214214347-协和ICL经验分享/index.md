@@ -1,6 +1,6 @@
 ---
-title: "协和ICL经验分享"
-slug: 协和ICL经验分享
+title: "协和ICL手术过程记录"
+slug: xiehe-icl
 date: 2023-02-14T21:43:47+08:00
 draft: false
 ---
