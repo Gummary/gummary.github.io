@@ -401,7 +401,14 @@ public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewC
 
 # 总结
 
-本文主要介绍了Java Bean Validation的发展历史，在Spring中的应用及Spring中对Web参数校验的原理。
+Spring中可以使用Hibernate Bean Validation对POST、GET等请求方法的入参做校验，也可以对业务逻辑层做校验。
+
+Spring中的校验可以是JSR 380定义的校验器，也可以自定义校验器。
+
+对于POST方法，只需对参数加@Valid注解即可，GET方法则须对Controller类加@Validated注解。
+
+Spring中，POST方法进行校验是在参数解析时直接调用Hibernate的校验器校验；对GET方法的校验则是使用AOP实现。
+
 
 # 参考文献
 
