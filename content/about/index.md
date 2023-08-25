@@ -11,6 +11,4 @@ weight: 50
 - Compute vision @ICT
 - Backen Developer @Meituan -->
 
-信じる心があなたの魔法。
-
 ![](future.jpeg)
