@@ -38,7 +38,7 @@ def replace_reference_url(refer):
 
 def replace_urls_in_reference(post):
 	article = []
-	for line in open(post):
+	for line in open(post, encoding='utf-8'):
 		if pattern.match(line) is None:
 			article.append(line)	
 			continue
@@ -49,5 +49,5 @@ def replace_urls_in_reference(post):
 
 post_path = input("Please input markdown file:\n")
 article = replace_urls_in_reference(post_path)
-with open(post_path, "w") as f:
+with open(post_path, "w", encoding='utf-8') as f:
 	f.write("".join(article))
