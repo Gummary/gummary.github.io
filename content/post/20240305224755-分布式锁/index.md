@@ -9,9 +9,28 @@ draft: true
 
 # Redis实现
 
-为什么redis可以实现分布式锁呢，首先最重要的特性是，Redis在同一时刻只有一个线程会对一个key进行操作。因此我们可以利用这个特性，让多个服务并发写入一个key，写入成功的服务则认为是成功获得锁了。
+## 最简单实现
 
-这样就完成了锁最重要特性，互斥性，确保一个资源只有一个服务可以拿到。
+为什么redis可以实现分布式锁呢，首先Redis的网络模型为Reactor模型，用一个线程处理所有的请求，因此Redis在同一时刻只有一个线程会对一个key进行操作，所以我们可以利用这个特性，让多个服务并发写入一个key，写入成功的服务则认为是成功获得锁了。在服务用完资源后，删除Key即可完成锁释放。
+
+{{< tfigure src="images/redis-thread.png" title="简化reactor模型" width="" class="align-center">}}
+
+在Redis中我们利用SETNX和DROP两个命令就可以实现一个简单的分布式锁。
+
+```shell
+SETNX keyname keyvalue
+DROP keyname
+```
+
+但这种实现会导致死锁问题，如果一个客户端拿到锁后，宕机了，此时其他客户端均无法再获取该锁。为了避免死锁，需要让客户端设置一个过期时间，过期后自动释放锁。
+
+如果客户端预估自己100s完成任务，则将key过期时间设置为100s，即使客户端宕机了，100s后该锁也会释放，不会出现死锁的情况。
+
+```shell
+SET keyname keyvalue EX 100 NX
+DROP keyname
+```
+
 
 # 参考
 
