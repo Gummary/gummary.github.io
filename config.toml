@@ -146,7 +146,7 @@ copyright = ""            # default: author.name ↓        # 默认为下面配
 
   [params.utterances]       # https://utteranc.es/
     owner = "Gummary"              # Your GitHub ID
-    repo = "blog-comment"               # The repo to store comments
+    repo = "gummary.github.io"               # The repo to store comments
 
   [params.gitalk]           # Gitalk is a comment system based on GitHub issues. see https://github.com/gitalk/gitalk
     owner = ""              # Your GitHub ID
