@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Tokenization介绍 - Gum</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="" /><meta name="description" content="" /><meta name="keywords" content="Photo, Reading, Java, Distribute System" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.152.2 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/tokenization%E4%BB%8B%E7%BB%8D/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.af7fd1da18d66c2b017df5b4cae508ef44cfcac3fb4c7c7a327fe4f4f9e28b08.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:url" content="http://localhost:1313/post/tokenization%E4%BB%8B%E7%BB%8D/">
+  <meta property="og:site_name" content="Gum">
+  <meta property="og:title" content="Tokenization介绍">
+  <meta property="og:description" content="信じる心があなたの魔法">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+    <meta property="article:published_time" content="2025-03-17T23:29:00+08:00">
+    <meta property="article:modified_time" content="2025-03-17T23:29:00+08:00">
+
+  <meta itemprop="name" content="Tokenization介绍">
+  <meta itemprop="description" content="信じる心があなたの魔法">
+  <meta itemprop="datePublished" content="2025-03-17T23:29:00+08:00">
+  <meta itemprop="dateModified" content="2025-03-17T23:29:00+08:00">
+  <meta itemprop="wordCount" content="2996">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Tokenization介绍">
+  <meta name="twitter:description" content="信じる心があなたの魔法">
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Gum</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Gum</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Tokenization介绍</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2025-03-17 </span>
+        
+          <span class="more-meta"> 2996 words </span>
+          <span class="more-meta"> 6 mins read </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#序言">序言</a></li>
+        <li><a href="#从-tokenization-说起">从 Tokenization 说起</a></li>
+        <li><a href="#为什么需要-tokenization">为什么需要 Tokenization</a></li>
+        <li><a href="#如何做-tokenization">如何做 Tokenization</a>
+          <ul>
+            <li><a href="#subword-tokenization">subword tokenization</a></li>
+          </ul>
+        </li>
+        <li><a href="#参考">参考</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="序言">序言</h2>
+<p>在谈到 Large Language Model（LLM）大模型时，离不开的一个概念就是 token，因为几乎所有生成式的大模型服务商基本都通过 token 数量来计费。第一次接触 token 的时候，我以为 token 是一个字或者一个单词，但实际使用时二者又不是完全相等的关系，这篇博客就主要看下 token 究竟什么，并介绍了当前生成式大语言模型所用的BPE算法。</p>
+<h2 id="从-tokenization-说起">从 Tokenization 说起</h2>
+<p>一篇文章在输入给大模型之前，首先需要经过 Tokenization，也即将输入的句子转为 token 序列。</p>
+<h2 id="为什么需要-tokenization">为什么需要 Tokenization</h2>
+<p>对文本进行 tokenization 的原因是为了让计算机能够理解一句话背后所代表的含义。</p>
+<p>为了让计算机能理解，一种简单的方式是，人工预定义一些句子并直接设定计算机要做出的反应。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[
+</span></span><span class="line"><span class="cl">{&#34;Question&#34;:&#34;你好&#34;,
+</span></span><span class="line"><span class="cl">&#34;Answer&#34;:&#34;你好&#34;},
+</span></span><span class="line"><span class="cl">{&#34;Question&#34;:&#34;你叫什么名字&#34;,
+</span></span><span class="line"><span class="cl">&#34;Answer&#34;:&#34;我叫小美&#34;},
+</span></span><span class="line"><span class="cl">]
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>但人类的语言丰富多变，这种方式显然是不现实的。但无论语言如何多变，其背后一定存在着某些规则，否则人类也无法理解语言背后的含义。所以我们也想让机器知道这些规则，通过这些规则来解析句子，进而理解句子背后的含义。</p>
+<p>对于一门语言来说，主要组成部分包括语音、单词和语法，其中单词是组成句子的基本单元，语法则是语言如何组织单词的规则。所以如果计算机只处理文本，并且理解了单词含义及对应的语法规则，理解人类语言就成为了可能。</p>
+<p>Tokenization 所做的就是第一步，将句子拆分成单词，让计算机学习单词的含义。</p>
+<h2 id="如何做-tokenization">如何做 Tokenization</h2>
+<p>我们先看英文的情况，对于英文来说，天然的用空格作为了单词与单词之间的间隔符，所以很容易想到的就是使用空格进行分词。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">The quick brown fox jumped over the lazy dog
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>使用空格分词后，可得到如下的词表:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="p">[</span><span class="s1">&#39;brown&#39;</span><span class="p">,</span> <span class="s1">&#39;quick&#39;</span><span class="p">,</span> <span class="s1">&#39;the&#39;</span><span class="p">,</span> <span class="s1">&#39;fox&#39;</span><span class="p">,</span> <span class="s1">&#39;dog.&#39;</span><span class="p">,</span> <span class="s1">&#39;jumped&#39;</span><span class="p">,</span> <span class="s1">&#39;over&#39;</span><span class="p">,</span> <span class="s1">&#39;The&#39;</span><span class="p">,</span> <span class="s1">&#39;lazy&#39;</span><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这种分词方法非常简单，但问题也很明显：</p>
+<ol>
+<li>这种处理方式会要求计算机要有一个非常巨大的词表，并且每当出现新的单词时，都要加入到词表中，否则计算就无法处理。例如计算机无法识别到 dataset 是 data 和 set 的组合、无法学习到 she&rsquo;s、he&rsquo;s、it&rsquo;s 背后的&rsquo;s 缩写。</li>
+<li>无法处理无分割符的语言，如中文、日文等。</li>
+</ol>
+<p>既然无法单词粒度太粗，那我们可以将粒度拆的再细点。无论是什么语言，在计算机中都是特定格式的字符序列，如 ascii、utf-8 等。所以我们可以将 token 的粒度拆分到字符维度。得到</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="p">[</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;l&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;q&#39;</span><span class="p">,</span> <span class="s1">&#39;v&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;j&#39;</span><span class="p">,</span> <span class="s1">&#39;T&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>相比于单词唯独来说，使用字符维度的 token 方法可以更好的处理未知的词汇，而且也可以处理无分隔符的语言。</p>
+<p>但这种划分方式也有其缺点，首先就是生成的 token 太多了，越多的 token 所需的计算量越大。其次就是在字符维度，计算机无法学习到其本身的语义信息。</p>
+<p>所以科研人员开始寻找一种介于单词和字符中间的一种 token 方式，subword tokenization，这是目前主流大语言模型所使用的 token 方式。</p>
+<h3 id="subword-tokenization">subword tokenization</h3>
+<p>subword tokenization 是为了解决，word 级别词表过大的问题，及字符级别输入过长且无语义的问题。其主要步骤是，将单词拆成一些更有意义的单元。例如，-ing，un-，-ily，-ed,-&rsquo;s 等等。这样，当遇到未知的单词时，也可处理，例如如果词表中有 foot 和 ball，遇到 football 时，可以将其拆分成 foot-和-ball 两个 token。</p>
+<p>使用这种方式，不需要将每一个遇到的单词都加到词表中，解决了词表过大的问题；同时，单词又没有拆分出非常多 token 且每个 token 都有一定的语义信息，解决了字符级别序列特别长且无语义的问题。</p>
+<p>目前 subword tokenization 的主要方式有三种：BPE (GPT-2), WordPiece (BERT), and Unigram (T5)</p>
+<h4 id="bpe">BPE</h4>
+<p>bpe 是构建一个词汇表，词汇表中是可能出现的字词。</p>
+<p>BPE 是一种起源于文本压缩的算法，现在被用于大模型训练中，期望用最少的 token 表示更多文本。</p>
+<p>BPE 处理英文文本的主要步骤如下：</p>
+<ol>
+<li>将文库按空格分词，在每个单词的后面拼接一个特殊 token<code>&lt;/s&gt;</code>，单词内的每个字符都作为一个单独的 token，构建出基础的词库</li>
+<li>统计词库内每个 token 出现的次数</li>
+<li>计算每个单词内相邻两个 token 出现的频率，选出最高的 token pair 加入到词库中，合并单词内的 token pair</li>
+<li>重复 2-3 步</li>
+</ol>
+<p>在每个单词末尾添加一个特殊 token 的原因是，在英文语境下，同一个 sub-word 在词尾和其他位置可能有不同的含义。例如 easiest 中的 st 和 star 中的 st。</p>
+<p>代码实现如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">get_vocabulary</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">vocab</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>  
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>  
+</span></span><span class="line"><span class="cl">            <span class="n">vocab</span><span class="p">[</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">word</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; &lt;/s&gt;&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">vocab</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>输出为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">{&#39;T h e &lt;/s&gt;&#39;: 1, &#39;h i g h e s t &lt;/s&gt;&#39;: 1, &#39;m o u n t a i n &lt;/s&gt;&#39;: 1, &#39;a l s o &lt;/s&gt;&#39;: 1, &#39;i s &lt;/s&gt;&#39;: 1, &#39;t h e &lt;/s&gt;&#39;: 2, &#39;c o o l e s t &lt;/s&gt;&#39;: 1, &#39;i n &lt;/s&gt;&#39;: 1, &#39;w o r l d . &lt;/s&gt;&#39;: 1}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>基于这个初始词表，统计每个出现次数最多的两个相邻token</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">count_token_pair_frequency</span><span class="p">(</span><span class="n">vocab</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]):</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">frequency</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">freq</span> <span class="ow">in</span> <span class="n">vocab</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>  
+</span></span><span class="line"><span class="cl">        <span class="n">w</span> <span class="o">=</span> <span class="n">word</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>  
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>  
+</span></span><span class="line"><span class="cl">            <span class="n">frequency</span><span class="p">[(</span><span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])]</span> <span class="o">+=</span> <span class="n">freq</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">frequency</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">{(&#39;T&#39;, &#39;h&#39;): 1, (&#39;h&#39;, &#39;e&#39;): 4, (&#39;e&#39;, &#39;&lt;/s&gt;&#39;): 3, (&#39;h&#39;, &#39;i&#39;): 1, (&#39;i&#39;, &#39;g&#39;): 1, (&#39;g&#39;, &#39;h&#39;): 1, (&#39;e&#39;, &#39;s&#39;): 2, (&#39;s&#39;, &#39;t&#39;): 2, (&#39;t&#39;, &#39;&lt;/s&gt;&#39;): 2, (&#39;m&#39;, &#39;o&#39;): 1, (&#39;o&#39;, &#39;u&#39;): 1, (&#39;u&#39;, &#39;n&#39;): 1, (&#39;n&#39;, &#39;t&#39;): 1, (&#39;t&#39;, &#39;a&#39;): 1, (&#39;a&#39;, &#39;i&#39;): 1, (&#39;i&#39;, &#39;n&#39;): 2, (&#39;n&#39;, &#39;&lt;/s&gt;&#39;): 2, (&#39;a&#39;, &#39;l&#39;): 1, (&#39;l&#39;, &#39;s&#39;): 1, (&#39;s&#39;, &#39;o&#39;): 1, (&#39;o&#39;, &#39;&lt;/s&gt;&#39;): 1, (&#39;i&#39;, &#39;s&#39;): 1, (&#39;s&#39;, &#39;&lt;/s&gt;&#39;): 1, (&#39;t&#39;, &#39;h&#39;): 2, (&#39;c&#39;, &#39;o&#39;): 1, (&#39;o&#39;, &#39;o&#39;): 1, (&#39;o&#39;, &#39;l&#39;): 1, (&#39;l&#39;, &#39;e&#39;): 1, (&#39;w&#39;, &#39;o&#39;): 1, (&#39;o&#39;, &#39;r&#39;): 1, (&#39;r&#39;, &#39;l&#39;): 1, (&#39;l&#39;, &#39;d&#39;): 1, (&#39;d&#39;, &#39;.&#39;): 1, (&#39;.&#39;, &#39;&lt;/s&gt;&#39;): 1}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>统计这个词表中出现次数最多的token pair为(&lsquo;h&rsquo;, &rsquo;e&rsquo;)，出现了4次，这就是一个merge rule，将其引用到原始词表中</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">merge_token_pair</span><span class="p">(</span><span class="n">pair</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">vocab</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">new_vocab</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">bigram</span> <span class="o">=</span> <span class="s2">&#34; &#34;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="c1"># (?&lt;!\S) 是一个负向后行断言，表示匹配的位置前面不能是一个非空白字符。  </span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># (?!\S) 是一个负向前瞻断言，表示匹配的位置后面不能是一个非空白字符。  </span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 这个正则表达式模式的作用是匹配那些前后都是空白字符的二元组。  </span>
+</span></span><span class="line"><span class="cl">    <span class="n">p</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?&lt;!\S)&#39;</span> <span class="o">+</span> <span class="n">bigram</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;(?!\S)&#39;</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">vocab</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>  
+</span></span><span class="line"><span class="cl">        <span class="n">w</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pair</span><span class="p">),</span> <span class="n">word</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">        <span class="n">new_vocab</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">=</span> <span class="n">vocab</span><span class="p">[</span><span class="n">word</span><span class="p">]</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">new_vocab</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">{&#39;T he &lt;/s&gt;&#39;: 1, &#39;h i g he s t &lt;/s&gt;&#39;: 1, &#39;m o u n t a i n &lt;/s&gt;&#39;: 1, &#39;a l s o &lt;/s&gt;&#39;: 1, &#39;i s &lt;/s&gt;&#39;: 1, &#39;t he &lt;/s&gt;&#39;: 2, &#39;c o o l e s t &lt;/s&gt;&#39;: 1, &#39;i n &lt;/s&gt;&#39;: 1, &#39;w o r l d . &lt;/s&gt;&#39;: 1}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>不断重复统计-合并的步骤一定次数，即可得到最终的词表，最终代码如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">get_tokens</span><span class="p">(</span><span class="n">vocab</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]):</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">tokens</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">freq</span> <span class="ow">in</span> <span class="n">vocab</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>  
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">word</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>  
+</span></span><span class="line"><span class="cl">            <span class="n">tokens</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">+=</span> <span class="n">freq</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">tokens</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">get_vocabulary</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">vocab</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>  
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>  
+</span></span><span class="line"><span class="cl">            <span class="n">vocab</span><span class="p">[</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">word</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; &lt;/s&gt;&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">vocab</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">count_token_pair_frequency</span><span class="p">(</span><span class="n">vocab</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]):</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">frequency</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">freq</span> <span class="ow">in</span> <span class="n">vocab</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>  
+</span></span><span class="line"><span class="cl">        <span class="n">w</span> <span class="o">=</span> <span class="n">word</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>  
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>  
+</span></span><span class="line"><span class="cl">            <span class="n">frequency</span><span class="p">[(</span><span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])]</span> <span class="o">+=</span> <span class="n">freq</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">frequency</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">merge_token_pair</span><span class="p">(</span><span class="n">pair</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">vocab</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">new_vocab</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">bigram</span> <span class="o">=</span> <span class="s2">&#34; &#34;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="c1"># (?&lt;!\S) 是一个负向后行断言，表示匹配的位置前面不能是一个非空白字符。  </span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># (?!\S) 是一个负向前瞻断言，表示匹配的位置后面不能是一个非空白字符。  </span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 这个正则表达式模式的作用是匹配那些前后都是空白字符的二元组。  </span>
+</span></span><span class="line"><span class="cl">    <span class="n">p</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?&lt;!\S)&#39;</span> <span class="o">+</span> <span class="n">bigram</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;(?!\S)&#39;</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">vocab</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>  
+</span></span><span class="line"><span class="cl">        <span class="n">w</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pair</span><span class="p">),</span> <span class="n">word</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">        <span class="n">new_vocab</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">=</span> <span class="n">vocab</span><span class="p">[</span><span class="n">word</span><span class="p">]</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">new_vocab</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">start_iter</span><span class="p">(</span><span class="n">corpus</span><span class="p">,</span> <span class="n">iter_times</span><span class="p">):</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">vocab</span> <span class="o">=</span> <span class="n">get_vocabulary</span><span class="p">(</span><span class="n">corpus</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">tokens</span> <span class="o">=</span> <span class="n">get_tokens</span><span class="p">(</span><span class="n">vocab</span><span class="o">=</span><span class="n">vocab</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;BEFORE BPE TOKENS: </span><span class="si">{}</span><span class="s2">&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tokens</span><span class="p">))</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iter_times</span><span class="p">):</span>  
+</span></span><span class="line"><span class="cl">        <span class="n">freq</span> <span class="o">=</span> <span class="n">count_token_pair_frequency</span><span class="p">(</span><span class="n">vocab</span><span class="o">=</span><span class="n">vocab</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">        <span class="n">new_rule</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">freq</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">freq</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Iter </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> get merge rule: </span><span class="si">{</span><span class="n">new_rule</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">        <span class="n">vocab</span> <span class="o">=</span> <span class="n">merge_token_pair</span><span class="p">(</span><span class="n">pair</span><span class="o">=</span><span class="n">new_rule</span><span class="p">,</span> <span class="n">vocab</span><span class="o">=</span><span class="n">vocab</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">tokens</span> <span class="o">=</span> <span class="n">get_tokens</span><span class="p">(</span><span class="n">vocab</span><span class="o">=</span><span class="n">vocab</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;AFTER BPE TOKENS: </span><span class="si">{}</span><span class="s2">&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tokens</span><span class="p">))</span>  
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl"><span class="n">TEST_CORPUS</span> <span class="o">=</span> <span class="s2">&#34;The highest mountin also is the coolest in the world.&#34;</span>  
+</span></span><span class="line"><span class="cl"><span class="n">start_iter</span><span class="p">(</span><span class="n">TEST_CORPUS</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在对语料库学习后，即可对句子进行编解码。编码的过程就是先将所有token按长度从大到小排列，然后对句子进行编码。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="n">corpus</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tokens</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="o">+</span> <span class="s1">&#39;&lt;/s&gt;&#39;</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">corpus</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)):</span>  
+</span></span><span class="line"><span class="cl">        <span class="n">words</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">encode_word</span><span class="p">(</span><span class="n">words</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">tokens</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">sub_word</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span> <span class="k">for</span> <span class="n">sub_word</span> <span class="ow">in</span> <span class="n">word</span><span class="p">])</span>  
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">encode_word</span><span class="p">(</span><span class="n">word</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tokens</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">[]</span>  
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">    <span class="n">sorted_tokens</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">sorted_tokens</span><span class="p">:</span>  
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">token</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">):</span>  
+</span></span><span class="line"><span class="cl">            <span class="k">continue</span>  
+</span></span><span class="line"><span class="cl">        <span class="n">i</span> <span class="o">=</span> <span class="n">word</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>  
+</span></span><span class="line"><span class="cl">            <span class="k">continue</span>  
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">encode_word</span><span class="p">(</span><span class="n">word</span><span class="p">[:</span><span class="n">i</span><span class="p">],</span> <span class="n">tokens</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">+</span> <span class="n">encode_word</span><span class="p">(</span><span class="n">word</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">token</span><span class="p">):],</span> <span class="n">tokens</span><span class="o">=</span><span class="n">tokens</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">[</span><span class="n">word</span><span class="p">]</span>  
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl"><span class="n">corpus</span> <span class="o">=</span> <span class="s2">&#34;helloworldhahaha hello word&#34;</span>  
+</span></span><span class="line"><span class="cl"><span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;he&#39;</span><span class="p">,</span> <span class="s1">&#39;ll&#39;</span><span class="p">,</span> <span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="s1">&#39;ha&#39;</span><span class="p">]</span>  
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">encode</span><span class="p">(</span><span class="n">corpus</span><span class="p">,</span> <span class="n">tokens</span><span class="p">))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">he ll o world ha ha ha &lt;/s&gt; he ll o&lt;/s&gt; word&lt;/s&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>而解码的过程就非常简单了，将句子按<code>&lt;/s&gt;</code>分割后，将每个token合并即可。</p>
+<h2 id="参考">参考</h2>
+<ol>
+<li><a href="https://leimao.github.io/blog/Byte-Pair-Encoding/">BPE实现</a></li>
+<li><a href="https://huggingface.co/docs/tokenizers/en/quicktour#post-processing">tokenizer库</a></li>
+<li><a href="https://discuss.huggingface.co/t/gpt2tokenizer-not-putting-bos-eos-token/27394">token时新增特殊token</a></li>
+<li><a href="https://huggingface.co/learn/nlp-course/en/chapter6/2?fw=pt">基于已有的tokenizer训练</a></li>
+<li><a href="https://stackoverflow.com/questions/76045605/using-a-custom-trained-huggingface-tokenizer">tokenizer和transformer的tokenizer</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/657047389">tokenizer中文教程</a></li>
+<li><a href="https://github.com/yanranzhao/n-gram-language-identification/blob/master/en-the-little-prince.txt">小王子英文版</a></li>
+</ol>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content"></span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2025-03-17
+        
+    </span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">License</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/%E5%85%B3%E4%BA%8E%E5%B7%A5%E4%BD%9C%E7%9A%84%E6%84%8F%E4%B9%89/">
+            <span class="next-text nav-default">关于工作的意义</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="Gummary/gummary.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:sdythp@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/Gummary/" class="iconfont icon-github" title="github"></a>
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2025<span class="heart"><i class="iconfont icon-heart"></i></span><span></span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+  <script type="text/javascript">
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js" integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

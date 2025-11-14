@@ -1,6 +1,6 @@
 <figure{{ with .Get "class" }} class="{{ . }}"{{ end }}>
     {{ $img_src := .Get "src" }}
-    {{- if (and .Page.Site.Params.COSUrl.enable (not .Page.Site.IsServer)) -}}
+    {{- if (and .Page.Site.Params.COSUrl.enable (not hugo.IsServer)) -}}
         {{ if not (hasPrefix $img_src "http") }}
             {{ $img_src = (print .Page.Site.Params.COSUrl.Host (path.Join .Page.RelPermalink $img_src)) }}
         {{ end }}

@@ -1,5 +1,5 @@
 {{- $img_destination := .Destination -}}
-{{- if (and .Page.Site.Params.COSUrl.enable (not .Page.Site.IsServer)) -}}
+{{- if (and .Page.Site.Params.COSUrl.enable (not hugo.IsServer)) -}}
     {{ if not (hasPrefix .Destination "http") }}
     {{ $img_destination = (print .Page.Site.Params.COSUrl.Host (path.Join .Page.RelPermalink .Destination)) }}
     {{ end }}

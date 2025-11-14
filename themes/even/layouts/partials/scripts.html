@@ -11,9 +11,7 @@
 {{- else -}}
   <script type="text/javascript" src="{{ "lib/jquery/jquery-3.2.1.min.js" | relURL }}"></script>
   <script type="text/javascript" src="{{ "lib/slideout/slideout-1.0.1.min.js" | relURL }}"></script>
-  {{ if .Site.Params.fancybox }}
-    <script type="text/javascript" src="{{ "lib/fancybox/jquery.fancybox-3.1.20.min.js" | relURL }}"></script>
-  {{ end }}
+  {{ if .Site.Params.fancybox }}<script type="text/javascript" src="{{ "lib/fancybox/jquery.fancybox-3.1.20.min.js" | relURL }}"></script>{{ end }}
 {{- end -}}
 
 <!-- timeago.JS -->
@@ -95,8 +93,8 @@
 {{- end }}
 
 <!-- Analytics -->
-{{- if (in (slice (getenv "HUGO_ENV") hugo.Environment) "production") | and .Site.GoogleAnalytics -}}
-  {{ template "_internal/google_analytics_async.html" . }}
+{{- if (in (slice (getenv "HUGO_ENV") hugo.Environment) "production") | and .Site.Config.Services.GoogleAnalytics.ID -}}
+  {{ template "_internal/google_analytics.html" . }}
 {{- end -}}
 
 {{- with .Site.Params.baiduAnalytics -}}
